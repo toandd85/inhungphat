@@ -363,6 +363,14 @@
 
                         </a>
 
+                        <a href="javascript:void(0)" class="menu-item submenu-item" id="menuItemPricingSettings" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.openPricingConfigModal()">
+
+                            <i data-lucide="sliders" style="width: 14px; height: 14px;"></i>
+
+                            <span>Thiết lập giá</span>
+
+                        </a>
+
                         <a href="#prod-orders" class="menu-item submenu-item" data-tab="prod-orders" id="menuItemProdOrders" style="padding: 6px 12px; font-size: 0.85rem;">
 
                             <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
@@ -7885,14 +7893,6 @@
 
                     <!-- TAB 1: SẢN XUẤT -->
                     <div id="pricingConfigTab-prod">
-                        <div style="background: var(--bg-hover, #f8fafc); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
-                            <label style="font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-primary);">
-                                📊 Khung số lượng tham khảo mặc định (cách nhau bởi dấu phẩy):
-                            </label>
-                            <input type="text" class="form-input" id="cfgProdBrackets" placeholder="Ví dụ: 500, 1000, 2000, 5000, 10000" style="width: 100%; font-weight: 600;">
-                            <small class="text-muted" style="display: block; margin-top: 4px;">Các mốc này sẽ được tự động hiển thị trong Bảng Tham Khảo Giá Theo Sản Lượng ở Hóa đơn/Báo giá PDF để khách chọn ưu đãi.</small>
-                        </div>
-
                         <div style="grid-template-columns: 1fr 1fr; display: grid; gap: 14px; margin-bottom: 16px;">
                             <div>
                                 <label style="font-weight: 700; display: block; margin-bottom: 4px; font-size: 0.88rem;">
@@ -7908,6 +7908,57 @@
                                 <input type="number" class="form-input" id="cfgProdDefaultPlateCost" step="10000" min="0" placeholder="150000" style="width: 100%;">
                                 <small class="text-muted">VD: 150.000đ / bộ kẽm</small>
                             </div>
+                        </div>
+
+                        <!-- 1. Cấu hình Markup theo khoảng số lượng -->
+                        <div style="margin-bottom: 20px; background: var(--bg-hover, #f8fafc); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <label style="font-weight: 700; margin: 0; color: var(--text-primary); font-size: 0.9rem;">
+                                    📈 1. Cấu hình Markup (Hệ số lợi nhuận) theo số lượng:
+                                </label>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="window.addProdMarkupRangeRow()" style="font-size: 0.8rem;">
+                                    + Thêm khoảng
+                                </button>
+                            </div>
+                            <small class="text-muted" style="display: block; margin-bottom: 8px;">Hệ số lợi nhuận tự động áp dụng khi số lượng nằm trong khoảng từ... đến...</small>
+                            <table class="table" style="width: 100%; border: 1px solid var(--border-color); font-size: 0.85rem;">
+                                <thead>
+                                    <tr style="background: var(--bg-hover);">
+                                        <th style="padding: 8px;">Số lượng từ</th>
+                                        <th style="padding: 8px;">Số lượng đến</th>
+                                        <th style="padding: 8px;">Hệ số Markup</th>
+                                        <th style="padding: 8px; width: 60px; text-align: center;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cfgProdMarkupRangesBody">
+                                    <!-- Rows rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 2. Cấu hình Tự động Chiết khấu theo tổng số lượng -->
+                        <div style="background: var(--bg-hover, #f8fafc); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <label style="font-weight: 700; margin: 0; color: var(--text-primary); font-size: 0.9rem;">
+                                    🎁 2. Tự động chiết khấu khi đạt mốc số lượng:
+                                </label>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="window.addProdDiscountTierRow()" style="font-size: 0.8rem;">
+                                    + Thêm mốc chiết khấu
+                                </button>
+                            </div>
+                            <small class="text-muted" style="display: block; margin-bottom: 8px;">Hệ thống tự động điền mức chiết khấu (%) khi đạt số lượng tối thiểu tương ứng.</small>
+                            <table class="table" style="width: 100%; border: 1px solid var(--border-color); font-size: 0.85rem;">
+                                <thead>
+                                    <tr style="background: var(--bg-hover);">
+                                        <th style="padding: 8px;">Số lượng tối thiểu đạt</th>
+                                        <th style="padding: 8px;">Chiết khấu tự động (%)</th>
+                                        <th style="padding: 8px; width: 60px; text-align: center;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cfgProdDiscountTiersBody">
+                                    <!-- Rows rendered dynamically -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 

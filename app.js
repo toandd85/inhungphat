@@ -563,6 +563,17 @@ const DEFAULT_PRICING_CONFIG = {
     production_brackets: [500, 1000, 2000, 5000, 10000],
     production_markup: 1.30,
     production_plate_cost: 150000,
+    production_markup_ranges: [
+        { min_qty: 0, max_qty: 500, markup: 1.40 },
+        { min_qty: 501, max_qty: 1000, markup: 1.35 },
+        { min_qty: 1001, max_qty: 5000, markup: 1.30 },
+        { min_qty: 5001, max_qty: null, markup: 1.25 }
+    ],
+    production_discount_tiers: [
+        { min_qty: 1000, discount_percent: 2 },
+        { min_qty: 5000, discount_percent: 5 },
+        { min_qty: 10000, discount_percent: 8 }
+    ],
     online_discount_tiers: [
         { min_qty: 50, discount_percent: 5 },
         { min_qty: 100, discount_percent: 10 },
@@ -4705,6 +4716,40 @@ function calculateRealtimeQuote(updateUI = true) {
     const dimExtra = parseFloat(document.getElementById("quoteDimExtra").value) || 0; // Cạnh dày (hộp âm dương)
     
     const qty = parseInt(document.getElementById("quoteQty").value) || 0;
+
+    // Auto pricing rules for production
+    const pricingConfig = state.pricing_config;
+    if (pricingConfig) {
+        // 1. Auto Markup range check
+        if (pricingConfig.production_markup_ranges && pricingConfig.production_markup_ranges.length > 0) {
+            const matchingRange = pricingConfig.production_markup_ranges.find(r => {
+                const minMatch = qty >= r.min_qty;
+                const maxMatch = r.max_qty === null || r.max_qty === undefined || r.max_qty === "" || qty <= r.max_qty;
+                return minMatch && maxMatch;
+            });
+            if (matchingRange) {
+                const markupEl = document.getElementById("quoteMarkup");
+                if (markupEl && document.activeElement !== markupEl) {
+                    markupEl.value = matchingRange.markup;
+                }
+            }
+        }
+        
+        // 2. Auto Discount tier check
+        if (pricingConfig.production_discount_tiers && pricingConfig.production_discount_tiers.length > 0) {
+            let maxDiscount = 0;
+            pricingConfig.production_discount_tiers.forEach(t => {
+                if (qty >= t.min_qty) {
+                    maxDiscount = Math.max(maxDiscount, t.discount_percent);
+                }
+            });
+            const discountEl = document.getElementById("quoteDiscount");
+            if (discountEl && document.activeElement !== discountEl) {
+                discountEl.value = maxDiscount;
+            }
+        }
+    }
+
     const batDai = parseInt(document.getElementById("quoteBatDai").value) || 1;
     const batRong = parseInt(document.getElementById("quoteBatRong").value) || 1;
     const paperWeight = parseFloat(document.getElementById("quotePaperWeight").value) || 300;
@@ -11260,10 +11305,6 @@ window.openPricingConfigModal = function() {
     const config = state.pricing_config || DEFAULT_PRICING_CONFIG;
     
     // Set Production Tab fields
-    const bracketsInput = document.getElementById("cfgProdBrackets");
-    if (bracketsInput) {
-        bracketsInput.value = (config.production_brackets || [500, 1000, 2000, 5000, 10000]).join(", ");
-    }
     const markupInput = document.getElementById("cfgProdDefaultMarkup");
     if (markupInput) {
         markupInput.value = config.production_markup || 1.30;
@@ -11271,6 +11312,35 @@ window.openPricingConfigModal = function() {
     const plateInput = document.getElementById("cfgProdDefaultPlateCost");
     if (plateInput) {
         plateInput.value = config.production_plate_cost || 150000;
+    }
+
+    // Render Production Markup Ranges
+    const markupTbody = document.getElementById("cfgProdMarkupRangesBody");
+    if (markupTbody) {
+        markupTbody.innerHTML = "";
+        const ranges = config.production_markup_ranges || [
+            { min_qty: 0, max_qty: 500, markup: 1.40 },
+            { min_qty: 501, max_qty: 1000, markup: 1.35 },
+            { min_qty: 1001, max_qty: 5000, markup: 1.30 },
+            { min_qty: 5001, max_qty: null, markup: 1.25 }
+        ];
+        ranges.forEach(r => {
+            window.addProdMarkupRangeRow(r.min_qty, r.max_qty || "", r.markup);
+        });
+    }
+
+    // Render Production Discount Tiers
+    const discountTbody = document.getElementById("cfgProdDiscountTiersBody");
+    if (discountTbody) {
+        discountTbody.innerHTML = "";
+        const tiers = config.production_discount_tiers || [
+            { min_qty: 1000, discount_percent: 2 },
+            { min_qty: 5000, discount_percent: 5 },
+            { min_qty: 10000, discount_percent: 8 }
+        ];
+        tiers.forEach(t => {
+            window.addProdDiscountTierRow(t.min_qty, t.discount_percent);
+        });
     }
     
     // Render Online Discount Tiers
@@ -11329,17 +11399,74 @@ window.addOnlineDiscountTierRow = function(minQty = 100, discountPct = 10) {
     tbody.appendChild(tr);
 };
 
+window.addProdMarkupRangeRow = function(minQty = 1, maxQty = 500, markup = 1.30) {
+    const tbody = document.getElementById("cfgProdMarkupRangesBody");
+    if (!tbody) return;
+    
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+        <td style="padding: 6px;">
+            <input type="number" class="form-input range-min-qty" value="${minQty}" min="0" style="width:100%;" required>
+        </td>
+        <td style="padding: 6px;">
+            <input type="number" class="form-input range-max-qty" value="${maxQty}" min="1" style="width:100%;" placeholder="Vô hạn">
+        </td>
+        <td style="padding: 6px;">
+            <input type="number" class="form-input range-markup" value="${markup}" min="1" step="0.01" style="width:100%;" required>
+        </td>
+        <td style="padding: 6px; text-align: center;">
+            <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()" style="padding: 4px 8px;">🗑️</button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+};
+
+window.addProdDiscountTierRow = function(minQty = 1000, discountPct = 5) {
+    const tbody = document.getElementById("cfgProdDiscountTiersBody");
+    if (!tbody) return;
+    
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+        <td style="padding: 6px;">
+            <input type="number" class="form-input tier-min-qty" value="${minQty}" min="1" style="width:100%;" required>
+        </td>
+        <td style="padding: 6px;">
+            <input type="number" class="form-input tier-pct" value="${discountPct}" min="0" max="100" step="0.5" style="width:100%;" required>
+        </td>
+        <td style="padding: 6px; text-align: center;">
+            <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()" style="padding: 4px 8px;">🗑️</button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+};
+
 window.savePricingConfigSettings = function() {
     try {
-        const bracketsRaw = document.getElementById("cfgProdBrackets")?.value || "";
-        const parsedBrackets = bracketsRaw.split(",")
-            .map(x => parseInt(x.trim()))
-            .filter(x => !isNaN(x) && x > 0)
-            .sort((a, b) => a - b);
-            
         const markup = parseFloat(document.getElementById("cfgProdDefaultMarkup")?.value) || 1.30;
         const plateCost = parseFloat(document.getElementById("cfgProdDefaultPlateCost")?.value) || 150000;
         
+        const markupRows = document.querySelectorAll("#cfgProdMarkupRangesBody tr");
+        const prodMarkupRanges = [];
+        markupRows.forEach(tr => {
+            const minQty = parseInt(tr.querySelector(".range-min-qty")?.value) || 0;
+            const maxVal = tr.querySelector(".range-max-qty")?.value;
+            const maxQty = maxVal ? parseInt(maxVal) : null;
+            const mk = parseFloat(tr.querySelector(".range-markup")?.value) || 1.30;
+            prodMarkupRanges.push({ min_qty: minQty, max_qty: maxQty, markup: mk });
+        });
+        prodMarkupRanges.sort((a, b) => a.min_qty - b.min_qty);
+
+        const discountRows = document.querySelectorAll("#cfgProdDiscountTiersBody tr");
+        const prodDiscountTiers = [];
+        discountRows.forEach(tr => {
+            const minQty = parseInt(tr.querySelector(".tier-min-qty")?.value) || 0;
+            const pct = parseFloat(tr.querySelector(".tier-pct")?.value) || 0;
+            if (minQty > 0) {
+                prodDiscountTiers.push({ min_qty: minQty, discount_percent: pct });
+            }
+        });
+        prodDiscountTiers.sort((a, b) => a.min_qty - b.min_qty);
+
         const tierRows = document.querySelectorAll("#cfgOnlineDiscountTiersBody tr");
         const onlineTiers = [];
         tierRows.forEach(tr => {
@@ -11352,9 +11479,11 @@ window.savePricingConfigSettings = function() {
         onlineTiers.sort((a, b) => a.min_qty - b.min_qty);
         
         state.pricing_config = {
-            production_brackets: parsedBrackets.length > 0 ? parsedBrackets : [500, 1000, 2000, 5000, 10000],
+            production_brackets: [500, 1000, 2000, 5000, 10000],
             production_markup: markup,
             production_plate_cost: plateCost,
+            production_markup_ranges: prodMarkupRanges,
+            production_discount_tiers: prodDiscountTiers,
             online_discount_tiers: onlineTiers
         };
         
