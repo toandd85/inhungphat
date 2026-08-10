@@ -358,6 +358,75 @@ const DEFAULT_MESSAGES = [
 
 const DEFAULT_ONLINE_PRODUCTS = [
     {
+        "sku": "MA_A",
+        "name": "Hộp Tết 2026 - MÃ A (42x36x10.5cm)",
+        "unit": "Bộ",
+        "price": 80000,
+        "wholesale_price": 67000,
+        "stock_qty": 5000,
+        "min_stock_qty": 100,
+        "barcode": "HQT2026A",
+        "wholesale_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 80000 },
+            { "min_qty": 101, "max_qty": 300, "price": 75000 },
+            { "min_qty": 301, "max_qty": 500, "price": 72800 },
+            { "min_qty": 501, "max_qty": 700, "price": 70000 },
+            { "min_qty": 701, "max_qty": 900, "price": 69000 },
+            { "min_qty": 901, "max_qty": 1000, "price": 68000 },
+            { "min_qty": 1001, "max_qty": 9999999, "price": 67000 }
+        ],
+        "wholesale_qty_discounts": [
+            { "min_qty": 20000, "max_qty": 49999, "discount_percent": 3 },
+            { "min_qty": 50000, "max_qty": 9999999, "discount_percent": 5 }
+        ]
+    },
+    {
+        "sku": "MA_B",
+        "name": "Hộp Tết 2026 - MÃ B (36x36x10.5cm)",
+        "unit": "Bộ",
+        "price": 75000,
+        "wholesale_price": 65000,
+        "stock_qty": 5000,
+        "min_stock_qty": 100,
+        "barcode": "HQT2026B",
+        "wholesale_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 75000 },
+            { "min_qty": 101, "max_qty": 300, "price": 72000 },
+            { "min_qty": 301, "max_qty": 500, "price": 70000 },
+            { "min_qty": 501, "max_qty": 700, "price": 68000 },
+            { "min_qty": 701, "max_qty": 900, "price": 67000 },
+            { "min_qty": 901, "max_qty": 1000, "price": 66000 },
+            { "min_qty": 1001, "max_qty": 9999999, "price": 65000 }
+        ],
+        "wholesale_qty_discounts": [
+            { "min_qty": 20000, "max_qty": 49999, "discount_percent": 3 },
+            { "min_qty": 50000, "max_qty": 9999999, "discount_percent": 5 }
+        ]
+    },
+    {
+        "sku": "MA_C",
+        "name": "Hộp Tết 2026 - MÃ C (29x36x10.5cm)",
+        "unit": "Bộ",
+        "price": 71000,
+        "wholesale_price": 60000,
+        "stock_qty": 5000,
+        "min_stock_qty": 100,
+        "barcode": "HQT2026C",
+        "wholesale_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 71000 },
+            { "min_qty": 101, "max_qty": 300, "price": 68000 },
+            { "min_qty": 301, "max_qty": 500, "price": 66000 },
+            { "min_qty": 501, "max_qty": 700, "price": 65000 },
+            { "min_qty": 701, "max_qty": 900, "price": 64000 },
+            { "min_qty": 901, "max_qty": 1000, "price": 63000 },
+            { "min_qty": 1001, "max_qty": 9999999, "price": 60000 }
+        ],
+        "wholesale_qty_discounts": [
+            { "min_qty": 20000, "max_qty": 49999, "discount_percent": 3 },
+            { "min_qty": 50000, "max_qty": 9999999, "discount_percent": 5 }
+        ]
+    },
+    {
         "sku": "TD09C",
         "name": "Hộp TD09C",
         "unit": "Cái",
@@ -602,10 +671,10 @@ class AppState {
         
         this.online_products = this.load("online_products", DEFAULT_ONLINE_PRODUCTS);
         // Force seed Excel products for existing localstorage
-        if (!localStorage.getItem("ihp_excel_seeded_v1")) {
+        if (!localStorage.getItem("ihp_excel_seeded_v2")) {
             this.online_products = DEFAULT_ONLINE_PRODUCTS;
             this.save("online_products", DEFAULT_ONLINE_PRODUCTS);
-            localStorage.setItem("ihp_excel_seeded_v1", "true");
+            localStorage.setItem("ihp_excel_seeded_v2", "true");
         }
 
         this.online_stock_logs = this.load("online_stock_logs", DEFAULT_ONLINE_STOCK_LOGS);
@@ -10568,8 +10637,14 @@ window.addOnlineOrderProdRow = function(name = "", qty = 1, price = 0) {
 window.recalcOnlineOrderTotal = function() {
     let subtotal = 0;
     let totalExtraDiscount = 0;
+    let totalQty = 0;
     
     const rows = document.querySelectorAll("#onlineOrderRowsContainer .online-order-row");
+    rows.forEach(row => {
+        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+        totalQty += qty;
+    });
+    
     rows.forEach(row => {
         const sku = row.querySelector(".item-sku").value;
         const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
@@ -10578,8 +10653,8 @@ window.recalcOnlineOrderTotal = function() {
         const lineSubtotal = qty * price;
         subtotal += lineSubtotal;
         
-        // Calculate extra discount
-        const dPct = window.calculateOnlineProductDiscountPercent(sku, qty);
+        // Calculate extra discount based on combined total quantity
+        const dPct = window.calculateOnlineProductDiscountPercent(sku, totalQty);
         const lineDiscount = Math.round(lineSubtotal * (dPct / 100));
         totalExtraDiscount += lineDiscount;
         
@@ -10587,7 +10662,7 @@ window.recalcOnlineOrderTotal = function() {
         const infoEl = row.querySelector(".line-discount-info");
         if (infoEl && infoEl.style) {
             if (dPct > 0) {
-                infoEl.textContent = `✓ Đạt số lượng sỉ: Chiết khấu thêm ${dPct}% (Giảm -${formatMoney(lineDiscount)}đ)`;
+                infoEl.textContent = `✓ Đạt tổng số lượng sỉ: Chiết khấu thêm ${dPct}% (Giảm -${formatMoney(lineDiscount)}đ)`;
                 infoEl.style.display = "block";
                 infoEl.style.marginBottom = "8px";
             } else {
