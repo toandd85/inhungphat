@@ -1343,7 +1343,11 @@
 
                         </div>
 
-                        <div class="filter-actions">
+                        <div class="filter-actions" style="display: flex; gap: 8px;">
+
+                            <button type="button" class="btn btn-secondary" onclick="window.openPricingConfigModal()" style="display: flex; align-items: center; gap: 8px; height: 40px; white-space: nowrap; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary);" title="Cấu hình khung số lượng & chiết khấu mặc định">
+                                <i data-lucide="sliders" style="width: 16px; height: 16px;"></i> Cấu hình giá
+                            </button>
 
                             <button class="btn btn-primary" id="btnNewOrder">
 
@@ -1416,6 +1420,10 @@
 
                         <button type="button" class="btn btn-success" onclick="window.openNewProdOrderModal()" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; height: 40px; white-space: nowrap;">
                             <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Tạo đơn
+                        </button>
+
+                        <button type="button" class="btn btn-secondary" onclick="window.openPricingConfigModal()" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; height: 40px; white-space: nowrap; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary);" title="Cấu hình khung số lượng & chiết khấu mặc định">
+                            <i data-lucide="sliders" style="width: 16px; height: 16px;"></i> Cấu hình giá
                         </button>
 
                         <div class="search-box">
@@ -4636,7 +4644,12 @@
 
                             <div class="form-group" id="groupQty">
 
-                                <label for="quoteQty">Số lượng (SL) *</label>
+                                <label for="quoteQty" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                    <span>Số lượng (SL) *</span>
+                                    <span onclick="document.getElementById('newProdBracketQty').scrollIntoView({ behavior: 'smooth' })" style="cursor: pointer; color: var(--accent); display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: normal;" title="Thiết lập khung giá & chiết khấu theo số lượng">
+                                        <i data-lucide="percent" style="width: 12px; height: 12px;"></i> Khung giá & CK
+                                    </span>
+                                </label>
 
                                 <input type="number" class="form-input" id="quoteQty" value="1000" required>
 
