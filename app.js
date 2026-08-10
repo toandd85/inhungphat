@@ -4055,7 +4055,7 @@ function setupEventListeners() {
         "quoteProductType", "quoteDim1", "quoteDim2", "quoteDim3", "quoteDimExtra", 
         "quoteQty", "quoteBatDai", "quoteBatRong", "quotePaperWeight", 
         "quotePaperPrice", "quoteMachineSize", "quotePlates", "quoteLaminating", 
-        "quoteGluePrice", "quoteShipFee", "quoteMarkup",
+        "quoteGluePrice", "quoteShipFee", "quoteMarkup", "quoteDiscount",
         "quoteCartonTrayType", "quoteCartonTrayPrice", "quoteCartonPrintWrap", "quoteCartonMold", "quoteCartonMagnets",
         "quoteCartonFoamThickness", "quoteCartonFoamBatRong", "quoteCartonFoamBatDai",
         "quoteCartonSilk", "quoteCartonDecal", "quoteCartonFinishingRate",
@@ -4630,6 +4630,7 @@ window.captureCurrentFormInputs = function() {
         cartonOfficeCost: getVal("quoteCartonOfficeCost", "0"),
         salesperson: getVal("quoteSalesperson", "Đại Hùng"),
         commissionRate: getVal("quoteCommissionRate", "1"),
+        discount: getVal("quoteDiscount", "0"),
         customBrackets: window.customProdBrackets || [],
         dynamicFields: {}
     };
@@ -4682,6 +4683,7 @@ window.applyQuoteInputsToForm = function(inputs, targetQty = null) {
     setVal("quoteCartonOfficeCost", inputs.cartonOfficeCost);
     setVal("quoteSalesperson", inputs.salesperson);
     setVal("quoteCommissionRate", inputs.commissionRate);
+    setVal("quoteDiscount", inputs.discount || "0");
 
     if (inputs.customBrackets) {
         window.customProdBrackets = Array.isArray(inputs.customBrackets) ? inputs.customBrackets : [];
@@ -5030,7 +5032,9 @@ function calculateRealtimeQuote(updateUI = true) {
     }
 
     // Sell calculations
-    unitPrice = totalCostReal * markup / qty;
+    const discountPct = parseFloat(document.getElementById("quoteDiscount")?.value) || 0;
+    const baseUnitPrice = totalCostReal * markup / qty;
+    unitPrice = baseUnitPrice * (1 - discountPct / 100);
     totalCostRevenue = unitPrice * qty;
 
     // Render numbers in UI
@@ -5051,6 +5055,19 @@ function calculateRealtimeQuote(updateUI = true) {
         document.getElementById("calcCostUnitPrice").textContent = formatMoney(Math.round(unitPrice));
         document.getElementById("calcTotalCost").textContent = formatMoney(Math.round(totalCostRevenue));
 
+        const discountEl = document.getElementById("rowQuoteDiscount");
+        const discountValEl = document.getElementById("calcCostDiscount");
+        const discountPctEl = document.getElementById("lblQuoteDiscountPercent");
+        if (discountPct > 0) {
+            if (discountEl) discountEl.style.display = "flex";
+            const totalBeforeDiscount = Math.round(totalCostReal * markup);
+            const discountAmt = Math.round(totalBeforeDiscount * (discountPct / 100));
+            if (discountValEl) discountValEl.textContent = "-" + formatMoney(discountAmt) + "đ";
+            if (discountPctEl) discountPctEl.textContent = discountPct;
+        } else {
+            if (discountEl) discountEl.style.display = "none";
+        }
+
         if (window.renderProdFormQuantityBrackets) {
             window.renderProdFormQuantityBrackets();
         }
@@ -5061,6 +5078,8 @@ function calculateRealtimeQuote(updateUI = true) {
         printCost: Math.round(printCost), 
         procCost: Math.round(procCost), 
         totalCost: Math.round(totalCostRevenue),
+        subtotalBeforeDiscount: Math.round(totalCostReal * markup),
+        discountAmt: Math.round(totalCostReal * markup * (discountPct / 100)),
         layoutLength,
         layoutWidth,
         wasteSheets,
@@ -5222,6 +5241,15 @@ window.selectProdBracketQty = function(qty) {
     const qtyEl = document.getElementById("quoteQty");
     if (qtyEl) {
         qtyEl.value = qty;
+        let disc = 0;
+        if (window.customProdBrackets) {
+            const match = window.customProdBrackets.find(b => b.qty === qty);
+            if (match) disc = parseFloat(match.discountPercent) || 0;
+        }
+        const discEl = document.getElementById("quoteDiscount");
+        if (discEl) {
+            discEl.value = disc;
+        }
         calculateRealtimeQuote(true);
     }
 };
@@ -5262,7 +5290,9 @@ function handleOrderSubmit(e) {
 
     const spSubmit = document.getElementById("quoteSalesperson").value || "Đại Hùng";
     const commRateSubmit = parseFloat(document.getElementById("quoteCommissionRate").value) || 0;
-    const finalTotalAmountSubmit = Math.round(calculations.totalCost * 1.08);
+    const subtotalBeforeDiscount = Math.round(calculations.subtotalBeforeDiscount);
+    const discountAmt = Math.round(calculations.discountAmt);
+    const finalTotalAmountSubmit = Math.round((subtotalBeforeDiscount - discountAmt) * 1.08);
     const commAmountSubmit = Math.round(finalTotalAmountSubmit * (commRateSubmit / 100));
 
     // Determine initial order status
@@ -5294,8 +5324,8 @@ function handleOrderSubmit(e) {
         paper_type: paperNames[paperWeight] || `Ivory ${paperWeight}gsm`,
         print_spec: `In Offset, Bình: ${calculations.layoutLength.toFixed(1)} x ${calculations.layoutWidth.toFixed(1)} cm`,
         post_processing: post_processing,
-        subtotal: Math.round(calculations.totalCost),
-        discount: 0,
+        subtotal: subtotalBeforeDiscount,
+        discount: discountAmt,
         vat_rate: 8,
         total_amount: finalTotalAmountSubmit,
         deposit: 0, // No auto deposit
