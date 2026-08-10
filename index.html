@@ -5429,12 +5429,14 @@
 
                             </div>
 
-                            <div class="price-row total-row">
-
-                                <span>GIÁ BÁN ĐỀ XUẤT (Đơn giá):</span>
-
+                            <div class="price-row total-row" style="display: flex; align-items: center; justify-content: space-between;">
+                                <span style="display: flex; align-items: center; gap: 6px;">
+                                    GIÁ BÁN ĐỀ XUẤT (Đơn giá):
+                                    <button type="button" onclick="window.openProdVolumePricingModal()" title="Xem bảng khung giá & chiết khấu theo sản lượng" style="background: var(--accent-light); color: var(--accent); border: none; border-radius: 4px; padding: 4px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
+                                        <i data-lucide="percent" style="width: 14px; height: 14px;"></i>
+                                    </button>
+                                </span>
                                 <span class="price-highlight" id="calcCostUnitPrice">0đ</span>
-
                             </div>
 
                             <div class="price-row" style="font-weight: 700; color: var(--accent);">
@@ -5445,51 +5447,6 @@
 
                             </div>
 
-                        </div>
-
-                        <!-- Production Volume & Discount Brackets Pane -->
-                        <div class="price-breakdown-pane mt-3" style="background: rgba(16, 143, 83, 0.05); border: 1.5px solid var(--accent); border-radius: 12px; padding: 14px 16px; margin-top: 16px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                                <h4 style="margin: 0; color: var(--accent); font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
-                                    <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
-                                    Bảng khung giá & Chiết khấu theo sản lượng
-                                </h4>
-                                <span style="font-size: 0.78rem; color: var(--text-secondary);">Tự động tính giá ưu đãi khi sản xuất số lượng lớn</span>
-                            </div>
-
-                            <div style="overflow-x: auto; margin-bottom: 12px;">
-                                <table class="table-brackets" style="width: 100%; border-collapse: collapse; font-size: 0.83rem; text-align: left;">
-                                    <thead>
-                                        <tr style="background: var(--accent); color: #ffffff;">
-                                            <th style="padding: 7px 10px; border-radius: 6px 0 0 0;">Số lượng (SP)</th>
-                                            <th style="padding: 7px 10px; text-align: right;">Đơn giá gốc</th>
-                                            <th style="padding: 7px 10px; text-align: right;">Mức CK (%)</th>
-                                            <th style="padding: 7px 10px; text-align: right;">Đơn giá sau CK</th>
-                                            <th style="padding: 7px 10px; text-align: right;">Tổng doanh số</th>
-                                            <th style="padding: 7px 10px; text-align: right;">Tiết kiệm/SP</th>
-                                            <th style="padding: 7px 10px; text-align: center; border-radius: 0 6px 0 0;">Thao tác</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="prodFormQuantityBracketsBody">
-                                        <!-- Rows injected dynamically -->
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Control bar for adding custom quantity & discount tier -->
-                            <div style="display: flex; gap: 8px; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; border: 1px dashed var(--border-color); flex-wrap: wrap;">
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin: 0;">SL thêm:</label>
-                                    <input type="number" id="newProdBracketQty" placeholder="Ví dụ: 3000" min="1" class="form-input" style="width: 110px; padding: 4px 8px; font-size: 0.82rem;">
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin: 0;">% CK thêm:</label>
-                                    <input type="number" id="newProdBracketDiscount" placeholder="0" min="0" max="100" step="0.5" class="form-input" style="width: 75px; padding: 4px 8px; font-size: 0.82rem;" value="0">
-                                </div>
-                                <button type="button" class="btn btn-secondary" onclick="window.addProdBracketRow()" style="padding: 5px 12px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 4px;">
-                                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i> + Thêm mức giá
-                                </button>
-                            </div>
                         </div>
 
                         <div class="form-actions mt-4">
@@ -5510,6 +5467,57 @@
 
         </div>
 
+    </div>
+
+    <!-- Modal: Bảng khung giá & chiết khấu theo sản lượng -->
+    <div class="modal" id="prodVolumePricingModal" style="z-index: 200100;">
+        <div class="modal-dialog" style="max-width: 750px;">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-weight: 700; font-size: 1.1rem; margin: 0; display:flex; align-items:center; gap:8px; color: var(--accent);">
+                        <i data-lucide="layers"></i> Bảng khung giá & Chiết khấu theo sản lượng
+                    </h3>
+                    <button type="button" class="btn-close" onclick="closeModal('prodVolumePricingModal')" style="background:none; border:none; font-size: 1.25rem; cursor:pointer; color:var(--text-secondary);">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div style="overflow-x: auto; margin-bottom: 16px;">
+                        <table class="table-brackets" style="width: 100%; border-collapse: collapse; font-size: 0.83rem; text-align: left;">
+                            <thead>
+                                <tr style="background: var(--accent); color: #ffffff;">
+                                    <th style="padding: 7px 10px; border-radius: 6px 0 0 0;">Số lượng (SP)</th>
+                                    <th style="padding: 7px 10px; text-align: right;">Đơn giá gốc</th>
+                                    <th style="padding: 7px 10px; text-align: right;">Mức CK (%)</th>
+                                    <th style="padding: 7px 10px; text-align: right;">Đơn giá sau CK</th>
+                                    <th style="padding: 7px 10px; text-align: right;">Tổng doanh số</th>
+                                    <th style="padding: 7px 10px; text-align: right;">Tiết kiệm/SP</th>
+                                    <th style="padding: 7px 10px; text-align: center; border-radius: 0 6px 0 0;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prodFormQuantityBracketsBody">
+                                <!-- Rows injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Control bar for adding custom quantity & discount tier -->
+                    <div style="display: flex; gap: 8px; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; border: 1px dashed var(--border-color); flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin: 0;">SL thêm:</label>
+                            <input type="number" id="newProdBracketQty" placeholder="Ví dụ: 3000" min="1" class="form-input" style="width: 110px; padding: 4px 8px; font-size: 0.82rem;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin: 0;">% CK thêm:</label>
+                            <input type="number" id="newProdBracketDiscount" placeholder="0" min="0" max="100" step="0.5" class="form-input" style="width: 75px; padding: 4px 8px; font-size: 0.82rem;" value="0">
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="window.addProdBracketRow()" style="padding: 5px 12px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                            <i data-lucide="plus" style="width: 14px; height: 14px;"></i> + Thêm mức giá
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
+                    <button type="button" class="btn btn-primary" onclick="closeModal('prodVolumePricingModal')">Xác nhận</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal 2: Stock Restock Modal -->

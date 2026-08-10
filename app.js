@@ -5296,7 +5296,13 @@ window.selectProdBracketQty = function(qty) {
             discEl.value = disc;
         }
         calculateRealtimeQuote(true);
+        closeModal("prodVolumePricingModal");
     }
+};
+
+window.openProdVolumePricingModal = function() {
+    window.renderProdFormQuantityBrackets();
+    openModal("prodVolumePricingModal");
 };
 
 function handleOrderSubmit(e) {
