@@ -1,0 +1,30 @@
+{
+  "name": "cho-ve-mini-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chợ Vé - Zalo Mini App trao đổi, mua bán vé sự kiện ca nhạc, phim, đá bóng và đặt sân thể thao (pickleball, bóng đá)",
+  "scripts": {
+    "start": "zmp-cli start",
+    "dev": "zmp-cli start",
+    "build": "zmp-cli build",
+    "deploy": "zmp-cli deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "firebase": "^10.14.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "zmp-sdk": "^2.53.0",
+    "zmp-ui": "^1.11.14"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.6",
+    "zmp-cli": "^4.0.3",
+    "zmp-vite-plugin": "^1.1.6"
+  }
+}

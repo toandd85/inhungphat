@@ -1,0 +1,27 @@
+{
+  "app": {
+    "title": "Chợ Vé",
+    "headerTextColor": "black",
+    "headerTitle": "Chợ Vé",
+    "statusBarType": "normal",
+    "webviewResizes": true,
+    "hideAndroidBottomNavigationBar": false,
+    "hideIOSSafeAreaBottomIndicator": true,
+    "hideAndroidSafeAreaBottomIndicator": true,
+    "actionBarHidden": false,
+    "textField": {
+      "keyboardAppearance": "light"
+    }
+  },
+  "pages": [
+    {
+      "path": "index",
+      "includes": ["src/**"],
+      "public": ["src/static/**"]
+    }
+  ],
+  "listeners": [],
+  "template": {
+    "backgroundColor": "#f5f6fa"
+  }
+}

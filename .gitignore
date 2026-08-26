@@ -2,3 +2,9 @@ node_modules/
 .firebase/
 .gemini/
 *.log
+functions/lib/
+miniapp/src/www/
+miniapp/dist/
+miniapp/.env
+miniapp/.env.local
+*.env.local
