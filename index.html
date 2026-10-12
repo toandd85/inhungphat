@@ -1832,6 +1832,16 @@
                             <select class="form-select" id="onlineOrderSalesStaffFilterSelect" style="width:auto; height:36px; font-size:0.85rem; padding:0 8px;" onchange="renderOnlineSales()">
                                 <option value="">-- NVKD --</option>
                             </select>
+                            <select class="form-select" id="onlineOrderWorkflowFilter" style="width:auto; height:36px; font-size:0.85rem; padding:0 8px; font-weight:600; color:var(--accent); border-color:var(--accent);" onchange="renderOnlineSales()" title="Lọc theo quy trình theo dõi">
+                                <option value="">-- Tất cả quy trình --</option>
+                                <option value="WAIT_DEPOSIT">💵 1. Chờ nhận tạm ứng</option>
+                                <option value="NOT_DELIVERED">🚚 2. Chưa giao hàng</option>
+                                <option value="SHIPPING">🚚 3. Đang giao hàng</option>
+                                <option value="DELIVERED_UNPAID">⚠️ 4. Đã giao - Chưa thu tiền</option>
+                                <option value="HAS_DEBT">🔴 5. Đang còn nợ</option>
+                                <option value="NOT_INVOICED">🧾 6. Chưa xuất hoá đơn</option>
+                                <option value="COMPLETED">✅ 7. Đã hoàn tất toàn bộ</option>
+                            </select>
 
                         </div>
 
@@ -1855,15 +1865,13 @@
 
                                             <th>Sản phẩm & SL</th>
 
-                                            <th>Kênh bán & NVKD</th>
+                                            <th>Quy trình theo dõi</th>
 
                                             <th>Tổng tiền</th>
 
                                             <th>Đã thanh toán</th>
 
                                             <th style="color: var(--danger);">Còn nợ</th>
-
-                                            <th>Trạng thái</th>
 
                                             <th>Hành động</th>
 
@@ -8823,6 +8831,226 @@
         </div>
     </div>
 
+    <!-- Modal: Theo Dõi & Cập Nhật Quy Trình Đơn Hàng Online -->
+    <div class="modal" id="onlineOrderTrackingModal">
+        <div class="modal-dialog" style="max-width: 760px;">
+            <div class="modal-content" style="border-radius: 14px;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px 20px;">
+                    <div>
+                        <h3 id="trackingModalTitle" style="margin:0; font-size:1.15rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="activity" style="color:var(--accent);"></i> Theo Dõi & Cập Nhật Quy Trình Đơn Hàng
+                        </h3>
+                        <p id="trackingModalSubtitle" style="margin:4px 0 0 0; font-size:0.82rem; color:var(--text-secondary);"></p>
+                    </div>
+                    <button type="button" class="close-btn" onclick="closeModal('onlineOrderTrackingModal')">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 18px 20px; max-height: 80vh; overflow-y: auto;">
+                    <form id="onlineOrderTrackingForm" onsubmit="window.saveOnlineOrderTracking(event)">
+                        <input type="hidden" id="trackingOrderId" value="">
+
+                        <!-- Visual Workflow Stepper -->
+                        <div class="workflow-stepper" id="trackingVisualStepper">
+                            <div class="workflow-step completed" id="step-created">
+                                <div class="workflow-step-circle"><i data-lucide="check" style="width:18px; height:18px;"></i></div>
+                                <span class="workflow-step-label">1. Tạo đơn</span>
+                            </div>
+                            <div class="workflow-step" id="step-deposit">
+                                <div class="workflow-step-circle"><i data-lucide="dollar-sign" style="width:18px; height:18px;"></i></div>
+                                <span class="workflow-step-label">2. Tạm ứng</span>
+                            </div>
+                            <div class="workflow-step" id="step-delivery">
+                                <div class="workflow-step-circle"><i data-lucide="truck" style="width:18px; height:18px;"></i></div>
+                                <span class="workflow-step-label">3. Giao hàng</span>
+                            </div>
+                            <div class="workflow-step" id="step-payment">
+                                <div class="workflow-step-circle"><i data-lucide="credit-card" style="width:18px; height:18px;"></i></div>
+                                <span class="workflow-step-label">4. Thu tiền</span>
+                            </div>
+                            <div class="workflow-step" id="step-invoice">
+                                <div class="workflow-step-circle"><i data-lucide="file-text" style="width:18px; height:18px;"></i></div>
+                                <span class="workflow-step-label">5. Hoá đơn</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 1: Nhận Tạm Ứng -->
+                        <div class="tracking-card">
+                            <div class="tracking-card-header">
+                                <h4 class="tracking-card-title"><i data-lucide="dollar-sign" style="width:18px; height:18px; color:#0284c7;"></i> Bước 1: Nhận Tạm Ứng (Đặt cọc)</h4>
+                                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85rem; font-weight:600; color:var(--accent);">
+                                    <input type="checkbox" id="trkDepositStatus" onchange="window.toggleTrackingDeposit(this.checked)" style="width:16px; height:16px;">
+                                    <span>Đã nhận tạm ứng</span>
+                                </label>
+                            </div>
+                            <div id="trkDepositBody" style="display:none; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Số tiền tạm ứng (VNĐ) *</label>
+                                    <input type="number" class="form-input" id="trkDepositAmount" min="0" step="1000" placeholder="Ví dụ: 1000000" oninput="window.calcTrackingDebt()" style="height:38px;">
+                                    <div style="display:flex; gap:6px; margin-top:6px;">
+                                        <button type="button" class="btn btn-secondary" onclick="window.setQuickDeposit(30)" style="padding:2px 8px; font-size:0.75rem;">30%</button>
+                                        <button type="button" class="btn btn-secondary" onclick="window.setQuickDeposit(50)" style="padding:2px 8px; font-size:0.75rem;">50%</button>
+                                        <button type="button" class="btn btn-secondary" onclick="window.setQuickDeposit(100)" style="padding:2px 8px; font-size:0.75rem;">100%</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ngày nhận tạm ứng</label>
+                                    <input type="date" class="form-input" id="trkDepositDate" style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Hình thức tạm ứng</label>
+                                    <select class="form-select" id="trkDepositMethod" style="height:38px;">
+                                        <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
+                                        <option value="CASH">Tiền mặt</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ghi chú tạm ứng</label>
+                                    <input type="text" class="form-input" id="trkDepositNote" placeholder="Ví dụ: Đã nhận cọc 50% qua VCB..." style="height:38px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Giao Hàng Cho Khách -->
+                        <div class="tracking-card">
+                            <div class="tracking-card-header">
+                                <h4 class="tracking-card-title"><i data-lucide="truck" style="width:18px; height:18px; color:#10b981;"></i> Bước 2: Tình Trạng Giao Hàng Cho Khách</h4>
+                                <span id="trkDeliveryStatusBadge" class="badge badge-warning" style="font-size:0.75rem;">Chưa giao hàng</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Tình trạng giao nhận *</label>
+                                    <select class="form-select" id="trkDeliveryStatus" onchange="window.updateTrackingDeliveryUI()" style="height:38px;" required>
+                                        <option value="PENDING">⏳ Chưa giao hàng (Chờ đóng gói/xử lý)</option>
+                                        <option value="SHIPPING">🚚 Đang giao hàng (Đang trên đường giao)</option>
+                                        <option value="DELIVERED">✅ Đã giao hàng thành công cho khách</option>
+                                        <option value="FAILED">❌ Giao thất bại / Chuyển hoàn</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ngày giao hàng</label>
+                                    <input type="date" class="form-input" id="trkDeliveryDate" style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Đơn vị vận chuyển / Người giao</label>
+                                    <select class="form-select" id="trkDeliveryCarrier" style="height:38px;">
+                                        <option value="Nội bộ (Xe công ty)">Nội bộ (Xe công ty / Tự giao)</option>
+                                        <option value="Grab Express">Grab Express</option>
+                                        <option value="Ahamove">Ahamove</option>
+                                        <option value="Giao Hàng Tiết Kiệm (GHTK)">Giao Hàng Tiết Kiệm (GHTK)</option>
+                                        <option value="Viettel Post">Viettel Post</option>
+                                        <option value="Gửi xe khách">Gửi xe khách</option>
+                                        <option value="Khách đến xưởng lấy">Khách đến xưởng lấy</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Mã vận đơn / Số phiếu giao</label>
+                                    <input type="text" class="form-input" id="trkDeliveryTrackingCode" placeholder="Ví dụ: GHTK-88291..." style="height:38px;">
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ghi chú giao hàng</label>
+                                    <input type="text" class="form-input" id="trkDeliveryNote" placeholder="Ví dụ: Đã giao bảo vệ tầng 1, người nhận ký tên A.Nam..." style="height:38px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Thu Tiền & Công Nợ -->
+                        <div class="tracking-card">
+                            <div class="tracking-card-header">
+                                <h4 class="tracking-card-title"><i data-lucide="credit-card" style="width:18px; height:18px; color:#f59e0b;"></i> Bước 3: Thu Tiền Sau Giao & Tình Trạng Công Nợ</h4>
+                                <button type="button" class="btn btn-secondary" onclick="window.setCollectFull()" style="padding: 4px 10px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:4px; color:#10b981; font-weight:600;">
+                                    <i data-lucide="check-circle" style="width:14px; height:14px;"></i> Thu đủ 100% (Xóa hết nợ)
+                                </button>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Tình trạng thu tiền *</label>
+                                    <select class="form-select" id="trkCollectionStatus" onchange="window.updateTrackingCollectionUI()" style="height:38px;" required>
+                                        <option value="UNCOLLECTED">🔴 Chưa thu tiền (Khách nợ 100%)</option>
+                                        <option value="PARTIAL">🟠 Đã thu một phần (Tạm ứng/Trả trước)</option>
+                                        <option value="COD_PENDING">🟡 Đã giao - Thu COD (Chờ đối soát từ shipper)</option>
+                                        <option value="COLLECTED_FULL">🟢 Đã thu đủ (100% - Không còn nợ)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Tổng số tiền đã thu (VNĐ) *</label>
+                                    <input type="number" class="form-input" id="trkPaidAmount" min="0" step="1000" oninput="window.calcTrackingDebt()" style="height:38px;" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Hình thức thanh toán</label>
+                                    <select class="form-select" id="trkPaymentMethod" style="height:38px;">
+                                        <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
+                                        <option value="CASH">Tiền mặt</option>
+                                        <option value="COD">Thu hộ COD qua shipper</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ngày thu tiền</label>
+                                    <input type="date" class="form-input" id="trkPaymentDate" style="height:38px;">
+                                </div>
+                            </div>
+
+                            <!-- Real-time Debt Summary -->
+                            <div class="debt-calculator-box">
+                                <div class="debt-calc-item">
+                                    <div class="label">Tổng giá trị đơn hàng</div>
+                                    <div class="value" id="trkLblTotalAmount" style="color:var(--text-primary);">0 đ</div>
+                                </div>
+                                <div class="debt-calc-item">
+                                    <div class="label">Đã thanh toán (Thu)</div>
+                                    <div class="value" id="trkLblPaidAmount" style="color:#10b981;">0 đ</div>
+                                </div>
+                                <div class="debt-calc-item">
+                                    <div class="label">Tình trạng CÔNG NỢ</div>
+                                    <div class="value" id="trkLblRemainingDebt" style="color:#ef4444;">0 đ (Còn nợ)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Xuất Hoá Đơn VAT -->
+                        <div class="tracking-card" style="margin-bottom:0;">
+                            <div class="tracking-card-header">
+                                <h4 class="tracking-card-title"><i data-lucide="file-text" style="width:18px; height:18px; color:#8b5cf6;"></i> Bước 4: Tình Trạng Xuất Hoá Đơn VAT</h4>
+                                <span id="trkInvoiceStatusBadge" class="badge" style="background:#f3f4f6; color:#6b7280; font-size:0.75rem;">Chưa xuất hoá đơn</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Trạng thái xuất hoá đơn *</label>
+                                    <select class="form-select" id="trkInvoiceStatus" onchange="window.updateTrackingInvoiceUI()" style="height:38px;" required>
+                                        <option value="NOT_ISSUED">⏳ Chưa xuất hoá đơn (Cần xuất)</option>
+                                        <option value="ISSUED">🧾 Đã xuất hoá đơn VAT</option>
+                                        <option value="NOT_REQUIRED">⚪ Khách không lấy hoá đơn</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Số hoá đơn VAT</label>
+                                    <input type="text" class="form-input" id="trkInvoiceNumber" placeholder="Ví dụ: HD001289" style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ký hiệu mẫu số / Serial</label>
+                                    <input type="text" class="form-input" id="trkInvoiceSerial" placeholder="Ví dụ: 1C26TLL" style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ngày xuất hoá đơn</label>
+                                    <input type="date" class="form-input" id="trkInvoiceDate" style="height:38px;">
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label style="font-size:0.85rem; font-weight:600;">Ghi chú xuất hoá đơn (Email nhận / Lưu ý)</label>
+                                    <input type="text" class="form-input" id="trkInvoiceNote" placeholder="Ví dụ: Đã gửi email kế toán cty abc@gmail.com..." style="height:38px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="padding: 16px 0 0 0; margin-top: 16px; border-top: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('onlineOrderTrackingModal')">Đóng</button>
+                            <button type="submit" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px; font-weight:600;">
+                                <i data-lucide="save"></i> Lưu Cập Nhật Quy Trình
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal 15: Invoice PDF Preview with Payment QR Code -->
     <div class="modal" id="onlineOrderInvoicePdfModal">
 
@@ -9281,7 +9509,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261012_clean_partners"></script>
+    <script src="/app.js?v=20261012_order_workflow"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

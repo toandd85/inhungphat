@@ -23651,7 +23651,7 @@ async function handleOnlineOrderSubmit(e) {
         if (!orderNumber) {
             const orderCodeSuffix = String(state.online_orders.length + 1).padStart(4, '0');
             orderNumber = `SO-ON-202606-${orderCodeSuffix}`;
-            orderId = "oo_" + Math.random().toString(36).substring(2, 9);
+            orderId = "oo_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
         }
         
         const onlineNotes = document.getElementById("onlineOrderNotes") ? document.getElementById("onlineOrderNotes").value.trim() : "";
@@ -23689,7 +23689,26 @@ async function handleOnlineOrderSubmit(e) {
             customer_ward: customerWard,
             customer_hamlet: customerHamlet,
             customer_street: customerStreet,
-            customer_address: fullCustomerAddr
+            customer_address: fullCustomerAddr,
+            // Workflow Tracking
+            deposit_status: existingOrder && existingOrder.deposit_status ? existingOrder.deposit_status : "NONE",
+            deposit_amount: existingOrder && existingOrder.deposit_amount ? existingOrder.deposit_amount : 0,
+            deposit_date: existingOrder && existingOrder.deposit_date ? existingOrder.deposit_date : "",
+            deposit_method: existingOrder && existingOrder.deposit_method ? existingOrder.deposit_method : "BANK_TRANSFER",
+            deposit_note: existingOrder && existingOrder.deposit_note ? existingOrder.deposit_note : "",
+            delivery_status: existingOrder && existingOrder.delivery_status ? existingOrder.delivery_status : "PENDING",
+            delivery_date: existingOrder && existingOrder.delivery_date ? existingOrder.delivery_date : "",
+            delivery_carrier: existingOrder && existingOrder.delivery_carrier ? existingOrder.delivery_carrier : "Nội bộ (Xe công ty)",
+            delivery_tracking_code: existingOrder && existingOrder.delivery_tracking_code ? existingOrder.delivery_tracking_code : "",
+            delivery_note: existingOrder && existingOrder.delivery_note ? existingOrder.delivery_note : "",
+            collection_status: existingOrder && existingOrder.collection_status ? existingOrder.collection_status : (paymentStatus === "PAID" ? "COLLECTED_FULL" : "UNCOLLECTED"),
+            paid_amount: existingOrder && existingOrder.paid_amount !== undefined ? existingOrder.paid_amount : (paymentStatus === "PAID" ? totalAmount : 0),
+            remaining_debt: existingOrder && existingOrder.remaining_debt !== undefined ? existingOrder.remaining_debt : (paymentStatus === "PAID" ? 0 : totalAmount),
+            invoice_status: existingOrder && existingOrder.invoice_status ? existingOrder.invoice_status : "NOT_ISSUED",
+            invoice_number: existingOrder && existingOrder.invoice_number ? existingOrder.invoice_number : "",
+            invoice_serial: existingOrder && existingOrder.invoice_serial ? existingOrder.invoice_serial : "",
+            invoice_date: existingOrder && existingOrder.invoice_date ? existingOrder.invoice_date : "",
+            invoice_note: existingOrder && existingOrder.invoice_note ? existingOrder.invoice_note : ""
         };
         
         if (paymentStatus !== "DRAFT") {
@@ -24498,7 +24517,30 @@ window.renderOnlineSales = function() {
         const matchesChannel = !channelFilter || o.sales_channel === channelFilter;
         const matchesStaff = !staffFilter || o.salesperson === staffFilter;
 
-        return matchesQuery && matchesStatus && matchesChannel && matchesStaff;
+        // Workflow filter
+        const workflowFilter = document.getElementById("onlineOrderWorkflowFilter")?.value || "";
+        let matchesWorkflow = true;
+        const payments = (state.transactions || []).filter(t => t.reference_id === o.id && t.type === 'RECEIPT');
+        const calcPaid = Math.max(o.paid_amount || 0, payments.reduce((sum, t) => sum + t.amount, 0));
+        const calcDebt = Math.max(0, (o.total_amount || 0) - calcPaid);
+
+        if (workflowFilter === "WAIT_DEPOSIT") {
+            matchesWorkflow = !o.deposit_amount || o.deposit_amount <= 0;
+        } else if (workflowFilter === "NOT_DELIVERED") {
+            matchesWorkflow = !o.delivery_status || o.delivery_status === "PENDING";
+        } else if (workflowFilter === "SHIPPING") {
+            matchesWorkflow = o.delivery_status === "SHIPPING";
+        } else if (workflowFilter === "DELIVERED_UNPAID") {
+            matchesWorkflow = o.delivery_status === "DELIVERED" && calcDebt > 0;
+        } else if (workflowFilter === "HAS_DEBT") {
+            matchesWorkflow = calcDebt > 0;
+        } else if (workflowFilter === "NOT_INVOICED") {
+            matchesWorkflow = !o.invoice_status || o.invoice_status === "NOT_ISSUED";
+        } else if (workflowFilter === "COMPLETED") {
+            matchesWorkflow = o.delivery_status === "DELIVERED" && calcDebt <= 0 && o.invoice_status === "ISSUED";
+        }
+
+        return matchesQuery && matchesStatus && matchesChannel && matchesStaff && matchesWorkflow;
     });
     
     if (filteredOrders.length === 0) {
@@ -24528,24 +24570,64 @@ window.renderOnlineSales = function() {
         const totalPaid = Math.max(o.paid_amount || 0, payments.reduce((sum, t) => sum + t.amount, 0));
         const remainingDebt = Math.max(0, (o.total_amount || 0) - totalPaid);
 
-        let payBadge = '';
-        if (o.status === "Hoàn thành" || o.payment_status === "PAID") {
-            payBadge = '<span class="badge badge-success">Hoàn thành</span>';
-        } else if (o.status === "Phiếu tạm") {
-            payBadge = '<span class="badge badge-secondary" style="background:#6b7280; color:#fff;">Phiếu tạm</span>';
-        } else if (totalPaid > 0) {
-            payBadge = `<span class="badge badge-warning">T.Toán ${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid}</span>`;
+        // 1. Tạm ứng badge
+        const depAmt = o.deposit_amount || 0;
+        const isDep = depAmt > 0 || o.deposit_status === "DEPOSITED";
+        const depositBadge = isDep ? 
+            `<span class="workflow-badge workflow-badge-deposit-yes" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đã tạm ứng ${formatMoney(depAmt)} (Click để xem/sửa)"><i data-lucide="dollar-sign" style="width:11px; height:11px;"></i> Ứng: ${formatMoney(depAmt)}</span>` : 
+            `<span class="workflow-badge workflow-badge-deposit-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa nhận tạm ứng (Click để cập nhật)"><i data-lucide="clock" style="width:11px; height:11px;"></i> Chưa ứng</span>`;
+
+        // 2. Giao hàng badge
+        const delStat = o.delivery_status || "PENDING";
+        let deliveryBadge = '';
+        if (delStat === "DELIVERED") {
+            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-done" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đã giao hàng ${o.delivery_date || ''} (${o.delivery_carrier || ''})"><i data-lucide="check-circle" style="width:11px; height:11px;"></i> Đã giao hàng</span>`;
+        } else if (delStat === "SHIPPING") {
+            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-shipping" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đang vận chuyển (${o.delivery_carrier || ''})"><i data-lucide="truck" style="width:11px; height:11px;"></i> Đang giao</span>`;
+        } else if (delStat === "FAILED") {
+            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-pending" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Giao thất bại/Hoàn hàng"><i data-lucide="alert-triangle" style="width:11px; height:11px;"></i> Giao hỏng</span>`;
         } else {
-            payBadge = '<span class="badge badge-danger">Chưa T.Toán</span>';
+            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-pending" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa giao hàng cho khách (Click để cập nhật)"><i data-lucide="clock" style="width:11px; height:11px;"></i> Chưa giao</span>`;
         }
 
+        // 3. Thu tiền & Công nợ badge
+        let payColBadge = '';
+        if (remainingDebt <= 0 && (o.total_amount || 0) > 0) {
+            payColBadge = `<span class="workflow-badge workflow-badge-pay-full" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đã thu đủ 100% (Hết nợ)"><i data-lucide="check" style="width:11px; height:11px;"></i> Đã thu đủ</span>`;
+        } else if (o.collection_status === "COD_PENDING") {
+            payColBadge = `<span class="workflow-badge workflow-badge-pay-cod" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Thu COD: ${formatMoney(remainingDebt)} (Chờ đối soát)"><i data-lucide="package" style="width:11px; height:11px;"></i> Thu COD: ${formatMoney(remainingDebt)}</span>`;
+        } else if (totalPaid > 0) {
+            payColBadge = `<span class="workflow-badge workflow-badge-pay-debt" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Còn nợ: ${formatMoney(remainingDebt)} (Đã thu: ${formatMoney(totalPaid)})"><i data-lucide="alert-circle" style="width:11px; height:11px;"></i> Nợ: ${formatMoney(remainingDebt)}</span>`;
+        } else {
+            payColBadge = `<span class="workflow-badge workflow-badge-pay-debt" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa thu tiền (Nợ: ${formatMoney(remainingDebt)})"><i data-lucide="alert-circle" style="width:11px; height:11px;"></i> Chưa thu</span>`;
+        }
+
+        // 4. Hoá đơn VAT badge
+        const invStat = o.invoice_status || "NOT_ISSUED";
+        let invBadge = '';
+        if (invStat === "ISSUED") {
+            invBadge = `<span class="workflow-badge workflow-badge-inv-yes" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="HĐ VAT: ${o.invoice_number || ''} ${o.invoice_date || ''}"><i data-lucide="file-check" style="width:11px; height:11px;"></i> HĐ: ${o.invoice_number || 'Đã xuất'}</span>`;
+        } else if (invStat === "NOT_REQUIRED") {
+            invBadge = `<span class="workflow-badge workflow-badge-inv-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Khách không lấy hóa đơn"><i data-lucide="minus-circle" style="width:11px; height:11px;"></i> K.lấy HĐ</span>`;
+        } else {
+            invBadge = `<span class="workflow-badge workflow-badge-inv-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa xuất hóa đơn VAT (Click để cập nhật)"><i data-lucide="file-text" style="width:11px; height:11px;"></i> Chưa xuất HĐ</span>`;
+        }
+
+        const workflowColHtml = `
+            <div class="workflow-badges-col">
+                <div style="display:flex; gap:4px; flex-wrap:wrap;">${depositBadge}${deliveryBadge}</div>
+                <div style="display:flex; gap:4px; flex-wrap:wrap;">${payColBadge}${invBadge}</div>
+            </div>
+        `;
+
+        const trackButton = `<button class="btn-icon" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Theo dõi & Cập nhật quy trình (Tạm ứng / Giao hàng / Thu tiền / Hóa đơn)"><i data-lucide="activity" style="color:var(--accent);"></i></button>`;
         const viewPdfButton = `<button class="btn-icon" onclick="openOnlineOrderInvoicePdf('${o.id}')" title="Xem Hóa Đơn PDF/Chi tiết"><i data-lucide="file-text" style="color:var(--info);"></i></button>`;
         const editButton = `<button class="btn-icon" onclick="window.openNewOnlineOrderModal('EDIT', '${o.id}')" title="Sửa đơn hàng"><i data-lucide="edit" style="color:var(--warning);"></i></button>`;
         const contractButton = `<button class="btn-icon" onclick="window.quickCreateContract('${o.id}', true)" title="Làm hợp đồng nhanh"><i data-lucide="file-signature" style="color:#6366f1;"></i></button>`;
         
         let payButton = '';
-        if (o.payment_status !== "PAID" && o.status !== "CANCELLED") {
-            payButton = `<button class="btn-icon" onclick="payOnlineOrder('${o.id}')" title="Thanh toán"><i data-lucide="check-circle" style="color:var(--success);"></i></button>`;
+        if (remainingDebt > 0 && o.status !== "CANCELLED") {
+            payButton = `<button class="btn-icon" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Thu tiền đơn hàng"><i data-lucide="check-circle" style="color:var(--success);"></i></button>`;
         }
         
         let cancelButton = '';
@@ -24553,22 +24635,27 @@ window.renderOnlineSales = function() {
             cancelButton = `<button class="btn-icon" onclick="window.cancelOnlineOrder('${o.id}')" title="Hủy đơn hàng"><i data-lucide="x-circle" style="color:#d97706;"></i></button>`;
         }
         
-        let actionButtons = `<div style="display:flex; gap:4px;">${viewPdfButton}${editButton}${payButton}${cancelButton}${contractButton}</div>`;
+        let actionButtons = `<div style="display:flex; gap:4px;">${trackButton}${viewPdfButton}${editButton}${payButton}${cancelButton}${contractButton}</div>`;
 
-        const formattedDate = o.created_at ? (typeof o.created_at === 'string' ? o.created_at.split(' ')[0] : new Date(o.created_at).toLocaleDateString('vi-VN')) : '-';
+        const formattedDate = o.created_at ? (typeof o.created_at === 'string' ? o.created_at.split('T')[0] : new Date(o.created_at).toLocaleDateString('vi-VN')) : '-';
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><a href="javascript:void(0)" onclick="openOnlineOrderInvoicePdf('${o.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${o.order_number}</strong></a>${o.invoice_code ? `<br><small class="text-muted">HĐ: ${o.invoice_code}</small>` : ''}</td>
+            <td>
+                <a href="javascript:void(0)" onclick="openOnlineOrderInvoicePdf('${o.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${o.order_number}</strong></a>
+                ${o.sales_channel ? `<br><span class="badge badge-info" style="font-size:0.68rem;">${o.sales_channel}</span>` : ''}
+            </td>
             <td><small>${formattedDate}</small></td>
-            <td><strong>${custName}</strong>${phoneHtml}</td>
+            <td>
+                <strong>${custName}</strong>${phoneHtml}
+                ${o.salesperson ? `<br><small class="text-muted"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</small>` : ''}
+            </td>
             <td><small>${locationStr}</small></td>
             <td style="max-width: 220px; font-size: 0.8rem;">${productsHtml}</td>
-            <td>${salesInfoHtml}</td>
+            <td style="min-width: 175px;">${workflowColHtml}</td>
             <td><strong>${typeof formatMoney === 'function' ? formatMoney(o.total_amount) : o.total_amount}</strong></td>
             <td><span style="color: var(--success); font-weight: 600;">${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid}</span></td>
             <td><span style="color: ${remainingDebt > 0 ? 'var(--danger)' : 'var(--text-secondary)'}; font-weight: 700;">${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt}</span></td>
-            <td>${payBadge}</td>
             <td>
                 <div class="card-actions-row">
                     ${actionButtons}
@@ -31529,3 +31616,336 @@ if (!window.nativeAlert) {
 
 
 
+
+
+// ==========================================================================
+// ONLINE ORDER WORKFLOW TRACKING FUNCTIONS
+// ==========================================================================
+window.openOnlineOrderTrackingModal = function(orderId) {
+    const order = (state.online_orders || []).find(o => o.id === orderId);
+    if (!order) {
+        alert("Không tìm thấy đơn hàng cần theo dõi.");
+        return;
+    }
+
+    const modal = document.getElementById("onlineOrderTrackingModal");
+    if (!modal) return;
+
+    const customer = (state.partners || []).find(p => p.id === order.customer_id);
+    const custName = order.customer_name || (customer ? customer.name : "Khách hàng");
+    const custPhone = order.customer_phone || (customer ? customer.phone : "");
+
+    document.getElementById("trackingOrderId").value = order.id;
+    document.getElementById("trackingModalTitle").innerHTML = `<i data-lucide="activity" style="color:var(--accent);"></i> Theo Dõi Quy Trình: <span style="color:var(--accent); font-weight:800;">${order.order_number}</span>`;
+    document.getElementById("trackingModalSubtitle").textContent = `Khách hàng: ${custName} ${custPhone ? '(' + custPhone + ')' : ''} | Tổng giá trị đơn: ${typeof formatMoney === 'function' ? formatMoney(order.total_amount || 0) : order.total_amount}`;
+
+    // 1. Tạm ứng
+    const hasDeposit = !!order.deposit_status && order.deposit_status === "DEPOSITED" || (order.deposit_amount && order.deposit_amount > 0);
+    const chkDeposit = document.getElementById("trkDepositStatus");
+    if (chkDeposit) chkDeposit.checked = hasDeposit;
+    
+    document.getElementById("trkDepositAmount").value = order.deposit_amount || 0;
+    document.getElementById("trkDepositDate").value = order.deposit_date || (order.created_at ? order.created_at.split('T')[0] : new Date().toISOString().split('T')[0]);
+    document.getElementById("trkDepositMethod").value = order.deposit_method || "BANK_TRANSFER";
+    document.getElementById("trkDepositNote").value = order.deposit_note || "";
+    window.toggleTrackingDeposit(hasDeposit);
+
+    // 2. Giao hàng
+    document.getElementById("trkDeliveryStatus").value = order.delivery_status || "PENDING";
+    document.getElementById("trkDeliveryDate").value = order.delivery_date || "";
+    document.getElementById("trkDeliveryCarrier").value = order.delivery_carrier || "Nội bộ (Xe công ty)";
+    document.getElementById("trkDeliveryTrackingCode").value = order.delivery_tracking_code || "";
+    document.getElementById("trkDeliveryNote").value = order.delivery_note || "";
+    window.updateTrackingDeliveryUI();
+
+    // 3. Thu tiền & Công nợ
+    const payments = (state.transactions || []).filter(t => t.reference_id === order.id && t.type === 'RECEIPT');
+    const totalPaid = Math.max(order.paid_amount || 0, payments.reduce((sum, t) => sum + t.amount, 0));
+    document.getElementById("trkPaidAmount").value = totalPaid;
+    document.getElementById("trkPaymentMethod").value = order.payment_method || "BANK_TRANSFER";
+    document.getElementById("trkPaymentDate").value = order.payment_date || "";
+    document.getElementById("trkCollectionStatus").value = order.collection_status || (totalPaid >= (order.total_amount || 0) && (order.total_amount || 0) > 0 ? "COLLECTED_FULL" : (totalPaid > 0 ? "PARTIAL" : "UNCOLLECTED"));
+    window.calcTrackingDebt();
+
+    // 4. Xuất hoá đơn VAT
+    document.getElementById("trkInvoiceStatus").value = order.invoice_status || "NOT_ISSUED";
+    document.getElementById("trkInvoiceNumber").value = order.invoice_number || order.invoice_code || "";
+    document.getElementById("trkInvoiceSerial").value = order.invoice_serial || "";
+    document.getElementById("trkInvoiceDate").value = order.invoice_date || "";
+    document.getElementById("trkInvoiceNote").value = order.invoice_note || "";
+    window.updateTrackingInvoiceUI();
+
+    // Visual Stepper Update
+    window.updateTrackingVisualStepper(order);
+
+    openModal("onlineOrderTrackingModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.toggleTrackingDeposit = function(isChecked) {
+    const body = document.getElementById("trkDepositBody");
+    if (body) {
+        body.style.display = isChecked ? "grid" : "none";
+    }
+    if (!isChecked) {
+        document.getElementById("trkDepositAmount").value = 0;
+    } else {
+        const curAmt = parseFloat(document.getElementById("trkDepositAmount").value) || 0;
+        if (curAmt <= 0) {
+            window.setQuickDeposit(50);
+        }
+    }
+    window.calcTrackingDebt();
+};
+
+window.setQuickDeposit = function(percent) {
+    const orderId = document.getElementById("trackingOrderId").value;
+    const order = (state.online_orders || []).find(o => o.id === orderId);
+    if (!order) return;
+    const total = order.total_amount || 0;
+    const depAmt = Math.round(total * (percent / 100));
+    document.getElementById("trkDepositAmount").value = depAmt;
+    document.getElementById("trkDepositStatus").checked = true;
+    window.toggleTrackingDeposit(true);
+    
+    const curPaid = parseFloat(document.getElementById("trkPaidAmount").value) || 0;
+    if (curPaid < depAmt) {
+        document.getElementById("trkPaidAmount").value = depAmt;
+    }
+    window.calcTrackingDebt();
+};
+
+window.updateTrackingDeliveryUI = function() {
+    const val = document.getElementById("trkDeliveryStatus").value;
+    const badge = document.getElementById("trkDeliveryStatusBadge");
+    const dateInput = document.getElementById("trkDeliveryDate");
+    if (badge) {
+        if (val === "DELIVERED") {
+            badge.className = "badge badge-success";
+            badge.textContent = "Đã giao hàng thành công";
+            if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+        } else if (val === "SHIPPING") {
+            badge.className = "badge badge-info";
+            badge.textContent = "Đang vận chuyển giao hàng";
+        } else if (val === "FAILED") {
+            badge.className = "badge badge-danger";
+            badge.textContent = "Giao thất bại / Hoàn hàng";
+        } else {
+            badge.className = "badge badge-warning";
+            badge.textContent = "Chưa giao hàng (Chờ xử lý)";
+        }
+    }
+};
+
+window.updateTrackingCollectionUI = function() {
+    const status = document.getElementById("trkCollectionStatus").value;
+    const orderId = document.getElementById("trackingOrderId").value;
+    const order = (state.online_orders || []).find(o => o.id === orderId);
+    if (!order) return;
+    const total = order.total_amount || 0;
+
+    if (status === "COLLECTED_FULL") {
+        document.getElementById("trkPaidAmount").value = total;
+    } else if (status === "UNCOLLECTED") {
+        document.getElementById("trkPaidAmount").value = 0;
+    }
+    window.calcTrackingDebt();
+};
+
+window.setCollectFull = function() {
+    const orderId = document.getElementById("trackingOrderId").value;
+    const order = (state.online_orders || []).find(o => o.id === orderId);
+    if (!order) return;
+    const total = order.total_amount || 0;
+    document.getElementById("trkPaidAmount").value = total;
+    document.getElementById("trkCollectionStatus").value = "COLLECTED_FULL";
+    document.getElementById("trkPaymentDate").value = new Date().toISOString().split('T')[0];
+    window.calcTrackingDebt();
+};
+
+window.calcTrackingDebt = function() {
+    const orderId = document.getElementById("trackingOrderId").value;
+    const order = (state.online_orders || []).find(o => o.id === orderId);
+    const total = order ? (order.total_amount || 0) : 0;
+    let paid = parseFloat(document.getElementById("trkPaidAmount").value) || 0;
+    const deposit = parseFloat(document.getElementById("trkDepositAmount").value) || 0;
+    if (paid < deposit) {
+        paid = deposit;
+        document.getElementById("trkPaidAmount").value = paid;
+    }
+    const debt = Math.max(0, total - paid);
+
+    const fmt = typeof formatMoney === 'function' ? formatMoney : (v => v + ' đ');
+    document.getElementById("trkLblTotalAmount").textContent = fmt(total);
+    document.getElementById("trkLblPaidAmount").textContent = fmt(paid);
+
+    const lblDebt = document.getElementById("trkLblRemainingDebt");
+    if (debt <= 0) {
+        lblDebt.textContent = "0 đ (Đã hết nợ)";
+        lblDebt.style.color = "#10b981";
+        document.getElementById("trkCollectionStatus").value = "COLLECTED_FULL";
+    } else {
+        lblDebt.textContent = fmt(debt) + " (Còn nợ)";
+        lblDebt.style.color = "#ef4444";
+        if (paid > 0) {
+            document.getElementById("trkCollectionStatus").value = "PARTIAL";
+        } else {
+            document.getElementById("trkCollectionStatus").value = "UNCOLLECTED";
+        }
+    }
+};
+
+window.updateTrackingInvoiceUI = function() {
+    const status = document.getElementById("trkInvoiceStatus").value;
+    const badge = document.getElementById("trkInvoiceStatusBadge");
+    const numInput = document.getElementById("trkInvoiceNumber");
+    const dateInput = document.getElementById("trkInvoiceDate");
+
+    if (badge) {
+        if (status === "ISSUED") {
+            badge.className = "badge";
+            badge.style.background = "#f3e8ff";
+            badge.style.color = "#7e22ce";
+            badge.textContent = "Đã xuất hoá đơn VAT";
+            if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+        } else if (status === "NOT_REQUIRED") {
+            badge.className = "badge";
+            badge.style.background = "#f3f4f6";
+            badge.style.color = "#6b7280";
+            badge.textContent = "Khách không lấy hoá đơn";
+        } else {
+            badge.className = "badge";
+            badge.style.background = "#f3f4f6";
+            badge.style.color = "#9ca3af";
+            badge.textContent = "Chưa xuất hoá đơn";
+        }
+    }
+};
+
+window.updateTrackingVisualStepper = function(order) {
+    const isDeposited = order.deposit_status === "DEPOSITED" || (order.deposit_amount && order.deposit_amount > 0);
+    const isDelivered = order.delivery_status === "DELIVERED";
+    const isPaid = (order.paid_amount || 0) >= (order.total_amount || 0) && (order.total_amount || 0) > 0;
+    const isInvoice = order.invoice_status === "ISSUED";
+
+    const sDeposit = document.getElementById("step-deposit");
+    const sDeliv = document.getElementById("step-delivery");
+    const sPay = document.getElementById("step-payment");
+    const sInv = document.getElementById("step-invoice");
+
+    if (sDeposit) sDeposit.className = "workflow-step " + (isDeposited ? "completed" : "pending");
+    if (sDeliv) sDeliv.className = "workflow-step " + (isDelivered ? "completed" : (order.delivery_status === "SHIPPING" ? "active" : "pending"));
+    if (sPay) sPay.className = "workflow-step " + (isPaid ? "completed" : (order.paid_amount > 0 ? "active" : "pending"));
+    if (sInv) sInv.className = "workflow-step " + (isInvoice ? "completed" : (order.invoice_status === "NOT_REQUIRED" ? "completed" : "pending"));
+};
+
+window.saveOnlineOrderTracking = function(e) {
+    if (e) e.preventDefault();
+    const orderId = document.getElementById("trackingOrderId").value;
+    const order = (state.online_orders || []).find(o => o.id === orderId);
+    if (!order) {
+        alert("Lỗi: Không tìm thấy đơn hàng cần lưu.");
+        return;
+    }
+
+    const isDepositChecked = document.getElementById("trkDepositStatus").checked;
+    const depositAmount = isDepositChecked ? (parseFloat(document.getElementById("trkDepositAmount").value) || 0) : 0;
+    const depositDate = document.getElementById("trkDepositDate").value;
+    const depositMethod = document.getElementById("trkDepositMethod").value;
+    const depositNote = document.getElementById("trkDepositNote").value.trim();
+
+    const deliveryStatus = document.getElementById("trkDeliveryStatus").value;
+    const deliveryDate = document.getElementById("trkDeliveryDate").value;
+    const deliveryCarrier = document.getElementById("trkDeliveryCarrier").value;
+    const deliveryTrackingCode = document.getElementById("trkDeliveryTrackingCode").value.trim();
+    const deliveryNote = document.getElementById("trkDeliveryNote").value.trim();
+
+    const collectionStatus = document.getElementById("trkCollectionStatus").value;
+    const paidAmount = parseFloat(document.getElementById("trkPaidAmount").value) || 0;
+    const paymentMethod = document.getElementById("trkPaymentMethod").value;
+    const paymentDate = document.getElementById("trkPaymentDate").value;
+
+    const invoiceStatus = document.getElementById("trkInvoiceStatus").value;
+    const invoiceNumber = document.getElementById("trkInvoiceNumber").value.trim();
+    const invoiceSerial = document.getElementById("trkInvoiceSerial").value.trim();
+    const invoiceDate = document.getElementById("trkInvoiceDate").value;
+    const invoiceNote = document.getElementById("trkInvoiceNote").value.trim();
+
+    const totalAmount = order.total_amount || 0;
+    const remainingDebt = Math.max(0, totalAmount - paidAmount);
+
+    // Update order object
+    order.deposit_status = isDepositChecked && depositAmount > 0 ? "DEPOSITED" : "NONE";
+    order.deposit_amount = depositAmount;
+    order.deposit_date = depositDate;
+    order.deposit_method = depositMethod;
+    order.deposit_note = depositNote;
+
+    order.delivery_status = deliveryStatus;
+    order.delivery_date = deliveryDate;
+    order.delivery_carrier = deliveryCarrier;
+    order.delivery_tracking_code = deliveryTrackingCode;
+    order.delivery_note = deliveryNote;
+
+    order.collection_status = collectionStatus;
+    order.paid_amount = paidAmount;
+    order.payment_method = paymentMethod;
+    order.payment_date = paymentDate;
+    order.remaining_debt = remainingDebt;
+    order.payment_status = remainingDebt <= 0 ? "PAID" : (paidAmount > 0 ? "PARTIALLY_PAID" : "UNPAID");
+
+    order.invoice_status = invoiceStatus;
+    order.invoice_number = invoiceNumber;
+    order.invoice_code = invoiceNumber;
+    order.invoice_serial = invoiceSerial;
+    order.invoice_date = invoiceDate;
+    order.invoice_note = invoiceNote;
+
+    // Update kanban status mapping
+    if (deliveryStatus === "DELIVERED" && remainingDebt <= 0) {
+        order.kanban_status = "DELIVERY";
+    } else if (invoiceStatus === "ISSUED") {
+        order.kanban_status = "INVOICE";
+    } else if (paidAmount > 0) {
+        order.kanban_status = "PAYMENT";
+    } else {
+        order.kanban_status = "ORDER";
+    }
+
+    // Sync financial receipt if payment was made
+    if (paidAmount > 0) {
+        let existingReceipt = (state.transactions || []).find(t => t.reference_id === order.id && t.type === 'RECEIPT');
+        if (existingReceipt) {
+            existingReceipt.amount = paidAmount;
+            existingReceipt.method = paymentMethod;
+            existingReceipt.date = paymentDate || new Date().toISOString().split('T')[0];
+        } else {
+            const txId = "tx_" + Date.now();
+            const customer = (state.partners || []).find(p => p.id === order.customer_id);
+            state.transactions.push({
+                id: txId,
+                date: paymentDate || new Date().toISOString().split('T')[0],
+                type: "RECEIPT",
+                category: "Thu tiền bán hàng online",
+                amount: paidAmount,
+                method: paymentMethod,
+                partner_id: order.customer_id,
+                partner_name: customer ? customer.name : (order.customer_name || "Khách hàng"),
+                reference_id: order.id,
+                reference_code: order.order_number,
+                description: `Thu tiền đơn hàng online ${order.order_number}`
+            });
+        }
+        state.updateState("transactions", state.transactions);
+    }
+
+    state.updateState("online_orders", state.online_orders);
+    closeModal("onlineOrderTrackingModal");
+
+    if (typeof renderOnlineSales === 'function') renderOnlineSales();
+    if (typeof showToast === 'function') {
+        showToast(`Đã cập nhật quy trình đơn hàng ${order.order_number} thành công!`, "success");
+    } else {
+        alert(`Đã cập nhật quy trình đơn hàng ${order.order_number} thành công!`);
+    }
+};
