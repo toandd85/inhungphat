@@ -30371,26 +30371,149 @@ window.switchOnlineViewMode = function(viewMode) {
     window.renderOnlineSales();
 };
 
+// ==========================================================================
+// CALENDAR VIEW: WORKFLOW LINKING (ORDER DATE -> DELIVERY DATE) & PROGRESS TOOLBAR
+// ==========================================================================
+window.currentCalendarYear = new Date().getFullYear();
+window.currentCalendarMonth = new Date().getMonth();
+window.calendarDisplayMode = "ALL"; // "ALL" | "ORDER_ONLY" | "DELIVERY_ONLY"
+window.calendarDeliveryStatusFilter = ""; // "" | "DELIVERED" | "SHIPPING" | "PENDING"
+
+window.changeCalendarMonth = function(offset) {
+    window.currentCalendarMonth += offset;
+    if (window.currentCalendarMonth < 0) {
+        window.currentCalendarMonth = 11;
+        window.currentCalendarYear -= 1;
+    } else if (window.currentCalendarMonth > 11) {
+        window.currentCalendarMonth = 0;
+        window.currentCalendarYear += 1;
+    }
+    window.renderOnlineOrdersCalendar();
+};
+
+window.goToCalendarToday = function() {
+    const today = new Date();
+    window.currentCalendarYear = today.getFullYear();
+    window.currentCalendarMonth = today.getMonth();
+    window.renderOnlineOrdersCalendar();
+};
+
+window.setCalendarDisplayMode = function(mode) {
+    window.calendarDisplayMode = mode;
+    window.renderOnlineOrdersCalendar();
+};
+
+window.setCalendarDeliveryFilter = function(status) {
+    window.calendarDeliveryStatusFilter = status;
+    window.renderOnlineOrdersCalendar();
+};
+
 window.renderOnlineOrdersCalendar = function() {
     const displayContainer = document.getElementById("onlineOrdersCalendarContainer");
     if (!displayContainer) return;
     
     displayContainer.innerHTML = "";
     
+    const currentYear = window.currentCalendarYear;
+    const currentMonth = window.currentCalendarMonth;
+    const today = new Date();
+    
+    const allOrders = state.online_orders || [];
+    const totalOrders = allOrders.length;
+    const deliveredOrders = allOrders.filter(o => o.delivery_status === "DELIVERED").length;
+    const shippingOrders = allOrders.filter(o => o.delivery_status === "SHIPPING").length;
+    const pendingOrders = allOrders.filter(o => !o.delivery_status || o.delivery_status === "PENDING").length;
+    const orderPercent = totalOrders > 0 ? Math.round((deliveredOrders / totalOrders) * 100) : 0;
+    
+    let totalProducts = 0;
+    let deliveredProducts = 0;
+    allOrders.forEach(o => {
+        const oQty = (o.items || []).reduce((sum, i) => sum + (parseInt(i.qty) || 0), 0);
+        totalProducts += oQty;
+        if (o.delivery_status === "DELIVERED") {
+            deliveredProducts += oQty;
+        }
+    });
+    const productPercent = totalProducts > 0 ? Math.round((deliveredProducts / totalProducts) * 100) : 0;
+
+    // 1. THANH CÔNG CỤ THEO DÕI TIẾN ĐỘ SẢN PHẨM & ĐƠN HÀNG
+    const trackingToolbar = document.createElement("div");
+    trackingToolbar.className = "calendar-tracking-toolbar";
+    trackingToolbar.innerHTML = `
+        <div class="tracking-toolbar-top">
+            <div class="tracking-toolbar-title">
+                <i data-lucide="truck" style="color:var(--accent); width:20px; height:20px;"></i>
+                <span>Theo Dõi Tiến Độ Giao Hàng & Đơn Hàng</span>
+            </div>
+            <div class="tracking-toolbar-pills">
+                <span class="trk-pill trk-pill-all" title="Tổng đơn và sản phẩm">
+                    <i data-lucide="package" style="width:12px; height:12px;"></i> Tổng: <strong>${totalOrders} đơn</strong> (${totalProducts} SP)
+                </span>
+                <span class="trk-pill trk-pill-delivered" title="Số đơn và sản phẩm đã giao thành công">
+                    <i data-lucide="check-circle" style="width:12px; height:12px;"></i> Đã giao: <strong>${deliveredOrders} đơn</strong> (${deliveredProducts} SP)
+                </span>
+                <span class="trk-pill trk-pill-shipping" title="Số đơn đang giao">
+                    <i data-lucide="truck" style="width:12px; height:12px;"></i> Đang giao: <strong>${shippingOrders} đơn</strong>
+                </span>
+                <span class="trk-pill trk-pill-pending" title="Số đơn chờ xử lý/đóng gói">
+                    <i data-lucide="clock" style="width:12px; height:12px;"></i> Chờ giao: <strong>${pendingOrders} đơn</strong>
+                </span>
+            </div>
+        </div>
+        <div class="tracking-progress-grid">
+            <div class="tracking-prog-card">
+                <div class="prog-card-header">
+                    <span class="prog-title"><i data-lucide="package-check" style="width:15px; height:15px; color:#10b981;"></i> Sản phẩm đã giao</span>
+                    <span class="prog-stat"><strong>${deliveredProducts}</strong> / ${totalProducts} cái (<span style="color:#10b981; font-weight:700;">${productPercent}%</span>)</span>
+                </div>
+                <div class="prog-bar-container">
+                    <div class="prog-bar-fill prog-bar-green" style="width: ${productPercent}%;"></div>
+                </div>
+            </div>
+            <div class="tracking-prog-card">
+                <div class="prog-card-header">
+                    <span class="prog-title"><i data-lucide="clipboard-check" style="width:15px; height:15px; color:#0284c7;"></i> Đơn hàng đã giao</span>
+                    <span class="prog-stat"><strong>${deliveredOrders}</strong> / ${totalOrders} đơn (<span style="color:#0284c7; font-weight:700;">${orderPercent}%</span>)</span>
+                </div>
+                <div class="prog-bar-container">
+                    <div class="prog-bar-fill prog-bar-blue" style="width: ${orderPercent}%;"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    displayContainer.appendChild(trackingToolbar);
+
+    // 2. LỊCH ĐƠN HÀNG VỚI LIÊN KẾT ĐẶT - GIAO
     const wrapper = document.createElement("div");
     wrapper.className = "calendar-wrapper";
     wrapper.style.cssText = "background:var(--bg-card); border-radius:16px; padding:16px; width:100%; box-sizing:border-box;";
     
-    const today = new Date();
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
-    
-    // Header controls
+    // Calendar Header Controls
     wrapper.innerHTML = `
-        <div class="calendar-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
-            <h3 style="margin:0; font-size:1.05rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:8px;">
-                <i data-lucide="calendar"></i> Lịch Đơn Hàng - Tháng ${currentMonth + 1} / ${currentYear}
-            </h3>
+        <div class="calendar-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <h3 style="margin:0; font-size:1.05rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="calendar"></i> Lịch Đơn Hàng - Tháng ${currentMonth + 1} / ${currentYear}
+                </h3>
+                <div style="display:flex; gap:4px;">
+                    <button type="button" class="btn btn-secondary" onclick="window.changeCalendarMonth(-1)" style="padding:4px 8px; font-size:0.8rem;" title="Tháng trước">◀</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.goToCalendarToday()" style="padding:4px 10px; font-size:0.8rem;" title="Về hôm nay">Hôm nay</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.changeCalendarMonth(1)" style="padding:4px 8px; font-size:0.8rem;" title="Tháng sau">▶</button>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <select class="form-select" id="calDisplayModeSelect" onchange="window.setCalendarDisplayMode(this.value)" style="height:34px; font-size:0.82rem; padding:0 8px; border-radius:6px; font-weight:600; color:var(--accent);">
+                    <option value="ALL" ${window.calendarDisplayMode === 'ALL' ? 'selected' : ''}>🔗 Xem: Tất cả (Đặt & Giao)</option>
+                    <option value="ORDER_ONLY" ${window.calendarDisplayMode === 'ORDER_ONLY' ? 'selected' : ''}>🛒 Xem: Chỉ Ngày Đặt hàng</option>
+                    <option value="DELIVERY_ONLY" ${window.calendarDisplayMode === 'DELIVERY_ONLY' ? 'selected' : ''}>🚚 Xem: Chỉ Ngày Giao hàng</option>
+                </select>
+                <select class="form-select" id="calDeliveryStatusSelect" onchange="window.setCalendarDeliveryFilter(this.value)" style="height:34px; font-size:0.82rem; padding:0 8px; border-radius:6px;">
+                    <option value="" ${!window.calendarDeliveryStatusFilter ? 'selected' : ''}>-- Tất cả trạng thái --</option>
+                    <option value="DELIVERED" ${window.calendarDeliveryStatusFilter === 'DELIVERED' ? 'selected' : ''}>✅ Đã giao thành công</option>
+                    <option value="SHIPPING" ${window.calendarDeliveryStatusFilter === 'SHIPPING' ? 'selected' : ''}>🚚 Đang giao hàng</option>
+                    <option value="PENDING" ${window.calendarDeliveryStatusFilter === 'PENDING' ? 'selected' : ''}>⏳ Chưa giao hàng</option>
+                </select>
+            </div>
         </div>
     `;
     
@@ -30410,37 +30533,47 @@ window.renderOnlineOrdersCalendar = function() {
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
     
     let startDayOfWeek = firstDay.getDay();
-    if (startDayOfWeek === 0) startDayOfWeek = 7; // Sunday maps to 7
+    if (startDayOfWeek === 0) startDayOfWeek = 7;
     
-    // Blank cells before month start
     for (let i = 1; i < startDayOfWeek; i++) {
         const blank = document.createElement("div");
         blank.style.padding = "8px";
         grid.appendChild(blank);
     }
     
+    // Helper to parse dates
+    function parseDate(dStr) {
+        if (!dStr) return null;
+        const d = new Date(dStr);
+        if (isNaN(d.getTime())) return null;
+        return {
+            year: d.getFullYear(),
+            month: d.getMonth(),
+            date: d.getDate()
+        };
+    }
+    
     const totalDays = lastDay.getDate();
     for (let d = 1; d <= totalDays; d++) {
         const cell = document.createElement("div");
-        cell.style.cssText = "background:var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; display:flex; flex-direction:column; align-items:stretch; min-height: 90px; box-sizing:border-box;";
+        cell.className = "cal-day-cell";
+        cell.id = `cal-day-${d}`;
+        cell.style.cssText = "background:var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; display:flex; flex-direction:column; align-items:stretch; min-height: 105px; box-sizing:border-box; transition: background 0.2s, border-color 0.2s;";
         
-        // Highlight today
         const isToday = d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
         if (isToday) {
             cell.style.borderColor = "var(--accent)";
             cell.style.background = "var(--accent-light)";
         }
         
-        // Determine if weekend (Saturday or Sunday)
         const dayObj = new Date(currentYear, currentMonth, d);
-        const wDay = dayObj.getDay(); // 0 is Sunday, 6 is Saturday
+        const wDay = dayObj.getDay();
         const isWeekend = (wDay === 0 || wDay === 6);
         
         // Lunar calculation
         let lunarDay = (d + currentMonth * 2 + (currentYear - 2026)) % 30;
         if (lunarDay <= 0) lunarDay += 30;
         
-        // Solar holiday detection
         let isHoliday = false;
         let holidayName = "";
         const sMonth = currentMonth + 1;
@@ -30448,8 +30581,6 @@ window.renderOnlineOrdersCalendar = function() {
         else if (d === 30 && sMonth === 4) { isHoliday = true; holidayName = "30/4"; }
         else if (d === 1 && sMonth === 5) { isHoliday = true; holidayName = "1/5"; }
         else if (d === 2 && sMonth === 9) { isHoliday = true; holidayName = "2/9"; }
-        
-        // Lunar Holidays
         if (lunarDay >= 1 && lunarDay <= 5 && sMonth === 2) { isHoliday = true; holidayName = "Tết Âm"; }
         else if (lunarDay === 10 && sMonth === 4) { isHoliday = true; holidayName = "Giỗ Tổ"; }
         
@@ -30458,15 +30589,10 @@ window.renderOnlineOrdersCalendar = function() {
         const subTextColor = shouldColorRed ? "rgba(220, 38, 38, 0.7)" : "var(--text-muted)";
         
         let lunarLabel = lunarDay;
-        if (isHoliday) {
-            lunarLabel = `<span style="font-weight:700; font-size:0.6rem;">${holidayName}</span>`;
-        } else if (lunarDay === 1) {
-            lunarLabel = `<span style="font-weight:700; font-size:0.6rem;">M.1</span>`;
-        } else if (lunarDay === 15) {
-            lunarLabel = `<span style="font-weight:700; font-size:0.6rem;">Rằm</span>`;
-        }
+        if (isHoliday) lunarLabel = `<span style="font-weight:700; font-size:0.6rem;">${holidayName}</span>`;
+        else if (lunarDay === 1) lunarLabel = `<span style="font-weight:700; font-size:0.6rem;">M.1</span>`;
+        else if (lunarDay === 15) lunarLabel = `<span style="font-weight:700; font-size:0.6rem;">Rằm</span>`;
         
-        // Days markup (Day number and lunar day)
         const cellHeader = document.createElement("div");
         cellHeader.style.cssText = "display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;";
         cellHeader.innerHTML = `
@@ -30475,32 +30601,99 @@ window.renderOnlineOrdersCalendar = function() {
         `;
         cell.appendChild(cellHeader);
         
-        // Events Container
         const eventsDiv = document.createElement("div");
-        eventsDiv.style.cssText = "display:flex; flex-direction:column; gap:2px; flex-grow:1; overflow-y:auto; max-height:60px;";
+        eventsDiv.style.cssText = "display:flex; flex-direction:column; gap:2px; flex-grow:1; overflow-y:auto; max-height:85px;";
         
-        // Filter orders for this day
-        const dayEvents = (state.online_orders || []).filter(item => {
-            if (!item.created_at) return false;
-            const itemDate = new Date(item.created_at);
-            return itemDate.getDate() === d && itemDate.getMonth() === currentMonth && itemDate.getFullYear() === currentYear;
-        });
-        
-        dayEvents.forEach(evt => {
-            const itemDiv = document.createElement("div");
-            itemDiv.style.cssText = "font-size: 0.65rem; padding: 2px 4px; border-radius: 3px; background: var(--accent); color: white; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;";
+        // Find matching events for Day d
+        allOrders.forEach(o => {
+            if (window.calendarDeliveryStatusFilter && o.delivery_status !== window.calendarDeliveryStatusFilter) {
+                if (!(window.calendarDeliveryStatusFilter === "PENDING" && !o.delivery_status)) {
+                    return;
+                }
+            }
             
-            const customer = state.partners.find(p => p.id === evt.customer_id);
-            const custName = customer ? customer.name.split(" ")[0] : "Khách";
-            itemDiv.textContent = `${evt.order_number.replace("SO-ON-202606-", "")}: ${custName}`;
-            itemDiv.title = `${evt.order_number} - ${customer ? customer.name : 'N/A'}`;
+            const ordP = parseDate(o.created_at);
+            const delP = parseDate(o.delivery_date);
             
-            itemDiv.onclick = function(e) {
-                e.stopPropagation();
-                window.openOnlineOrderInvoicePdf(evt.id);
-            };
+            const isOrderDay = ordP && ordP.year === currentYear && ordP.month === currentMonth && ordP.date === d;
+            const isDeliveryDay = delP && delP.year === currentYear && delP.month === currentMonth && delP.date === d;
             
-            eventsDiv.appendChild(itemDiv);
+            const customer = (state.partners || []).find(p => p.id === o.customer_id);
+            const custName = customer ? customer.name.split(" ")[0] : (o.customer_name ? o.customer_name.split(" ")[0] : "Khách");
+            const orderNumShort = o.order_number.replace(/^SO-ON-/, '').replace(/^SO-/, '');
+            const totalQty = (o.items || []).reduce((sum, i) => sum + (parseInt(i.qty) || 0), 0);
+            const fmt = typeof formatMoney === 'function' ? formatMoney : (v => v + ' đ');
+            
+            const ordDateStr = ordP ? `${ordP.date}/${ordP.month + 1}/${ordP.year}` : '-';
+            const delDateStr = delP ? `${delP.date}/${delP.month + 1}/${delP.year}` : 'Chưa hẹn';
+            
+            // 1. ORDER EVENT (Ngày đặt hàng)
+            if (isOrderDay && window.calendarDisplayMode !== "DELIVERY_ONLY") {
+                cell.classList.add(`cal-day-${o.id}`);
+                const orderCard = document.createElement("div");
+                orderCard.className = `cal-event-card cal-event-order cal-event-${o.id}`;
+                orderCard.dataset.orderId = o.id;
+                orderCard.dataset.type = "ORDER";
+                orderCard.innerHTML = `<span style="font-weight:700;">🛒 [Đặt]</span> <span>${orderNumShort}: ${custName}</span>`;
+                orderCard.title = `🛒 NGÀY ĐẶT HÀNG: ${ordDateStr}\n- Đơn: ${o.order_number}\n- Khách: ${customer ? customer.name : 'N/A'}\n- Tổng tiền: ${fmt(o.total_amount)}\n- SL sản phẩm: ${totalQty} cái\n- 🚚 Ngày hẹn/giao: ${delDateStr}\n(Bấm để xem/cập nhật quy trình)`;
+                
+                orderCard.addEventListener('mouseenter', () => {
+                    document.querySelectorAll(`.cal-event-${o.id}`).forEach(el => el.classList.add('cal-event-linked'));
+                    document.querySelectorAll(`.cal-day-${o.id}`).forEach(el => el.classList.add('cal-day-linked'));
+                });
+                orderCard.addEventListener('mouseleave', () => {
+                    document.querySelectorAll(`.cal-event-${o.id}`).forEach(el => el.classList.remove('cal-event-linked'));
+                    document.querySelectorAll(`.cal-day-${o.id}`).forEach(el => el.classList.remove('cal-day-linked'));
+                });
+                orderCard.onclick = (e) => {
+                    e.stopPropagation();
+                    window.openOnlineOrderTrackingModal(o.id);
+                };
+                eventsDiv.appendChild(orderCard);
+            }
+            
+            // 2. DELIVERY EVENT (Ngày giao hàng)
+            if (isDeliveryDay && window.calendarDisplayMode !== "ORDER_ONLY") {
+                cell.classList.add(`cal-day-${o.id}`);
+                const delCard = document.createElement("div");
+                let delClass = 'cal-event-delivery-pending';
+                let delIcon = '⏳';
+                let delStatusText = 'Chưa giao';
+                
+                if (o.delivery_status === 'DELIVERED') {
+                    delClass = 'cal-event-delivery-done';
+                    delIcon = '✅';
+                    delStatusText = 'Đã giao thành công';
+                } else if (o.delivery_status === 'SHIPPING') {
+                    delClass = 'cal-event-delivery-shipping';
+                    delIcon = '🚚';
+                    delStatusText = 'Đang giao hàng';
+                } else if (o.delivery_status === 'FAILED') {
+                    delClass = 'cal-event-delivery-overdue';
+                    delIcon = '❌';
+                    delStatusText = 'Giao thất bại';
+                }
+                
+                delCard.className = `cal-event-card ${delClass} cal-event-${o.id}`;
+                delCard.dataset.orderId = o.id;
+                delCard.dataset.type = "DELIVERY";
+                delCard.innerHTML = `<span style="font-weight:700;">${delIcon} [Giao]</span> <span>${orderNumShort}: ${custName}</span>`;
+                delCard.title = `🚚 NGÀY GIAO HÀNG: ${delDateStr} (${delStatusText})\n- Đơn: ${o.order_number}\n- Đặt ngày: ${ordDateStr}\n- Khách: ${customer ? customer.name : 'N/A'}\n- Đơn vị giao: ${o.delivery_carrier || 'Nội bộ'}\n- SL sản phẩm: ${totalQty} cái\n(Bấm để xem/cập nhật quy trình)`;
+                
+                delCard.addEventListener('mouseenter', () => {
+                    document.querySelectorAll(`.cal-event-${o.id}`).forEach(el => el.classList.add('cal-event-linked'));
+                    document.querySelectorAll(`.cal-day-${o.id}`).forEach(el => el.classList.add('cal-day-linked'));
+                });
+                delCard.addEventListener('mouseleave', () => {
+                    document.querySelectorAll(`.cal-event-${o.id}`).forEach(el => el.classList.remove('cal-event-linked'));
+                    document.querySelectorAll(`.cal-day-${o.id}`).forEach(el => el.classList.remove('cal-day-linked'));
+                });
+                delCard.onclick = (e) => {
+                    e.stopPropagation();
+                    window.openOnlineOrderTrackingModal(o.id);
+                };
+                eventsDiv.appendChild(delCard);
+            }
         });
         
         cell.appendChild(eventsDiv);
@@ -30516,6 +30709,7 @@ window.renderOnlineOrdersCalendar = function() {
         } catch (e) {}
     }
 };
+
 
 // ==========================================================================
 // AUTHENTICATION & ROLE-BASED ACCESS CONTROL (RBAC)
