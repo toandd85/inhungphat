@@ -4,6 +4,17 @@
 
 <head>
     <script>
+        // Ensure orders and transactions are cleared and partner cache refreshed
+        (function() {
+            if (!localStorage.getItem("ihp_clean_orders_v5")) {
+                localStorage.setItem("ihp_online_orders", "[]");
+                localStorage.setItem("ihp_orders", "[]");
+                localStorage.setItem("ihp_transactions", "[]");
+                localStorage.removeItem("ihp_partners");
+                localStorage.setItem("ihp_clean_orders_v5", "true");
+            }
+        })();
+
         // Immediately set theme before document rendering
         (function() {
             const savedTheme = localStorage.getItem("ihp_app_theme") || "light";
@@ -33,7 +44,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20260803_1148">
+    <link rel="stylesheet" href="/style.css?v=20261009_1630">
 
     <script>
 
@@ -1810,11 +1821,17 @@
                                 </div>
                             </div>
 
-                            <!-- 4/ Tìm kiếm (icon tìm kiếm) -->
-                            <div class="search-box" style="flex-grow:1; min-width:0; margin: 0; position:relative;">
+                            <!-- 4/ Tìm kiếm (icon tìm kiếm) & Filter Selects -->
+                            <div class="search-box" style="flex-grow:1; min-width:180px; margin: 0; position:relative;">
                                 <i data-lucide="search" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px;"></i>
-                                <input type="text" placeholder="Tìm..." id="onlineOrderSearchInput" style="padding-left:32px; height:36px; font-size:0.85rem; width:100%; margin:0;">
+                                <input type="text" placeholder="Tìm theo mã, KH, SĐT, địa chỉ, SP, NVKD..." id="onlineOrderSearchInput" style="padding-left:32px; height:36px; font-size:0.85rem; width:100%; margin:0;">
                             </div>
+                            <select class="form-select" id="onlineOrderChannelFilterSelect" style="width:auto; height:36px; font-size:0.85rem; padding:0 8px;" onchange="renderOnlineSales()">
+                                <option value="">-- Kênh bán --</option>
+                            </select>
+                            <select class="form-select" id="onlineOrderSalesStaffFilterSelect" style="width:auto; height:36px; font-size:0.85rem; padding:0 8px;" onchange="renderOnlineSales()">
+                                <option value="">-- NVKD --</option>
+                            </select>
 
                         </div>
 
@@ -1834,11 +1851,15 @@
 
                                             <th>Khách hàng</th>
 
-                                            <th>Sản phẩm</th>
+                                            <th>Khu vực / Địa chỉ</th>
 
-                                            <th>Sales & Hoa hồng</th>
+                                            <th>Sản phẩm & SL</th>
+
+                                            <th>Kênh bán & NVKD</th>
 
                                             <th>Tổng tiền</th>
+
+                                            <th>Đã thanh toán</th>
 
                                             <th style="color: var(--danger);">Còn nợ</th>
 
@@ -4343,15 +4364,33 @@
                         </button>
                     </div>
 
-                    <div class="actions-bar">
+                    <div class="actions-bar" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
 
-                        <div class="search-box">
+                        <div class="search-box" style="flex: 1; min-width: 200px;">
 
                             <i data-lucide="search"></i>
 
-                            <input type="text" placeholder="Tìm kiếm đối tác..." id="crmSearchInput">
+                            <input type="text" placeholder="Tìm kiếm theo Mã, Tên, SĐT, Địa chỉ, Khu vực, NVKD..." id="crmSearchInput">
 
                         </div>
+
+                        <select class="form-select" id="crmRegionFilterSelect" style="width: auto; min-width: 150px;" onchange="renderCRM()">
+
+                            <option value="">-- Tất cả khu vực --</option>
+
+                        </select>
+
+                        <select class="form-select" id="crmSalesStaffFilterSelect" style="width: auto; min-width: 150px;" onchange="renderCRM()">
+
+                            <option value="">-- Tất cả NVKD --</option>
+
+                        </select>
+
+                        <select class="form-select" id="crmChannelFilterSelect" style="width: auto; min-width: 140px;" onchange="renderCRM()">
+
+                            <option value="">-- Tất cả Kênh bán --</option>
+
+                        </select>
 
                         <div class="filter-actions">
 
@@ -4379,25 +4418,25 @@
 
                                         <tr>
 
-                                            <th>Mã</th>
+                                            <th>Mã KH</th>
 
-                                            <th>Họ và tên</th>
-
-                                            <th>Tên công ty xuất HĐ</th>
-
-                                            <th>Mã số thuế</th>
-
-                                            <th>Địa chỉ xuất HĐ</th>
-
-                                            <th>Email nhận HĐ</th>
-
-                                            <th>Vai trò</th>
+                                            <th>Tên khách hàng</th>
 
                                             <th>Điện thoại</th>
 
-                                            <th>Email</th>
+                                            <th>Địa chỉ giao hàng</th>
 
-                                            <th>Chi tiêu/Bán hàng</th>
+                                            <th>Khu vực</th>
+
+                                            <th>Phường/Xã</th>
+
+                                            <th>NVKD Phụ trách</th>
+
+                                            <th>Kênh bán</th>
+
+                                            <th>Ghi chú</th>
+
+                                            <th>Chi tiêu</th>
 
                                             <th>Công nợ</th>
 
@@ -5854,6 +5893,46 @@
 
                             <div class="form-group">
 
+                                <label for="partnerRegion">Khu vực (Tỉnh/Thành/Quận/Huyện)</label>
+
+                                <input type="text" class="form-input" id="partnerRegion" placeholder="Ví dụ: Hà Nội - Quận Hà Đông">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="partnerWard">Phường / Xã</label>
+
+                                <input type="text" class="form-input" id="partnerWard" placeholder="Ví dụ: Xã Hòa Lạc">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="partnerSalesStaff">NVKD Phụ trách (Người nhận đặt)</label>
+
+                                <input type="text" class="form-input" id="partnerSalesStaff" placeholder="Ví dụ: KD Thành">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="partnerSalesChannel">Kênh bán hàng</label>
+
+                                <input type="text" class="form-input" id="partnerSalesChannel" placeholder="Ví dụ: Bán trực tiếp">
+
+                            </div>
+
+                            <div class="form-group col-span-2">
+
+                                <label for="partnerNote">Ghi chú thông tin khách hàng</label>
+
+                                <input type="text" class="form-input" id="partnerNote" placeholder="Ghi chú chi tiết cho khách hàng">
+
+                            </div>
+
+                            <div class="form-group">
+
                                 <label for="partnerRole">Vai trò đối tác *</label>
 
                                 <select class="form-select" id="partnerRole" required>
@@ -5994,13 +6073,13 @@
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px;">
                             <div class="form-group">
                                 <label for="onlineOrderCustomer">Khách hàng *</label>
-                                <select class="form-select" id="onlineOrderCustomer" style="width: 100%; height: 38px; border-radius: 6px;" required>
+                                <select class="form-select" id="onlineOrderCustomer" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;" required>
                                     <!-- Dynamic customers loaded here -->
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="onlineOrderSalesPerson">Nhân viên sales *</label>
-                                <select class="form-select" id="onlineOrderSalesPerson" style="width: 100%; height: 38px; border-radius: 6px;" required>
+                                <select class="form-select" id="onlineOrderSalesPerson" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;" required>
                                     <!-- Loaded dynamically -->
                                 </select>
                             </div>
@@ -6020,13 +6099,22 @@
                             </div>
                         </div>
 
-                        <!-- Shipping & Delivery configuration block -->
-                        <div style="background: var(--bg-card); padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-top: 16px;">
-                            <h4 style="margin:0 0 12px 0; font-size:0.9rem; font-weight:600; color:var(--accent);">Thông tin giao hàng & Vận chuyển</h4>
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                                <!-- Shipping & Delivery configuration block -->
+                        <div style="background: var(--bg-card); padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; margin-top: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h4 style="margin:0; font-size:0.95rem; font-weight:600; color:var(--accent); display:flex; align-items:center; gap:6px;">
+                                    <i data-lucide="truck" style="width:16px; height:16px;"></i> Thông tin giao hàng & Vận chuyển
+                                </h4>
+                                <button type="button" class="btn btn-secondary" id="btnSyncCustomerAddr" onclick="window.syncOnlineOrderDeliveryAddress(document.getElementById('onlineOrderCustomer').value)" style="padding: 4px 10px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:4px;">
+                                    <i data-lucide="refresh-cw" style="width:12px; height:12px;"></i> Đồng bộ từ Khách hàng
+                                </button>
+                            </div>
+
+                            <!-- Row 1: Shipping Method & Fee -->
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px;">
                                 <div class="form-group">
-                                    <label for="onlineOrderShipMethod">Giao vận *</label>
-                                    <select class="form-select" id="onlineOrderShipMethod" style="width: 100%; height: 38px; border-radius: 6px;" required>
+                                    <label for="onlineOrderShipMethod" style="font-weight: 500;">Giao vận *</label>
+                                    <select class="form-select" id="onlineOrderShipMethod" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;" required>
                                         <option value="INTERNAL_FREE">Giao công ty - Miễn phí (< 5 km)</option>
                                         <option value="INTERNAL_TIER">Giao công ty - Định mức (5-10 km - 300.000đ)</option>
                                         <option value="INTERNAL_AGREEMENT">Giao công ty - Thỏa thuận (> 10 km)</option>
@@ -6034,31 +6122,129 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="onlineOrderShipFee">Phí vận chuyển *</label>
-                                    <input type="number" class="form-input" id="onlineOrderShipFee" value="0" min="0" style="width: 100%; height: 38px; border-radius: 6px;" required>
+                                    <label for="onlineOrderShipFee" style="font-weight: 500;">Phí vận chuyển *</label>
+                                    <input type="number" class="form-input" id="onlineOrderShipFee" value="0" min="0" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;" required>
                                 </div>
+                            </div>
+
+                            <!-- Row 2: Province & Ward -->
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group">
+                                    <label for="onlineOrderProvince" style="font-weight: 500;">1. Tỉnh / Thành phố</label>
+                                    <select class="form-select" id="onlineOrderProvince" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
+                                        <option value="">-- Chọn Tỉnh / Thành phố --</option>
+                                        <option value="Thành phố Hà Nội">Thành phố Hà Nội</option>
+                                        <option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh</option>
+                                        <option value="Thành phố Hải Phòng">Thành phố Hải Phòng</option>
+                                        <option value="Thành phố Đà Nẵng">Thành phố Đà Nẵng</option>
+                                        <option value="Thành phố Cần Thơ">Thành phố Cần Thơ</option>
+                                        <option value="An Giang">An Giang</option>
+                                        <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                                        <option value="Bắc Giang">Bắc Giang</option>
+                                        <option value="Bắc Kạn">Bắc Kạn</option>
+                                        <option value="Bạc Liêu">Bạc Liêu</option>
+                                        <option value="Bắc Ninh">Bắc Ninh</option>
+                                        <option value="Bến Tre">Bến Tre</option>
+                                        <option value="Bình Định">Bình Định</option>
+                                        <option value="Bình Dương">Bình Dương</option>
+                                        <option value="Bình Phước">Bình Phước</option>
+                                        <option value="Bình Thuận">Bình Thuận</option>
+                                        <option value="Cà Mau">Cà Mau</option>
+                                        <option value="Cao Bằng">Cao Bằng</option>
+                                        <option value="Đắc Lắk">Đắc Lắk</option>
+                                        <option value="Đắc Nông">Đắc Nông</option>
+                                        <option value="Điện Biên">Điện Biên</option>
+                                        <option value="Đồng Nai">Đồng Nai</option>
+                                        <option value="Đồng Tháp">Đồng Tháp</option>
+                                        <option value="Gia Lai">Gia Lai</option>
+                                        <option value="Hà Giang">Hà Giang</option>
+                                        <option value="Hà Nam">Hà Nam</option>
+                                        <option value="Hà Tĩnh">Hà Tĩnh</option>
+                                        <option value="Hải Dương">Hải Dương</option>
+                                        <option value="Hậu Giang">Hậu Giang</option>
+                                        <option value="Hòa Bình">Hòa Bình</option>
+                                        <option value="Hưng Yên">Hưng Yên</option>
+                                        <option value="Khánh Hòa">Khánh Hòa</option>
+                                        <option value="Kiên Giang">Kiên Giang</option>
+                                        <option value="Kon Tum">Kon Tum</option>
+                                        <option value="Lai Châu">Lai Châu</option>
+                                        <option value="Lâm Đồng">Lâm Đồng</option>
+                                        <option value="Lạng Sơn">Lạng Sơn</option>
+                                        <option value="Lào Cai">Lào Cai</option>
+                                        <option value="Long An">Long An</option>
+                                        <option value="Nam Định">Nam Định</option>
+                                        <option value="Nghệ An">Nghệ An</option>
+                                        <option value="Ninh Bình">Ninh Bình</option>
+                                        <option value="Ninh Thuận">Ninh Thuận</option>
+                                        <option value="Phú Thọ">Phú Thọ</option>
+                                        <option value="Phú Yên">Phú Yên</option>
+                                        <option value="Quảng Bình">Quảng Bình</option>
+                                        <option value="Quảng Nam">Quảng Nam</option>
+                                        <option value="Quảng Ngãi">Quảng Ngãi</option>
+                                        <option value="Quảng Ninh">Quảng Ninh</option>
+                                        <option value="Quảng Trị">Quảng Trị</option>
+                                        <option value="Sóc Trăng">Sóc Trăng</option>
+                                        <option value="Sơn La">Sơn La</option>
+                                        <option value="Tây Ninh">Tây Ninh</option>
+                                        <option value="Thái Bình">Thái Bình</option>
+                                        <option value="Thái Nguyên">Thái Nguyên</option>
+                                        <option value="Thanh Hóa">Thanh Hóa</option>
+                                        <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+                                        <option value="Tiền Giang">Tiền Giang</option>
+                                        <option value="Trà Vinh">Trà Vinh</option>
+                                        <option value="Tuyên Quang">Tuyên Quang</option>
+                                        <option value="Vĩnh Long">Vĩnh Long</option>
+                                        <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+                                        <option value="Yên Bái">Yên Bái</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="onlineOrderWard" style="font-weight: 500;">2. Xã / Phường / Thị trấn</label>
+                                    <input type="text" class="form-input" id="onlineOrderWard" placeholder="Nhập Xã / Phường / Thị trấn..." style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;" list="onlineOrderWardList">
+                                    <datalist id="onlineOrderWardList"></datalist>
+                                </div>
+                            </div>
+
+                            <!-- Row 3: Hamlet & Street Detail -->
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group">
+                                    <label for="onlineOrderHamlet" style="font-weight: 500;">3. Thôn / Xóm / Tổ dân phố</label>
+                                    <input type="text" class="form-input" id="onlineOrderHamlet" placeholder="Thôn, Xóm, Tổ dân phố, Ấp..." style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="onlineOrderStreet" style="font-weight: 500;">4. Số nhà, Tên đường / Tòa nhà / Chi tiết</label>
+                                    <input type="text" class="form-input" id="onlineOrderStreet" placeholder="Số nhà, đường, ngõ ngách, tòa nhà..." style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
+                                </div>
+                            </div>
+
+                            <!-- Row 4: Checkbox update to profile -->
+                            <div style="display: flex; align-items: center; justify-content: flex-start; padding-top: 4px;">
+                                <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color); font-size: 0.88rem;">
+                                    <input type="checkbox" id="onlineOrderSaveAddrToProfile" style="width: 16px; height: 16px; cursor: pointer;">
+                                    <span>Lưu & Cập nhật địa chỉ này vào hồ sơ Khách hàng</span>
+                                </label>
                             </div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px;">
                             <div class="form-group">
                                 <label for="onlineOrderDiscount">Chiết khấu / Giảm giá</label>
-                                <input type="number" class="form-input" id="onlineOrderDiscount" value="0" min="0" style="width: 100%; height: 38px; border-radius: 6px;">
+                                <input type="number" class="form-input" id="onlineOrderDiscount" value="0" min="0" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="onlineOrderVat">Thuế suất VAT (%)</label>
-                                <input type="number" class="form-input" id="onlineOrderVat" value="8" min="0" max="100" style="width: 100%; height: 38px; border-radius: 6px;">
+                                <input type="number" class="form-input" id="onlineOrderVat" value="8" min="0" max="100" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="onlineOrderPaymentMethod">Hình thức thanh toán</label>
-                                <select class="form-select" id="onlineOrderPaymentMethod" style="width: 100%; height: 38px; border-radius: 6px;">
+                                <select class="form-select" id="onlineOrderPaymentMethod" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
                                     <option value="BANK_TRANSFER">Chuyển khoản ngân hàng (VCB)</option>
                                     <option value="CASH">Tiền mặt (Két tiền)</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="onlineOrderPaymentStatus">Trạng thái</label>
-                                <select class="form-select" id="onlineOrderPaymentStatus" style="width: 100%; height: 38px; border-radius: 6px;">
+                                <select class="form-select" id="onlineOrderPaymentStatus" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
                                     <option value="UNPAID" selected>Chưa thanh toán (Ghi nợ)</option>
                                     <option value="PAID">Đã thanh toán đủ</option>
                                 </select>
@@ -6092,7 +6278,7 @@
                                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top:8px;">
                                     <div class="form-group">
                                         <label for="onlineOrderProdOperator">Phụ trách kỹ thuật in *</label>
-                                        <select class="form-select" id="onlineOrderProdOperator" style="width: 100%; height: 38px; border-radius: 6px;">
+                                        <select class="form-select" id="onlineOrderProdOperator" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
                                             <option value="Đại Hùng">Đại Hùng</option>
                                             <option value="Thế Phương">Thế Phương</option>
                                             <option value="Văn Minh">Văn Minh</option>
@@ -9095,7 +9281,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20260803_1148"></script>
+    <script src="/app.js?v=20261012_clean_partners"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

@@ -4788,3 +4788,30 @@ body.light-mode .login-input:focus {
 
 
 
+
+
+/* Fix select & input vertical text clipping in onlineOrderModal and system-wide */
+select.form-select, .form-select {
+    box-sizing: border-box !important;
+    line-height: normal !important;
+}
+
+#onlineOrderModal .form-select,
+#onlineOrderModal select {
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 8px 12px !important;
+    line-height: normal !important;
+    box-sizing: border-box !important;
+    font-size: 0.9rem !important;
+}
+
+#onlineOrderModal .form-input,
+#onlineOrderModal input:not([type="checkbox"]):not([type="radio"]) {
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 8px 12px !important;
+    line-height: normal !important;
+    box-sizing: border-box !important;
+    font-size: 0.9rem !important;
+}
