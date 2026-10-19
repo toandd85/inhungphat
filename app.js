@@ -24644,37 +24644,18 @@ window.posCurrentCategory = "ALL";
 window.posActiveOrderId = null;
 window.posActiveMode = "ADD";
 
-// Calculate price based on selected price book and quantity
-window.getPosProductPrice = function(prod, priceBook = window.posSelectedPriceBook, qty = 1) {
+// Calculate price based on selected price book (RETAIL or WHOLESALE) - independent of quantity
+window.getPosProductPrice = function(prod, priceBook = window.posSelectedPriceBook) {
     if (!prod) return 0;
     
-    // If WHOLESALE price book is chosen
+    // If WHOLESALE price book (Khách sỉ)
     if (priceBook === "WHOLESALE") {
-        // 1. Check if product has specific tiered wholesale prices configured
-        if (prod.wholesale_qty_prices && prod.wholesale_qty_prices.length > 0) {
-            const match = prod.wholesale_qty_prices.find(item => {
-                const minMatch = qty >= item.min_qty;
-                const maxMatch = !item.max_qty || item.max_qty <= 0 || qty <= item.max_qty;
-                return minMatch && maxMatch;
-            });
-            if (match && Number(match.price) > 0) return Number(match.price);
-        }
-        // 2. Use configured wholesale_price for this model/SKU
         if (prod.wholesale_price && Number(prod.wholesale_price) > 0) {
             return Number(prod.wholesale_price);
         }
     }
     
-    // If RETAIL or wholesale price not set, check tiered retail brackets
-    if (prod.wholesale_qty_prices && prod.wholesale_qty_prices.length > 0) {
-        const match = prod.wholesale_qty_prices.find(item => {
-            const minMatch = qty >= item.min_qty;
-            const maxMatch = !item.max_qty || item.max_qty <= 0 || qty <= item.max_qty;
-            return minMatch && maxMatch;
-        });
-        if (match && Number(match.price) > 0) return Number(match.price);
-    }
-    
+    // RETAIL (Khách lẻ) or fallback
     return Number(prod.price || 0);
 };
 
@@ -26935,9 +26916,6 @@ window.renderOnlinePrices = function() {
     
     filtered.forEach(p => {
         const row = document.createElement("tr");
-        const priceCount = p.wholesale_qty_prices ? p.wholesale_qty_prices.length : 0;
-        const discountCount = p.wholesale_qty_discounts ? p.wholesale_qty_discounts.length : 0;
-        const summaryText = `${priceCount} khoảng sỉ, ${discountCount} mức CK`;
         
         let imgHtml = ``;
         if (p.image) {
@@ -26945,57 +26923,18 @@ window.renderOnlinePrices = function() {
         } else {
             imgHtml = `<div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.04); border-radius:4px; border:1px dashed var(--border-color); color:var(--text-secondary);"><i data-lucide="image" style="width:14px; height:14px;"></i></div>`;
         }
-
-        // Generate tooltip contents
-        const prices = p.wholesale_qty_prices || [];
-        const discounts = p.wholesale_qty_discounts || [];
-        
-        let tooltipContentHtml = "";
-        if (prices.length > 0) {
-            tooltipContentHtml += `<div style="font-weight:700; color:var(--success); margin-bottom:4px;">Giá sỉ theo số lượng:</div>`;
-            prices.forEach(x => {
-                const range = x.max_qty ? `${x.min_qty} - ${x.max_qty}` : `≥ ${x.min_qty}`;
-                tooltipContentHtml += `<div style="margin-bottom:2px;">• SL ${range}: <strong>${formatMoney(x.price)}</strong></div>`;
-            });
-        }
-        if (discounts.length > 0) {
-            if (tooltipContentHtml) tooltipContentHtml += `<div style="margin-top:8px; margin-bottom:4px; font-weight:700; color:var(--warning);">Chiết khấu theo số lượng:</div>`;
-            else tooltipContentHtml += `<div style="font-weight:700; color:var(--warning); margin-bottom:4px;">Chiết khấu theo số lượng:</div>`;
-            discounts.forEach(x => {
-                const range = x.max_qty ? `${x.min_qty} - ${x.max_qty}` : `≥ ${x.min_qty}`;
-                tooltipContentHtml += `<div style="margin-bottom:2px;">• SL ${range}: <strong>${x.discount_percent}%</strong></div>`;
-            });
-        }
-        
-        if (!tooltipContentHtml) {
-            tooltipContentHtml = `<span style="color:var(--text-secondary);">Chưa thiết lập khoảng giá sỉ/chiết khấu.</span>`;
-        }
         
         row.innerHTML = `
             <td><strong>${p.sku}</strong></td>
             <td>${imgHtml}</td>
-            <td>${p.name}</td>
-            <td>${p.unit}</td>
-            <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price}" min="0" style="width:130px; padding:4px 8px; font-size:0.85rem;"></td>
-            <td><input type="number" class="form-input price-wholesale" data-sku="${p.sku}" value="${p.wholesale_price || 0}" min="0" style="width:130px; padding:4px 8px; font-size:0.85rem;" placeholder="Giá sỉ..."></td>
-            <td>
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <div class="tooltip-container">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="openAdvancedPricingModal('${p.sku}')" style="padding: 4px 8px; font-size:0.75rem; background:rgba(0,0,0,0.05); border:1px solid var(--border-color); color:var(--text-primary);">
-                            <i data-lucide="eye" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:2px;"></i> Xem
-                        </button>
-                        <div class="tooltip-content">
-                            ${tooltipContentHtml}
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="openAdvancedPricingModal('${p.sku}')" style="padding: 4px 8px; font-size:0.75rem;">
-                        <i data-lucide="settings" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> Thiết lập SL
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm" onclick="saveSingleProductPrice('${p.sku}', this)" style="padding: 4px 8px; font-size:0.75rem;">
-                        <i data-lucide="check" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:2px;"></i> Lưu
-                    </button>
-                    <span style="font-size:0.75rem; color:var(--text-secondary); margin-left:4px; display:inline-block; vertical-align:middle;">(${summaryText})</span>
-                </div>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.unit || 'Chiếc'}</td>
+            <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price || 0}" min="0" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;"></td>
+            <td><input type="number" class="form-input price-wholesale" data-sku="${p.sku}" value="${p.wholesale_price || 0}" min="0" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;" placeholder="Nhập giá sỉ..."></td>
+            <td style="text-align: center;">
+                <button type="button" class="btn btn-success btn-sm" onclick="saveSingleProductPrice('${p.sku}', this)" style="padding: 5px 14px; font-size:0.8rem; font-weight:700;">
+                    <i data-lucide="check" style="width:13px; height:13px; display:inline-block; vertical-align:middle; margin-right:2px;"></i> Lưu
+                </button>
             </td>
         `;
         tableBody.appendChild(row);
@@ -27171,35 +27110,39 @@ window.saveAdvancedPricingSettings = function() {
     alert(`Đã lưu thiết lập nâng cao cho hàng hóa ${prod.name} thành công!`);
 };
 
-window.calculateOnlineProductUnitPrice = function(sku, qty) {
+window.calculateOnlineProductUnitPrice = function(sku, customerIdOrIsWholesale) {
     const prod = (state.online_products || []).find(p => p.sku === sku);
     if (!prod) return 0;
     
-    if (prod.wholesale_qty_prices && prod.wholesale_qty_prices.length > 0) {
-        const match = prod.wholesale_qty_prices.find(item => {
-            const minMatch = qty >= item.min_qty;
-            const maxMatch = !item.max_qty || item.max_qty <= 0 || qty <= item.max_qty;
-            return minMatch && maxMatch;
-        });
-        if (match) return match.price;
+    let isWholesale = false;
+    if (typeof customerIdOrIsWholesale === "boolean") {
+        isWholesale = customerIdOrIsWholesale;
+    } else if (typeof customerIdOrIsWholesale === "string" && (customerIdOrIsWholesale === "WHOLESALE" || customerIdOrIsWholesale === "Khách sỉ" || customerIdOrIsWholesale === "SI")) {
+        isWholesale = true;
+    } else if (customerIdOrIsWholesale && typeof customerIdOrIsWholesale === "string" && customerIdOrIsWholesale.startsWith("p_")) {
+        const partner = (state.partners || []).find(p => p.id === customerIdOrIsWholesale);
+        isWholesale = partner && (partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI");
+    } else {
+        // Fallback: check currently selected customer or price book in DOM
+        const posCustId = document.getElementById("posCustomerSelect")?.value;
+        const onlineCustId = document.getElementById("onlineOrderCustomer")?.value;
+        const custId = posCustId || onlineCustId;
+        const partner = (state.partners || []).find(p => p.id === custId);
+        if (partner) {
+            isWholesale = (partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI");
+        } else if (window.posSelectedPriceBook === "WHOLESALE") {
+            isWholesale = true;
+        }
     }
     
-    if (qty >= 10 && prod.wholesale_price > 0) {
-        return prod.wholesale_price;
+    if (isWholesale && prod.wholesale_price && Number(prod.wholesale_price) > 0) {
+        return Number(prod.wholesale_price);
     }
-    return prod.price;
+    return Number(prod.price || 0);
 };
 
-window.calculateOnlineProductDiscountPercent = function(sku, qty) {
-    const prod = state.online_products.find(p => p.sku === sku);
-    if (!prod || !prod.wholesale_qty_discounts || prod.wholesale_qty_discounts.length === 0) return 0;
-    
-    const match = prod.wholesale_qty_discounts.find(item => {
-        const minMatch = qty >= item.min_qty;
-        const maxMatch = !item.max_qty || item.max_qty <= 0 || qty <= item.max_qty;
-        return minMatch && maxMatch;
-    });
-    return match ? match.discount_percent : 0;
+window.calculateOnlineProductDiscountPercent = function() {
+    return 0;
 };
 
 // Inventory Checks
