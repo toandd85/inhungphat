@@ -265,6 +265,7 @@ const DEFAULT_PARTNERS = [
     "sales_staff": "HOÀNG QUANG HUY",
     "sales_channel": "Bán trực tiếp",
     "role": "CUSTOMER",
+    "customer_type": "RETAIL",
     "status": true,
     "credit_limit": 0,
     "note": "Khách hàng (HOÀNG QUANG HUY)"
@@ -287,6 +288,7 @@ const DEFAULT_PARTNERS = [
     "sales_staff": "KD Thành",
     "sales_channel": "Bán trực tiếp",
     "role": "CUSTOMER",
+    "customer_type": "WHOLESALE",
     "status": true,
     "credit_limit": 0,
     "note": "Đã lấy 29/11, ck tk C.Liên"
@@ -19640,6 +19642,8 @@ function renderCRM() {
     const regFilter = regionSelect ? regionSelect.value : "";
     const staffFilter = staffSelect ? staffSelect.value : "";
     const channelFilter = channelSelect ? channelSelect.value : "";
+    const custTypeSelect = document.getElementById("crmCustomerTypeFilterSelect");
+    const custTypeFilter = custTypeSelect ? custTypeSelect.value : "";
 
     const filteredPartners = state.partners.filter(p => {
         const q = query;
@@ -19657,8 +19661,13 @@ function renderCRM() {
         const matchesRegion = !regFilter || p.region === regFilter;
         const matchesStaff = !staffFilter || p.sales_staff === staffFilter;
         const matchesChannel = !channelFilter || p.sales_channel === channelFilter;
+        
+        const isCustWholesale = (p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI");
+        const matchesCustType = !custTypeFilter || 
+            (custTypeFilter === "WHOLESALE" && isCustWholesale) ||
+            (custTypeFilter === "RETAIL" && !isCustWholesale);
 
-        return matchesQuery && matchesRole && matchesRegion && matchesStaff && matchesChannel;
+        return matchesQuery && matchesRole && matchesRegion && matchesStaff && matchesChannel && matchesCustType;
     });
 
     const tableBody = document.querySelector("#crmTable tbody");
@@ -19666,7 +19675,7 @@ function renderCRM() {
     tableBody.innerHTML = "";
 
     if (filteredPartners.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="13" class="text-muted text-center" style="padding: 24px;">Không tìm thấy khách hàng / đối tác nào</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="14" class="text-muted text-center" style="padding: 24px;">Không tìm thấy khách hàng / đối tác nào</td></tr>`;
         return;
     }
 
@@ -19696,6 +19705,11 @@ function renderCRM() {
 
         const statusBadge = p.status !== false ? `<span class="badge badge-success">Đang làm việc</span>` : `<span class="badge badge-danger">Tạm dừng</span>`;
 
+        const isWholesale = (p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI");
+        const custTypeBadge = isWholesale 
+            ? `<span class="badge badge-warning" style="font-size:0.75rem; background:#fef3c7; color:#b45309; border:1px solid #fde68a;">🏢 Khách sỉ</span>`
+            : `<span class="badge badge-info" style="font-size:0.75rem; background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">👤 Khách lẻ</span>`;
+
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><a href="javascript:void(0)" onclick="window.openEditPartner('${p.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${p.code || 'N/A'}</strong></a></td>
@@ -19704,6 +19718,7 @@ function renderCRM() {
                 ${p.company_name && p.company_name !== p.name ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;" title="Tên công ty"><i data-lucide="building" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${p.company_name}</div>` : ''}
                 ${p.contact_person && p.contact_person !== p.name && p.contact_person !== 'Đại diện công ty' ? `<div style="font-size:0.75rem; color:var(--accent); margin-top:1px;" title="Người liên hệ"><i data-lucide="user" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${p.contact_person}</div>` : ''}
             </td>
+            <td>${custTypeBadge}</td>
             <td>${p.phone || 'N/A'}</td>
             <td>${p.address || '<span class="text-muted">-</span>'}</td>
             <td>${p.region ? `<span class="badge badge-info" style="font-size:0.75rem;">${p.region}</span>` : '<span class="text-muted">-</span>'}</td>
@@ -19742,6 +19757,7 @@ function handlePartnerSubmit(e) {
     const address = document.getElementById("partnerAddress").value;
     const role = document.getElementById("partnerRole").value;
     const limit = parseInt(document.getElementById("partnerLimit").value) || 0;
+    const customer_type = document.getElementById("partnerCustomerType") ? document.getElementById("partnerCustomerType").value : "RETAIL";
 
     const company_name = document.getElementById("partnerCompanyName").value.trim();
     const tax_code = document.getElementById("partnerTaxCode").value.trim();
@@ -19758,7 +19774,7 @@ function handlePartnerSubmit(e) {
         // Edit Partner
         const newPartners = state.partners.map(p => {
             if (p.id === id) {
-                return { ...p, name, phone, email, address, role, credit_limit: limit, company_name, tax_code, billing_address, billing_email, region, ward, sales_staff, sales_channel, note };
+                return { ...p, name, phone, email, address, role, customer_type, credit_limit: limit, company_name, tax_code, billing_address, billing_email, region, ward, sales_staff, sales_channel, note };
             }
             return p;
         });
@@ -19779,6 +19795,7 @@ function handlePartnerSubmit(e) {
             email: email,
             address: address,
             role: role,
+            customer_type: customer_type || "RETAIL",
             credit_limit: limit,
             status: true,
             company_name,
@@ -20326,6 +20343,10 @@ window.openEditPartner = function(partnerId) {
     document.getElementById("partnerAddress").value = partner.address || "";
     document.getElementById("partnerRole").value = partner.role;
     document.getElementById("partnerLimit").value = partner.credit_limit;
+    if (document.getElementById("partnerCustomerType")) {
+        const isWholesale = partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI";
+        document.getElementById("partnerCustomerType").value = isWholesale ? "WHOLESALE" : "RETAIL";
+    }
 
     document.getElementById("partnerCompanyName").value = partner.company_name || "";
     document.getElementById("partnerTaxCode").value = partner.tax_code || "";
@@ -20978,6 +20999,7 @@ async function sendTelegramOrderAlert(order) {
             columns: [
                 { name: 'Mã', type: 'text', getValue: (p) => p.code },
                 { name: 'Họ và tên', type: 'text', getValue: (p) => p.name },
+                { name: 'Loại khách hàng', type: 'text', getValue: (p) => (p.customer_type === 'WHOLESALE' || p.customer_type === 'Khách sỉ' || p.customer_type === 'SI') ? 'Khách sỉ' : 'Khách lẻ' },
                 { name: 'Tên công ty xuất HĐ', type: 'text', getValue: (p) => p.company_name || 'N/A', hiddenByDefault: true },
                 { name: 'Mã số thuế', type: 'text', getValue: (p) => p.tax_code || 'N/A', hiddenByDefault: true },
                 { name: 'Địa chỉ xuất HĐ', type: 'text', getValue: (p) => p.billing_address || 'N/A', hiddenByDefault: true },
@@ -24680,13 +24702,15 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
             if (customers.length === 0) {
                 const opt = document.createElement("option");
                 opt.value = "";
-                opt.textContent = "Khách lẻ (Khách vãng lai)";
+                opt.textContent = "[Lẻ] Khách lẻ (Khách vãng lai)";
                 customerSelect.appendChild(opt);
             } else {
                 customers.forEach(c => {
                     const opt = document.createElement("option");
                     opt.value = c.id;
-                    opt.textContent = `${c.name} ${c.phone ? `(${c.phone})` : ''}`;
+                    const isWholesale = (c.customer_type === "WHOLESALE" || c.customer_type === "Khách sỉ" || c.customer_type === "SI");
+                    const tag = isWholesale ? "[Sỉ]" : "[Lẻ]";
+                    opt.textContent = `${tag} ${c.name} ${c.phone ? `(${c.phone})` : ''}`;
                     customerSelect.appendChild(opt);
                 });
             }
@@ -24717,6 +24741,14 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
             if (shipFeeEl) shipFeeEl.value = order.ship_fee || 0;
             if (notesEl) notesEl.value = order.notes || "";
 
+            if (order.price_book && priceBookSelect) {
+                priceBookSelect.value = order.price_book;
+                window.posSelectedPriceBook = order.price_book;
+            }
+            if (typeof window.handlePosCustomerChange === 'function') {
+                window.handlePosCustomerChange(false);
+            }
+
             // Load items into cart
             window.posCart = (order.items || []).map(i => {
                 const prod = (state.online_products || []).find(p => p.sku === i.sku);
@@ -24742,6 +24774,10 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
             if (shipFeeEl) shipFeeEl.value = 0;
             if (notesEl) notesEl.value = "";
             window.posCart = [];
+            
+            if (typeof window.handlePosCustomerChange === 'function') {
+                window.handlePosCustomerChange(true);
+            }
         }
 
         // Render catalog & cart
@@ -24982,6 +25018,30 @@ window.clearPosCart = function() {
     }
 };
 
+// Handle Customer Change in POS: updates badge and auto-selects price book
+window.handlePosCustomerChange = function(forceAutoPriceBook = true) {
+    const customerSelect = document.getElementById("posCustomerSelect");
+    const customerId = customerSelect ? customerSelect.value : "";
+    const partner = (state.partners || []).find(p => p.id === customerId);
+    const isWholesale = partner && (partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI");
+
+    const badgeEl = document.getElementById("posCustomerTypeBadge");
+    if (badgeEl) {
+        badgeEl.textContent = isWholesale ? "🏢 Khách sỉ" : "👤 Khách lẻ";
+        badgeEl.className = "pos-cust-type-pill " + (isWholesale ? "wholesale" : "retail");
+        badgeEl.style.display = "inline-flex";
+    }
+
+    if (forceAutoPriceBook) {
+        const targetPriceBook = isWholesale ? "WHOLESALE" : "RETAIL";
+        const priceBookSelect = document.getElementById("posPriceBookSelect");
+        if (priceBookSelect && priceBookSelect.value !== targetPriceBook) {
+            priceBookSelect.value = targetPriceBook;
+            window.handlePosPriceBookChange();
+        }
+    }
+};
+
 // Switch Price Book: Bán lẻ <-> Bán sỉ
 window.handlePosPriceBookChange = function() {
     const select = document.getElementById("posPriceBookSelect");
@@ -25091,11 +25151,11 @@ window.recalcPosTotals = function() {
     setTxt("posGrandTotalAmount", fmt(grandTotal));
 };
 
-// Submit POS Order
-window.submitPosOrder = function() {
+// Submit POS Order (isDraft = true: Lưu nháp, isDraft = false: Xác nhận / Thanh toán)
+window.submitPosOrder = function(isDraft = false) {
     try {
-        if (window.posCart.length === 0) {
-            alert("Vui lòng chọn ít nhất 1 sản phẩm vào giỏ hàng trước khi thanh toán.");
+        if (!window.posCart || window.posCart.length === 0) {
+            alert("Vui lòng chọn ít nhất 1 sản phẩm vào giỏ hàng trước khi lưu hoặc thanh toán.");
             return;
         }
 
@@ -25107,7 +25167,7 @@ window.submitPosOrder = function() {
         const vatRate = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
         const shipFee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
         const paymentMethod = document.getElementById("posPaymentMethodSelect")?.value || "BANK_TRANSFER";
-        const paymentStatus = document.getElementById("posPaymentStatusSelect")?.value || "PAID";
+        const paymentStatus = isDraft ? "DRAFT" : (document.getElementById("posPaymentStatusSelect")?.value || "PAID");
         const notes = document.getElementById("posOrderNotes")?.value.trim() || "";
 
         const subtotal = window.posCart.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
@@ -25123,8 +25183,8 @@ window.submitPosOrder = function() {
             const existingOrder = state.online_orders.find(o => o.id === orderId);
             if (existingOrder) {
                 orderNumber = existingOrder.order_number;
-                // Revert old stocks if needed
-                if (existingOrder.items) {
+                // Revert old stocks if previously non-draft
+                if (existingOrder.payment_status !== "DRAFT" && existingOrder.items) {
                     existingOrder.items.forEach(oldItem => {
                         const p = state.online_products.find(prod => prod.sku === oldItem.sku);
                         if (p) p.stock_qty += oldItem.qty;
@@ -25139,7 +25199,7 @@ window.submitPosOrder = function() {
             orderId = "oo_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
         }
 
-        const customer = state.partners.find(p => p.id === customerId);
+        const customer = (state.partners || []).find(p => p.id === customerId);
 
         const newOrder = {
             id: orderId,
@@ -25151,7 +25211,7 @@ window.submitPosOrder = function() {
             commission_rate: 5,
             commission_amount: Math.round(totalAmount * 0.05),
             items: window.posCart.map(i => ({ ...i })),
-            price_book: window.posSelectedPriceBook,
+            price_book: window.posSelectedPriceBook || "RETAIL",
             subtotal: subtotal,
             discount: discount,
             vat_rate: vatRate,
@@ -25161,100 +25221,108 @@ window.submitPosOrder = function() {
             total_amount: totalAmount,
             payment_status: paymentStatus,
             payment_method: paymentMethod,
-            paid_amount: paymentStatus === "PAID" ? totalAmount : 0,
-            remaining_debt: paymentStatus === "PAID" ? 0 : totalAmount,
+            paid_amount: (!isDraft && paymentStatus === "PAID") ? totalAmount : 0,
+            remaining_debt: (!isDraft && paymentStatus === "PAID") ? 0 : totalAmount,
             created_at: isEdit ? (state.online_orders.find(o => o.id === orderId)?.created_at || new Date().toISOString()) : new Date().toISOString(),
             has_production: false,
             production_steps: [],
-            kanban_status: "ORDER",
+            kanban_status: isDraft ? "DRAFT" : "ORDER",
             notes: notes
         };
 
-        // Deduct stock
-        state.online_products.forEach(p => {
-            const item = window.posCart.find(i => i.sku === p.sku);
-            if (item) {
-                p.stock_qty -= item.qty;
-                const logId = "log_" + Math.random().toString(36).substring(2, 9);
-                state.online_stock_logs.push({
-                    id: logId,
-                    created_at: new Date().toISOString(),
-                    sku: p.sku,
-                    type: "EXPORT",
-                    qty: -item.qty,
-                    note: `Xuất kho bán hàng POS ${orderNumber}`
-                });
-            }
-        });
+        // Deduct stock only when confirming order (not draft)
+        if (!isDraft) {
+            state.online_products.forEach(p => {
+                const item = window.posCart.find(i => i.sku === p.sku);
+                if (item) {
+                    p.stock_qty -= item.qty;
+                    const logId = "log_" + Math.random().toString(36).substring(2, 9);
+                    state.online_stock_logs.push({
+                        id: logId,
+                        created_at: new Date().toISOString(),
+                        sku: p.sku,
+                        type: "EXPORT",
+                        qty: -item.qty,
+                        note: `Xuất kho bán hàng POS ${orderNumber}`
+                    });
+                }
+            });
+        }
 
-        // Save order
+        // Save order to online_orders
         if (isEdit) {
             state.online_orders = state.online_orders.map(o => o.id === orderId ? newOrder : o);
         } else {
             state.online_orders = [newOrder, ...state.online_orders];
         }
 
-        // Sync to standard orders
-        const stdOrder = state.orders.find(o => o.id === orderId);
-        if (stdOrder) {
-            Object.assign(stdOrder, {
-                customer_id: customerId,
-                quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
-                subtotal: subtotal,
-                discount: discount,
-                vat_rate: vatRate,
-                ship_fee: shipFee,
-                total_amount: totalAmount,
-                payment_status: paymentStatus,
-                payment_method: paymentMethod,
-                notes: notes
-            });
+        if (isDraft) {
+            // Remove from standard orders and transactions if existed
+            state.orders = state.orders.filter(o => o.id !== orderId);
+            state.transactions = state.transactions.filter(t => t.reference_id !== orderId);
         } else {
-            const stdCodeSuffix = String(state.orders.length + 1).padStart(4, '0');
-            state.orders = [{
-                id: orderId,
-                order_number: `SO-202606-${stdCodeSuffix}`,
-                customer_id: customerId,
-                quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
-                paper_type: "Thành phẩm kho sẵn",
-                print_spec: window.posCart.map(i => `${i.name} (SL: ${i.qty})`).join(", "),
-                post_processing: "Không gia công thêm",
-                subtotal: subtotal,
-                discount: discount,
-                vat_rate: vatRate,
-                ship_fee: shipFee,
-                total_amount: totalAmount,
-                deposit: paymentStatus === "PAID" ? totalAmount : 0,
-                payment_status: paymentStatus,
-                payment_method: paymentMethod,
-                salesperson: salesperson,
-                created_at: new Date().toISOString(),
-                status: "DELIVERED",
-                notes: notes || `Đơn hàng POS ${orderNumber}`
-            }, ...state.orders];
-        }
-
-        // Generate Transaction if PAID
-        if (paymentStatus === "PAID") {
-            const existingTx = state.transactions.find(t => t.reference_id === orderId && t.type === "RECEIPT");
-            if (existingTx) {
-                existingTx.amount = totalAmount;
-                existingTx.payment_method = paymentMethod;
-            } else {
-                const txCodeSuffix = String(state.transactions.length + 1).padStart(4, '0');
-                state.transactions = [{
-                    id: "t_" + Math.random().toString(36).substring(2, 9),
-                    tx_number: `PT-202606-${txCodeSuffix}`,
-                    created_at: new Date().toISOString(),
-                    type: "RECEIPT",
-                    category: "CUSTOMER_FINAL",
-                    amount: totalAmount,
+            // Sync to standard orders
+            const stdOrder = state.orders.find(o => o.id === orderId);
+            if (stdOrder) {
+                Object.assign(stdOrder, {
+                    customer_id: customerId,
+                    quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
+                    subtotal: subtotal,
+                    discount: discount,
+                    vat_rate: vatRate,
+                    ship_fee: shipFee,
+                    total_amount: totalAmount,
+                    payment_status: paymentStatus,
                     payment_method: paymentMethod,
-                    account_source: paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH",
-                    partner_id: customerId,
-                    reference_id: orderId,
-                    created_by: salesperson
-                }, ...state.transactions];
+                    notes: notes
+                });
+            } else {
+                const stdCodeSuffix = String(state.orders.length + 1).padStart(4, '0');
+                state.orders = [{
+                    id: orderId,
+                    order_number: `SO-202606-${stdCodeSuffix}`,
+                    customer_id: customerId,
+                    quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
+                    paper_type: "Thành phẩm kho sẵn",
+                    print_spec: window.posCart.map(i => `${i.name} (SL: ${i.qty})`).join(", "),
+                    post_processing: "Không gia công thêm",
+                    subtotal: subtotal,
+                    discount: discount,
+                    vat_rate: vatRate,
+                    ship_fee: shipFee,
+                    total_amount: totalAmount,
+                    deposit: paymentStatus === "PAID" ? totalAmount : 0,
+                    payment_status: paymentStatus,
+                    payment_method: paymentMethod,
+                    salesperson: salesperson,
+                    created_at: new Date().toISOString(),
+                    status: "DELIVERED",
+                    notes: notes || `Đơn hàng POS ${orderNumber}`
+                }, ...state.orders];
+            }
+
+            // Generate Transaction if PAID
+            if (paymentStatus === "PAID") {
+                const existingTx = state.transactions.find(t => t.reference_id === orderId && t.type === "RECEIPT");
+                if (existingTx) {
+                    existingTx.amount = totalAmount;
+                    existingTx.payment_method = paymentMethod;
+                } else {
+                    const txCodeSuffix = String(state.transactions.length + 1).padStart(4, '0');
+                    state.transactions = [{
+                        id: "t_" + Math.random().toString(36).substring(2, 9),
+                        tx_number: `PT-202606-${txCodeSuffix}`,
+                        created_at: new Date().toISOString(),
+                        type: "RECEIPT",
+                        category: "CUSTOMER_FINAL",
+                        amount: totalAmount,
+                        payment_method: paymentMethod,
+                        account_source: paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH",
+                        partner_id: customerId,
+                        reference_id: orderId,
+                        created_by: salesperson
+                    }, ...state.transactions];
+                }
             }
         }
 
@@ -25272,11 +25340,15 @@ window.submitPosOrder = function() {
         if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
         if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
 
-        // Open Invoice PDF
-        window.openOnlineOrderInvoicePdf(orderId);
+        if (isDraft) {
+            alert(`Đã lưu nháp đơn hàng ${orderNumber} thành công!`);
+        } else {
+            // Open Invoice PDF
+            window.openOnlineOrderInvoicePdf(orderId);
+        }
     } catch (err) {
         console.error("Lỗi hoàn tất đơn POS:", err);
-        alert("Lỗi khi thanh toán đơn hàng: " + err.message);
+        alert("Lỗi khi xử lý đơn hàng: " + err.message);
     }
 };
 
@@ -25284,13 +25356,17 @@ window.openQuickAddCustomerModal = function() {
     const name = prompt("Nhập tên khách hàng mới:");
     if (!name || !name.trim()) return;
     const phone = prompt("Nhập số điện thoại khách hàng:");
+    const isWholesale = confirm("Khách hàng này là Khách sỉ? (Nhấn OK nếu là Khách sỉ, Cancel nếu là Khách lẻ)");
 
+    const codeSuffix = String((state.partners || []).length + 1).padStart(3, '0');
     const newCust = {
         id: "p_" + Date.now(),
+        code: `KH-${codeSuffix}`,
         name: name.trim(),
         phone: (phone || "").trim(),
         role: "CUSTOMER",
         type: "CUSTOMER",
+        customer_type: isWholesale ? "WHOLESALE" : "RETAIL",
         created_at: new Date().toISOString()
     };
     state.partners = [newCust, ...state.partners];
@@ -25301,11 +25377,15 @@ window.openQuickAddCustomerModal = function() {
     if (select) {
         const opt = document.createElement("option");
         opt.value = newCust.id;
-        opt.textContent = `${newCust.name} (${newCust.phone})`;
-        select.appendChild(opt);
+        const tag = isWholesale ? "[Sỉ]" : "[Lẻ]";
+        opt.textContent = `${tag} ${newCust.name} ${newCust.phone ? `(${newCust.phone})` : ''}`;
+        select.insertBefore(opt, select.firstChild);
         select.value = newCust.id;
+        if (typeof window.handlePosCustomerChange === 'function') {
+            window.handlePosCustomerChange(true);
+        }
     }
-    alert(`Đã thêm khách hàng ${newCust.name} thành công!`);
+    alert(`Đã thêm ${isWholesale ? 'Khách sỉ' : 'Khách lẻ'} ${newCust.name} thành công!`);
 };
 
 // Keyboard shortcuts for POS
@@ -25321,7 +25401,7 @@ document.addEventListener("keydown", function(e) {
         document.getElementById("posCustomerSelect")?.focus();
     } else if (e.key === "F9") {
         e.preventDefault();
-        window.submitPosOrder();
+        window.submitPosOrder(false);
     } else if (e.key === "Escape") {
         window.closePosModal();
     }

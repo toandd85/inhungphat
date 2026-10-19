@@ -6191,14 +6191,105 @@ select.form-select, .form-select {
     font-weight: 600;
 }
 
-.pos-checkout-btn {
+.pos-cust-type-pill {
+    padding: 3px 8px;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.pos-cust-type-pill.retail {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.pos-cust-type-pill.wholesale {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+/* POS Actions Row: Cancel / Draft / Confirm */
+.pos-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
-    height: 48px;
+}
+
+.pos-action-btn {
+    height: 46px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.pos-btn-cancel {
+    flex: 0 0 auto;
+    padding: 0 16px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.pos-btn-cancel:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+    border-color: #94a3b8;
+}
+
+[data-theme="dark"] .pos-btn-cancel {
+    background: #334155;
+    color: #cbd5e1;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .pos-btn-cancel:hover {
+    background: #475569;
+    color: #ffffff;
+}
+
+.pos-btn-draft {
+    flex: 0 0 auto;
+    padding: 0 16px;
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+.pos-btn-draft:hover {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #f59e0b;
+}
+
+[data-theme="dark"] .pos-btn-draft {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.pos-checkout-btn {
+    flex: 1;
+    height: 46px;
     background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     color: #ffffff;
     border: none;
     border-radius: 8px;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.5px;
     cursor: pointer;
@@ -6234,6 +6325,18 @@ select.form-select, .form-select {
     }
     .pos-search-wrapper {
         width: 200px;
+    }
+}
+
+@media (max-width: 600px) {
+    .pos-actions-row {
+        flex-wrap: wrap;
+    }
+    .pos-btn-cancel, .pos-btn-draft {
+        flex: 1 1 calc(50% - 4px);
+    }
+    .pos-checkout-btn {
+        flex: 1 1 100%;
     }
 }
 

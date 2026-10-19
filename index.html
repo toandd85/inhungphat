@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261009_1630">
+    <link rel="stylesheet" href="/style.css?v=20261019_pos_customer_type">
 
     <script>
 
@@ -4311,6 +4311,16 @@
 
                         </select>
 
+                        <select class="form-select" id="crmCustomerTypeFilterSelect" style="width: auto; min-width: 140px;" onchange="renderCRM()">
+
+                            <option value="">-- Loại khách hàng --</option>
+
+                            <option value="RETAIL">Khách lẻ</option>
+
+                            <option value="WHOLESALE">Khách sỉ</option>
+
+                        </select>
+
                         <div class="filter-actions">
 
                             <button class="btn btn-primary" id="btnNewPartner">
@@ -4340,6 +4350,8 @@
                                             <th>Mã KH</th>
 
                                             <th>Tên khách hàng</th>
+
+                                            <th>Loại KH</th>
 
                                             <th>Điện thoại</th>
 
@@ -6012,6 +6024,20 @@
 
                             </div>
 
+                            <div class="form-group" id="partnerCustomerTypeGroup">
+
+                                <label for="partnerCustomerType">Loại khách hàng</label>
+
+                                <select class="form-select" id="partnerCustomerType">
+
+                                    <option value="RETAIL" selected>Khách lẻ</option>
+
+                                    <option value="WHOLESALE">Khách sỉ</option>
+
+                                </select>
+
+                            </div>
+
                             <div class="form-group">
 
                                 <label for="partnerLimit">Hạn mức nợ (đ)</label>
@@ -6237,9 +6263,10 @@
                         <!-- Customer search & select -->
                         <div class="pos-customer-box">
                             <i data-lucide="user-check" class="pos-control-icon"></i>
-                            <select id="posCustomerSelect" class="pos-control-select">
+                            <select id="posCustomerSelect" class="pos-control-select" onchange="window.handlePosCustomerChange(true)">
                                 <!-- Loaded dynamically from state.partners (CUSTOMER) -->
                             </select>
+                            <span id="posCustomerTypeBadge" class="pos-cust-type-pill retail" style="display:inline-flex;">👤 Khách lẻ</span>
                             <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal()" title="Thêm khách hàng nhanh">+</button>
                         </div>
 
@@ -6286,10 +6313,20 @@
                             </div>
                         </div>
 
-                        <button type="button" class="pos-checkout-btn" onclick="window.submitPosOrder()">
-                            <i data-lucide="check-circle" style="width:20px; height:20px;"></i>
-                            <span>THANH TOÁN (F9)</span>
-                        </button>
+                        <div class="pos-actions-row">
+                            <button type="button" class="pos-action-btn pos-btn-cancel" onclick="window.closePosModal()" title="Hủy thao tác và đóng POS">
+                                <i data-lucide="x-circle" style="width:18px; height:18px;"></i>
+                                <span>HỦY</span>
+                            </button>
+                            <button type="button" class="pos-action-btn pos-btn-draft" onclick="window.submitPosOrder(true)" title="Lưu nháp đơn hàng (không trừ tồn kho)">
+                                <i data-lucide="file-text" style="width:18px; height:18px;"></i>
+                                <span>LƯU NHÁP</span>
+                            </button>
+                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn và thanh toán (F9)">
+                                <i data-lucide="check-circle" style="width:20px; height:20px;"></i>
+                                <span>THANH TOÁN (F9)</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -10202,7 +10239,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_pos_screen"></script>
+    <script src="/app.js?v=20261019_pos_customer_type"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
