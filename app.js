@@ -18143,10 +18143,10 @@ function initDataInForms() {
         if (p.role === "CUSTOMER" || p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH") {
             if (finPartner) finPartner.innerHTML += `<option value="${p.id}">${p.name} (${p.code})</option>`;
         }
-        if (p.role === "SUBCONTRACTOR") {
+        if (p.role === "SUBCONTRACTOR" || p.role === "BOTH") {
             if (subPartnerSelect) subPartnerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
         }
-        if (p.role === "SUPPLIER") {
+        if (p.role === "SUPPLIER" || p.role === "BOTH") {
             if (stockSupplierSelect) stockSupplierSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
         }
     });
@@ -23675,6 +23675,7 @@ window.initOnlineSales = function() {
     document.getElementById("onlineOrderSearchInput")?.addEventListener("input", renderOnlineSales);
     document.getElementById("onlineOrderStatusFilter")?.addEventListener("change", renderOnlineSales);
     document.getElementById("onlineProductSearchInput")?.addEventListener("input", renderOnlineProducts);
+    document.getElementById("onlineProductSupplierFilter")?.addEventListener("change", renderOnlineProducts);
     document.getElementById("onlineStockSearchInput")?.addEventListener("input", renderOnlineStockLogs);
     
     // Action modal triggers
@@ -24057,18 +24058,19 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         imgPreview.style.display = "none";
     }
 
-    // Populate Supplier datalist
-    const dl = document.getElementById("onlineProductSupplierDatalist");
-    if (dl) {
-        dl.innerHTML = "";
+    // Populate Supplier dropdown from Partners
+    const supSelect = document.getElementById("onlineProductSupplier");
+    if (supSelect) {
+        supSelect.innerHTML = '<option value="">-- Chọn Nhà cung cấp --</option>';
         const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH");
-        const knownSuppliers = new Set(suppliers.map(s => s.name));
-        (state.online_products || []).forEach(p => {
-            if (p.supplier) knownSuppliers.add(p.supplier);
-            if (p.brand) knownSuppliers.add(p.brand);
-        });
-        knownSuppliers.forEach(sName => {
-            if (sName) dl.innerHTML += `<option value="${sName}">`;
+        suppliers.sort((a, b) => (a.name || "").localeCompare(b.name || "", "vi"));
+        const seenNames = new Set();
+        suppliers.forEach(s => {
+            if (s.name && !seenNames.has(s.name)) {
+                seenNames.add(s.name);
+                const codePrefix = s.code ? `[${s.code}] ` : "";
+                supSelect.innerHTML += `<option value="${s.name}">${codePrefix}${s.name}</option>`;
+            }
         });
     }
     
@@ -24096,7 +24098,11 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
             document.getElementById("onlineProductName").value = prod.name;
             document.getElementById("onlineProductUnit").value = prod.unit;
             if (document.getElementById("onlineProductSupplier")) {
-                document.getElementById("onlineProductSupplier").value = prod.supplier || prod.brand || "";
+                const curSup = prod.supplier || prod.brand || "";
+                if (curSup && supSelect && !Array.from(supSelect.options).some(o => o.value === curSup)) {
+                    supSelect.innerHTML += `<option value="${curSup}">${curSup}</option>`;
+                }
+                document.getElementById("onlineProductSupplier").value = curSup;
             }
             if (document.getElementById("onlineProductCostPrice")) {
                 document.getElementById("onlineProductCostPrice").value = prod.cost_price || prod.import_price || 0;
@@ -24129,14 +24135,36 @@ window.openOnlineImportStockModal = function() {
         });
     }
 
-    // Load supplier options
+    // Load supplier options from Partners
     const supplierSelect = document.getElementById("onlineImportSupplier");
     if (supplierSelect) {
-        supplierSelect.innerHTML = "";
-        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "BOTH");
+        supplierSelect.innerHTML = '<option value="">-- Chọn Nhà cung cấp --</option>';
+        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "BOTH" || p.role === "SUBCONTRACTOR");
+        suppliers.sort((a, b) => (a.name || "").localeCompare(b.name || "", "vi"));
+        const seen = new Set();
         suppliers.forEach(s => {
-            supplierSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            if (s.name && !seen.has(s.name)) {
+                seen.add(s.name);
+                const codePrefix = s.code ? `[${s.code}] ` : "";
+                supplierSelect.innerHTML += `<option value="${s.name}">${codePrefix}${s.name}</option>`;
+            }
         });
+    }
+
+    // Auto-sync supplier when product changes
+    if (productSelect && supplierSelect) {
+        const syncSupplier = () => {
+            const p = (state.online_products || []).find(item => item.sku === productSelect.value);
+            if (p && (p.supplier || p.brand)) {
+                const supVal = p.supplier || p.brand;
+                if (!Array.from(supplierSelect.options).some(o => o.value === supVal)) {
+                    supplierSelect.innerHTML += `<option value="${supVal}">${supVal}</option>`;
+                }
+                supplierSelect.value = supVal;
+            }
+        };
+        productSelect.onchange = syncSupplier;
+        syncSupplier();
     }
 
     // Bind dynamic source toggle behavior
@@ -26172,8 +26200,17 @@ window.editOnlineProduct = function(sku) {
 window.importOnlineStockFromTable = function(sku) {
     window.openOnlineImportStockModal();
     const productSelect = document.getElementById("onlineImportProduct");
+    const supplierSelect = document.getElementById("onlineImportSupplier");
     if (productSelect) {
         productSelect.value = String(sku);
+        const prod = (state.online_products || []).find(p => p.sku === String(sku));
+        if (prod && (prod.supplier || prod.brand) && supplierSelect) {
+            const supVal = prod.supplier || prod.brand;
+            if (!Array.from(supplierSelect.options).some(o => o.value === supVal)) {
+                supplierSelect.innerHTML += `<option value="${supVal}">${supVal}</option>`;
+            }
+            supplierSelect.value = supVal;
+        }
     }
 };
 
@@ -26526,14 +26563,38 @@ window.renderOnlineProducts = function() {
     if (!tableBody) return;
     tableBody.innerHTML = "";
     
+    // Update supplier filter options
+    const supFilterSelect = document.getElementById("onlineProductSupplierFilter");
+    if (supFilterSelect) {
+        const curVal = supFilterSelect.value;
+        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH");
+        const uniqueSups = new Set(suppliers.map(s => s.name));
+        (state.online_products || []).forEach(p => {
+            if (p.supplier) uniqueSups.add(p.supplier);
+            if (p.brand) uniqueSups.add(p.brand);
+        });
+        
+        const currentCount = supFilterSelect.options.length;
+        if (currentCount <= 1 || currentCount !== uniqueSups.size + 1) {
+            supFilterSelect.innerHTML = '<option value="">-- Tất cả Nhà cung cấp --</option>';
+            Array.from(uniqueSups).sort((a,b) => (a||"").localeCompare(b||"", 'vi')).forEach(sName => {
+                if (sName) supFilterSelect.innerHTML += `<option value="${sName}">${sName}</option>`;
+            });
+            supFilterSelect.value = curVal;
+        }
+    }
+
     const query = document.getElementById("onlineProductSearchInput")?.value.toLowerCase().trim() || "";
+    const filterSup = document.getElementById("onlineProductSupplierFilter")?.value || "";
     
     const filteredProducts = (state.online_products || []).filter(p => {
         if (!p) return false;
         const sku = String(p.sku || "").toLowerCase();
         const name = String(p.name || "").toLowerCase();
-        const supplier = String(p.supplier || p.brand || "").toLowerCase();
-        return sku.includes(query) || name.includes(query) || supplier.includes(query);
+        const supplier = String(p.supplier || p.brand || "");
+        const matchQuery = sku.includes(query) || name.includes(query) || supplier.toLowerCase().includes(query);
+        const matchSupplier = !filterSup || supplier === filterSup;
+        return matchQuery && matchSupplier;
     });
     
     filteredProducts.forEach(prod => {
@@ -30877,7 +30938,7 @@ window.openNewImportTicketModal = function() {
     const supplierSelect = document.getElementById("whImportSupplierSelect");
     if (supplierSelect) {
         supplierSelect.innerHTML = '<option value="">-- Chọn Nhà cung cấp --</option>';
-        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR");
+        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH");
         suppliers.forEach(p => {
             supplierSelect.innerHTML += `<option value="${p.name}">${p.code} - ${p.name}</option>`;
         });

@@ -1819,9 +1819,14 @@
                     <div id="subtab-online-products" class="online-subtab-pane" style="display:none;">
 
                         <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-                            <div class="search-box" style="width:250px;">
-                                <i data-lucide="search"></i>
-                                <input type="text" placeholder="Tìm kiếm hàng hóa..." id="onlineProductSearchInput">
+                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                <div class="search-box" style="width:240px;">
+                                    <i data-lucide="search"></i>
+                                    <input type="text" placeholder="Tìm kiếm hàng hóa..." id="onlineProductSearchInput">
+                                </div>
+                                <select class="form-select" id="onlineProductSupplierFilter" style="width:220px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineProducts && window.renderOnlineProducts()">
+                                    <option value="">-- Tất cả Nhà cung cấp --</option>
+                                </select>
                             </div>
                         </div>
 
@@ -6659,11 +6664,13 @@
 
                             <div class="form-group">
 
-                                <label for="onlineProductSupplier">Nhà cung cấp</label>
+                                <label for="onlineProductSupplier">Nhà cung cấp *</label>
 
-                                <input type="text" class="form-input" id="onlineProductSupplier" list="onlineProductSupplierDatalist" placeholder="Chọn hoặc nhập NCC...">
+                                <select class="form-select" id="onlineProductSupplier" required>
 
-                                <datalist id="onlineProductSupplierDatalist"></datalist>
+                                    <option value="">-- Chọn Nhà cung cấp --</option>
+
+                                </select>
 
                             </div>
 
@@ -10210,7 +10217,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_sample_cost_stock"></script>
+    <script src="/app.js?v=20261019_supplier_partners"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
