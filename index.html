@@ -264,21 +264,21 @@
                             </div>
                         </div>
 
-                        <!-- Quản lý kho collapsible group -->
+                        <!-- Kho hàng collapsible group -->
                         <div class="menu-group" style="width: 100%;">
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('ton-kho');" style="padding: 8px 12px; font-size: 0.9rem;">
+                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('kho-hang');" style="padding: 8px 12px; font-size: 0.9rem;">
                                 <i data-lucide="warehouse" style="width: 16px; height: 16px;"></i>
-                                <span>Quản lý kho</span>
+                                <span>Kho hàng</span>
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
                             </button>
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
+                                <a href="/kho-hang" class="menu-item submenu-item" data-slug="kho-hang" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="package" style="width: 12px; height: 12px;"></i>
+                                    <span>Kho hàng</span>
+                                </a>
                                 <a href="/nhap-kho-hang-hoa" class="menu-item submenu-item" data-slug="nhap-kho-hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="download" style="width: 12px; height: 12px;"></i>
                                     <span>Nhập kho (bổ sung SL)</span>
-                                </a>
-                                <a href="/ton-kho" class="menu-item submenu-item" data-slug="ton-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="package" style="width: 12px; height: 12px;"></i>
-                                    <span>Tồn kho hàng hóa</span>
                                 </a>
                                 <a href="/kiem-ke-kho" class="menu-item submenu-item" data-slug="kiem-ke-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="check-square" style="width: 12px; height: 12px;"></i>
@@ -2235,9 +2235,11 @@
                                     <tr>
                                         <th>Mã SKU</th>
                                         <th>Tên sản phẩm</th>
+                                        <th>Nhà cung cấp</th>
                                         <th style="text-align:center; color:var(--success);">Tổng nhập (+)</th>
                                         <th style="text-align:center; color:var(--danger);">Tổng xuất (-)</th>
                                         <th style="text-align:center; font-weight:700;">Tồn kho thực tế</th>
+                                        <th style="text-align:center;">Lịch sử</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -7140,6 +7142,78 @@
 
     </div>
 
+    <!-- Modal: Lịch sử xuất nhập kho chi tiết theo mặt hàng -->
+    <div class="modal" id="productStockHistoryModal" style="z-index: 200070;">
+        <div class="modal-dialog" style="max-width: 900px; width: 95%;">
+            <div class="modal-content">
+                <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:16px 20px;">
+                    <div>
+                        <h2 style="font-size:1.2rem; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="history" style="color:var(--primary);"></i>
+                            <span id="productStockHistoryModalTitle">Lịch sử xuất/nhập kho</span>
+                        </h2>
+                        <div id="productStockHistoryModalSubtitle" style="color:var(--text-secondary); font-size:0.83rem; margin-top:4px;"></div>
+                    </div>
+                    <button class="btn-close" onclick="document.getElementById('productStockHistoryModal').classList.remove('active')"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body" style="padding:20px; max-height:calc(85vh - 130px); overflow-y:auto;">
+                    <!-- Stats bar -->
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+                        <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:8px; padding:12px 14px;">
+                            <div style="font-size:0.78rem; color:var(--text-secondary); font-weight:600;">Tổng nhập kho</div>
+                            <div id="prodHistTotalImport" style="font-size:1.3rem; font-weight:800; color:#10b981; margin-top:2px;">+0</div>
+                        </div>
+                        <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:8px; padding:12px 14px;">
+                            <div style="font-size:0.78rem; color:var(--text-secondary); font-weight:600;">Tổng xuất kho</div>
+                            <div id="prodHistTotalExport" style="font-size:1.3rem; font-weight:800; color:#ef4444; margin-top:2px;">-0</div>
+                        </div>
+                        <div style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:8px; padding:12px 14px;">
+                            <div style="font-size:0.78rem; color:var(--text-secondary); font-weight:600;">Tồn kho thực tế</div>
+                            <div id="prodHistCurrentStock" style="font-size:1.3rem; font-weight:800; color:var(--text-primary); margin-top:2px;">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar inside modal -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">Phân loại:</span>
+                            <select id="prodHistTypeFilter" class="form-select" style="width:145px; padding:4px 8px; font-size:0.82rem;" onchange="window.filterProductStockHistory()">
+                                <option value="ALL">Tất cả giao dịch</option>
+                                <option value="IMPORT">Chỉ nhập kho (+)</option>
+                                <option value="EXPORT">Chỉ xuất kho (-)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary" onclick="window.exportSingleProductStockHistory()" style="padding:5px 12px; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="file-spreadsheet"></i>
+                            <span>Xuất Excel thẻ kho</span>
+                        </button>
+                    </div>
+
+                    <!-- Table of chronological logs -->
+                    <div class="table-responsive" style="max-height:380px; overflow-y:auto; border:1px solid var(--border-color); border-radius:6px;">
+                        <table class="table" id="productStockHistoryTable" style="margin:0; font-size:0.85rem;">
+                            <thead style="position:sticky; top:0; background:var(--bg-card); z-index:1;">
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Loại giao dịch</th>
+                                    <th style="text-align:right;">Số lượng</th>
+                                    <th>Người thực hiện</th>
+                                    <th>Ghi chú & Nguồn giao dịch</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:flex; justify-content:flex-end; padding:12px 20px; border-top:1px solid var(--border-color);">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('productStockHistoryModal').classList.remove('active')">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: Catalog Excel Import Preview Modal -->
     <div class="modal" id="onlineCatalogImportPreviewModal" style="z-index: 200060;">
         <div class="modal-dialog" style="max-width: 950px; width: 95%;">
@@ -10462,7 +10536,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_auto_pricebook"></script>
+    <script src="/app.js?v=20261019_stock_history_supplier"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
