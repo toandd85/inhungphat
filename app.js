@@ -25052,6 +25052,12 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
         if (priceBookSelect) {
             priceBookSelect.value = window.posSelectedPriceBook || "RETAIL";
         }
+        const displayEl = document.getElementById("posPriceBookDisplay");
+        if (displayEl) {
+            displayEl.innerHTML = (window.posSelectedPriceBook === "WHOLESALE") 
+                ? `<span style="color:#d97706; font-weight:700;">🏢 Bảng giá bán sỉ</span>` 
+                : `<span style="color:var(--text-primary); font-weight:700;">🏷️ Bảng giá bán lẻ</span>`;
+        }
 
         if (mode === "EDIT" && orderId) {
             const order = state.online_orders.find(o => o.id === orderId) || state.orders.find(o => o.id === orderId);
@@ -25344,7 +25350,7 @@ window.clearPosCart = function() {
     }
 };
 
-// Handle Customer Change in POS: updates badge and auto-selects price book
+// Handle Customer Change in POS: updates badge and auto-selects price book (strictly read-only display)
 window.handlePosCustomerChange = function(forceAutoPriceBook = true) {
     const customerSelect = document.getElementById("posCustomerSelect");
     const customerId = customerSelect ? customerSelect.value : "";
@@ -25358,33 +25364,65 @@ window.handlePosCustomerChange = function(forceAutoPriceBook = true) {
         badgeEl.style.display = "inline-flex";
     }
 
-    if (forceAutoPriceBook) {
-        const targetPriceBook = isWholesale ? "WHOLESALE" : "RETAIL";
-        const priceBookSelect = document.getElementById("posPriceBookSelect");
-        if (priceBookSelect && priceBookSelect.value !== targetPriceBook) {
-            priceBookSelect.value = targetPriceBook;
-            window.handlePosPriceBookChange();
+    const targetPriceBook = isWholesale ? "WHOLESALE" : "RETAIL";
+    window.posSelectedPriceBook = targetPriceBook;
+
+    const priceBookSelect = document.getElementById("posPriceBookSelect");
+    if (priceBookSelect) {
+        priceBookSelect.value = targetPriceBook;
+    }
+
+    const displayEl = document.getElementById("posPriceBookDisplay");
+    if (displayEl) {
+        if (isWholesale) {
+            displayEl.innerHTML = `<span style="color:#d97706; font-weight:700;">🏢 Bảng giá bán sỉ</span>`;
+        } else {
+            displayEl.innerHTML = `<span style="color:var(--text-primary); font-weight:700;">🏷️ Bảng giá bán lẻ</span>`;
         }
     }
-};
-
-// Switch Price Book: Bán lẻ <-> Bán sỉ
-window.handlePosPriceBookChange = function() {
-    const select = document.getElementById("posPriceBookSelect");
-    if (!select) return;
-
-    window.posSelectedPriceBook = select.value;
 
     // Recalculate price for every item currently in cart
-    window.posCart.forEach(item => {
-        const prod = (state.online_products || []).find(p => p.sku === item.sku);
-        item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, item.qty);
-        item.item_total = item.qty * item.price;
-    });
+    if (Array.isArray(window.posCart)) {
+        window.posCart.forEach(item => {
+            const prod = (state.online_products || []).find(p => p.sku === item.sku);
+            item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, item.qty);
+            item.item_total = item.qty * item.price;
+        });
+    }
 
     // Re-render cart and product catalog
-    window.renderPosCart();
-    window.renderPosCatalog();
+    if (typeof window.renderPosCart === 'function') window.renderPosCart();
+    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+// Sync Price Book info and recalculate prices
+window.handlePosPriceBookChange = function() {
+    const select = document.getElementById("posPriceBookSelect");
+    const val = select ? select.value : (window.posSelectedPriceBook || "RETAIL");
+    window.posSelectedPriceBook = val;
+
+    const displayEl = document.getElementById("posPriceBookDisplay");
+    if (displayEl) {
+        if (val === "WHOLESALE") {
+            displayEl.innerHTML = `<span style="color:#d97706; font-weight:700;">🏢 Bảng giá bán sỉ</span>`;
+        } else {
+            displayEl.innerHTML = `<span style="color:var(--text-primary); font-weight:700;">🏷️ Bảng giá bán lẻ</span>`;
+        }
+    }
+
+    // Recalculate price for every item currently in cart
+    if (Array.isArray(window.posCart)) {
+        window.posCart.forEach(item => {
+            const prod = (state.online_products || []).find(p => p.sku === item.sku);
+            item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, item.qty);
+            item.item_total = item.qty * item.price;
+        });
+    }
+
+    // Re-render cart and product catalog
+    if (typeof window.renderPosCart === 'function') window.renderPosCart();
+    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
 };
 
 // Render Cart Lines

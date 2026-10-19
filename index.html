@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261019_two_prices">
+    <link rel="stylesheet" href="/style.css?v=20261019_auto_pricebook">
 
     <script>
 
@@ -6408,13 +6408,16 @@
                             <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal()" title="Thêm khách hàng nhanh">+</button>
                         </div>
 
-                        <!-- Price Book selector (BẢNG GIÁ BÁN LẺ / BÁN SỈ) -->
+                        <!-- Price Book selector (TỰ ĐỘNG THEO LOẠI KHÁCH - CHỈ HIỂN THỊ THÔNG TIN) -->
                         <div class="pos-pricebook-box">
                             <i data-lucide="badge-percent" class="pos-control-icon" style="color:#d97706;"></i>
-                            <select id="posPriceBookSelect" class="pos-control-select" onchange="window.handlePosPriceBookChange()">
-                                <option value="RETAIL" selected>🏷️ Bảng giá bán lẻ</option>
-                                <option value="WHOLESALE">🏢 Bảng giá bán sỉ</option>
-                            </select>
+                            <div class="pos-pricebook-badge" style="width: 100%; height: 34px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; padding: 0 10px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; background: var(--bg-hover); cursor: default; user-select: none;" title="Bảng giá tự động áp dụng theo phân loại Khách hàng (Chỉ hiển thị, không thể sửa)">
+                                <span id="posPriceBookDisplay">🏷️ Bảng giá bán lẻ</span>
+                                <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; display: inline-flex; align-items: center; gap: 3px;">
+                                    <i data-lucide="lock" style="width: 11px; height: 11px;"></i> Tự động
+                                </span>
+                            </div>
+                            <input type="hidden" id="posPriceBookSelect" value="RETAIL">
                         </div>
                     </div>
 
@@ -10459,7 +10462,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_catalog_vs_restock"></script>
+    <script src="/app.js?v=20261019_auto_pricebook"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
