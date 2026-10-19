@@ -14138,24 +14138,24 @@ class AppState {
                     p.price = typeof p.price === 'number' ? p.price : 0;
                     p.wholesale_price = typeof p.wholesale_price === 'number' ? p.wholesale_price : 0;
                     
-                    // Auto configure 6 ranges and 2 discounts if missing
-                    if (!p.wholesale_qty_prices || p.wholesale_qty_prices.length === 0) {
-                        const basePrice = p.price || 0;
-                        p.wholesale_qty_prices = [
-                            { min_qty: 1, max_qty: 99, price: Math.round(basePrice) },
-                            { min_qty: 100, max_qty: 499, price: Math.round(basePrice * 0.95) },
-                            { min_qty: 500, max_qty: 999, price: Math.round(basePrice * 0.90) },
-                            { min_qty: 1000, max_qty: 2999, price: Math.round(basePrice * 0.85) },
-                            { min_qty: 3000, max_qty: 4999, price: Math.round(basePrice * 0.80) },
-                            { min_qty: 5000, max_qty: null, price: Math.round(basePrice * 0.75) }
-                        ];
+                    // Auto configure retail quantity price tiers if missing
+                    if (!p.retail_qty_prices || p.retail_qty_prices.length === 0) {
+                        if (p.wholesale_qty_prices && p.wholesale_qty_prices.length > 0) {
+                            p.retail_qty_prices = p.wholesale_qty_prices;
+                        } else {
+                            const basePrice = p.price || 0;
+                            p.retail_qty_prices = [
+                                { min_qty: 1, max_qty: 99, price: Math.round(basePrice) },
+                                { min_qty: 100, max_qty: 499, price: Math.round(basePrice * 0.95) },
+                                { min_qty: 500, max_qty: 999, price: Math.round(basePrice * 0.90) },
+                                { min_qty: 1000, max_qty: 2999, price: Math.round(basePrice * 0.85) },
+                                { min_qty: 3000, max_qty: 4999, price: Math.round(basePrice * 0.80) },
+                                { min_qty: 5000, max_qty: null, price: Math.round(basePrice * 0.75) }
+                            ];
+                        }
                     }
-                    if (!p.wholesale_qty_discounts || p.wholesale_qty_discounts.length === 0) {
-                        p.wholesale_qty_discounts = [
-                            { min_qty: 1000, max_qty: 4999, discount_percent: 3 },
-                            { min_qty: 5000, max_qty: null, discount_percent: 5 }
-                        ];
-                    }
+                    p.wholesale_qty_prices = p.retail_qty_prices;
+                    p.wholesale_qty_discounts = [];
                 }
                 return p;
             }).filter(Boolean);
@@ -24644,18 +24644,33 @@ window.posCurrentCategory = "ALL";
 window.posActiveOrderId = null;
 window.posActiveMode = "ADD";
 
-// Calculate price based on selected price book (RETAIL or WHOLESALE) - independent of quantity
-window.getPosProductPrice = function(prod, priceBook = window.posSelectedPriceBook) {
+// Calculate price: Wholesale is single flat price; Retail uses quantity tiered brackets if available
+window.getPosProductPrice = function(prod, priceBook = window.posSelectedPriceBook, qty = 1) {
     if (!prod) return 0;
     
-    // If WHOLESALE price book (Khách sỉ)
+    // If WHOLESALE price book (Khách sỉ) -> single flat wholesale price
     if (priceBook === "WHOLESALE") {
         if (prod.wholesale_price && Number(prod.wholesale_price) > 0) {
             return Number(prod.wholesale_price);
         }
+        return Number(prod.price || 0);
     }
     
-    // RETAIL (Khách lẻ) or fallback
+    // RETAIL (Khách lẻ) -> tiered brackets by quantity
+    const tiers = prod.retail_qty_prices || prod.wholesale_qty_prices;
+    if (Array.isArray(tiers) && tiers.length > 0) {
+        const numQty = Number(qty) || 1;
+        const match = tiers.find(t => {
+            const min = Number(t.min_qty) || 0;
+            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+            return numQty >= min && numQty <= max;
+        });
+        if (match && Number(match.price) > 0) {
+            return Number(match.price);
+        }
+    }
+    
+    // Fallback standard retail price
     return Number(prod.price || 0);
 };
 
@@ -26818,19 +26833,6 @@ window.openOnlineBulkPriceModal = function() {
         });
     }
 
-    // Clear and Populate default 2 Discount Levels
-    const discountsContainer = document.getElementById("bulkPriceDiscountsContainer");
-    if (discountsContainer) {
-        discountsContainer.innerHTML = "";
-        const defaultDiscounts = [
-            { min: 1000, max: 4999, percent: 3 },
-            { min: 5000, max: '', percent: 5 }
-        ];
-        defaultDiscounts.forEach(disc => {
-            window.addBulkPriceDiscountRow(disc.min, disc.max, disc.percent);
-        });
-    }
-
     openModal("onlineBulkPriceModal");
 };
 
@@ -26861,38 +26863,26 @@ function handleOnlineBulkPriceSubmit(e) {
         return { min, max, ratio };
     });
 
-    // 3. Parse Discount Inputs
-    const discRows = document.querySelectorAll("#bulkPriceDiscountsContainer > div");
-    const parsedDiscounts = Array.from(discRows).map(row => {
-        const min = parseInt(row.querySelector(".disc-min").value) || 0;
-        const maxVal = row.querySelector(".disc-max").value;
-        const max = maxVal ? parseInt(maxVal) : null;
-        const percent = parseFloat(row.querySelector(".disc-percent").value) || 0;
-        return { min, max, percent };
-    });
-
-    // 4. Update the products in state
+    // 3. Update the products in state
     state.online_products.forEach(p => {
         if (checkedSkus.includes(p.sku)) {
             const basePrice = p.price || 0;
             // Map ratios to actual prices
-            p.wholesale_qty_prices = parsedTiers.map(t => ({
+            const mappedTiers = parsedTiers.map(t => ({
                 min_qty: t.min,
                 max_qty: t.max,
                 price: Math.round(basePrice * (t.ratio / 100))
             }));
-            p.wholesale_qty_discounts = parsedDiscounts.map(d => ({
-                min_qty: d.min,
-                max_qty: d.max,
-                discount_percent: d.percent
-            }));
+            p.retail_qty_prices = mappedTiers;
+            p.wholesale_qty_prices = mappedTiers;
+            p.wholesale_qty_discounts = [];
         }
     });
 
     state.updateState("online_products", state.online_products);
     closeModal("onlineBulkPriceModal");
     if (typeof renderOnlinePrices === "function") renderOnlinePrices();
-    alert(`Đã áp dụng thiết lập bảng giá sỉ hàng loạt thành công cho ${checkedSkus.length} sản phẩm!`);
+    alert(`Đã áp dụng thiết lập bậc thang giá bán lẻ hàng loạt thành công cho ${checkedSkus.length} sản phẩm!`);
 }
 
 // Bind submit event for bulk price form on DOMContentLoaded
@@ -26924,6 +26914,16 @@ window.renderOnlinePrices = function() {
             imgHtml = `<div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.04); border-radius:4px; border:1px dashed var(--border-color); color:var(--text-secondary);"><i data-lucide="image" style="width:14px; height:14px;"></i></div>`;
         }
         
+        const tiers = p.retail_qty_prices || p.wholesale_qty_prices || [];
+        let tierPreviewText = "Chưa thiết lập bậc thang";
+        if (tiers.length > 0) {
+            tierPreviewText = tiers.map(t => `${t.min_qty} - ${t.max_qty || '∞'}: ${(typeof formatMoney === 'function' ? formatMoney(t.price) : t.price)}đ`).join('&#10;');
+        }
+        
+        const tierBadgeHtml = tiers.length > 0
+            ? `<span title="${tierPreviewText}" style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:help;">${tiers.length} mức SL</span>`
+            : `<span style="color:var(--text-secondary); font-size:0.75rem;">Chưa có</span>`;
+
         row.innerHTML = `
             <td><strong>${p.sku}</strong></td>
             <td>${imgHtml}</td>
@@ -26931,6 +26931,14 @@ window.renderOnlinePrices = function() {
             <td>${p.unit || 'Chiếc'}</td>
             <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price || 0}" min="0" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;"></td>
             <td><input type="number" class="form-input price-wholesale" data-sku="${p.sku}" value="${p.wholesale_price || 0}" min="0" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;" placeholder="Nhập giá sỉ..."></td>
+            <td>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    ${tierBadgeHtml}
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openAdvancedPricingModal('${p.sku}')" style="padding:4px 8px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;" title="Cấu hình bậc thang giá bán lẻ theo số lượng">
+                        <i data-lucide="sliders" style="width:12px; height:12px;"></i> Thiết lập SL
+                    </button>
+                </div>
+            </td>
             <td style="text-align: center;">
                 <button type="button" class="btn btn-success btn-sm" onclick="saveSingleProductPrice('${p.sku}', this)" style="padding: 5px 14px; font-size:0.8rem; font-weight:700;">
                     <i data-lucide="check" style="width:13px; height:13px; display:inline-block; vertical-align:middle; margin-right:2px;"></i> Lưu
@@ -26996,25 +27004,14 @@ window.openAdvancedPricingModal = function(sku) {
     document.getElementById("advPricingProductName").textContent = prod.name;
     
     const priceTableBody = document.querySelector("#advPriceTable tbody");
-    const discountTableBody = document.querySelector("#advDiscountTable tbody");
-    priceTableBody.innerHTML = "";
-    discountTableBody.innerHTML = "";
+    if (priceTableBody) priceTableBody.innerHTML = "";
     
-    const qtyPrices = prod.wholesale_qty_prices || [];
+    const qtyPrices = prod.retail_qty_prices || prod.wholesale_qty_prices || [];
     qtyPrices.forEach(item => {
         addAdvPriceRow(item.min_qty, item.max_qty || "", item.price);
     });
     if (qtyPrices.length === 0) {
-        addAdvPriceRow(100, "", prod.wholesale_price || 0);
-    }
-    
-    const qtyDiscounts = prod.wholesale_qty_discounts || [];
-    qtyDiscounts.forEach(item => {
-        addAdvDiscountRow(item.min_qty, item.max_qty || "", item.discount_percent);
-    });
-    if (qtyDiscounts.length === 0) {
-        addAdvDiscountRow(20000, 49999, 3);
-        addAdvDiscountRow(50000, "", 5);
+        addAdvPriceRow(1, "", prod.price || 0);
     }
     
     const modal = document.getElementById("onlineProductAdvancedPricingModal");
@@ -27044,20 +27041,7 @@ window.addAdvPriceRow = function(minQty = "", maxQty = "", price = "") {
 };
 
 window.addAdvDiscountRow = function(minQty = "", maxQty = "", discount = "") {
-    const tableBody = document.querySelector("#advDiscountTable tbody");
-    if (!tableBody) return;
-    
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td><input type="number" class="form-input row-min-qty" value="${minQty}" min="0" required style="padding:4px 8px;"></td>
-        <td><input type="number" class="form-input row-max-qty" value="${maxQty}" min="0" placeholder="K.hạn" style="padding:4px 8px;"></td>
-        <td><input type="number" class="form-input row-discount" value="${discount}" min="0" max="100" required style="padding:4px 8px;"></td>
-        <td class="text-center"><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()" style="padding:4px 8px;"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button></td>
-    `;
-    tableBody.appendChild(row);
-    if (window.lucide && typeof lucide.createIcons === 'function') {
-        lucide.createIcons();
-    }
+    // Deprecated - kept as no-op stub for safety
 };
 
 window.saveAdvancedPricingSettings = function() {
@@ -27065,7 +27049,7 @@ window.saveAdvancedPricingSettings = function() {
     const prod = state.online_products.find(p => p.sku === sku);
     if (!prod) return;
     
-    // Parse wholesale prices
+    // Parse retail tiered prices
     const priceRows = document.querySelectorAll("#advPriceTable tbody tr");
     const qtyPrices = [];
     priceRows.forEach(row => {
@@ -27081,38 +27065,35 @@ window.saveAdvancedPricingSettings = function() {
         }
     });
     
-    // Parse extra discounts
-    const discountRows = document.querySelectorAll("#advDiscountTable tbody tr");
-    const qtyDiscounts = [];
-    discountRows.forEach(row => {
-        const minQty = parseFloat(row.querySelector(".row-min-qty").value);
-        const maxQty = parseFloat(row.querySelector(".row-max-qty").value);
-        const discount = parseFloat(row.querySelector(".row-discount").value);
-        if (!isNaN(minQty) && !isNaN(discount)) {
-            qtyDiscounts.push({
-                min_qty: minQty,
-                max_qty: isNaN(maxQty) ? "" : maxQty,
-                discount_percent: discount
-            });
-        }
-    });
-    
     qtyPrices.sort((a, b) => a.min_qty - b.min_qty);
-    qtyDiscounts.sort((a, b) => a.min_qty - b.min_qty);
     
-    prod.wholesale_qty_prices = qtyPrices;
-    prod.wholesale_qty_discounts = qtyDiscounts;
+    prod.retail_qty_prices = qtyPrices;
+    prod.wholesale_qty_prices = qtyPrices; // sync for backwards compatibility
+    prod.wholesale_qty_discounts = [];     // remove quantity discount completely
     
     state.updateState("online_products", state.online_products);
     
     closeModal("onlineProductAdvancedPricingModal");
     renderOnlinePrices();
-    alert(`Đã lưu thiết lập nâng cao cho hàng hóa ${prod.name} thành công!`);
+    alert(`Đã lưu thiết lập giá bán lẻ theo số lượng cho ${prod.name} thành công!`);
 };
 
-window.calculateOnlineProductUnitPrice = function(sku, customerIdOrIsWholesale) {
+window.calculateOnlineProductUnitPrice = function(sku, arg2, arg3) {
     const prod = (state.online_products || []).find(p => p.sku === sku);
     if (!prod) return 0;
+    
+    let qty = 1;
+    let customerIdOrIsWholesale = null;
+    
+    if (typeof arg2 === "number" || (!isNaN(parseFloat(arg2)) && isFinite(arg2) && typeof arg2 !== "boolean")) {
+        qty = parseFloat(arg2) || 1;
+        customerIdOrIsWholesale = arg3;
+    } else {
+        customerIdOrIsWholesale = arg2;
+        if (arg3 !== undefined && !isNaN(parseFloat(arg3))) {
+            qty = parseFloat(arg3) || 1;
+        }
+    }
     
     let isWholesale = false;
     if (typeof customerIdOrIsWholesale === "boolean") {
@@ -27135,9 +27116,28 @@ window.calculateOnlineProductUnitPrice = function(sku, customerIdOrIsWholesale) 
         }
     }
     
-    if (isWholesale && prod.wholesale_price && Number(prod.wholesale_price) > 0) {
-        return Number(prod.wholesale_price);
+    // 1. Wholesale customer: always single flat wholesale price
+    if (isWholesale) {
+        if (prod.wholesale_price && Number(prod.wholesale_price) > 0) {
+            return Number(prod.wholesale_price);
+        }
+        return Number(prod.price || 0);
     }
+    
+    // 2. Retail customer: tiered price based on quantity
+    const tiers = prod.retail_qty_prices || prod.wholesale_qty_prices;
+    if (Array.isArray(tiers) && tiers.length > 0) {
+        const numQty = Number(qty) || 1;
+        const match = tiers.find(t => {
+            const min = Number(t.min_qty) || 0;
+            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+            return numQty >= min && numQty <= max;
+        });
+        if (match && Number(match.price) > 0) {
+            return Number(match.price);
+        }
+    }
+    
     return Number(prod.price || 0);
 };
 
