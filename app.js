@@ -13021,1196 +13021,315 @@ const DEFAULT_MESSAGES = [
 
 const DEFAULT_ONLINE_PRODUCTS = [
     {
-        "sku": "TD01B",
-        "name": "Hộp TD01B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
+        "sku": "SIZE-A",
+        "name": "Hộp quà Tết Size A (42 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp phổ thông",
+        "stock_qty": 2000,
         "min_stock_qty": 100,
-        "category": "BOX"
+        "cost_price": 58900,
+        "import_price": 58900,
+        "price": 80000,
+        "wholesale_price": 67000,
+        "description": "Bộ gồm Hộp + Túi kèm đóng gói (1 dây = 8 hộp = dài x rộng x cao 84cm). Giá đã gồm VAT.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23b91c1c'/><text x='50' y='42' fill='%23fef08a' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>SIZE A</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>42x36x10.5</text><circle cx='50' cy='82' r='4' fill='%23fef08a'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 80000 },
+            { "min_qty": 101, "max_qty": 300, "price": 75000 },
+            { "min_qty": 301, "max_qty": 500, "price": 72800 },
+            { "min_qty": 501, "max_qty": 700, "price": 70000 },
+            { "min_qty": 701, "max_qty": 900, "price": 69000 },
+            { "min_qty": 901, "max_qty": null, "price": 68000 }
+        ]
     },
     {
-        "sku": "TD11A",
-        "name": "Hộp TD11A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
+        "sku": "SIZE-B",
+        "name": "Hộp quà Tết Size B (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp phổ thông",
+        "stock_qty": 2000,
         "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH03A",
-        "name": "Hộp LH03A",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD10A",
-        "name": "Hộp TD10A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD13A",
-        "name": "Hộp TD13A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD12A",
-        "name": "Hộp TD12A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD13B",
-        "name": "Hộp TD13B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH03B",
-        "name": "Hộp LH03B",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH01B",
-        "name": "Hộp LH01B - 36x36x10cm",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD12B",
-        "name": "Hộp TD12B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD15B",
-        "name": "Hộp TD15B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD16A",
-        "name": "Hộp TD16A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 58700,
-        "import_price": 58700,
-        "price": 74074.07,
-        "wholesale_price": 66667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD14A",
-        "name": "Hộp TD14A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 58700,
-        "import_price": 58700,
-        "price": 74074.07,
-        "wholesale_price": 66667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG05X",
-        "name": "Hộp Cao Cấp TD_G_05 Xanh",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 110000,
-        "import_price": 110000,
-        "price": 138888.89,
-        "wholesale_price": 125000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDS02",
-        "name": "Hộp Cao Cấp TD_S_02",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 84300,
-        "import_price": 84300,
-        "price": 106481.48,
-        "wholesale_price": 95833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG02",
-        "name": "Hộp Cao Cấp TD_G_02",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 91700,
-        "import_price": 91700,
-        "price": 115740.74,
-        "wholesale_price": 104167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG05D",
-        "name": "Hộp Cao Cấp TD_G_05 Đỏ",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 91700,
-        "import_price": 91700,
-        "price": 115740.74,
-        "wholesale_price": 104167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH02B",
-        "name": "Hộp LH02B",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG04",
-        "name": "Hộp Cao Cấp TD_G_04",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 91700,
-        "import_price": 91700,
-        "price": 115740.74,
-        "wholesale_price": 104167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDS05X",
-        "name": "Hộp Cao Cấp TD_S_05 Xanh",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 84300,
-        "import_price": 84300,
-        "price": 106481.48,
-        "wholesale_price": 95833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD14B",
-        "name": "Hộp TD14B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD11B",
-        "name": "Hộp TD11B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH04A",
-        "name": "Hộp LH04A",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD15A",
-        "name": "Hộp TD15A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD15C",
-        "name": "Hộp TD15C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD14C",
-        "name": "Hộp TD14C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD12C",
-        "name": "Hộp TD12C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD10B",
-        "name": "Hộp TD10B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 55000,
-        "import_price": 55000,
-        "price": 69444.44,
-        "wholesale_price": 62500,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LHS02",
-        "name": "Hộp Cao Cấp LH_S_02",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 102700,
-        "import_price": 102700,
-        "price": 129629.63,
-        "wholesale_price": 116667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LHS01",
-        "name": "Hộp Cao Cấp LH_S_01",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 103000,
-        "import_price": 103000,
-        "price": 130000,
-        "wholesale_price": 117000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH01A",
-        "name": "Hộp LH01A",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD11C",
-        "name": "Hộp TD11C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH02C",
-        "name": "Hộp LH02C",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD13C",
-        "name": "Hộp TD13C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG03V",
-        "name": "Hộp Cao Cấp TD_G_03 Vàng",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 99000,
-        "import_price": 99000,
-        "price": 125000,
-        "wholesale_price": 112500,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD02C",
-        "name": "Hộp TD02C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 44000,
-        "import_price": 44000,
-        "price": 55555.56,
-        "wholesale_price": 50000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "Decal",
-        "name": "Decal Nổi",
-        "supplier": "Decal Nguyễn Xiển",
-        "brand": "Decal Nguyễn Xiển",
-        "unit": "Chiếc",
-        "cost_price": 39600,
-        "import_price": 39600,
-        "price": 50000,
-        "wholesale_price": 45000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH03C",
-        "name": "Hộp LH03C",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDS05D",
-        "name": "Hộp Cao Cấp TD_S_05 Đỏ",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 84300,
-        "import_price": 84300,
-        "price": 106481.48,
-        "wholesale_price": 95833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD01C",
-        "name": "Hộp TD01C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "LH02A",
-        "name": "Hộp LH02A",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 55000,
-        "import_price": 55000,
-        "price": 69444.44,
-        "wholesale_price": 62500,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD10C",
-        "name": "Hộp TD10C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 44000,
-        "import_price": 44000,
-        "price": 55555.56,
-        "wholesale_price": 50000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD16B",
-        "name": "Hộp TD16B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD09B",
-        "name": "Hộp TD09B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 55400,
-        "import_price": 55400,
-        "price": 70000,
-        "wholesale_price": 63000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD16C",
-        "name": "Hộp TD16C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 44000,
-        "import_price": 44000,
-        "price": 55555.56,
-        "wholesale_price": 50000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDS04",
-        "name": "Hộp Cao Cấp TD_S_04",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 103000,
-        "import_price": 103000,
-        "price": 130000,
-        "wholesale_price": 117000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDS06",
-        "name": "Hộp Cao Cấp TD_S_06 Vàng",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 84300,
-        "import_price": 84300,
-        "price": 106481.48,
-        "wholesale_price": 95833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG06V",
-        "name": "Hộp Cao Cấp TD_G_06 Vàng",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 99000,
-        "import_price": 99000,
-        "price": 125000,
-        "wholesale_price": 112500,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD05B",
-        "name": "Hộp TD05B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD01A",
-        "name": "Hộp TD01A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 58700,
-        "import_price": 58700,
-        "price": 74074.07,
-        "wholesale_price": 66667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD06B",
-        "name": "Hộp TD06B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62000,
-        "wholesale_price": 55800,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG03D",
-        "name": "Hộp Cao Cấp TD_G_03 Đỏ",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 91700,
-        "import_price": 91700,
-        "price": 115740.74,
-        "wholesale_price": 104167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD06A",
-        "name": "Hộp TD06A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD07C",
-        "name": "Hộp TD07C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 44000,
-        "import_price": 44000,
-        "price": 55555.56,
-        "wholesale_price": 50000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD09A",
-        "name": "Hộp TD09A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD09C",
-        "name": "Hộp TD09C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD04B",
-        "name": "Hộp TD04B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "KhayB",
-        "name": "Khay Size B 36x36",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 7900,
-        "import_price": 7900,
-        "price": 10000,
-        "wholesale_price": 9000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD07A",
-        "name": "Hộp TD07A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "G03X",
-        "name": "Hộp Cao Cấp TD_G_03 Xanh",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 91700,
-        "import_price": 91700,
-        "price": 115740.74,
-        "wholesale_price": 104167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDG01",
-        "name": "Hộp Cao Cấp TD_G_01",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 110000,
-        "import_price": 110000,
-        "price": 138888.89,
-        "wholesale_price": 125000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD03A",
-        "name": "Hộp TD03A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 59400,
-        "import_price": 59400,
+        "cost_price": 57200,
+        "import_price": 57200,
         "price": 75000,
-        "wholesale_price": 67500,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "wholesale_price": 65000,
+        "description": "Bộ gồm Hộp + Túi kèm đóng gói (1 dây = 8 hộp = dài x rộng x cao 84cm). Giá đã gồm VAT.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23dc2626'/><text x='50' y='42' fill='%23fef08a' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>SIZE B</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>36x36x10.5</text><circle cx='50' cy='82' r='4' fill='%23fef08a'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 75000 },
+            { "min_qty": 101, "max_qty": 300, "price": 72000 },
+            { "min_qty": 301, "max_qty": 500, "price": 70000 },
+            { "min_qty": 501, "max_qty": 700, "price": 68000 },
+            { "min_qty": 701, "max_qty": 900, "price": 67000 },
+            { "min_qty": 901, "max_qty": null, "price": 66000 }
+        ]
     },
     {
-        "sku": "EpNhu",
-        "name": "Ép Nhũ",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 4000,
-        "import_price": 4000,
-        "price": 5000,
-        "wholesale_price": 4500,
-        "stock_qty": 2500,
+        "sku": "SIZE-C",
+        "name": "Hộp quà Tết Size C (29 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp phổ thông",
+        "stock_qty": 2000,
         "min_stock_qty": 100,
-        "category": "BOX"
+        "cost_price": 54500,
+        "import_price": 54500,
+        "price": 71000,
+        "wholesale_price": 62000,
+        "description": "Bộ gồm Hộp + Túi kèm đóng gói (1 dây = 8 hộp = dài x rộng x cao 84cm). Giá đã gồm VAT.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23d97706'/><text x='50' y='42' fill='%23ffffff' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>SIZE C</text><text x='50' y='65' fill='%23fef3c7' font-size='11' font-family='sans-serif' text-anchor='middle'>29x36x10.5</text><circle cx='50' cy='82' r='4' fill='%23ffffff'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 71000 },
+            { "min_qty": 101, "max_qty": 300, "price": 68000 },
+            { "min_qty": 301, "max_qty": 500, "price": 66000 },
+            { "min_qty": 501, "max_qty": 700, "price": 65000 },
+            { "min_qty": 701, "max_qty": 900, "price": 64000 },
+            { "min_qty": 901, "max_qty": null, "price": 63000 }
+        ]
     },
     {
-        "sku": "TDS03X",
-        "name": "Hộp Cao Cấp TD_S_03 Xanh",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 84300,
-        "import_price": 84300,
-        "price": 106481.48,
-        "wholesale_price": 95833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "S36",
+        "name": "Hộp quà Tết S36 (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 92400,
+        "import_price": 92400,
+        "price": 120000,
+        "wholesale_price": 105000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Gồm các mẫu S36-01, S36-02 Đỏ/Vàng/Xanh.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23991b1b'/><text x='50' y='42' fill='%23fef08a' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>S36</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%23fef08a'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 120000 },
+            { "min_qty": 101, "max_qty": 300, "price": 118000 },
+            { "min_qty": 301, "max_qty": 500, "price": 115000 },
+            { "min_qty": 501, "max_qty": 700, "price": 112000 },
+            { "min_qty": 701, "max_qty": null, "price": 110000 }
+        ]
     },
     {
-        "sku": "TD07B",
-        "name": "Hộp TD07B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "P33",
+        "name": "Hộp quà Tết P33 (29 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 99400,
+        "import_price": 99400,
+        "price": 125000,
+        "wholesale_price": 113000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Hộp quà Tết cao cấp họa tiết xanh hoàng gia.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%231e40af'/><text x='50' y='42' fill='%2393c5fd' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>P33</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%2393c5fd'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 125000 },
+            { "min_qty": 101, "max_qty": 300, "price": 123000 },
+            { "min_qty": 301, "max_qty": 500, "price": 120000 },
+            { "min_qty": 501, "max_qty": 700, "price": 118000 },
+            { "min_qty": 701, "max_qty": null, "price": 115000 }
+        ]
     },
     {
-        "sku": "KhayA",
-        "name": "Khay Size A 42x36",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 4000,
-        "import_price": 4000,
-        "price": 5000,
-        "wholesale_price": 4500,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "G36",
+        "name": "Hộp quà Tết G36 (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 105600,
+        "import_price": 105600,
+        "price": 140000,
+        "wholesale_price": 120000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Hộp quà Tết cao cấp hoa văn rồng vàng.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23c2410c'/><text x='50' y='42' fill='%23fed7aa' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>G36</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%23fed7aa'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 140000 },
+            { "min_qty": 101, "max_qty": 300, "price": 138000 },
+            { "min_qty": 301, "max_qty": 500, "price": 135000 },
+            { "min_qty": 501, "max_qty": 700, "price": 130000 },
+            { "min_qty": 701, "max_qty": null, "price": 125000 }
+        ]
     },
     {
-        "sku": "KhayC",
-        "name": "Khay Size C 29x36",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 7900,
-        "import_price": 7900,
-        "price": 10000,
-        "wholesale_price": 9000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "G07",
+        "name": "Hộp quà Tết G07 (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 117000,
+        "import_price": 117000,
+        "price": 150000,
+        "wholesale_price": 133000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Hộp quà Tết cao cấp phong cách cung đình.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23047857'/><text x='50' y='42' fill='%23a7f3d0' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>G07</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%23a7f3d0'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 150000 },
+            { "min_qty": 101, "max_qty": 300, "price": 148000 },
+            { "min_qty": 301, "max_qty": 500, "price": 145000 },
+            { "min_qty": 501, "max_qty": 700, "price": 140000 },
+            { "min_qty": 701, "max_qty": null, "price": 135000 }
+        ]
     },
     {
-        "sku": "TD08B",
-        "name": "Hộp TD08B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "M36",
+        "name": "Hộp quà Tết M36 (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 130200,
+        "import_price": 130200,
+        "price": 165000,
+        "wholesale_price": 148000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Hộp quà Tết cao cấp vân đá vàng vương giả.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23475569'/><text x='50' y='42' fill='%23fde047' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>M36</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%23fde047'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 165000 },
+            { "min_qty": 101, "max_qty": 300, "price": 162000 },
+            { "min_qty": 301, "max_qty": 500, "price": 160000 },
+            { "min_qty": 501, "max_qty": 700, "price": 155000 },
+            { "min_qty": 701, "max_qty": null, "price": 150000 }
+        ]
     },
     {
-        "sku": "TD06C",
-        "name": "Hộp TD06C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 52100,
-        "import_price": 52100,
-        "price": 65740.74,
-        "wholesale_price": 59167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "H36",
+        "name": "Hộp quà Tết H36 (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 130200,
+        "import_price": 130200,
+        "price": 170000,
+        "wholesale_price": 148000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Hộp quà Tết tranh dân gian dập nổi cao cấp.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23831843'/><text x='50' y='42' fill='%23fbcfe8' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>H36</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%23fbcfe8'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 170000 },
+            { "min_qty": 101, "max_qty": 300, "price": 168000 },
+            { "min_qty": 301, "max_qty": 500, "price": 165000 },
+            { "min_qty": 501, "max_qty": 700, "price": 160000 },
+            { "min_qty": 701, "max_qty": null, "price": 155000 }
+        ]
     },
     {
-        "sku": "TD03C",
-        "name": "Hộp TD03C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 44000,
-        "import_price": 44000,
-        "price": 55555.56,
-        "wholesale_price": 50000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "S38",
+        "name": "Hộp quà Tết S38 (36 x 36 x 10.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 134600,
+        "import_price": 134600,
+        "price": 170000,
+        "wholesale_price": 153000,
+        "description": "Bộ hộp + túi đóng thùng (10 bộ/thùng). Hộp quà Tết cao cấp nắp gài rượu vang.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23701a75'/><text x='50' y='42' fill='%23f5d0fe' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>S38</text><text x='50' y='65' fill='%23ffffff' font-size='11' font-family='sans-serif' text-anchor='middle'>Cao cấp</text><polygon points='50,75 53,81 60,81 55,85 57,91 50,87 43,91 45,85 40,81 47,81' fill='%23f5d0fe'/></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 170000 },
+            { "min_qty": 101, "max_qty": 300, "price": 168000 },
+            { "min_qty": 301, "max_qty": 500, "price": 165000 },
+            { "min_qty": 501, "max_qty": 700, "price": 160000 },
+            { "min_qty": 701, "max_qty": null, "price": 155000 }
+        ]
     },
     {
-        "sku": "TD02A",
-        "name": "Hộp TD02A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD04A",
-        "name": "Hộp TD04A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDS03V",
-        "name": "Hộp Cao Cấp TD_S_03 Vàng",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 102700,
-        "import_price": 102700,
-        "price": 129629.63,
-        "wholesale_price": 116667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "SP000008",
-        "name": "Hộp TDF29",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 79200,
-        "import_price": 79200,
-        "price": 100000,
-        "wholesale_price": 90000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD03B",
-        "name": "Hộp TD03B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD08A",
-        "name": "Hộp TD08A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 58700,
-        "import_price": 58700,
-        "price": 74074.07,
-        "wholesale_price": 66667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDL02",
-        "name": "Hộp Cao Cấp TD_L_02 Vàng",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 80700,
-        "import_price": 80700,
-        "price": 101851.85,
-        "wholesale_price": 91667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD05A",
-        "name": "Hộp TD05A",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49100,
-        "import_price": 49100,
-        "price": 62037.04,
-        "wholesale_price": 55833,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "SP000007",
-        "name": "Thuyền",
-        "supplier": "Decal Nguyễn Xiển",
-        "brand": "Decal Nguyễn Xiển",
-        "unit": "Chiếc",
-        "cost_price": 8700,
-        "import_price": 8700,
-        "price": 11000,
-        "wholesale_price": 9900,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD04C",
-        "name": "Hộp TD04C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 44000,
-        "import_price": 44000,
-        "price": 55555.56,
-        "wholesale_price": 50000,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD08C",
-        "name": "Hộp TD08C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49900,
-        "import_price": 49900,
-        "price": 62962.96,
-        "wholesale_price": 56667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD02B",
-        "name": "Hộp TD02B",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 47700,
-        "import_price": 47700,
-        "price": 60185.19,
-        "wholesale_price": 54167,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "Thiep",
-        "name": "Thiệp",
-        "supplier": "Lạc Hồng",
-        "brand": "Lạc Hồng",
-        "unit": "Chiếc",
-        "cost_price": 2000,
-        "import_price": 2000,
-        "price": 2500,
-        "wholesale_price": 2250,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TD05C",
-        "name": "Hộp TD05C",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 49900,
-        "import_price": 49900,
-        "price": 62962.96,
-        "wholesale_price": 56667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
-    },
-    {
-        "sku": "TDL01",
-        "name": "Hộp Cao Cấp TD_L_01 Xanh",
-        "supplier": "Tuấn Dung",
-        "brand": "Tuấn Dung",
-        "unit": "Chiếc",
-        "cost_price": 80700,
-        "import_price": 80700,
-        "price": 101851.85,
-        "wholesale_price": 91667,
-        "stock_qty": 2500,
-        "min_stock_qty": 100,
-        "category": "BOX"
+        "sku": "T40",
+        "name": "Hộp quà Tết T40 - 3 Tầng (36 x 40 x 14.5 cm)",
+        "supplier": "In Lạc Hồng",
+        "brand": "In Lạc Hồng",
+        "unit": "Bộ",
+        "category": "Hộp cao cấp",
+        "stock_qty": 1500,
+        "min_stock_qty": 50,
+        "cost_price": 213800,
+        "import_price": 213800,
+        "price": 265000,
+        "wholesale_price": 243000,
+        "description": "Hộp quà Tết 3 tầng vương giả (Tầng 1 cao 10cm, Tầng 2 cao 10cm, Tầng 3 cao 12cm). Đã đóng thùng kèm túi.",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23881337'/><text x='50' y='38' fill='%23fecdd3' font-size='16' font-family='sans-serif' font-weight='bold' text-anchor='middle'>T40</text><text x='50' y='58' fill='%23ffffff' font-size='10' font-family='sans-serif' text-anchor='middle'>3 Tầng</text><text x='50' y='75' fill='%23fecdd3' font-size='10' font-family='sans-serif' text-anchor='middle'>36x40x14.5</text></svg>",
+        "retail_qty_prices": [
+            { "min_qty": 1, "max_qty": 100, "price": 265000 },
+            { "min_qty": 101, "max_qty": 300, "price": 260000 },
+            { "min_qty": 301, "max_qty": 500, "price": 255000 },
+            { "min_qty": 501, "max_qty": 700, "price": 250000 },
+            { "min_qty": 701, "max_qty": null, "price": 245000 }
+        ]
     }
 ];
+
+const DEFAULT_PROCESSING_SERVICES = {
+    ep_nhu: {
+        id: "ep_nhu",
+        name: "Ép nhũ - 1 màu 1 mặt (Hộp + Túi)",
+        lead_time: "6 ngày từ ngày cọc đơn hàng & chốt thiết kế",
+        min_fee: 1800000,
+        note: "Chi phí tối thiểu là 1.800.000đ (Làm 1 bộ cũng hết 1.800.000đ, làm 100 bộ cũng 1.800.000đ).",
+        tiers: [
+            { min_qty: 1, max_qty: 100, price: 18000 },
+            { min_qty: 101, max_qty: 200, price: 15000 },
+            { min_qty: 201, max_qty: 300, price: 12000 },
+            { min_qty: 301, max_qty: 400, price: 10000 },
+            { min_qty: 401, max_qty: null, price: 8000 }
+        ]
+    },
+    khay_dinh_hinh: {
+        id: "khay_dinh_hinh",
+        name: "Khay định hình theo yêu cầu",
+        lead_time: "6 ngày từ ngày cọc đơn hàng & chốt thiết kế",
+        note: "Áp dụng theo phân loại Hộp cao cấp hoặc Hộp phổ thông.",
+        tiers_caocap: [
+            { min_qty: 1, max_qty: 100, price: 15000 },
+            { min_qty: 101, max_qty: 200, price: 14000 },
+            { min_qty: 201, max_qty: 300, price: 13000 },
+            { min_qty: 301, max_qty: 400, price: 12000 },
+            { min_qty: 401, max_qty: null, price: 10000 }
+        ],
+        tiers_phothong: [
+            { min_qty: 1, max_qty: 100, price: 12000 },
+            { min_qty: 101, max_qty: 200, price: 11000 },
+            { min_qty: 201, max_qty: 300, price: 10000 },
+            { min_qty: 301, max_qty: 400, price: 9000 },
+            { min_qty: 401, max_qty: null, price: 8000 }
+        ]
+    },
+    in_doc_quyen: {
+        id: "in_doc_quyen",
+        name: "In mẫu độc quyền (Không thay đổi kích thước phổ thông)",
+        lead_time: "7 - 10 ngày từ ngày cọc đơn hàng & chốt thiết kế",
+        note: "In dưới 1.000 bộ: 8.000.000đ + Tổng đơn hàng. Từ 1.000 bộ trở lên: +8.000đ/bộ.",
+        fixed_under_fee: 8000000,
+        price_per_box: 8000,
+        threshold_qty: 1000
+    },
+    vach_ngan: {
+        id: "vach_ngan",
+        name: "Thêm vách ngăn",
+        lead_time: "Theo tiến độ đơn hàng",
+        note: "Bộ sản phẩm chưa bao gồm vách ngăn. Khách lấy thêm tính 5.000đ/bộ.",
+        price_per_box: 5000
+    }
+};
 
 const DEFAULT_PRICING_CONFIG = {
     production_brackets: [500, 1000, 2000, 5000, 10000],
@@ -14235,9 +13354,17 @@ const DEFAULT_PRICING_CONFIG = {
 };
 
 const DEFAULT_ONLINE_STOCK_LOGS = [
-    { id: "log-1", created_at: "2026-06-20T10:00:00Z", sku: "SP-001", type: "IMPORT", qty: 500, note: "Nhập kho ban đầu" },
-    { id: "log-2", created_at: "2026-06-20T10:15:00Z", sku: "SP-002", type: "IMPORT", qty: 2000, note: "Nhập kho ban đầu" },
-    { id: "log-3", created_at: "2026-06-20T10:30:00Z", sku: "SP-003", type: "IMPORT", qty: 1200, note: "Nhập kho ban đầu" }
+    { id: "log-A", created_at: "2026-10-19T08:00:00Z", sku: "SIZE-A", type: "IMPORT", qty: 2000, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-B", created_at: "2026-10-19T08:00:00Z", sku: "SIZE-B", type: "IMPORT", qty: 2000, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-C", created_at: "2026-10-19T08:00:00Z", sku: "SIZE-C", type: "IMPORT", qty: 2000, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-S36", created_at: "2026-10-19T08:00:00Z", sku: "S36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-P33", created_at: "2026-10-19T08:00:00Z", sku: "P33", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-G36", created_at: "2026-10-19T08:00:00Z", sku: "G36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-G07", created_at: "2026-10-19T08:00:00Z", sku: "G07", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-M36", created_at: "2026-10-19T08:00:00Z", sku: "M36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-H36", created_at: "2026-10-19T08:00:00Z", sku: "H36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-S38", created_at: "2026-10-19T08:00:00Z", sku: "S38", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
+    { id: "log-T40", created_at: "2026-10-19T08:00:00Z", sku: "T40", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" }
 ];
 
 const DEFAULT_ONLINE_IMPORT_RECORDS = [
@@ -14315,14 +13442,36 @@ class AppState {
         this.subcontracts = this.load("subcontracts", DEFAULT_SUBCONTRACTS);
         
         this.online_products = this.load("online_products", DEFAULT_ONLINE_PRODUCTS);
-        // Force seed Excel products for existing localstorage
-        if (!localStorage.getItem("ihp_excel_seeded_v3")) {
+        // Force seed Tet 2027 products for existing localstorage (Wipe old and load 11 new products)
+        if (!localStorage.getItem("ihp_tet_2027_seeded_v1")) {
             this.online_products = DEFAULT_ONLINE_PRODUCTS;
             this.save("online_products", DEFAULT_ONLINE_PRODUCTS);
-            localStorage.setItem("ihp_excel_seeded_v3", "true");
+            localStorage.setItem("ihp_tet_2027_seeded_v1", "true");
         }
 
+        this.processing_services = this.load("processing_services", DEFAULT_PROCESSING_SERVICES);
+
         this.online_stock_logs = this.load("online_stock_logs", DEFAULT_ONLINE_STOCK_LOGS);
+        if (!localStorage.getItem("ihp_tet_2027_stock_logs_v1") || !this.online_stock_logs || this.online_stock_logs.length === 0) {
+            this.online_stock_logs = DEFAULT_ONLINE_STOCK_LOGS;
+            this.save("online_stock_logs", DEFAULT_ONLINE_STOCK_LOGS);
+            localStorage.setItem("ihp_tet_2027_stock_logs_v1", "true");
+        }
+
+        // Ensure "In Lạc Hồng" supplier is present in partners list
+        if (Array.isArray(this.partners) && !this.partners.some(p => p && (p.name === "In Lạc Hồng" || p.name === "Công ty Cổ phần In Lạc Hồng"))) {
+            this.partners.push({
+                id: "p_sup_lachong",
+                code: "NCC_LACHONG",
+                name: "In Lạc Hồng",
+                company_name: "Công ty Cổ phần In Lạc Hồng",
+                role: "SUPPLIER",
+                phone: "0907.861.111",
+                address: "Số 14 Pháo Đài Láng, P. Láng, TP. Hà Nội",
+                created_at: new Date().toISOString()
+            });
+            this.save("partners", this.partners);
+        }
         this.online_import_records = this.load("online_import_records", DEFAULT_ONLINE_IMPORT_RECORDS);
         if (!this.online_import_records || this.online_import_records.length === 0) {
             this.online_import_records = DEFAULT_ONLINE_IMPORT_RECORDS;
@@ -14381,7 +13530,7 @@ class AppState {
                         p.cost_price = Math.round((wsPrice * 0.88) / 100) * 100;
                     }
                     p.import_price = p.cost_price;
-                    p.supplier = p.supplier || p.brand || 'Tuấn Dung';
+                    p.supplier = p.supplier || p.brand || 'In Lạc Hồng';
                     p.brand = p.supplier;
                     
                     // Ensure stock quantity is abundant and greater than min stock / remaining
@@ -14417,7 +13566,7 @@ class AppState {
                     const wsPrice = p.wholesale_price > 0 ? p.wholesale_price : (p.price > 0 ? Math.round(p.price * 0.9) : 50000);
                     p.cost_price = Math.round((wsPrice * 0.88) / 100) * 100;
                     p.import_price = p.cost_price;
-                    p.supplier = p.supplier || p.brand || 'Tuấn Dung';
+                    p.supplier = p.supplier || p.brand || 'In Lạc Hồng';
                     p.brand = p.supplier;
                     if (!p.stock_qty || p.stock_qty < 2500) {
                         p.stock_qty = 2500;
@@ -24037,6 +23186,18 @@ window.openNewOnlineOrderModal = function(mode = "ADD", orderId = "") {
             const notesEl = document.getElementById("onlineOrderNotes");
             if (notesEl) notesEl.value = order.notes || "";
 
+            // Restore processing add-ons if present
+            const epNhuCb = document.getElementById("posAddonEpNhu");
+            const khayCb = document.getElementById("posAddonKhay");
+            const khayTypeSel = document.getElementById("posAddonKhayType");
+            const inDqCb = document.getElementById("posAddonInDocQuyen");
+            const vnCb = document.getElementById("posAddonVachNgan");
+            if (epNhuCb) epNhuCb.checked = !!(order.processing_services?.ep_nhu?.selected);
+            if (khayCb) khayCb.checked = !!(order.processing_services?.khay_dinh_hinh?.selected);
+            if (khayTypeSel && order.processing_services?.khay_dinh_hinh?.type) khayTypeSel.value = order.processing_services.khay_dinh_hinh.type;
+            if (inDqCb) inDqCb.checked = !!(order.processing_services?.in_doc_quyen?.selected);
+            if (vnCb) vnCb.checked = !!(order.processing_services?.vach_ngan?.selected);
+
             const provinceEl = document.getElementById("onlineOrderProvince");
             const wardEl = document.getElementById("onlineOrderWard");
             const hamletEl = document.getElementById("onlineOrderHamlet");
@@ -25108,6 +24269,18 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
             if (shipFeeEl) shipFeeEl.value = 0;
             if (notesEl) notesEl.value = "";
             window.posCart = [];
+
+            // Reset processing add-ons
+            const epNhuCb = document.getElementById("posAddonEpNhu");
+            const khayCb = document.getElementById("posAddonKhay");
+            const khayTypeSel = document.getElementById("posAddonKhayType");
+            const inDqCb = document.getElementById("posAddonInDocQuyen");
+            const vnCb = document.getElementById("posAddonVachNgan");
+            if (epNhuCb) epNhuCb.checked = false;
+            if (khayCb) khayCb.checked = false;
+            if (khayTypeSel) khayTypeSel.value = "AUTO";
+            if (inDqCb) inDqCb.checked = false;
+            if (vnCb) vnCb.checked = false;
             
             if (typeof window.handlePosCustomerChange === 'function') {
                 window.handlePosCustomerChange(true);
@@ -25348,6 +24521,14 @@ window.clearPosCart = function() {
     if (window.posCart.length === 0) return;
     if (confirm("Bạn có chắc chắn muốn xóa toàn bộ sản phẩm trong giỏ hàng này?")) {
         window.posCart = [];
+        const epNhuCb = document.getElementById("posAddonEpNhu");
+        const khayCb = document.getElementById("posAddonKhay");
+        const inDqCb = document.getElementById("posAddonInDocQuyen");
+        const vnCb = document.getElementById("posAddonVachNgan");
+        if (epNhuCb) epNhuCb.checked = false;
+        if (khayCb) khayCb.checked = false;
+        if (inDqCb) inDqCb.checked = false;
+        if (vnCb) vnCb.checked = false;
         window.renderPosCart();
     }
 };
@@ -25502,7 +24683,20 @@ window.recalcPosTotals = function() {
     const vatPercent = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
     const shipFeeVal = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
 
-    const taxable = Math.max(0, subtotal - discountVal);
+    // Calculate Processing Add-ons (Ảnh 5)
+    const procResult = typeof window.calculatePosProcessingTotals === "function" ? window.calculatePosProcessingTotals() : { totalFee: 0 };
+    const processingFee = procResult.totalFee || 0;
+
+    const procBadge = document.getElementById("posProcessingTotalBadge");
+    if (procBadge) procBadge.textContent = processingFee > 0 ? `+${typeof formatMoney === 'function' ? formatMoney(processingFee) : processingFee + 'đ'}` : "+0đ";
+
+    const procRow = document.getElementById("posProcessingSummaryRow");
+    if (procRow) procRow.style.display = processingFee > 0 ? "flex" : "none";
+
+    const procFeeEl = document.getElementById("posProcessingFeeAmount");
+    if (procFeeEl) procFeeEl.textContent = `+${typeof formatMoney === 'function' ? formatMoney(processingFee) : processingFee + 'đ'}`;
+
+    const taxable = Math.max(0, subtotal + processingFee - discountVal);
     const vatVal = Math.round(taxable * (vatPercent / 100));
     const grandTotal = Math.max(0, taxable + vatVal + shipFeeVal);
 
@@ -25537,7 +24731,9 @@ window.submitPosOrder = function(isDraft = false) {
         const notes = document.getElementById("posOrderNotes")?.value.trim() || "";
 
         const subtotal = window.posCart.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
-        const taxable = Math.max(0, subtotal - discount);
+        const procResult = typeof window.calculatePosProcessingTotals === "function" ? window.calculatePosProcessingTotals() : { totalFee: 0 };
+        const processingFee = procResult.totalFee || 0;
+        const taxable = Math.max(0, subtotal + processingFee - discount);
         const vatAmount = Math.round(taxable * (vatRate / 100));
         const totalAmount = Math.max(0, taxable + vatAmount + shipFee);
 
@@ -25579,6 +24775,8 @@ window.submitPosOrder = function(isDraft = false) {
             items: window.posCart.map(i => ({ ...i })),
             price_book: window.posSelectedPriceBook || "RETAIL",
             subtotal: subtotal,
+            processing_fee: processingFee,
+            processing_services: procResult.services,
             discount: discount,
             vat_rate: vatRate,
             vat_amount: vatAmount,
@@ -27362,6 +26560,273 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("onlineBulkPriceForm")?.addEventListener("submit", handleOnlineBulkPriceSubmit);
 });
 
+
+
+// ==========================================================================
+// THIẾT LẬP BẢNG GIÁ DỊCH VỤ GIA CÔNG 2027 (ẢNH 5)
+// ==========================================================================
+
+window.switchPriceSettingTab = function(tabName) {
+    const btnGoods = document.getElementById("btnPriceTabGoods");
+    const btnServices = document.getElementById("btnPriceTabServices");
+    const contentGoods = document.getElementById("priceTabContentGoods");
+    const contentServices = document.getElementById("priceTabContentServices");
+
+    if (tabName === "services") {
+        if (btnGoods) btnGoods.classList.remove("active");
+        if (btnServices) btnServices.classList.add("active");
+        if (contentGoods) contentGoods.style.display = "none";
+        if (contentServices) contentServices.style.display = "block";
+        if (typeof window.populateProcessingServicesInputs === "function") {
+            window.populateProcessingServicesInputs();
+        }
+    } else {
+        if (btnServices) btnServices.classList.remove("active");
+        if (btnGoods) btnGoods.classList.add("active");
+        if (contentServices) contentServices.style.display = "none";
+        if (contentGoods) contentGoods.style.display = "block";
+        if (typeof renderOnlinePrices === "function") renderOnlinePrices();
+    }
+    if (window.lucide && typeof lucide.createIcons === "function") lucide.createIcons();
+};
+
+window.populateProcessingServicesInputs = function() {
+    const ps = state.processing_services || DEFAULT_PROCESSING_SERVICES;
+    
+    // Ép nhũ
+    const epNhu = ps.ep_nhu || DEFAULT_PROCESSING_SERVICES.ep_nhu;
+    const ep100 = epNhu.tiers?.find(t => t.max_qty === 100)?.price || 18000;
+    const ep200 = epNhu.tiers?.find(t => t.max_qty === 200)?.price || 15000;
+    const ep300 = epNhu.tiers?.find(t => t.max_qty === 300)?.price || 12000;
+    const ep400 = epNhu.tiers?.find(t => t.max_qty === 400)?.price || 10000;
+    const ep500 = epNhu.tiers?.find(t => t.min_qty >= 401 || t.max_qty === null)?.price || 8000;
+    
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    setVal("procEpNhu_100", ep100);
+    setVal("procEpNhu_200", ep200);
+    setVal("procEpNhu_300", ep300);
+    setVal("procEpNhu_400", ep400);
+    setVal("procEpNhu_500", ep500);
+    setVal("procEpNhuMin", epNhu.min_fee || 1800000);
+
+    // Khay định hình
+    const khay = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
+    const cc = khay.tiers_caocap || [];
+    setVal("procKhayCC_100", cc.find(t => t.max_qty === 100)?.price || 15000);
+    setVal("procKhayCC_200", cc.find(t => t.max_qty === 200)?.price || 14000);
+    setVal("procKhayCC_300", cc.find(t => t.max_qty === 300)?.price || 13000);
+    setVal("procKhayCC_400", cc.find(t => t.max_qty === 400)?.price || 12000);
+    setVal("procKhayCC_500", cc.find(t => t.min_qty >= 401 || t.max_qty === null)?.price || 10000);
+
+    const pt = khay.tiers_phothong || [];
+    setVal("procKhayPT_100", pt.find(t => t.max_qty === 100)?.price || 12000);
+    setVal("procKhayPT_200", pt.find(t => t.max_qty === 200)?.price || 11000);
+    setVal("procKhayPT_300", pt.find(t => t.max_qty === 300)?.price || 10000);
+    setVal("procKhayPT_400", pt.find(t => t.max_qty === 400)?.price || 9000);
+    setVal("procKhayPT_500", pt.find(t => t.min_qty >= 401 || t.max_qty === null)?.price || 8000);
+
+    // In mẫu độc quyền
+    const inDq = ps.in_doc_quyen || DEFAULT_PROCESSING_SERVICES.in_doc_quyen;
+    setVal("procInDocQuyenUnder", inDq.fixed_under_fee || 8000000);
+    setVal("procInDocQuyenOver", inDq.price_per_box || 8000);
+
+    // Vách ngăn
+    const vn = ps.vach_ngan || DEFAULT_PROCESSING_SERVICES.vach_ngan;
+    setVal("procVachNganPrice", vn.price_per_box || 5000);
+};
+
+window.saveProcessingServicesConfig = function() {
+    const getVal = (id, def) => {
+        const val = parseFloat(document.getElementById(id)?.value);
+        return isNaN(val) ? def : val;
+    };
+
+    const newConfig = {
+        ep_nhu: {
+            id: "ep_nhu",
+            name: "Ép nhũ - 1 màu 1 mặt (Hộp + Túi)",
+            lead_time: "6 ngày từ ngày cọc đơn hàng & chốt thiết kế",
+            min_fee: getVal("procEpNhuMin", 1800000),
+            note: "Chi phí tối thiểu là 1.800.000đ (Làm 1 bộ cũng hết 1.800.000đ, làm 100 bộ cũng 1.800.000đ).",
+            tiers: [
+                { min_qty: 1, max_qty: 100, price: getVal("procEpNhu_100", 18000) },
+                { min_qty: 101, max_qty: 200, price: getVal("procEpNhu_200", 15000) },
+                { min_qty: 201, max_qty: 300, price: getVal("procEpNhu_300", 12000) },
+                { min_qty: 301, max_qty: 400, price: getVal("procEpNhu_400", 10000) },
+                { min_qty: 401, max_qty: null, price: getVal("procEpNhu_500", 8000) }
+            ]
+        },
+        khay_dinh_hinh: {
+            id: "khay_dinh_hinh",
+            name: "Khay định hình theo yêu cầu",
+            lead_time: "6 ngày từ ngày cọc đơn hàng & chốt thiết kế",
+            note: "Áp dụng theo phân loại Hộp cao cấp hoặc Hộp phổ thông.",
+            tiers_caocap: [
+                { min_qty: 1, max_qty: 100, price: getVal("procKhayCC_100", 15000) },
+                { min_qty: 101, max_qty: 200, price: getVal("procKhayCC_200", 14000) },
+                { min_qty: 201, max_qty: 300, price: getVal("procKhayCC_300", 13000) },
+                { min_qty: 301, max_qty: 400, price: getVal("procKhayCC_400", 12000) },
+                { min_qty: 401, max_qty: null, price: getVal("procKhayCC_500", 10000) }
+            ],
+            tiers_phothong: [
+                { min_qty: 1, max_qty: 100, price: getVal("procKhayPT_100", 12000) },
+                { min_qty: 101, max_qty: 200, price: getVal("procKhayPT_200", 11000) },
+                { min_qty: 201, max_qty: 300, price: getVal("procKhayPT_300", 10000) },
+                { min_qty: 301, max_qty: 400, price: getVal("procKhayPT_400", 9000) },
+                { min_qty: 401, max_qty: null, price: getVal("procKhayPT_500", 8000) }
+            ]
+        },
+        in_doc_quyen: {
+            id: "in_doc_quyen",
+            name: "In mẫu độc quyền (Không thay đổi kích thước phổ thông)",
+            lead_time: "7 - 10 ngày từ ngày cọc đơn hàng & chốt thiết kế",
+            note: "In dưới 1.000 bộ: 8.000.000đ + Tổng đơn hàng. Từ 1.000 bộ trở lên: +8.000đ/bộ.",
+            fixed_under_fee: getVal("procInDocQuyenUnder", 8000000),
+            price_per_box: getVal("procInDocQuyenOver", 8000),
+            threshold_qty: 1000
+        },
+        vach_ngan: {
+            id: "vach_ngan",
+            name: "Thêm vách ngăn",
+            lead_time: "Theo tiến độ đơn hàng",
+            note: "Bộ sản phẩm chưa bao gồm vách ngăn. Khách lấy thêm tính 5.000đ/bộ.",
+            price_per_box: getVal("procVachNganPrice", 5000)
+        }
+    };
+
+    state.processing_services = newConfig;
+    state.save("processing_services", newConfig);
+    alert("Đã lưu bảng giá dịch vụ gia công 2027 thành công!");
+    if (typeof window.recalcPosTotals === "function") window.recalcPosTotals();
+};
+
+window.togglePosProcessingCollapse = function() {
+    const content = document.getElementById("posProcessingContent");
+    const chevron = document.getElementById("posProcessingChevron");
+    if (!content) return;
+    if (content.style.display === "none") {
+        content.style.display = "grid";
+        if (chevron) chevron.style.transform = "rotate(0deg)";
+    } else {
+        content.style.display = "none";
+        if (chevron) chevron.style.transform = "rotate(-90deg)";
+    }
+};
+
+window.calculatePosProcessingTotals = function() {
+    const items = window.posCart || [];
+    const totalQty = items.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
+    
+    const isEpNhu = !!document.getElementById("posAddonEpNhu")?.checked;
+    const isKhay = !!document.getElementById("posAddonKhay")?.checked;
+    const khayType = document.getElementById("posAddonKhayType")?.value || "AUTO";
+    const isInDocQuyen = !!document.getElementById("posAddonInDocQuyen")?.checked;
+    const isVachNgan = !!document.getElementById("posAddonVachNgan")?.checked;
+
+    const result = {
+        totalFee: 0,
+        totalQty: totalQty,
+        services: {
+            ep_nhu: { selected: isEpNhu, fee: 0, unit_price: 0, note: "" },
+            khay_dinh_hinh: { selected: isKhay, fee: 0, type: khayType, note: "" },
+            in_doc_quyen: { selected: isInDocQuyen, fee: 0, note: "" },
+            vach_ngan: { selected: isVachNgan, fee: 0, unit_price: 5000, note: "" }
+        }
+    };
+
+    if (totalQty <= 0) return result;
+
+    const ps = state.processing_services || DEFAULT_PROCESSING_SERVICES;
+
+    // 1. Ép nhũ
+    if (isEpNhu) {
+        const epConfig = ps.ep_nhu || DEFAULT_PROCESSING_SERVICES.ep_nhu;
+        const tiers = epConfig.tiers || [];
+        const matchTier = tiers.find(t => {
+            const min = Number(t.min_qty) || 0;
+            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+            return totalQty >= min && totalQty <= max;
+        });
+        const unitPrice = matchTier ? Number(matchTier.price) : 8000;
+        let fee = totalQty * unitPrice;
+        const minFee = Number(epConfig.min_fee) || 1800000;
+        if (fee < minFee || totalQty <= 100) {
+            fee = minFee;
+            result.services.ep_nhu.note = `Tối thiểu ${formatMoney(minFee)}`;
+        } else {
+            result.services.ep_nhu.note = `${formatMoney(unitPrice)}/bộ`;
+        }
+        result.services.ep_nhu.unit_price = unitPrice;
+        result.services.ep_nhu.fee = fee;
+        result.totalFee += fee;
+    }
+
+    // 2. Khay định hình
+    if (isKhay) {
+        const khayConfig = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
+        let khayFee = 0;
+
+        const findTierPrice = (tierList, qty) => {
+            const match = (tierList || []).find(t => {
+                const min = Number(t.min_qty) || 0;
+                const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+                return qty >= min && qty <= max;
+            });
+            return match ? Number(match.price) : (tierList && tierList.length ? tierList[tierList.length - 1].price : 10000);
+        };
+
+        if (khayType === "CAOCAP") {
+            const unitPrice = findTierPrice(khayConfig.tiers_caocap, totalQty);
+            khayFee = totalQty * unitPrice;
+            result.services.khay_dinh_hinh.note = `Cao cấp: ${formatMoney(unitPrice)}/bộ`;
+        } else if (khayType === "PHOTHONG") {
+            const unitPrice = findTierPrice(khayConfig.tiers_phothong, totalQty);
+            khayFee = totalQty * unitPrice;
+            result.services.khay_dinh_hinh.note = `Phổ thông: ${formatMoney(unitPrice)}/bộ`;
+        } else {
+            // AUTO: calculate based on product categories
+            items.forEach(item => {
+                const prod = (state.online_products || []).find(p => p.sku === item.sku);
+                const isCaoCap = prod ? (prod.category === "Hộp cao cấp" || !prod.category || !prod.category.includes("phổ thông")) : true;
+                const unitPrice = isCaoCap ? findTierPrice(khayConfig.tiers_caocap, totalQty) : findTierPrice(khayConfig.tiers_phothong, totalQty);
+                khayFee += (Number(item.qty) || 0) * unitPrice;
+            });
+            result.services.khay_dinh_hinh.note = `Tự động theo loại hộp`;
+        }
+        result.services.khay_dinh_hinh.fee = khayFee;
+        result.totalFee += khayFee;
+    }
+
+    // 3. In mẫu độc quyền
+    if (isInDocQuyen) {
+        const inConfig = ps.in_doc_quyen || DEFAULT_PROCESSING_SERVICES.in_doc_quyen;
+        const threshold = Number(inConfig.threshold_qty) || 1000;
+        let fee = 0;
+        if (totalQty < threshold) {
+            fee = Number(inConfig.fixed_under_fee) || 8000000;
+            result.services.in_doc_quyen.note = `<1000 bộ: Trọn gói ${formatMoney(fee)}`;
+        } else {
+            const unitPrice = Number(inConfig.price_per_box) || 8000;
+            fee = totalQty * unitPrice;
+            result.services.in_doc_quyen.note = `≥1000 bộ: ${formatMoney(unitPrice)}/bộ`;
+        }
+        result.services.in_doc_quyen.fee = fee;
+        result.totalFee += fee;
+    }
+
+    // 4. Thêm vách ngăn
+    if (isVachNgan) {
+        const vnConfig = ps.vach_ngan || DEFAULT_PROCESSING_SERVICES.vach_ngan;
+        const unitPrice = Number(vnConfig.price_per_box) || 5000;
+        const fee = totalQty * unitPrice;
+        result.services.vach_ngan.unit_price = unitPrice;
+        result.services.vach_ngan.fee = fee;
+        result.services.vach_ngan.note = `${formatMoney(unitPrice)}/bộ`;
+        result.totalFee += fee;
+    }
+
+    return result;
+};
 
 window.renderOnlinePrices = function() {
     const tableBody = document.querySelector("#onlinePricesTable tbody");
