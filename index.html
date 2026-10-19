@@ -1906,9 +1906,11 @@
 
                                         <th>Đơn vị</th>
 
-                                        <th style="width: 200px;">Giá bán lẻ (đ)</th>
+                                        <th style="width: 160px;">Giá bán lẻ (đ)</th>
 
-                                        <th style="width: 450px;">Giá sỉ & Chiết khấu theo SL</th>
+                                        <th style="width: 160px;">Giá bán sỉ (đ)</th>
+
+                                        <th style="width: 320px;">Giá sỉ theo SL & Chiết khấu</th>
 
                                     </tr>
 
@@ -6114,6 +6116,186 @@
 
     </div>
 
+    <!-- POS FULLSCREEN MODAL (KIOTVIET STYLE) -->
+    <div class="modal pos-screen-modal" id="onlinePosModal">
+        <div class="pos-container">
+            <!-- POS TOPBAR -->
+            <div class="pos-topbar">
+                <div class="pos-topbar-left">
+                    <div class="pos-brand">
+                        <span class="pos-logo-icon"><i data-lucide="shopping-cart"></i></span>
+                        <div class="pos-brand-text">
+                            <strong>IN LẠC HỒNG POS</strong>
+                            <small id="posOrderNumberDisplay">Đơn hàng mới</small>
+                        </div>
+                    </div>
+
+                    <!-- Search product bar with barcode scanner icon (F3) -->
+                    <div class="pos-search-wrapper">
+                        <i data-lucide="search" class="pos-search-icon"></i>
+                        <input type="text" id="posProductSearchInput" class="pos-search-input" placeholder="Tìm tên hàng hóa, mã SKU, barcode (F3)..." autocomplete="off" oninput="window.handlePosSearchInput(this.value)">
+                        <i data-lucide="scan" class="pos-barcode-icon" title="Quét mã vạch"></i>
+                        <div id="posProductSearchDropdown" class="pos-search-dropdown" style="display:none;"></div>
+                    </div>
+
+                    <!-- Order tabs like KiotViet -->
+                    <div class="pos-order-tabs">
+                        <button type="button" class="pos-tab active" id="posTab1">
+                            <i data-lucide="file-text" style="width:14px; height:14px;"></i>
+                            <span>Hóa đơn 1</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pos-topbar-right">
+                    <div class="pos-user-badge">
+                        <i data-lucide="user" style="width:15px; height:15px;"></i>
+                        <span id="posCurrentCashier">Thu ngân</span>
+                    </div>
+                    <button type="button" class="pos-btn-action" onclick="window.clearPosCart()" title="Xóa toàn bộ giỏ hàng">
+                        <i data-lucide="trash-2" style="width:15px; height:15px;"></i>
+                    </button>
+                    <button type="button" class="pos-btn-close" onclick="window.closePosModal()" title="Thoát màn hình POS">
+                        <i data-lucide="x" style="width:16px; height:16px;"></i>
+                        <span>Thoát POS</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- POS BODY (2 COLUMNS) -->
+            <div class="pos-body">
+                <!-- LEFT COLUMN: CART & BILL SUMMARY -->
+                <div class="pos-left-panel">
+                    <!-- Line Items Table Header -->
+                    <div class="pos-cart-header">
+                        <span style="width: 36px; text-align: center;">STT</span>
+                        <span style="flex: 1; padding-left: 6px;">Tên hàng hóa / Mã SKU</span>
+                        <span style="width: 65px; text-align: center;">ĐVT</span>
+                        <span style="width: 105px; text-align: center;">Số lượng</span>
+                        <span style="width: 110px; text-align: right;">Đơn giá</span>
+                        <span style="width: 115px; text-align: right;">Thành tiền</span>
+                        <span style="width: 36px; text-align: center;"></span>
+                    </div>
+
+                    <!-- Line Items Scrollable List -->
+                    <div class="pos-cart-body" id="posCartItemsList">
+                        <!-- Dynamic Cart Rows -->
+                    </div>
+
+                    <!-- Promotions & Order Adjustments Banner -->
+                    <div class="pos-cart-extras">
+                        <div class="pos-extra-row">
+                            <div class="pos-extra-item">
+                                <label><i data-lucide="tag" style="width:13px; height:13px;"></i> Giảm giá:</label>
+                                <input type="number" id="posOrderDiscount" class="pos-mini-input" value="0" min="0" placeholder="0" oninput="window.recalcPosTotals()">
+                            </div>
+                            <div class="pos-extra-item">
+                                <label><i data-lucide="percent" style="width:13px; height:13px;"></i> Thuế VAT (%):</label>
+                                <input type="number" id="posOrderVat" class="pos-mini-input" value="8" min="0" max="100" style="width:55px;" oninput="window.recalcPosTotals()">
+                            </div>
+                            <div class="pos-extra-item">
+                                <label><i data-lucide="truck" style="width:13px; height:13px;"></i> Phí ship:</label>
+                                <input type="number" id="posOrderShipFee" class="pos-mini-input" value="0" min="0" placeholder="0" oninput="window.recalcPosTotals()">
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú đơn hàng -->
+                        <div style="margin-top: 6px;">
+                            <input type="text" id="posOrderNotes" class="pos-notes-input" placeholder="Ghi chú đơn hàng (ví dụ: giao giờ hành chính, gọi trước khi giao...)">
+                        </div>
+                    </div>
+
+                    <!-- Cart Financial Totals Summary Bar -->
+                    <div class="pos-cart-summary">
+                        <div class="pos-summary-row">
+                            <span>Tổng tiền hàng (<strong id="posTotalQtyCount">0</strong> SP):</span>
+                            <strong id="posSubtotalAmount">0đ</strong>
+                        </div>
+                        <div class="pos-summary-row" style="color: #dc2626;">
+                            <span>Chiết khấu / Giảm giá:</span>
+                            <strong id="posDiscountAmount">-0đ</strong>
+                        </div>
+                        <div class="pos-summary-row">
+                            <span>Thuế VAT:</span>
+                            <strong id="posVatAmount">0đ</strong>
+                        </div>
+                        <div class="pos-summary-row">
+                            <span>Phí vận chuyển:</span>
+                            <strong id="posShipFeeAmount">0đ</strong>
+                        </div>
+                        <div class="pos-summary-row total-highlight">
+                            <span>KHÁCH PHẢI TRẢ:</span>
+                            <span id="posGrandTotalAmount">0đ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: CUSTOMER, PRICE BOOK & PRODUCT CATALOG -->
+                <div class="pos-right-panel">
+                    <!-- Top Controls: Customer + PRICE BOOK (BẢNG GIÁ) -->
+                    <div class="pos-controls-bar">
+                        <!-- Customer search & select -->
+                        <div class="pos-customer-box">
+                            <i data-lucide="user-check" class="pos-control-icon"></i>
+                            <select id="posCustomerSelect" class="pos-control-select">
+                                <!-- Loaded dynamically from state.partners (CUSTOMER) -->
+                            </select>
+                            <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal()" title="Thêm khách hàng nhanh">+</button>
+                        </div>
+
+                        <!-- Price Book selector (BẢNG GIÁ BÁN LẺ / BÁN SỈ) -->
+                        <div class="pos-pricebook-box">
+                            <i data-lucide="badge-percent" class="pos-control-icon" style="color:#d97706;"></i>
+                            <select id="posPriceBookSelect" class="pos-control-select" onchange="window.handlePosPriceBookChange()">
+                                <option value="RETAIL" selected>🏷️ Bảng giá bán lẻ</option>
+                                <option value="WHOLESALE">🏢 Bảng giá bán sỉ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Category filter tags -->
+                    <div class="pos-category-bar" id="posCategoryFilterBar">
+                        <button type="button" class="pos-cat-pill active" data-cat="ALL" onclick="window.filterPosProducts('ALL')">Tất cả</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp giấy" onclick="window.filterPosProducts('Hộp giấy')">Hộp giấy</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Túi giấy" onclick="window.filterPosProducts('Túi giấy')">Túi giấy</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Decal" onclick="window.filterPosProducts('Decal')">Decal / Tem</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Phụ kiện" onclick="window.filterPosProducts('Phụ kiện')">Khác</button>
+                    </div>
+
+                    <!-- Product Cards Grid (Like KiotViet in image) -->
+                    <div class="pos-product-grid" id="posProductCatalogGrid">
+                        <!-- Dynamic Product Cards -->
+                    </div>
+
+                    <!-- Payment Execution Box -->
+                    <div class="pos-checkout-bar">
+                        <div class="pos-payment-meta">
+                            <div class="pos-meta-field">
+                                <label>Hình thức:</label>
+                                <select id="posPaymentMethodSelect" class="pos-control-select" style="height:32px;">
+                                    <option value="BANK_TRANSFER">Chuyển khoản (VietQR)</option>
+                                    <option value="CASH">Tiền mặt (Két tiền)</option>
+                                </select>
+                            </div>
+                            <div class="pos-meta-field">
+                                <label>Trạng thái:</label>
+                                <select id="posPaymentStatusSelect" class="pos-control-select" style="height:32px;">
+                                    <option value="PAID">Đã thanh toán đủ</option>
+                                    <option value="UNPAID">Chưa thanh toán (Ghi nợ)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="button" class="pos-checkout-btn" onclick="window.submitPosOrder()">
+                            <i data-lucide="check-circle" style="width:20px; height:20px;"></i>
+                            <span>THANH TOÁN (F9)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal 8: Online Order Modal (Create / Edit) -->
 
     <div class="modal" id="onlineOrderModal">
@@ -10020,7 +10202,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_sales_hub_nav"></script>
+    <script src="/app.js?v=20261019_pos_screen"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

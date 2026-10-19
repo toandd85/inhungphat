@@ -24613,6 +24613,725 @@ async function handleOnlineOrderSubmit(e) {
     }
 }
 
+// ==========================================================================
+// KIOTVIET-STYLE POS SYSTEM FOR ONLINE ORDERS
+// ==========================================================================
+window.posCart = [];
+window.posSelectedPriceBook = "RETAIL"; // "RETAIL" or "WHOLESALE"
+window.posCurrentCategory = "ALL";
+window.posActiveOrderId = null;
+window.posActiveMode = "ADD";
+
+// Calculate price based on selected price book and quantity
+window.getPosProductPrice = function(prod, priceBook = window.posSelectedPriceBook, qty = 1) {
+    if (!prod) return 0;
+    
+    // If WHOLESALE price book is chosen
+    if (priceBook === "WHOLESALE") {
+        // 1. Check if product has specific tiered wholesale prices configured
+        if (prod.wholesale_qty_prices && prod.wholesale_qty_prices.length > 0) {
+            const match = prod.wholesale_qty_prices.find(item => {
+                const minMatch = qty >= item.min_qty;
+                const maxMatch = !item.max_qty || item.max_qty <= 0 || qty <= item.max_qty;
+                return minMatch && maxMatch;
+            });
+            if (match && Number(match.price) > 0) return Number(match.price);
+        }
+        // 2. Use configured wholesale_price for this model/SKU
+        if (prod.wholesale_price && Number(prod.wholesale_price) > 0) {
+            return Number(prod.wholesale_price);
+        }
+    }
+    
+    // If RETAIL or wholesale price not set, check tiered retail brackets
+    if (prod.wholesale_qty_prices && prod.wholesale_qty_prices.length > 0) {
+        const match = prod.wholesale_qty_prices.find(item => {
+            const minMatch = qty >= item.min_qty;
+            const maxMatch = !item.max_qty || item.max_qty <= 0 || qty <= item.max_qty;
+            return minMatch && maxMatch;
+        });
+        if (match && Number(match.price) > 0) return Number(match.price);
+    }
+    
+    return Number(prod.price || 0);
+};
+
+window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
+    try {
+        const modal = document.getElementById("onlinePosModal");
+        if (!modal) {
+            console.error("Không tìm thấy modal onlinePosModal");
+            return;
+        }
+
+        window.posActiveMode = mode;
+        window.posActiveOrderId = mode === "EDIT" ? orderId : null;
+
+        // Current Cashier
+        const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+        const cashierEl = document.getElementById("posCurrentCashier");
+        if (cashierEl) cashierEl.textContent = currentUser.name || "Admin / Bán hàng";
+
+        // Populate Customers
+        const customerSelect = document.getElementById("posCustomerSelect");
+        if (customerSelect) {
+            customerSelect.innerHTML = "";
+            const customers = (state.partners || []).filter(p => p.role === "CUSTOMER" || !p.role || p.role === "ALL");
+            if (customers.length === 0) {
+                const opt = document.createElement("option");
+                opt.value = "";
+                opt.textContent = "Khách lẻ (Khách vãng lai)";
+                customerSelect.appendChild(opt);
+            } else {
+                customers.forEach(c => {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = `${c.name} ${c.phone ? `(${c.phone})` : ''}`;
+                    customerSelect.appendChild(opt);
+                });
+            }
+        }
+
+        // Reset inputs
+        const discountEl = document.getElementById("posOrderDiscount");
+        const vatEl = document.getElementById("posOrderVat");
+        const shipFeeEl = document.getElementById("posOrderShipFee");
+        const notesEl = document.getElementById("posOrderNotes");
+        const priceBookSelect = document.getElementById("posPriceBookSelect");
+
+        if (priceBookSelect) {
+            priceBookSelect.value = window.posSelectedPriceBook || "RETAIL";
+        }
+
+        if (mode === "EDIT" && orderId) {
+            const order = state.online_orders.find(o => o.id === orderId) || state.orders.find(o => o.id === orderId);
+            if (!order) {
+                alert("Lỗi: Không tìm thấy đơn hàng cần sửa.");
+                return;
+            }
+
+            document.getElementById("posOrderNumberDisplay").textContent = order.order_number || order.id;
+            if (customerSelect && order.customer_id) customerSelect.value = order.customer_id;
+            if (discountEl) discountEl.value = order.discount || 0;
+            if (vatEl) vatEl.value = order.vat_rate !== undefined ? order.vat_rate : 8;
+            if (shipFeeEl) shipFeeEl.value = order.ship_fee || 0;
+            if (notesEl) notesEl.value = order.notes || "";
+
+            // Load items into cart
+            window.posCart = (order.items || []).map(i => {
+                const prod = (state.online_products || []).find(p => p.sku === i.sku);
+                const qty = Number(i.qty || i.quantity || 1);
+                const price = Number(i.price || (prod ? prod.price : 0));
+                return {
+                    sku: i.sku,
+                    name: i.name || (prod ? prod.name : i.sku),
+                    unit: i.unit || (prod ? prod.unit : 'Chiếc'),
+                    brand: i.brand || (prod ? prod.brand : ''),
+                    qty: qty,
+                    price: price,
+                    item_total: i.item_total !== undefined ? Number(i.item_total) : (qty * price),
+                    item_note: i.item_note || ""
+                };
+            });
+        } else {
+            const suffix = String(state.online_orders.length + 1).padStart(4, '0');
+            const newOrderNo = `SO-ON-202606-${suffix}`;
+            document.getElementById("posOrderNumberDisplay").textContent = `${newOrderNo} (Mới)`;
+            if (discountEl) discountEl.value = 0;
+            if (vatEl) vatEl.value = 8;
+            if (shipFeeEl) shipFeeEl.value = 0;
+            if (notesEl) notesEl.value = "";
+            window.posCart = [];
+        }
+
+        // Render catalog & cart
+        window.renderPosCatalog();
+        window.renderPosCart();
+
+        // Show POS modal
+        modal.classList.add("active");
+
+        // Focus search
+        setTimeout(() => {
+            const searchInput = document.getElementById("posProductSearchInput");
+            if (searchInput) searchInput.focus();
+        }, 150);
+
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+    } catch (e) {
+        console.error("Lỗi khởi động POS:", e);
+        alert("Lỗi mở màn hình POS: " + e.message);
+    }
+};
+
+window.closePosModal = function() {
+    const modal = document.getElementById("onlinePosModal");
+    if (modal) modal.classList.remove("active");
+};
+
+// Render Product Catalog Cards Grid (Right column)
+window.renderPosCatalog = function() {
+    const grid = document.getElementById("posProductCatalogGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    const searchInput = document.getElementById("posProductSearchInput");
+    const query = (searchInput?.value || "").toLowerCase().trim();
+    const currentPriceBook = window.posSelectedPriceBook || "RETAIL";
+
+    const filtered = (state.online_products || []).filter(p => {
+        if (!p) return false;
+        // Category filter
+        if (window.posCurrentCategory && window.posCurrentCategory !== "ALL") {
+            const prodName = (p.name || "").toLowerCase();
+            const cat = window.posCurrentCategory.toLowerCase();
+            if (!prodName.includes(cat)) return false;
+        }
+        // Search text filter
+        if (query) {
+            const sku = (p.sku || "").toLowerCase();
+            const name = (p.name || "").toLowerCase();
+            const barcode = (p.barcode || "").toLowerCase();
+            if (!sku.includes(query) && !name.includes(query) && !barcode.includes(query)) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px 10px; color:#94a3b8; font-size:0.9rem;">
+            <i data-lucide="package-search" style="width:36px; height:36px; margin: 0 auto 8px auto; opacity:0.6; display:block;"></i>
+            Không tìm thấy hàng hóa nào phù hợp.
+        </div>`;
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    filtered.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "pos-prod-card";
+        card.setAttribute("title", `Click để thêm ${p.name}`);
+        card.onclick = () => window.addPosItem(p.sku, 1);
+
+        const currentPrice = window.getPosProductPrice(p, currentPriceBook, 1);
+        const stockQty = p.stock_qty !== undefined ? p.stock_qty : 999;
+        const isOutOfStock = stockQty <= 0;
+        const stockBadgeColor = isOutOfStock ? "#ef4444" : "#10b981";
+
+        let wholesaleBadge = "";
+        if (currentPriceBook === "WHOLESALE" && p.wholesale_price > 0) {
+            wholesaleBadge = `<span class="pos-prod-badge-wholesale">Giá sỉ</span>`;
+        }
+
+        let imgHtml = "";
+        if (p.image) {
+            imgHtml = `<img src="${p.image}" class="pos-prod-img" alt="${p.name}">`;
+        } else {
+            imgHtml = `<i data-lucide="box" style="width:28px; height:28px; color:#cbd5e1;"></i>`;
+        }
+
+        card.innerHTML = `
+            <div>
+                <div class="pos-prod-img-wrap">${imgHtml}</div>
+                <div class="pos-prod-name">${p.name}</div>
+            </div>
+            <div>
+                <div class="pos-prod-meta">
+                    <span>${p.sku}</span>
+                    <span style="color: ${stockBadgeColor}; font-weight: 600;">Tồn: ${stockQty}</span>
+                </div>
+                <div class="pos-prod-price">
+                    ${typeof formatMoney === 'function' ? formatMoney(currentPrice) : currentPrice}
+                    ${wholesaleBadge}
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.filterPosProducts = function(cat) {
+    window.posCurrentCategory = cat;
+    document.querySelectorAll(".pos-cat-pill").forEach(pill => {
+        if (pill.getAttribute("data-cat") === cat) pill.classList.add("active");
+        else pill.classList.remove("active");
+    });
+    window.renderPosCatalog();
+};
+
+window.handlePosSearchInput = function(val) {
+    const dropdown = document.getElementById("posProductSearchDropdown");
+    if (!dropdown) return;
+    const query = (val || "").toLowerCase().trim();
+
+    // Also update catalog grid in real-time
+    window.renderPosCatalog();
+
+    if (!query) {
+        dropdown.style.display = "none";
+        dropdown.innerHTML = "";
+        return;
+    }
+
+    const matches = (state.online_products || []).filter(p => {
+        const sku = (p.sku || "").toLowerCase();
+        const name = (p.name || "").toLowerCase();
+        const barcode = (p.barcode || "").toLowerCase();
+        return sku.includes(query) || name.includes(query) || barcode.includes(query);
+    }).slice(0, 6);
+
+    if (matches.length === 0) {
+        dropdown.style.display = "none";
+        return;
+    }
+
+    dropdown.innerHTML = "";
+    matches.forEach(p => {
+        const item = document.createElement("div");
+        item.className = "pos-search-item";
+        const price = window.getPosProductPrice(p, window.posSelectedPriceBook, 1);
+        item.innerHTML = `
+            <div>
+                <strong>${p.sku}</strong> - ${p.name}
+                <div style="font-size:0.75rem; color:#64748b;">Tồn kho: ${p.stock_qty || 0} ${p.unit || ''}</div>
+            </div>
+            <div style="font-weight:700; color:#0284c7;">
+                ${typeof formatMoney === 'function' ? formatMoney(price) : price}
+            </div>
+        `;
+        item.onclick = () => {
+            window.addPosItem(p.sku, 1);
+            dropdown.style.display = "none";
+            const searchInput = document.getElementById("posProductSearchInput");
+            if (searchInput) searchInput.value = "";
+            window.renderPosCatalog();
+        };
+        dropdown.appendChild(item);
+    });
+    dropdown.style.display = "block";
+};
+
+// Add product to Cart
+window.addPosItem = function(sku, qtyDelta = 1) {
+    const prod = (state.online_products || []).find(p => p.sku === sku);
+    if (!prod) return;
+
+    const existing = window.posCart.find(i => i.sku === sku);
+    if (existing) {
+        existing.qty += qtyDelta;
+        if (existing.qty <= 0) {
+            window.removePosItem(sku);
+            return;
+        }
+        existing.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, existing.qty);
+        existing.item_total = existing.qty * existing.price;
+    } else {
+        const initialQty = qtyDelta > 0 ? qtyDelta : 1;
+        const price = window.getPosProductPrice(prod, window.posSelectedPriceBook, initialQty);
+        window.posCart.push({
+            sku: prod.sku,
+            name: prod.name,
+            unit: prod.unit || 'Chiếc',
+            brand: prod.brand || '',
+            qty: initialQty,
+            price: price,
+            item_total: initialQty * price,
+            item_note: ""
+        });
+    }
+
+    window.renderPosCart();
+};
+
+// Update item quantity in Cart
+window.updatePosItemQty = function(sku, newQty) {
+    const qty = parseInt(newQty);
+    if (isNaN(qty) || qty <= 0) {
+        window.removePosItem(sku);
+        return;
+    }
+
+    const item = window.posCart.find(i => i.sku === sku);
+    if (!item) return;
+
+    const prod = (state.online_products || []).find(p => p.sku === sku);
+    item.qty = qty;
+    item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, qty);
+    item.item_total = item.qty * item.price;
+
+    window.renderPosCart();
+};
+
+window.removePosItem = function(sku) {
+    window.posCart = window.posCart.filter(i => i.sku !== sku);
+    window.renderPosCart();
+};
+
+window.clearPosCart = function() {
+    if (window.posCart.length === 0) return;
+    if (confirm("Bạn có chắc chắn muốn xóa toàn bộ sản phẩm trong giỏ hàng này?")) {
+        window.posCart = [];
+        window.renderPosCart();
+    }
+};
+
+// Switch Price Book: Bán lẻ <-> Bán sỉ
+window.handlePosPriceBookChange = function() {
+    const select = document.getElementById("posPriceBookSelect");
+    if (!select) return;
+
+    window.posSelectedPriceBook = select.value;
+
+    // Recalculate price for every item currently in cart
+    window.posCart.forEach(item => {
+        const prod = (state.online_products || []).find(p => p.sku === item.sku);
+        item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, item.qty);
+        item.item_total = item.qty * item.price;
+    });
+
+    // Re-render cart and product catalog
+    window.renderPosCart();
+    window.renderPosCatalog();
+};
+
+// Render Cart Lines
+window.renderPosCart = function() {
+    const container = document.getElementById("posCartItemsList");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (window.posCart.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding: 60px 20px; color:#94a3b8;">
+                <i data-lucide="shopping-cart" style="width:48px; height:48px; margin: 0 auto 12px auto; opacity:0.35; display:block;"></i>
+                <p style="font-weight: 600; font-size: 0.95rem; margin-bottom: 4px;">Giỏ hàng chưa có sản phẩm nào</p>
+                <small style="font-size: 0.8rem;">Click vào sản phẩm từ danh mục bên phải hoặc tìm kiếm (F3) để thêm</small>
+            </div>
+        `;
+        window.recalcPosTotals();
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    window.posCart.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "pos-cart-row";
+
+        let priceBadge = "";
+        const prod = (state.online_products || []).find(p => p.sku === item.sku);
+        if (window.posSelectedPriceBook === "WHOLESALE" && prod && prod.wholesale_price > 0) {
+            priceBadge = `<span style="font-size:0.65rem; padding:1px 3px; background:#fef3c7; color:#b45309; border-radius:3px; font-weight:700; margin-left:4px;">Sỉ</span>`;
+        }
+
+        row.innerHTML = `
+            <span style="width: 36px; text-align: center; color:#64748b; font-size:0.8rem;">${idx + 1}</span>
+            <div style="flex: 1; padding-left: 6px; overflow:hidden;">
+                <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.name}">${item.name}</div>
+                <div style="font-size:0.75rem; color:#64748b;">SKU: <strong>${item.sku}</strong></div>
+            </div>
+            <span style="width: 65px; text-align: center; font-size:0.8rem; color:#475569;">${item.unit}</span>
+            <div style="width: 105px; text-align: center;">
+                <div class="pos-qty-control">
+                    <button type="button" class="pos-qty-btn" onclick="window.addPosItem('${item.sku}', -1)">-</button>
+                    <input type="number" class="pos-qty-input" value="${item.qty}" min="1" onchange="window.updatePosItemQty('${item.sku}', this.value)" onfocus="this.select()">
+                    <button type="button" class="pos-qty-btn" onclick="window.addPosItem('${item.sku}', 1)">+</button>
+                </div>
+            </div>
+            <div style="width: 110px; text-align: right; font-weight:600; color:#334155;">
+                ${typeof formatMoney === 'function' ? formatMoney(item.price) : item.price}
+                ${priceBadge}
+            </div>
+            <div style="width: 115px; text-align: right; font-weight:700; color:#0284c7;">
+                ${typeof formatMoney === 'function' ? formatMoney(item.item_total) : item.item_total}
+            </div>
+            <div style="width: 36px; text-align: center;">
+                <button type="button" class="pos-del-btn" onclick="window.removePosItem('${item.sku}')" title="Xóa mặt hàng này">
+                    <i data-lucide="trash-2" style="width:15px; height:15px;"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(row);
+    });
+
+    window.recalcPosTotals();
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+// Recalculate Totals
+window.recalcPosTotals = function() {
+    const subtotal = window.posCart.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
+    const totalQty = window.posCart.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
+
+    const discountVal = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
+    const vatPercent = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
+    const shipFeeVal = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
+
+    const taxable = Math.max(0, subtotal - discountVal);
+    const vatVal = Math.round(taxable * (vatPercent / 100));
+    const grandTotal = Math.max(0, taxable + vatVal + shipFeeVal);
+
+    const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${Number(v || 0).toLocaleString('vi-VN')}đ`;
+
+    const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setTxt("posTotalQtyCount", totalQty);
+    setTxt("posSubtotalAmount", fmt(subtotal));
+    setTxt("posDiscountAmount", discountVal > 0 ? `-${fmt(discountVal)}` : "-0đ");
+    setTxt("posVatAmount", fmt(vatVal));
+    setTxt("posShipFeeAmount", fmt(shipFeeVal));
+    setTxt("posGrandTotalAmount", fmt(grandTotal));
+};
+
+// Submit POS Order
+window.submitPosOrder = function() {
+    try {
+        if (window.posCart.length === 0) {
+            alert("Vui lòng chọn ít nhất 1 sản phẩm vào giỏ hàng trước khi thanh toán.");
+            return;
+        }
+
+        const customerId = document.getElementById("posCustomerSelect")?.value || "";
+        const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+        const salesperson = currentUser.name || "Admin";
+
+        const discount = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
+        const vatRate = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
+        const shipFee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
+        const paymentMethod = document.getElementById("posPaymentMethodSelect")?.value || "BANK_TRANSFER";
+        const paymentStatus = document.getElementById("posPaymentStatusSelect")?.value || "PAID";
+        const notes = document.getElementById("posOrderNotes")?.value.trim() || "";
+
+        const subtotal = window.posCart.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
+        const taxable = Math.max(0, subtotal - discount);
+        const vatAmount = Math.round(taxable * (vatRate / 100));
+        const totalAmount = Math.max(0, taxable + vatAmount + shipFee);
+
+        const isEdit = window.posActiveMode === "EDIT" && !!window.posActiveOrderId;
+        let orderId = window.posActiveOrderId;
+        let orderNumber = "";
+
+        if (isEdit) {
+            const existingOrder = state.online_orders.find(o => o.id === orderId);
+            if (existingOrder) {
+                orderNumber = existingOrder.order_number;
+                // Revert old stocks if needed
+                if (existingOrder.items) {
+                    existingOrder.items.forEach(oldItem => {
+                        const p = state.online_products.find(prod => prod.sku === oldItem.sku);
+                        if (p) p.stock_qty += oldItem.qty;
+                    });
+                }
+            }
+        }
+
+        if (!orderNumber) {
+            const suffix = String(state.online_orders.length + 1).padStart(4, '0');
+            orderNumber = `SO-ON-202606-${suffix}`;
+            orderId = "oo_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
+        }
+
+        const customer = state.partners.find(p => p.id === customerId);
+
+        const newOrder = {
+            id: orderId,
+            order_number: orderNumber,
+            customer_id: customerId,
+            customer_name: customer ? customer.name : "Khách lẻ",
+            customer_phone: customer ? customer.phone : "",
+            salesperson: salesperson,
+            commission_rate: 5,
+            commission_amount: Math.round(totalAmount * 0.05),
+            items: window.posCart.map(i => ({ ...i })),
+            price_book: window.posSelectedPriceBook,
+            subtotal: subtotal,
+            discount: discount,
+            vat_rate: vatRate,
+            vat_amount: vatAmount,
+            ship_method: shipFee > 0 ? "INTERNAL_TIER" : "INTERNAL_FREE",
+            ship_fee: shipFee,
+            total_amount: totalAmount,
+            payment_status: paymentStatus,
+            payment_method: paymentMethod,
+            paid_amount: paymentStatus === "PAID" ? totalAmount : 0,
+            remaining_debt: paymentStatus === "PAID" ? 0 : totalAmount,
+            created_at: isEdit ? (state.online_orders.find(o => o.id === orderId)?.created_at || new Date().toISOString()) : new Date().toISOString(),
+            has_production: false,
+            production_steps: [],
+            kanban_status: "ORDER",
+            notes: notes
+        };
+
+        // Deduct stock
+        state.online_products.forEach(p => {
+            const item = window.posCart.find(i => i.sku === p.sku);
+            if (item) {
+                p.stock_qty -= item.qty;
+                const logId = "log_" + Math.random().toString(36).substring(2, 9);
+                state.online_stock_logs.push({
+                    id: logId,
+                    created_at: new Date().toISOString(),
+                    sku: p.sku,
+                    type: "EXPORT",
+                    qty: -item.qty,
+                    note: `Xuất kho bán hàng POS ${orderNumber}`
+                });
+            }
+        });
+
+        // Save order
+        if (isEdit) {
+            state.online_orders = state.online_orders.map(o => o.id === orderId ? newOrder : o);
+        } else {
+            state.online_orders = [newOrder, ...state.online_orders];
+        }
+
+        // Sync to standard orders
+        const stdOrder = state.orders.find(o => o.id === orderId);
+        if (stdOrder) {
+            Object.assign(stdOrder, {
+                customer_id: customerId,
+                quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
+                subtotal: subtotal,
+                discount: discount,
+                vat_rate: vatRate,
+                ship_fee: shipFee,
+                total_amount: totalAmount,
+                payment_status: paymentStatus,
+                payment_method: paymentMethod,
+                notes: notes
+            });
+        } else {
+            const stdCodeSuffix = String(state.orders.length + 1).padStart(4, '0');
+            state.orders = [{
+                id: orderId,
+                order_number: `SO-202606-${stdCodeSuffix}`,
+                customer_id: customerId,
+                quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
+                paper_type: "Thành phẩm kho sẵn",
+                print_spec: window.posCart.map(i => `${i.name} (SL: ${i.qty})`).join(", "),
+                post_processing: "Không gia công thêm",
+                subtotal: subtotal,
+                discount: discount,
+                vat_rate: vatRate,
+                ship_fee: shipFee,
+                total_amount: totalAmount,
+                deposit: paymentStatus === "PAID" ? totalAmount : 0,
+                payment_status: paymentStatus,
+                payment_method: paymentMethod,
+                salesperson: salesperson,
+                created_at: new Date().toISOString(),
+                status: "DELIVERED",
+                notes: notes || `Đơn hàng POS ${orderNumber}`
+            }, ...state.orders];
+        }
+
+        // Generate Transaction if PAID
+        if (paymentStatus === "PAID") {
+            const existingTx = state.transactions.find(t => t.reference_id === orderId && t.type === "RECEIPT");
+            if (existingTx) {
+                existingTx.amount = totalAmount;
+                existingTx.payment_method = paymentMethod;
+            } else {
+                const txCodeSuffix = String(state.transactions.length + 1).padStart(4, '0');
+                state.transactions = [{
+                    id: "t_" + Math.random().toString(36).substring(2, 9),
+                    tx_number: `PT-202606-${txCodeSuffix}`,
+                    created_at: new Date().toISOString(),
+                    type: "RECEIPT",
+                    category: "CUSTOMER_FINAL",
+                    amount: totalAmount,
+                    payment_method: paymentMethod,
+                    account_source: paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH",
+                    partner_id: customerId,
+                    reference_id: orderId,
+                    created_by: salesperson
+                }, ...state.transactions];
+            }
+        }
+
+        state.updateState("online_orders", state.online_orders);
+        state.updateState("orders", state.orders);
+        state.updateState("online_products", state.online_products);
+        state.updateState("online_stock_logs", state.online_stock_logs);
+        state.updateState("transactions", state.transactions);
+
+        // Close POS modal
+        window.closePosModal();
+
+        // Refresh UI
+        if (typeof renderOnlineSales === 'function') renderOnlineSales();
+        if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+        if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
+
+        // Open Invoice PDF
+        window.openOnlineOrderInvoicePdf(orderId);
+    } catch (err) {
+        console.error("Lỗi hoàn tất đơn POS:", err);
+        alert("Lỗi khi thanh toán đơn hàng: " + err.message);
+    }
+};
+
+window.openQuickAddCustomerModal = function() {
+    const name = prompt("Nhập tên khách hàng mới:");
+    if (!name || !name.trim()) return;
+    const phone = prompt("Nhập số điện thoại khách hàng:");
+
+    const newCust = {
+        id: "p_" + Date.now(),
+        name: name.trim(),
+        phone: (phone || "").trim(),
+        role: "CUSTOMER",
+        type: "CUSTOMER",
+        created_at: new Date().toISOString()
+    };
+    state.partners = [newCust, ...state.partners];
+    state.updateState("partners", state.partners);
+
+    // Refresh select and pick this new customer
+    const select = document.getElementById("posCustomerSelect");
+    if (select) {
+        const opt = document.createElement("option");
+        opt.value = newCust.id;
+        opt.textContent = `${newCust.name} (${newCust.phone})`;
+        select.appendChild(opt);
+        select.value = newCust.id;
+    }
+    alert(`Đã thêm khách hàng ${newCust.name} thành công!`);
+};
+
+// Keyboard shortcuts for POS
+document.addEventListener("keydown", function(e) {
+    const posModal = document.getElementById("onlinePosModal");
+    if (!posModal || !posModal.classList.contains("active")) return;
+
+    if (e.key === "F3") {
+        e.preventDefault();
+        document.getElementById("posProductSearchInput")?.focus();
+    } else if (e.key === "F4") {
+        e.preventDefault();
+        document.getElementById("posCustomerSelect")?.focus();
+    } else if (e.key === "F9") {
+        e.preventDefault();
+        window.submitPosOrder();
+    } else if (e.key === "Escape") {
+        window.closePosModal();
+    }
+});
+
+// Alias for backwards compatibility: openNewOnlineOrderModal opens POS!
+window.openNewOnlineOrderModal = function(mode = "ADD", orderId = "") {
+    window.openOnlinePosModal(mode, orderId);
+};
+
 window.openOnlineOrderInvoicePdf = function(orderId) {
     try {
         const order = state.online_orders.find(o => o.id === orderId) || state.orders.find(o => o.id === orderId);
@@ -26177,7 +26896,8 @@ window.renderOnlinePrices = function() {
             <td>${imgHtml}</td>
             <td>${p.name}</td>
             <td>${p.unit}</td>
-            <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price}" min="0" style="width:160px; padding:4px 8px; font-size:0.85rem;"></td>
+            <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price}" min="0" style="width:130px; padding:4px 8px; font-size:0.85rem;"></td>
+            <td><input type="number" class="form-input price-wholesale" data-sku="${p.sku}" value="${p.wholesale_price || 0}" min="0" style="width:130px; padding:4px 8px; font-size:0.85rem;" placeholder="Giá sỉ..."></td>
             <td>
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                     <div class="tooltip-container">
@@ -26191,7 +26911,10 @@ window.renderOnlinePrices = function() {
                     <button type="button" class="btn btn-primary btn-sm" onclick="openAdvancedPricingModal('${p.sku}')" style="padding: 4px 8px; font-size:0.75rem;">
                         <i data-lucide="settings" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> Thiết lập SL
                     </button>
-                    <span style="font-size:0.75rem; color:var(--text-secondary); margin-left:8px; display:inline-block; vertical-align:middle;">(${summaryText})</span>
+                    <button type="button" class="btn btn-success btn-sm" onclick="saveSingleProductPrice('${p.sku}', this)" style="padding: 4px 8px; font-size:0.75rem;">
+                        <i data-lucide="check" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:2px;"></i> Lưu
+                    </button>
+                    <span style="font-size:0.75rem; color:var(--text-secondary); margin-left:4px; display:inline-block; vertical-align:middle;">(${summaryText})</span>
                 </div>
             </td>
         `;
@@ -26211,10 +26934,13 @@ window.saveOnlinePrices = function() {
     retails.forEach((input) => {
         const sku = input.dataset.sku;
         const retailVal = parseFloat(input.value) || 0;
+        const wholesaleInput = document.querySelector(`#onlinePricesTable .price-wholesale[data-sku="${sku}"]`);
+        const wholesaleVal = wholesaleInput ? (parseFloat(wholesaleInput.value) || 0) : 0;
         
         const p = state.online_products.find(prod => String(prod.sku).trim().toUpperCase() === String(sku).trim().toUpperCase());
         if (p) {
             p.price = retailVal;
+            p.wholesale_price = wholesaleVal;
             updatedCount++;
         }
     });
@@ -26229,13 +26955,15 @@ window.saveSingleProductPrice = function(sku, buttonEl) {
     const row = buttonEl.closest("tr");
     if (!row) return;
     
-    const retailVal = parseFloat(row.querySelector(".price-retail").value) || 0;
+    const retailVal = parseFloat(row.querySelector(".price-retail")?.value) || 0;
+    const wholesaleVal = parseFloat(row.querySelector(".price-wholesale")?.value) || 0;
     
     const p = state.online_products.find(prod => String(prod.sku).trim().toUpperCase() === String(sku).trim().toUpperCase());
     if (p) {
         p.price = retailVal;
+        p.wholesale_price = wholesaleVal;
         state.updateState("online_products", state.online_products);
-        alert(`Đã lưu cập nhật giá cho sản phẩm ${p.name} thành công!`);
+        alert(`Đã lưu cập nhật giá cho sản phẩm ${p.name} (Lẻ: ${formatMoney(retailVal)}, Sỉ: ${formatMoney(wholesaleVal)}) thành công!`);
         renderOnlineProducts();
         renderOnlinePrices();
     }
