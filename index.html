@@ -530,7 +530,7 @@
                         <button onclick="event.stopPropagation(); window.openNewOnlineOrderModal();" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; border: 2px solid #ffffff; font-size: 1.4rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(16, 143, 83, 0.4);" onmouseover="this.style.transform='scale(1.2)';" onmouseout="this.style.transform='scale(1)';" title="Tạo đơn hàng online mới">+</button>
                     </div>
                     <div class="hub-grid">
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-dashboard')">
+                        <div class="hub-card" onclick="window.navigateTo('ban-hang-online')">
                             <div class="hub-icon gradient-1">
                                 <i data-lucide="bar-chart-2"></i>
                             </div>
@@ -539,7 +539,7 @@
                                 <p>Xem tổng quan kinh doanh online</p>
                             </div>
                         </div>
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-orders')">
+                        <div class="hub-card" onclick="window.navigateTo('dat-hang')">
                             <div class="hub-icon gradient-2">
                                 <i data-lucide="shopping-bag"></i>
                             </div>
@@ -548,7 +548,7 @@
                                 <p>Tạo & quản lý đơn hàng online</p>
                             </div>
                         </div>
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-returns')">
+                        <div class="hub-card" onclick="window.navigateTo('tra-hang')">
                             <div class="hub-icon gradient-4">
                                 <i data-lucide="rotate-ccw"></i>
                             </div>
@@ -557,7 +557,7 @@
                                 <p>Xử lý đổi trả & hoàn tiền</p>
                             </div>
                         </div>
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-invoices')">
+                        <div class="hub-card" onclick="window.navigateTo('hoa-don')">
                             <div class="hub-icon gradient-3">
                                 <i data-lucide="file-text"></i>
                             </div>
@@ -574,7 +574,7 @@
                         <span>Hàng hóa & Kho hàng</span>
                     </div>
                     <div class="hub-grid">
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-products')">
+                        <div class="hub-card" onclick="window.navigateTo('hang-hoa')">
                             <div class="hub-icon gradient-5">
                                 <i data-lucide="list"></i>
                             </div>
@@ -583,7 +583,7 @@
                                 <p>Quản lý danh mục sản phẩm online</p>
                             </div>
                         </div>
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-prices')">
+                        <div class="hub-card" onclick="window.navigateTo('thiet-lap-gia')">
                             <div class="hub-icon gradient-6">
                                 <i data-lucide="tags"></i>
                             </div>
@@ -592,7 +592,7 @@
                                 <p>Bảng giá bán lẻ & sỉ</p>
                             </div>
                         </div>
-                        <div class="hub-card" onclick="switchTab('online-sales'); switchOnlineSalesSubTab('online-stock')">
+                        <div class="hub-card" onclick="window.navigateTo('ton-kho')">
                             <div class="hub-icon gradient-7">
                                 <i data-lucide="warehouse"></i>
                             </div>
@@ -10020,7 +10020,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_invoice_fix"></script>
+    <script src="/app.js?v=20261019_sales_hub_nav"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -10034,7 +10034,7 @@
             <span>Sản xuất</span>
         </button>
         <div class="bottom-nav-center-wrapper">
-            <button class="bottom-nav-item bottom-nav-sales-highlight" data-slug="ban-hang-online" data-tab="sales-hub" onclick="window.navigateTo('ban-hang-online')">
+            <button class="bottom-nav-item bottom-nav-sales-highlight" data-slug="kinh-doanh" data-tab="sales-hub" onclick="window.navigateTo('kinh-doanh')" title="Quản lý Bán hàng">
                 <i data-lucide="shopping-cart"></i>
             </button>
         </div>

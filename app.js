@@ -14774,7 +14774,7 @@ window.goBackToHub = function(tabId) {
 window.ROUTE_DEFINITIONS = [
     // 1. Dashboard & Hubs
     { slug: 'tong-quan', tabId: 'dashboard', title: 'Tổng quan hoạt động | In Lạc Hồng', aliases: ['dashboard', 'home', 'trang-chu'] },
-    { slug: 'kinh-doanh', tabId: 'sales-hub', title: 'Trung tâm Kinh doanh & Bán hàng | In Lạc Hồng', aliases: ['sales-hub'] },
+    { slug: 'kinh-doanh', tabId: 'sales-hub', title: 'Quản lý Bán hàng | In Lạc Hồng', aliases: ['sales-hub', 'ban-hang-hub', 'quan-ly-ban-hang'] },
     { slug: 'san-xuat', tabId: 'production-hub', title: 'Trung tâm Sản xuất & Xưởng in | In Lạc Hồng', aliases: ['production-hub'] },
     { slug: 'tai-chinh', tabId: 'finance-hub', title: 'Trung tâm Thu chi & Tài chính | In Lạc Hồng', aliases: ['finance-hub'] },
     { slug: 'quan-tri', tabId: 'admin-hub', title: 'Trung tâm Quản trị & Phân quyền | In Lạc Hồng', aliases: ['admin-hub', 'admin', 'he-thong'] },
@@ -14980,20 +14980,25 @@ window.activateView = function(route) {
     
     const parentHubMap = {
         'online-sales': 'sales-hub',
+        'sales-hub': 'sales-hub',
         'quotes': 'production-hub',
         'prod-orders': 'production-hub',
         'production': 'production-hub',
         'subcontracting': 'production-hub',
         'inventory': 'production-hub',
         'warehouse': 'production-hub',
+        'production-hub': 'production-hub',
         'finance': 'finance-hub',
+        'finance-hub': 'finance-hub',
+        'admin-hub': 'admin-hub',
         'crm': 'admin-hub',
         'crm-care': 'admin-hub',
         'contracts': 'admin-hub',
         'chat': 'admin-hub',
         'employees': 'admin-hub',
         'collaborators': 'admin-hub',
-        'labor-contracts': 'admin-hub'
+        'labor-contracts': 'admin-hub',
+        'categories': 'admin-hub'
     };
     
     const highlightTabId = parentHubMap[tabId] || tabId;
@@ -15022,7 +15027,7 @@ window.activateView = function(route) {
         lucide.createIcons();
     }
 
-    if (tabId === 'admin-hub' && typeof window.applyUserPermissions === 'function') {
+    if ((tabId === 'admin-hub' || tabId === 'sales-hub' || tabId === 'production-hub' || tabId === 'finance-hub') && typeof window.applyUserPermissions === 'function') {
         window.applyUserPermissions();
     }
 
@@ -32831,9 +32836,13 @@ window.applyUserPermissions = function() {
     const hubCards = document.querySelectorAll(".hub-card");
     hubCards.forEach(el => {
         const onclickAttr = el.getAttribute("onclick") || "";
-        const match = onclickAttr.match(/switchTab\('([^']+)'\)/);
+        const match = onclickAttr.match(/(?:switchTab|navigateTo)\('([^']+)'\)/);
         if (match) {
-            const tab = match[1];
+            let tab = match[1];
+            if (window.findRoute) {
+                const r = window.findRoute(tab);
+                if (r) tab = r.tabId;
+            }
             const req = window.getRequiredPermission(tab);
             if (req && !isCtrlAdmin && !permissions[req]) {
                 el.style.display = "none";
@@ -32844,12 +32853,16 @@ window.applyUserPermissions = function() {
     });
     
     // Hide/Show dashboard KPI cards
-    const kpiCards = document.querySelectorAll(".kpi-card, [onclick*='switchTab']");
+    const kpiCards = document.querySelectorAll(".kpi-card, [onclick*='switchTab'], [onclick*='navigateTo']");
     kpiCards.forEach(el => {
         const onclickAttr = el.getAttribute("onclick") || "";
-        const match = onclickAttr.match(/switchTab\('([^']+)'\)/);
+        const match = onclickAttr.match(/(?:switchTab|navigateTo)\('([^']+)'\)/);
         if (match) {
-            const tab = match[1];
+            let tab = match[1];
+            if (window.findRoute) {
+                const r = window.findRoute(tab);
+                if (r) tab = r.tabId;
+            }
             const req = window.getRequiredPermission(tab);
             if (req && !isCtrlAdmin && !permissions[req]) {
                 el.style.display = "none";
