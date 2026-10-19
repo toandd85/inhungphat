@@ -12490,34 +12490,503 @@ const DEFAULT_CONTRACTS = [
 
 const DEFAULT_SALESPERSONS = [
     { 
-        id: "s1", code: "SALES-001", name: "Đại Hùng", role: "SALESPERSON", phone: "0988776655", email: "hung.sales@inlachong.com", commission_rate: 5, referral_code: "hungdh", referral_link: "https://inlachongjsc.web.app/?ref=hungdh", status: true,
-        title: "Trưởng phòng", department: "Kinh doanh", branch: "Hà Nội", birthday: "1995-05-15", address: "Cầu Giấy, Hà Nội", zalo: "0988776655", facebook: "facebook.com/daihung.vcb",
+        id: "s1", code: "SALES-001", name: "Đại Hùng", role: "SALESPERSON", phone: "0988776655", email: "hung.sales@inlachong.com", commission_rate: 5, referral_code: "hungdh", referral_link: "https://inlachongjsc.web.app/?ref=hungdh", status: "ACTIVE",
+        title: "Trưởng Phòng Kinh Doanh", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng",
+        gender: "Nam", birthday: "1990-05-15", join_date: "2025-01-02",
+        id_card: "001090012345", id_card_date: "2021-04-10", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Hà Nội", permanent_address: "Số 15 Phố Huế, Hàng Bài, Hoàn Kiếm, Hà Nội", address: "Số 68 Cầu Giấy, Quan Hoa, Cầu Giấy, Hà Nội",
+        education: "Đại học", major: "Quản trị kinh doanh & Tiếp thị", school: "Đại học Kinh Tế Quốc Dân",
+        tax_code: "8012345678", insurance_code: "0123456789", bank_account: "190345678901", bank_name: "Techcombank - CN Ba Đình",
+        zalo: "0988776655", facebook: "facebook.com/daihung.vcb", notes: "Trưởng phòng phụ trách kinh doanh dự án bao bì toàn miền Bắc",
         work_history: [
-            { id: "h1", date: "2025-01-02", contract_type: "Thử việc", title: "Nhân viên", department: "Kinh doanh", branch: "Hà Nội", note: "Nhận việc thử việc nhân viên kinh doanh" },
-            { id: "h2", date: "2025-03-02", contract_type: "Chính thức", title: "Nhân viên", department: "Kinh doanh", branch: "Hà Nội", note: "Ký hợp đồng chính thức" },
-            { id: "h3", date: "2026-01-02", contract_type: "Chính thức", title: "Trưởng phòng", department: "Kinh doanh", branch: "Hà Nội", note: "Quyết định bổ nhiệm lên Trưởng phòng Kinh doanh" }
+            { id: "h1", date: "2025-01-02", contract_type: "Thử việc", title: "Nhân Viên Kinh Doanh (Sales Executive)", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Nhận việc thử việc nhân viên kinh doanh" },
+            { id: "h2", date: "2025-03-02", contract_type: "Chính thức", title: "Nhân Viên Kinh Doanh (Sales Executive)", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Ký hợp đồng chính thức thời hạn 1 năm" },
+            { id: "h3", date: "2026-01-02", contract_type: "Chính thức", title: "Trưởng Phòng Kinh Doanh", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Quyết định bổ nhiệm lên Trưởng phòng Kinh Doanh" }
         ]
     },
     { 
-        id: "s2", code: "SALES-002", name: "Thế Phương", role: "SALESPERSON", phone: "0977665544", email: "phuong.sales@inlachong.com", commission_rate: 5, referral_code: "phuongtp", referral_link: "https://inlachongjsc.web.app/?ref=phuongtp", status: true,
-        title: "Nhân viên", department: "Kinh doanh", branch: "Hà Nội", birthday: "1997-09-20", address: "Thanh Xuân, Hà Nội", zalo: "0977665544", facebook: "facebook.com/thephuong.ihp",
+        id: "s2", code: "SALES-002", name: "Thế Phương", role: "SALESPERSON", phone: "0977665544", email: "phuong.sales@inlachong.com", commission_rate: 5, referral_code: "phuongtp", referral_link: "https://inlachongjsc.web.app/?ref=phuongtp", status: "ACTIVE",
+        title: "Nhân Viên Kinh Doanh (Sales Executive)", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng",
+        gender: "Nam", birthday: "1997-09-20", join_date: "2026-03-01",
+        id_card: "001097009876", id_card_date: "2022-08-15", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Hải Phòng", permanent_address: "Lê Chân, TP. Hải Phòng", address: "Nguyễn Trãi, Thanh Xuân, Hà Nội",
+        education: "Đại học", major: "Thương mại quốc tế", school: "Đại học Ngoại Thương Hà Nội",
+        tax_code: "8023456789", insurance_code: "0134567890", bank_account: "0021000456789", bank_name: "Vietcombank - CN Thanh Xuân",
+        zalo: "0977665544", facebook: "facebook.com/thephuong.ihp", notes: "Phụ trách khách hàng doanh nghiệp tem nhãn, bao bì hộp cứng",
         work_history: [
-            { id: "p1", date: "2026-03-01", contract_type: "Chính thức", title: "Nhân viên", department: "Kinh doanh", branch: "Hà Nội", note: "Tuyển dụng mới vị trí nhân viên chính thức" }
+            { id: "p1", date: "2026-03-01", contract_type: "Chính thức", title: "Nhân Viên Kinh Doanh (Sales Executive)", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Tuyển dụng mới vị trí nhân viên kinh doanh chính thức" }
         ]
     },
     { 
-        id: "s3", code: "CTV-001", name: "Văn Minh", role: "COLLABORATOR", phone: "0966554433", email: "minh.ctv@gmail.com", commission_rate: 10, referral_code: "minhctv", referral_link: "https://inlachongjsc.web.app/?ref=minhctv", status: true,
-        title: "Cộng tác viên", department: "Kinh doanh", branch: "Hồ Chí Minh", birthday: "1994-02-10", address: "Quận 1, TP. Hồ Chí Minh", zalo: "0966554433", facebook: "facebook.com/vanminh.ctv",
+        id: "s4", code: "SALES-003", name: "Hoàng Mai Chi", role: "SALESPERSON", phone: "0912348899", email: "chi.design@inlachong.com", commission_rate: 3, referral_code: "maichi", referral_link: "https://inlachongjsc.web.app/?ref=maichi", status: "ACTIVE",
+        title: "Chuyên Viên Thiết Kế Đồ Họa", department: "Phòng Kỹ Thuật & Thiết Kế", branch: "Hà Nội - Trụ sở chính & Văn phòng",
+        gender: "Nữ", birthday: "1996-11-08", join_date: "2025-06-15",
+        id_card: "035196004567", id_card_date: "2021-12-20", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Hà Nam", permanent_address: "Thành phố Phủ Lý, Hà Nam", address: "Số 82 Dịch Vọng Hậu, Cầu Giấy, Hà Nội",
+        education: "Đại học", major: "Thiết kế Đồ họa & Bao bì", school: "Đại học Mỹ Thuật Công Nghiệp",
+        tax_code: "8034567890", insurance_code: "0145678901", bank_account: "10188992233", bank_name: "MB Bank - CN Cầu Giấy",
+        zalo: "0912348899", facebook: "facebook.com/maichi.designer", notes: "Chuyên thiết kế nhận diện thương hiệu, catalog, kỷ yếu, bao bì cao cấp",
         work_history: [
-            { id: "m1", date: "2026-05-01", contract_type: "CTV", title: "Cộng tác viên", department: "Kinh doanh", branch: "Hồ Chí Minh", note: "Bắt đầu làm CTV thị trường phía Nam" }
+            { id: "c1", date: "2025-06-15", contract_type: "Chính thức", title: "Chuyên Viên Thiết Kế Đồ Họa", department: "Phòng Kỹ Thuật & Thiết Kế", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Ký hợp đồng lao động vị trí Chuyên viên thiết kế" }
+        ]
+    },
+    { 
+        id: "s5", code: "SALES-004", name: "Trần Văn Toàn", role: "SALESPERSON", phone: "0934567812", email: "toan.offset@inlachong.com", commission_rate: 2, referral_code: "toanoffset", referral_link: "https://inlachongjsc.web.app/?ref=toanoffset", status: "ACTIVE",
+        title: "Kỹ Thuật Viên / Thợ Máy In Offset", department: "Phân Xưởng In Offset & Kỹ Thuật Số", branch: "Xưởng In & Sản xuất Hà Nội",
+        gender: "Nam", birthday: "1992-04-18", join_date: "2024-02-10",
+        id_card: "027092003344", id_card_date: "2020-07-12", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Bắc Ninh", permanent_address: "Từ Sơn, Tỉnh Bắc Ninh", address: "Khu công nghiệp Vĩnh Tuy, Hoàng Mai, Hà Nội",
+        education: "Cao đẳng", major: "Công nghệ In & Xuất bản", school: "Cao đẳng In Hà Nội",
+        tax_code: "8045678901", insurance_code: "0156789012", bank_account: "2201000123999", bank_name: "BIDV - CN Quang Trung",
+        zalo: "0934567812", facebook: "facebook.com/toan.print", notes: "Vận hành máy in Offset Komori 4 màu, phụ trách giám sát chất lượng bài in",
+        work_history: [
+            { id: "t1", date: "2024-02-10", contract_type: "Chính thức", title: "Kỹ Thuật Viên / Thợ Máy In Offset", department: "Phân Xưởng In Offset & Kỹ Thuật Số", branch: "Xưởng In & Sản xuất Hà Nội", note: "Ký hợp đồng chính thức thợ in máy offset chính" }
+        ]
+    },
+    { 
+        id: "s6", code: "TV-001", name: "Lê Thu Trang", role: "PROBATION", phone: "0968112233", email: "trang.sales@inlachong.com", commission_rate: 5, referral_code: "thutrang", referral_link: "https://inlachongjsc.web.app/?ref=thutrang", status: "PROBATION",
+        title: "Nhân viên thử việc", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng",
+        gender: "Nữ", birthday: "2001-08-12", join_date: "2026-05-15",
+        id_card: "026101007788", id_card_date: "2021-09-05", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Vĩnh Phúc", permanent_address: "Vĩnh Yên, Vĩnh Phúc", address: "Số 45 Hồ Tùng Mậu, Cầu Giấy, Hà Nội",
+        education: "Đại học", major: "Kinh doanh quốc tế", school: "Đại học Thương Mại",
+        tax_code: "8067890123", insurance_code: "0178901234", bank_account: "10288334455", bank_name: "Vietcombank - CN Thăng Long",
+        zalo: "0968112233", facebook: "facebook.com/thutrang.le", notes: "Nhân sự mới thử việc 2 tháng vị trí kinh doanh dự án ấn phẩm văn phòng",
+        work_history: [
+            { id: "tr1", date: "2026-05-15", contract_type: "Thử việc", title: "Nhân viên thử việc", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Bắt đầu thời gian thử việc 02 tháng" }
+        ]
+    },
+    { 
+        id: "s7", code: "TTS-001", name: "Nguyễn Đức Duy", role: "INTERN", phone: "0971223344", email: "duy.intern@inlachong.com", commission_rate: 3, referral_code: "ducduy", referral_link: "https://inlachongjsc.web.app/?ref=ducduy", status: "INTERN",
+        title: "Thực tập sinh (Intern)", department: "Phòng Kỹ Thuật & Thiết Kế", branch: "Hà Nội - Trụ sở chính & Văn phòng",
+        gender: "Nam", birthday: "2003-10-25", join_date: "2026-06-01",
+        id_card: "024003005566", id_card_date: "2022-03-20", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Bắc Giang", permanent_address: "TP. Bắc Giang, Tỉnh Bắc Giang", address: "Số 12 Chùa Láng, Đống Đa, Hà Nội",
+        education: "Đại học", major: "Thiết kế Đồ họa & Truyền thông", school: "Đại học Mỹ Thuật Công Nghiệp",
+        tax_code: "8078901234", insurance_code: "", bank_account: "190388772211", bank_name: "Techcombank - CN Đống Đa",
+        zalo: "0971223344", facebook: "facebook.com/ducduy.design", notes: "Thực tập sinh thiết kế đồ họa bao bì, thực tập 3 tháng tại công ty",
+        work_history: [
+            { id: "d1", date: "2026-06-01", contract_type: "Thực tập sinh", title: "Thực tập sinh (Intern)", department: "Phòng Kỹ Thuật & Thiết Kế", branch: "Hà Nội - Trụ sở chính & Văn phòng", note: "Tiếp nhận thực tập sinh thiết kế đồ họa" }
+        ]
+    },
+    { 
+        id: "s3", code: "CTV-001", name: "Văn Minh", role: "COLLABORATOR", phone: "0966554433", email: "minh.ctv@gmail.com", commission_rate: 10, referral_code: "minhctv", referral_link: "https://inlachongjsc.web.app/?ref=minhctv", status: "ACTIVE",
+        title: "Cộng Tác Viên Kinh Doanh", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Chi nhánh Miền Nam (TP. Hồ Chí Minh)",
+        gender: "Nam", birthday: "1994-02-10", join_date: "2026-05-01",
+        id_card: "079094008899", id_card_date: "2022-01-18", id_card_place: "Cục Cảnh sát QLHC về TTXH",
+        hometown: "Nam Định", permanent_address: "Ý Yên, Nam Định", address: "Quận 1, TP. Hồ Chí Minh",
+        education: "Đại học", major: "Marketing", school: "Đại học Kinh Tế TP.HCM",
+        tax_code: "8056789012", insurance_code: "0167890123", bank_account: "190399887766", bank_name: "Techcombank - CN Sài Gòn",
+        zalo: "0966554433", facebook: "facebook.com/vanminh.ctv", notes: "CTV phát triển thị trường bao bì mỹ phẩm khu vực phía Nam",
+        work_history: [
+            { id: "m1", date: "2026-05-01", contract_type: "CTV", title: "Cộng Tác Viên Kinh Doanh", department: "Phòng Kinh Doanh & Tiếp Thị", branch: "Chi nhánh Miền Nam (TP. Hồ Chí Minh)", note: "Bắt đầu làm CTV thị trường phía Nam" }
         ]
     }
 ];
 
 const DEFAULT_LABOR_CONTRACTS = [
-    { id: "lc1", employee_id: "s1", contract_number: "HĐLĐ-2026-0001", sign_date: "2026-01-02", start_date: "2026-01-02", end_date: "2027-01-02", base_salary: 12000000, contract_type: "Xác định thời hạn", status: "ACTIVE" },
-    { id: "lc2", employee_id: "s2", contract_number: "HĐLĐ-2026-0002", sign_date: "2026-03-01", start_date: "2026-03-01", end_date: "", base_salary: 15000000, contract_type: "Không xác định thời hạn", status: "ACTIVE" }
+    { 
+        id: "lc1", 
+        employee_id: "s1", 
+        contract_number: "HĐLĐ-2026-0001", 
+        department: "Kinh doanh",
+        job_title: "Trưởng phòng Kinh doanh",
+        hometown: "Hà Nội",
+        education: "Đại học",
+        birth_date: "1990-05-15",
+        insurance_code: "0123456789",
+        personal_tax_code: "8012345678",
+        bank_account: "190345678901 - Techcombank",
+        sign_date: "2026-01-02", 
+        start_date: "2026-01-02", 
+        end_date: "2027-01-02", 
+        base_salary: 15000000, 
+        contract_type: "Xác định thời hạn", 
+        status: "ACTIVE",
+        attachments: [],
+        history: [
+            {
+                id: "orig_lc1",
+                type: "ORIGINAL",
+                title: "Hợp đồng ban đầu",
+                number: "HĐLĐ-2026-0001",
+                date: "2026-01-02",
+                salary: 12000000,
+                job_title: "Nhân viên kinh doanh",
+                department: "Kinh doanh",
+                note: "Ký kết hợp đồng lao động chính thức",
+                attachments: []
+            },
+            {
+                id: "appx_lc1_01",
+                type: "AMENDMENT",
+                number: "PL-01/HĐLĐ-2026-0001",
+                date: "2026-06-01",
+                change_type: "Điều chỉnh mức lương & Chức vụ",
+                old_salary: 12000000,
+                salary: 15000000,
+                old_title: "Nhân viên kinh doanh",
+                job_title: "Trưởng phòng Kinh doanh",
+                old_dept: "Kinh doanh",
+                department: "Kinh doanh",
+                note: "Bổ nhiệm vị trí Trưởng phòng Kinh doanh và điều chỉnh mức lương",
+                attachments: []
+            }
+        ]
+    },
+    { 
+        id: "lc2", 
+        employee_id: "s2", 
+        contract_number: "HĐLĐ-2026-0002", 
+        department: "Kỹ thuật & Thiết kế",
+        job_title: "Chuyên viên thiết kế in ấn",
+        hometown: "Nam Định",
+        education: "Đại học",
+        birth_date: "1993-08-20",
+        insurance_code: "0198765432",
+        personal_tax_code: "8098765432",
+        bank_account: "1028374650 - Vietcombank",
+        sign_date: "2026-03-01", 
+        start_date: "2026-03-01", 
+        end_date: "", 
+        base_salary: 14000000, 
+        contract_type: "Không xác định thời hạn", 
+        status: "ACTIVE",
+        attachments: [],
+        history: [
+            {
+                id: "orig_lc2",
+                type: "ORIGINAL",
+                title: "Hợp đồng ban đầu",
+                number: "HĐLĐ-2026-0002",
+                date: "2026-03-01",
+                salary: 14000000,
+                job_title: "Chuyên viên thiết kế in ấn",
+                department: "Kỹ thuật & Thiết kế",
+                note: "Ký kết hợp đồng lao động không thời hạn",
+                attachments: []
+            }
+        ]
+    }
 ];
+
+
+// ==========================================
+// MASTER CATEGORIES MASTER DATA (DANH MỤC DÙNG CHUNG HỆ THỐNG)
+// ==========================================
+const DEFAULT_MASTER_CATEGORIES = {
+    // 1. NHÂN SỰ & HỢP ĐỒNG (HR & CONTRACTS)
+    hr_branch: {
+        key: "hr_branch",
+        module: "hr",
+        moduleName: "Nhân sự & Hợp đồng",
+        name: "Chi nhánh làm việc",
+        desc: "Các văn phòng đại diện, chi nhánh kinh doanh, xưởng in trực thuộc",
+        icon: "building-2",
+        items: [
+            { id: "br_1", code: "HN-HQ", name: "Trụ sở chính & Văn phòng Hà Nội", desc: "Tòa nhà Lạc Hồng, Q. Cầu Giấy, Hà Nội", order: 1, status: "ACTIVE" },
+            { id: "br_2", code: "HN-XG", name: "Xưởng in & Gia công Đan Phượng", desc: "Cụm CN Song Phượng, Đan Phượng, Hà Nội", order: 2, status: "ACTIVE" },
+            { id: "br_3", code: "HN-LB", name: "Trung tâm Kho vận & Cắt xén Long Biên", desc: "Khu CN Đài Tư, Long Biên, Hà Nội", order: 3, status: "ACTIVE" },
+            { id: "br_4", code: "HCM-CN", name: "Chi nhánh Miền Nam (TP. Hồ Chí Minh)", desc: "Quận Tân Bình, TP. Hồ Chí Minh", order: 4, status: "ACTIVE" }
+        ]
+    },
+    hr_department: {
+        key: "hr_department",
+        module: "hr",
+        moduleName: "Nhân sự & Hợp đồng",
+        name: "Phòng ban trực thuộc",
+        desc: "Cơ cấu phòng ban, ban chuyên môn và bộ phận chức năng",
+        icon: "network",
+        items: [
+            { id: "dept_1", code: "BGD", name: "Ban Giám Đốc", desc: "Hội đồng quản trị và Ban điều hành công ty", order: 1, status: "ACTIVE" },
+            { id: "dept_2", code: "KD", name: "Kinh doanh & Phát triển thị trường", desc: "Đội ngũ Sales, Bán hàng B2B & Đại lý", order: 2, status: "ACTIVE" },
+            { id: "dept_3", code: "TK", name: "Kỹ thuật & Thiết kế đồ họa", desc: "Chế bản CTP, thiết kế market bao bì & ấn phẩm", order: 3, status: "ACTIVE" },
+            { id: "dept_4", code: "SX", name: "Xưởng In & Sản xuất", desc: "Đội ngũ kỹ thuật vận hành máy in offset, KTS và thợ máy", order: 4, status: "ACTIVE" },
+            { id: "dept_5", code: "KT", name: "Kế toán - Tài chính", desc: "Quản lý thu chi, công nợ, sổ quỹ và hóa đơn chứng từ", order: 5, status: "ACTIVE" },
+            { id: "dept_6", code: "HCNS", name: "Hành chính - Nhân sự", desc: "Tuyển dụng, đào tạo, hợp đồng lao động và chế độ", order: 6, status: "ACTIVE" },
+            { id: "dept_7", code: "KHO", name: "Kho & Vận chuyển giao nhận", desc: "Quản lý vật tư giấy, thành phẩm và đội xe giao hàng", order: 7, status: "ACTIVE" }
+        ]
+    },
+    hr_title: {
+        key: "hr_title",
+        module: "hr",
+        moduleName: "Nhân sự & Hợp đồng",
+        name: "Chức vụ / Vị trí công tác",
+        desc: "Các chức danh chuyên môn và cấp bậc làm việc trong tổ chức",
+        icon: "award",
+        items: [
+            { id: "title_1", code: "CEO", name: "Tổng Giám Đốc", desc: "Điều hành toàn diện hoạt động doanh nghiệp", order: 1, status: "ACTIVE" },
+            { id: "title_2", code: "TP-KD", name: "Trưởng phòng Kinh doanh", desc: "Quản lý chiến lược doanh số và đội ngũ Sales", order: 2, status: "ACTIVE" },
+            { id: "title_3", code: "NVKD", name: "Chuyên viên Kinh doanh / Sales", desc: "Tư vấn khách hàng, báo giá và chốt đơn in", order: 3, status: "ACTIVE" },
+            { id: "title_4", code: "TP-TK", name: "Trưởng phòng Kỹ thuật Thiết kế", desc: "Kiểm soát file in, bình bản và thiết kế mẫu", order: 4, status: "ACTIVE" },
+            { id: "title_5", code: "CV-TK", name: "Chuyên viên thiết kế in ấn", desc: "Thiết kế bao bì, catalogue, profile, nhãn mác", order: 5, status: "ACTIVE" },
+            { id: "title_6", code: "QD-XG", name: "Quản đốc Phân xưởng In", desc: "Điều phối ca máy, tiến độ và chất lượng thành phẩm", order: 6, status: "ACTIVE" },
+            { id: "title_7", code: "THO-IN", name: "Thợ in chính / Trưởng kíp máy", desc: "Vận hành máy in Offset 4-5 màu và máy KTS", order: 7, status: "ACTIVE" },
+            { id: "title_8", code: "THO-GC", name: "Kỹ thuật gia công sau in", desc: "Cán màng, ép kim, bế nổi, dán hộp tự động", order: 8, status: "ACTIVE" },
+            { id: "title_9", code: "KTT", name: "Kế toán trưởng", desc: "Phụ trách báo cáo tài chính, thuế và dòng tiền", order: 9, status: "ACTIVE" },
+            { id: "title_10", code: "KT-TH", name: "Kế toán tổng hợp & Công nợ", desc: "Theo dõi thu chi, đối chiếu công nợ nhà in & khách hàng", order: 10, status: "ACTIVE" },
+            { id: "title_11", code: "THU-KHO", name: "Thủ kho Giấy & Vật tư", desc: "Quản lý nhập xuất tồn kho giấy cuộn, giấy ram và vật tư", order: 11, status: "ACTIVE" },
+            { id: "title_12", code: "NV-GH", name: "Nhân viên Giao nhận / Điều phối xe", desc: "Vận chuyển thành phẩm giao tận nơi khách hàng", order: 12, status: "ACTIVE" }
+        ]
+    },
+    hr_role: {
+        key: "hr_role",
+        module: "hr",
+        moduleName: "Nhân sự & Hợp đồng",
+        name: "Phân loại nhân sự",
+        desc: "Hình thức tuyển dụng và tình trạng quan hệ lao động",
+        icon: "user-check",
+        items: [
+            { id: "role_1", code: "OFFICIAL", name: "Nhân viên chính thức", desc: "Hưởng đầy đủ chế độ BHXH, BHYT, phép năm", order: 1, status: "ACTIVE" },
+            { id: "role_2", code: "PROBATION", name: "Nhân viên thử việc", desc: "Đang trong thời gian đánh giá năng lực thử việc", order: 2, status: "ACTIVE" },
+            { id: "role_3", code: "INTERN", name: "Thực tập sinh", desc: "Học việc, thực tập sinh tốt nghiệp hoặc hỗ trợ dự án", order: 3, status: "ACTIVE" },
+            { id: "role_4", code: "COLLABORATOR", name: "Cộng tác viên (CTV)", desc: "Hợp tác theo doanh số bán hàng hoặc dự án freelance", order: 4, status: "ACTIVE" },
+            { id: "role_5", code: "SEASONAL", name: "Nhân viên thời vụ", desc: "Lao động làm việc theo mùa vụ cao điểm tết / sự kiện", order: 5, status: "ACTIVE" }
+        ]
+    },
+    hr_education: {
+        key: "hr_education",
+        module: "hr",
+        moduleName: "Nhân sự & Hợp đồng",
+        name: "Trình độ học vấn & Bằng cấp",
+        desc: "Học vị cao nhất và trình độ chuyên môn đào tạo",
+        icon: "graduation-cap",
+        items: [
+            { id: "edu_1", code: "POST_GRAD", name: "Sau Đại học (Thạc sĩ / Tiến sĩ)", desc: "Văn bằng sau đại học", order: 1, status: "ACTIVE" },
+            { id: "edu_2", code: "BACHELOR", name: "Đại học", desc: "Tốt nghiệp cử nhân / kỹ sư hệ đại học chính quy", order: 2, status: "ACTIVE" },
+            { id: "edu_3", code: "COLLEGE", name: "Cao đẳng", desc: "Tốt nghiệp hệ cao đẳng chuyên nghiệp hoặc nghề", order: 3, status: "ACTIVE" },
+            { id: "edu_4", code: "VOCATIONAL", name: "Trung cấp / Đào tạo nghề", desc: "Trung cấp kỹ thuật in ấn, cơ khí, đồ họa", order: 4, status: "ACTIVE" },
+            { id: "edu_5", code: "HIGH_SCHOOL", name: "Trung học phổ thông (12/12)", desc: "Tốt nghiệp THPT", order: 5, status: "ACTIVE" },
+            { id: "edu_6", code: "BASIC", name: "Lao động phổ thông", desc: "Đã qua đào tạo kỹ năng an toàn cơ bản tại xưởng", order: 6, status: "ACTIVE" }
+        ]
+    },
+    hr_contract_type: {
+        key: "hr_contract_type",
+        module: "hr",
+        moduleName: "Nhân sự & Hợp đồng",
+        name: "Loại hợp đồng lao động",
+        desc: "Các mẫu hợp đồng giao kết theo Bộ luật Lao động",
+        icon: "file-signature",
+        items: [
+            { id: "ct_1", code: "INDEFINITE", name: "Không xác định thời hạn", desc: "Hợp đồng lao động dài hạn dành cho nhân sự chính thức", order: 1, status: "ACTIVE" },
+            { id: "ct_2", code: "FIXED_12M", name: "Xác định thời hạn (12 tháng)", desc: "Hợp đồng có thời hạn 1 năm", order: 2, status: "ACTIVE" },
+            { id: "ct_3", code: "FIXED_36M", name: "Xác định thời hạn (24 - 36 tháng)", desc: "Hợp đồng thời hạn 2 đến 3 năm", order: 3, status: "ACTIVE" },
+            { id: "ct_4", code: "PROBATION_60D", name: "Hợp đồng thử việc (60 ngày)", desc: "Áp dụng cho nhân sự thử việc chuyên môn đại học", order: 4, status: "ACTIVE" },
+            { id: "ct_5", code: "INTERNSHIP", name: "Hợp đồng thực tập sinh", desc: "Hợp đồng thỏa thuận thực tập sinh và phụ cấp", order: 5, status: "ACTIVE" },
+            { id: "ct_6", code: "SERVICE_CTV", name: "Hợp đồng dịch vụ / Hợp đồng CTV", desc: "Thỏa thuận hoa hồng chiết khấu cộng tác viên", order: 6, status: "ACTIVE" },
+            { id: "ct_7", code: "SEASONAL_JOB", name: "Hợp đồng lao động theo vụ việc", desc: "Áp dụng theo đợt sản xuất ngắn hạn dưới 12 tháng", order: 7, status: "ACTIVE" }
+        ]
+    },
+
+    // 2. SẢN XUẤT & KỸ THUẬT (PRODUCTION & TECHNICAL)
+    prod_stage: {
+        key: "prod_stage",
+        module: "prod",
+        moduleName: "Sản xuất & Kỹ thuật",
+        name: "Công đoạn sản xuất",
+        desc: "Các bước trong quy trình in ấn và gia công hoàn thiện",
+        icon: "sliders",
+        items: [
+            { id: "stg_1", code: "PREPRESS", name: "Thiết kế & Chế bản CTP", desc: "Kiểm tra file, bình trang và xuất bản kẽm in", order: 1, status: "ACTIVE" },
+            { id: "stg_2", code: "OFFSET", name: "In Offset công nghiệp", desc: "In ấn số lượng lớn trên máy in Offset 4-6 màu", order: 2, status: "ACTIVE" },
+            { id: "stg_3", code: "DIGITAL", name: "In Kỹ thuật số nhanh", desc: "In mẫu proof, in đơn hàng gấp hoặc số lượng nhỏ", order: 3, status: "ACTIVE" },
+            { id: "stg_4", code: "LAMINATION", name: "Cán màng bóng / mờ / nhiệt", desc: "Phủ màng BOPP bảo vệ bề mặt giấy", order: 4, status: "ACTIVE" },
+            { id: "stg_5", code: "FOIL_EMBOSS", name: "Ép kim / Bế nổi / UV định hình", desc: "Tạo hiệu ứng cao cấp mỹ thuật trên bao bì", order: 5, status: "ACTIVE" },
+            { id: "stg_6", code: "DIE_CUT", name: "Bế đứt khuôn & Dán hộp tự động", desc: "Tạo hình hộp giấy, túi giấy và dán mép", order: 6, status: "ACTIVE" },
+            { id: "stg_7", code: "BINDING", name: "Đóng cuốn / Ghim lồng / Dán gáy", desc: "Hoàn thiện catalogue, tạp chí, sổ tay", order: 7, status: "ACTIVE" },
+            { id: "stg_8", code: "QC_PACK", name: "Kiểm tra KCS & Đóng gói pallet", desc: "Kiểm tra lỗi, đóng thùng carton dán tem", order: 8, status: "ACTIVE" }
+        ]
+    },
+    prod_machine: {
+        key: "prod_machine",
+        module: "prod",
+        moduleName: "Sản xuất & Kỹ thuật",
+        name: "Máy móc & Thiết bị sản xuất",
+        desc: "Hệ thống máy in, máy bế, máy gia công tại xưởng",
+        icon: "cpu",
+        items: [
+            { id: "mac_1", code: "M-HD75", name: "Máy in Heidelberg Speedmaster XL 75", desc: "Máy in offset 4 màu khổ 53x74cm Đức", order: 1, status: "ACTIVE" },
+            { id: "mac_2", code: "M-KM440", name: "Máy in Komori Lithrone GL 440", desc: "Máy in offset 5 màu khổ lớn 72x102cm Nhật Bản", order: 2, status: "ACTIVE" },
+            { id: "mac_3", code: "M-KN6100", name: "Máy in KTS Konica Minolta AccurioPress", desc: "Máy in nhanh kỹ thuật số chất lượng cao", order: 3, status: "ACTIVE" },
+            { id: "mac_4", code: "M-BOBST", name: "Máy bế tự động Bobst Novacut 106", desc: "Máy bế đứt tự động tốc độ cao Thụy Sĩ", order: 4, status: "ACTIVE" },
+            { id: "mac_5", code: "M-CAN108", name: "Máy cán màng nhiệt tự động YSL-1080", desc: "Cán màng mờ, bóng tốc độ 60m/phút", order: 5, status: "ACTIVE" },
+            { id: "mac_6", code: "M-EPK", name: "Máy ép nhũ kim định vị vi tính", desc: "Ép kim vàng, bạc, hologram cao cấp", order: 6, status: "ACTIVE" },
+            { id: "mac_7", code: "M-DANHOP", name: "Máy gấp dán hộp tự động 4-6 góc", desc: "Dán hộp carton, hộp thuốc, hộp mỹ phẩm", order: 7, status: "ACTIVE" }
+        ]
+    },
+    prod_uom: {
+        key: "prod_uom",
+        module: "prod",
+        moduleName: "Sản xuất & Kỹ thuật",
+        name: "Đơn vị tính (ĐVT)",
+        desc: "Quy chuẩn đơn vị tính dùng trong sản xuất, kho và báo giá",
+        icon: "scale",
+        items: [
+            { id: "uom_1", code: "CAI", name: "Cái / Chiếc", desc: "Hộp giấy, túi xách, tem nhãn thành phẩm", order: 1, status: "ACTIVE" },
+            { id: "uom_2", code: "CUON", name: "Cuốn / Quyển", desc: "Catalogue, profile, sách, sổ tay, tạp chí", order: 2, status: "ACTIVE" },
+            { id: "uom_3", code: "HOP", name: "Hộp", desc: "Đóng gói theo hộp tiêu chuẩn (100 chiếc/hộp)", order: 3, status: "ACTIVE" },
+            { id: "uom_4", code: "BO", name: "Bộ", desc: "Bộ nhận diện thương hiệu, bộ ấn phẩm văn phòng", order: 4, status: "ACTIVE" },
+            { id: "uom_5", code: "TO", name: "Tờ in", desc: "Tờ rơi, tờ gấp brochure, poster quảng cáo", order: 5, status: "ACTIVE" },
+            { id: "uom_6", code: "RAM", name: "Ram giấy (500 tờ)", desc: "Quy cách đóng gói nguyên ram giấy phẳng", order: 6, status: "ACTIVE" },
+            { id: "uom_7", code: "KG", name: "Kg (Kilogram)", desc: "Mực in, màng nilon, phế liệu giấy vụn", order: 7, status: "ACTIVE" },
+            { id: "uom_8", code: "M2", name: "Mét vuông (m²)", desc: "In bạt hiflex, decal pp, bản kẽm CTP", order: 8, status: "ACTIVE" }
+        ]
+    },
+    prod_paper_type: {
+        key: "prod_paper_type",
+        module: "prod",
+        moduleName: "Sản xuất & Kỹ thuật",
+        name: "Loại chất liệu giấy in",
+        desc: "Các dòng giấy in ấn bao bì và ấn phẩm thông dụng",
+        icon: "layers",
+        items: [
+            { id: "pp_1", code: "COUCHE", name: "Giấy Couche (C100 - C300)", desc: "Bề mặt láng bóng, in màu sắc nét (tờ rơi, catalogue)", order: 1, status: "ACTIVE" },
+            { id: "pp_2", code: "IVORY", name: "Giấy Ivory (I250 - I400)", desc: "Mặt trắng mịn, mặt lưng nhám cứng cáp (hộp mỹ phẩm, dược phẩm)", order: 2, status: "ACTIVE" },
+            { id: "pp_3", code: "DUPLEX", name: "Giấy Duplex (D250 - D450)", desc: "Một mặt trắng láng, mặt lưng xám (hộp bánh kẹo, đồ gia dụng)", order: 3, status: "ACTIVE" },
+            { id: "pp_4", code: "KRAFT", name: "Giấy Kraft nâu / trắng (K70 - K280)", desc: "Thân thiện môi trường, dẻo dai (túi giấy, bao bì xi măng)", order: 4, status: "ACTIVE" },
+            { id: "pp_5", code: "BRISTOL", name: "Giấy Bristol (B200 - B350)", desc: "Bề mặt hơi bóng nhẹ, bám mực tốt (thiệp cưới, bìa hồ sơ)", order: 5, status: "ACTIVE" },
+            { id: "pp_6", code: "DECAL", name: "Giấy Decal (Decal giấy, nhựa PP, vỡ, trong)", desc: "Có lớp keo dán sẵn dùng in tem nhãn sản phẩm", order: 6, status: "ACTIVE" },
+            { id: "pp_7", code: "ART_PAPER", name: "Giấy Mỹ thuật cao cấp (Econo, Boheme, Sirio)", desc: "Có vân họa tiết độc đáo dành cho hộp quà tết và thiệp sang trọng", order: 7, status: "ACTIVE" }
+        ]
+    },
+
+    // 3. BÁN HÀNG & VẬN CHUYỂN (SALES & DELIVERY)
+    sales_channel: {
+        key: "sales_channel",
+        module: "sales",
+        moduleName: "Bán hàng & Vận chuyển",
+        name: "Kênh bán hàng / Nguồn đơn",
+        desc: "Kênh tiếp cận khách hàng và phát sinh đơn đặt hàng",
+        icon: "share-2",
+        items: [
+            { id: "sc_1", code: "DIRECT", name: "Bán hàng trực tiếp / Showroom", desc: "Khách đến văn phòng trao đổi và đặt in trực tiếp", order: 1, status: "ACTIVE" },
+            { id: "sc_2", code: "WEBSITE", name: "Website TMĐT / Landing Page", desc: "Khách đặt hàng qua website www.inlachong.vn", order: 2, status: "ACTIVE" },
+            { id: "sc_3", code: "SHOPEE", name: "Sàn TMĐT Shopee Mall", desc: "Đơn hàng bán lẻ qua gian hàng Shopee", order: 3, status: "ACTIVE" },
+            { id: "sc_4", code: "TIKTOK", name: "TikTok Shop Lạc Hồng", desc: "Bán hàng qua livestream và video TikTok Shop", order: 4, status: "ACTIVE" },
+            { id: "sc_5", code: "FACEBOOK", name: "Fanpage Facebook In Lạc Hồng", desc: "In hộp giấy & túi xách qua tin nhắn Fanpage", order: 5, status: "ACTIVE" },
+            { id: "sc_6", code: "ZALO_OA", name: "Zalo OA Doanh Nghiệp", desc: "Tư vấn & gửi báo giá qua Zalo OA chính thức", order: 6, status: "ACTIVE" },
+            { id: "sc_7", code: "REFERRAL", name: "Khách quen / Người quen giới thiệu", desc: "Đối tác doanh nghiệp trung thành và giới thiệu", order: 7, status: "ACTIVE" },
+            { id: "sc_8", code: "AGENT_CTV", name: "Đại lý phân phối & CTV ngoài", desc: "Đơn hàng do cộng tác viên mang về", order: 8, status: "ACTIVE" }
+        ]
+    },
+    sales_carrier: {
+        key: "sales_carrier",
+        module: "sales",
+        moduleName: "Bán hàng & Vận chuyển",
+        name: "Đơn vị vận chuyển / Đối tác giao nhận",
+        desc: "Nhà xe, bưu cục vận chuyển và phương thức giao nhận hàng",
+        icon: "truck",
+        items: [
+            { id: "carr_1", code: "GHTK", name: "Giao Hàng Tiết Kiệm (GHTK)", desc: "Giao hàng bưu kiện toàn quốc COD", order: 1, status: "ACTIVE" },
+            { id: "carr_2", code: "GHN", name: "Giao Hàng Nhanh (GHN Express)", desc: "Vận chuyển nhanh nội thành và liên tỉnh", order: 2, status: "ACTIVE" },
+            { id: "carr_3", code: "VIETTEL_POST", name: "Viettel Post", desc: "Mạng lưới bưu chính quân đội Viettel", order: 3, status: "ACTIVE" },
+            { id: "carr_4", code: "JT_EXPRESS", name: "J&T Express", desc: "Đối tác giao hàng sàn thương mại điện tử", order: 4, status: "ACTIVE" },
+            { id: "carr_5", code: "INSTANT_GRAB", name: "AhaMove / GrabExpress Siêu tốc", desc: "Giao hỏa tốc 1-2h nội thành Hà Nội & TP.HCM", order: 5, status: "ACTIVE" },
+            { id: "carr_6", code: "INTERNAL_FLEET", name: "Đội xe tải Lạc Hồng (Xe 1.5T - 2.5T)", desc: "Giao hàng cồng kềnh số lượng lớn đến kho khách", order: 6, status: "ACTIVE" },
+            { id: "carr_7", code: "SELF_PICKUP", name: "Khách hàng tự nhận tại xưởng", desc: "Khách đến xưởng kiểm hàng và chở trực tiếp", order: 7, status: "ACTIVE" }
+        ]
+    },
+    sales_return_reason: {
+        key: "sales_return_reason",
+        module: "sales",
+        moduleName: "Bán hàng & Vận chuyển",
+        name: "Lý do hoàn / Trả hàng & Đổi trả",
+        desc: "Phân loại nguyên nhân khiếu nại và đổi trả sản phẩm in",
+        icon: "rotate-ccw",
+        items: [
+            { id: "rr_1", code: "COLOR_MISMATCH", name: "Lỗi lệch màu sắc so với bài mẫu proof", desc: "Màu in sai lệch quá 15% so với bản duyệt mẫu", order: 1, status: "ACTIVE" },
+            { id: "rr_2", code: "SIZE_ERROR", name: "Kích thước / Khuôn bế sai quy cách", desc: "Hộp bế lệch không lắp vừa sản phẩm của khách", order: 2, status: "ACTIVE" },
+            { id: "rr_3", code: "SHIPPING_DAMAGE", name: "Rách nát, ướt hỏng trong lúc vận chuyển", desc: "Đơn vị vận chuyển làm va đập, méo móp thùng", order: 3, status: "ACTIVE" },
+            { id: "rr_4", code: "LATE_DELIVERY", name: "Giao hàng quá trễ so với hạn hợp đồng", desc: "Giao muộn ngày tổ chức sự kiện / hội chợ", order: 4, status: "ACTIVE" },
+            { id: "rr_5", code: "QTY_SHORTAGE", name: "Giao thiếu số lượng đặt hàng", desc: "Số lượng thực tế giao thiếu so với phiếu xuất", order: 5, status: "ACTIVE" },
+            { id: "rr_6", code: "CUSTOMER_CANCEL", name: "Khách đổi ý, từ chối nhận hàng", desc: "Khách bom hàng COD hoặc ngưng kế hoạch kinh doanh", order: 6, status: "ACTIVE" }
+        ]
+    },
+
+    // 4. TÀI CHÍNH & SỔ QUỸ (FINANCE & CASHFLOW)
+    fin_income_category: {
+        key: "fin_income_category",
+        module: "fin",
+        moduleName: "Tài chính & Sổ quỹ",
+        name: "Khoản mục thu tiền (Phiếu thu)",
+        desc: "Phân loại các nguồn thu phát sinh trong dòng tiền doanh nghiệp",
+        icon: "arrow-down-left",
+        items: [
+            { id: "inc_1", code: "THU-IN", name: "Thu tiền đơn hàng in ấn sản xuất", desc: "Thanh toán theo hợp đồng hoặc đơn đặt in", order: 1, status: "ACTIVE" },
+            { id: "inc_2", code: "THU-ONLINE", name: "Thu tiền đơn hàng bán lẻ online", desc: "Thu từ sàn TMĐT, website, ship COD", order: 2, status: "ACTIVE" },
+            { id: "inc_3", code: "THU-CONGNO", name: "Thu hồi công nợ đối tác khách hàng", desc: "Khách thanh toán định kỳ hoặc đối trừ công nợ", order: 3, status: "ACTIVE" },
+            { id: "inc_4", code: "THU-DATCOC", name: "Thu tiền tạm ứng / Đặt cọc hợp đồng", desc: "Tiền cọc 50% trước khi xuất bản kẽm in", order: 4, status: "ACTIVE" },
+            { id: "inc_5", code: "THU-PHELIEU", name: "Thu thanh lý vật tư & phế liệu giấy xén", desc: "Bán giấy lề, thùng carton hỏng và phôi kim", order: 5, status: "ACTIVE" },
+            { id: "inc_6", code: "THU-LAIBANK", name: "Thu lãi tiền gửi ngân hàng", desc: "Lãi tiền gửi định kỳ tài khoản doanh nghiệp", order: 6, status: "ACTIVE" },
+            { id: "inc_7", code: "THU-KHAC", name: "Các khoản thu nhập khác", desc: "Hoàn thuế, bồi thường bảo hiểm, thưởng", order: 7, status: "ACTIVE" }
+        ]
+    },
+    fin_expense_category: {
+        key: "fin_expense_category",
+        module: "fin",
+        moduleName: "Tài chính & Sổ quỹ",
+        name: "Khoản mục chi tiền (Phiếu chi)",
+        desc: "Phân loại các chi phí sản xuất kinh doanh và vận hành",
+        icon: "arrow-up-right",
+        items: [
+            { id: "exp_1", code: "CHI-VATTU", name: "Chi mua giấy & vật tư in ấn", desc: "Thanh toán nhà cung cấp giấy cuộn, mực in, bản kẽm", order: 1, status: "ACTIVE" },
+            { id: "exp_2", code: "CHI-GIACONG", name: "Chi thanh toán xưởng gia công ngoài", desc: "Trả tiền ép nhũ, bế nổi, cán màng, tráng UV", order: 2, status: "ACTIVE" },
+            { id: "exp_3", code: "CHI-LUONG", name: "Chi thanh toán lương nhân sự", desc: "Bảng lương cán bộ công nhân viên định kỳ hàng tháng", order: 3, status: "ACTIVE" },
+            { id: "exp_4", code: "CHI-HOAHONG", name: "Chi thanh toán hoa hồng Sales / CTV", desc: "Thưởng hoa hồng theo đơn hàng hoàn tất", order: 4, status: "ACTIVE" },
+            { id: "exp_5", code: "CHI-MATBANG", name: "Chi tiền thuê mặt bằng, điện nước xưởng", desc: "Chi phí tiện ích sản xuất và tiền thuê đất xưởng", order: 5, status: "ACTIVE" },
+            { id: "exp_6", code: "CHI-MKT", name: "Chi phí Marketing & Quảng cáo", desc: "Chi phí chạy Ads Facebook, Google, TikTok", order: 6, status: "ACTIVE" },
+            { id: "exp_7", code: "CHI-HOANTIEN", name: "Chi hoàn tiền đơn hàng / Khiếu nại", desc: "Hoàn lại tiền cho khách do hủy đơn hoặc hàng lỗi", order: 7, status: "ACTIVE" },
+            { id: "exp_8", code: "CHI-VANCHUYEN", name: "Chi cước phí vận chuyển & Giao hàng", desc: "Thanh toán tiền xe tải, ship COD bưu tá", order: 8, status: "ACTIVE" }
+        ]
+    },
+    fin_account: {
+        key: "fin_account",
+        module: "fin",
+        moduleName: "Tài chính & Sổ quỹ",
+        name: "Tài khoản thanh toán / Sổ quỹ tiền",
+        desc: "Các két tiền mặt và tài khoản ngân hàng của doanh nghiệp",
+        icon: "credit-card",
+        items: [
+            { id: "acc_1", code: "TM-VP", name: "Tiền mặt - Két quỹ văn phòng Cầu Giấy", desc: "Tiền mặt tại trụ sở giao dịch", order: 1, status: "ACTIVE" },
+            { id: "acc_2", code: "TM-XG", name: "Tiền mặt - Két quỹ xưởng Đan Phượng", desc: "Tiền mặt thủ quỹ xưởng phục vụ chi tiêu nhanh", order: 2, status: "ACTIVE" },
+            { id: "acc_3", code: "VCB-CTY", name: "Vietcombank - TK Công ty In Lạc Hồng", desc: "STK: 0011004567899 - VCB Sở Giao Dịch", order: 3, status: "ACTIVE" },
+            { id: "acc_4", code: "TCB-GD", name: "Techcombank - TK Giám đốc Điều hành", desc: "STK: 190345678901 - TCB Tràng An", order: 4, status: "ACTIVE" },
+            { id: "acc_5", code: "MB-THUCHI", name: "MBBank - TK Thu chi tự động QR", desc: "STK: 888899996666 - Ngân hàng Quân Đội", order: 5, status: "ACTIVE" }
+        ]
+    },
+
+    // 5. ĐỐI TÁC & KHÁCH HÀNG (CRM & PARTNERS)
+    crm_customer_group: {
+        key: "crm_customer_group",
+        module: "crm",
+        moduleName: "Đối tác & Khách hàng",
+        name: "Nhóm phân loại khách hàng",
+        desc: "Phân nhóm khách hàng để áp dụng chính sách giá & chiết khấu",
+        icon: "users",
+        items: [
+            { id: "cg_1", code: "VIP_CORP", name: "Khách hàng VIP / Tập đoàn lớn", desc: "Doanh số trên 100tr/tháng, thanh toán chậm 30 ngày", order: 1, status: "ACTIVE" },
+            { id: "cg_2", code: "LOYAL_MEMBER", name: "Khách hàng thân thiết (Thành viên)", desc: "Đặt in đều đặn, chiết khấu 5% theo chương trình", order: 2, status: "ACTIVE" },
+            { id: "cg_3", code: "PRINT_SHOP", name: "Xưởng in quảng cáo & Đại lý cấp 1", desc: "Thợ in, công ty quảng cáo gia công lại", order: 3, status: "ACTIVE" },
+            { id: "cg_4", code: "SME_BIZ", name: "Doanh nghiệp vừa & nhỏ (SME)", desc: "In bao bì đóng gói thường xuyên theo từng lô", order: 4, status: "ACTIVE" },
+            { id: "cg_5", code: "RETAIL", name: "Khách lẻ / Cá nhân đặt theo đợt", desc: "In ấn thiệp, tem nhãn lẻ, thanh toán 100%", order: 5, status: "ACTIVE" }
+        ]
+    },
+    crm_supplier_group: {
+        key: "crm_supplier_group",
+        module: "crm",
+        moduleName: "Đối tác & Khách hàng",
+        name: "Nhóm nhà cung cấp & Gia công",
+        desc: "Phân loại nguồn cung ứng vật tư và đối tác dịch vụ ngoài",
+        icon: "truck",
+        items: [
+            { id: "sg_1", code: "SUP_PAPER", name: "Nhà cung cấp Giấy cuộn & Giấy ram", desc: "Các công ty nhập khẩu giấy Bãi Bằng, APP, Chấn Kiệt", order: 1, status: "ACTIVE" },
+            { id: "sg_2", code: "SUP_INK_CTP", name: "Nhà cung cấp Mực in & Bản kẽm CTP", desc: "Mực in DIC, Toyo Ink, kẽm nhiệt Kodak, Fuji", order: 2, status: "ACTIVE" },
+            { id: "sg_3", code: "SUP_FILM_GLUE", name: "Nhà cung cấp Màng BOPP & Keo dán hộp", desc: "Màng cán nhiệt, keo sữa dán hộp tốc độ cao", order: 3, status: "ACTIVE" },
+            { id: "sg_4", code: "SUB_FOIL_EMBOSS", name: "Đối tác gia công Ép kim / Bế nổi", desc: "Xưởng chuyên gia công khuôn bế và ép nhũ", order: 4, status: "ACTIVE" },
+            { id: "sg_5", code: "SUB_UV_VARNISH", name: "Đối tác phủ UV định hình / Phủ bóng cát", desc: "Xưởng gia công bề mặt công nghệ cao", order: 5, status: "ACTIVE" }
+        ]
+    }
+};
 
 const DEFAULT_CRM_NOTES = [
     { id: "n1", partner_id: "p1", created_at: "2026-06-12T09:15:00Z", created_by: "Quản lý Hùng", content: "Khách gọi xác nhận đặt cọc 3.000.000đ cho đơn hàng SO-202606-0001. Yêu cầu giao kẽm in offset sớm." },
@@ -13643,6 +14112,14 @@ class AppState {
         this.contracts = this.load("contracts", DEFAULT_CONTRACTS);
         this.salespersons = this.load("salespersons", DEFAULT_SALESPERSONS);
         this.labor_contracts = this.load("labor_contracts", DEFAULT_LABOR_CONTRACTS);
+        this.master_categories = this.load("master_categories", DEFAULT_MASTER_CATEGORIES);
+        if (this.master_categories && typeof this.master_categories === 'object') {
+            Object.keys(DEFAULT_MASTER_CATEGORIES).forEach(k => {
+                if (!this.master_categories[k]) {
+                    this.master_categories[k] = JSON.parse(JSON.stringify(DEFAULT_MASTER_CATEGORIES[k]));
+                }
+            });
+        }
         this.warehouse_transactions = this.load("warehouse_transactions", []);
         this.warehouse_audits = this.load("warehouse_audits", []);
         this.users = this.load("users", []);
@@ -13718,7 +14195,7 @@ class AppState {
                 "online_products", "online_stock_logs", "online_orders", "online_returns",
                 "online_inventory_checks", "online_internal_exits", "transactions",
                 "crm_notes", "conversations", "messages", "restocks", "contracts",
-                "salespersons", "labor_contracts", "warehouse_transactions", "warehouse_audits",
+                "salespersons", "labor_contracts", "master_categories", "warehouse_transactions", "warehouse_audits",
                 "users", "departments"
             ];
 
@@ -14187,17 +14664,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Weather widget continuous scroll is handled via CSS marquee keyframes
 
-    const menuItems = document.querySelectorAll(".menu-item");
-    menuItems.forEach(item => {
+    // SEO Route Click Handlers for Sidebar & Bottom Navigation
+    document.querySelectorAll(".sidebar-menu a, .bottom-nav-bar button, .bottom-nav-bar a").forEach(item => {
         item.addEventListener("click", (e) => {
-            e.preventDefault();
-            const tabId = item.getAttribute("data-tab");
-            switchTab(tabId);
-            
-            // Auto close mobile sidebar after click
-            if (sidebarEl && sidebarEl.classList.contains("active")) {
-                sidebarEl.classList.remove("active");
-                if (menuToggleBtn) menuToggleBtn.classList.remove("active");
+            const slug = item.getAttribute("data-slug") || item.getAttribute("data-tab");
+            if (slug) {
+                e.preventDefault();
+                window.navigateTo(slug, true);
+                if (sidebarEl && sidebarEl.classList.contains("active")) {
+                    sidebarEl.classList.remove("active");
+                    if (menuToggleBtn) menuToggleBtn.classList.remove("active");
+                }
             }
         });
     });
@@ -14222,15 +14699,26 @@ document.addEventListener("DOMContentLoaded", () => {
     setupEventListeners();
     initOnlineSales();
 
+    // Initialise SEO URL Route on startup
+    if (window.handleCurrentUrlRoute) {
+        window.handleCurrentUrlRoute(false);
+    }
+
     // Start Telegram Polling if enabled
     if (localStorage.getItem("ihp_tg_enable_chat_sync") === "true") {
         startTelegramPolling();
     }
 });
 
-window.switchFinanceSubTab = function(subtabId) {
-    switchTab('finance');
-    
+window.switchFinanceSubTab = function(subtabId, updateUrl = true) {
+    if (updateUrl && window.findRoute) {
+        const route = window.findRoute('finance', { subtab: subtabId });
+        if (route && window.currentRouteSlug !== route.slug) {
+            window.navigateTo(route.slug, true);
+            return;
+        }
+    }
+
     // Update active class on inner buttons
     const finBtns = document.querySelectorAll(".fin-subtab-btn");
     finBtns.forEach(btn => {
@@ -14270,7 +14758,8 @@ window.goBackToHub = function(tabId) {
         'chat': 'admin-hub',
         'employees': 'admin-hub',
         'collaborators': 'admin-hub',
-        'labor-contracts': 'admin-hub'
+        'labor-contracts': 'admin-hub',
+        'categories': 'admin-hub'
     }[tabId];
     if (parentHub) {
         switchTab(parentHub);
@@ -14279,25 +14768,180 @@ window.goBackToHub = function(tabId) {
     }
 };
 
-function switchTab(tabId) {
-    const currentUser = JSON.parse(localStorage.getItem("ihp_current_user"));
-    if (!currentUser) {
-        const loginOverlay = document.getElementById("loginScreen");
-        if (loginOverlay) loginOverlay.style.display = "flex";
+// ==========================================
+// SEO URL ROUTER & BROWSER HISTORY SYSTEM
+// ==========================================
+window.ROUTE_DEFINITIONS = [
+    // 1. Dashboard & Hubs
+    { slug: 'tong-quan', tabId: 'dashboard', title: 'Tổng quan hoạt động | In Lạc Hồng', aliases: ['dashboard', 'home', 'trang-chu'] },
+    { slug: 'kinh-doanh', tabId: 'sales-hub', title: 'Trung tâm Kinh doanh & Bán hàng | In Lạc Hồng', aliases: ['sales-hub'] },
+    { slug: 'san-xuat', tabId: 'production-hub', title: 'Trung tâm Sản xuất & Xưởng in | In Lạc Hồng', aliases: ['production-hub'] },
+    { slug: 'tai-chinh', tabId: 'finance-hub', title: 'Trung tâm Thu chi & Tài chính | In Lạc Hồng', aliases: ['finance-hub'] },
+    { slug: 'quan-tri', tabId: 'admin-hub', title: 'Trung tâm Quản trị & Phân quyền | In Lạc Hồng', aliases: ['admin-hub', 'admin', 'he-thong'] },
+
+    // 2. Bán hàng Online & các menu con
+    { slug: 'ban-hang-online', tabId: 'online-sales', subtab: 'online-dashboard', title: 'Báo cáo Bán hàng Online | In Lạc Hồng', aliases: ['online-sales', 'ban-hang'] },
+    { slug: 'dat-hang', tabId: 'online-sales', subtab: 'online-orders', title: 'Quản lý Đơn hàng Online | In Lạc Hồng', aliases: ['don-hang-online', 'online-orders', 'don-hang'] },
+    { slug: 'hoa-don', tabId: 'online-sales', subtab: 'online-invoices', title: 'Hóa đơn Bán hàng Online | In Lạc Hồng', aliases: ['online-invoices'] },
+    { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Trả hàng Online | In Lạc Hồng', aliases: ['online-returns'] },
+    { slug: 'hang-hoa', tabId: 'online-sales', subtab: 'online-products', title: 'Danh mục Hàng hóa Sản phẩm | In Lạc Hồng', aliases: ['online-products', 'san-pham', 'danh-sach-hang-hoa'] },
+    { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
+    { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Tồn kho Hàng hóa | In Lạc Hồng', aliases: ['online-stock', 'ton-kho-hang-hoa'] },
+    { slug: 'kiem-ke-kho', tabId: 'online-sales', subtab: 'online-inventory-check', title: 'Kiểm kê Kho hàng hóa | In Lạc Hồng', aliases: ['online-inventory-check'] },
+    { slug: 'xuat-kho-noi-bo', tabId: 'online-sales', subtab: 'online-internal-exits', title: 'Xuất kho nội bộ | In Lạc Hồng', aliases: ['online-internal-exits'] },
+
+    // 3. Sản xuất
+    { slug: 'tinh-gia', tabId: 'quotes', title: 'Tính giá & Báo giá in ấn | In Lạc Hồng', aliases: ['quotes', 'bao-gia'] },
+    { slug: 'don-hang-san-xuat', tabId: 'prod-orders', title: 'Đơn hàng Sản xuất | In Lạc Hồng', aliases: ['prod-orders'] },
+    { slug: 'lenh-san-xuat', tabId: 'production', title: 'Lệnh sản xuất & Tiến độ xưởng | In Lạc Hồng', aliases: ['production'] },
+    { slug: 'gia-cong-ngoai', tabId: 'subcontracting', title: 'Quản lý Gia công ngoài | In Lạc Hồng', aliases: ['subcontracting'] },
+    { slug: 'kho-vat-tu', tabId: 'inventory', title: 'Quản lý Kho vật tư & Giấy in | In Lạc Hồng', aliases: ['inventory'] },
+    { slug: 'kho-thanh-pham', tabId: 'warehouse', title: 'Kho thành phẩm | In Lạc Hồng', aliases: ['warehouse'] },
+
+    // 4. CRM
+    { slug: 'doi-tac', tabId: 'crm', crmRole: 'ALL', title: 'Danh bạ Đối tác toàn diện | In Lạc Hồng', aliases: ['crm', 'tat-ca-doi-tac'] },
+    { slug: 'khach-hang', tabId: 'crm', crmRole: 'CUSTOMER', title: 'Danh sách Khách hàng | In Lạc Hồng', aliases: ['crm-customers'] },
+    { slug: 'nha-cung-cap', tabId: 'crm', crmRole: 'SUPPLIER', title: 'Danh sách Nhà cung cấp | In Lạc Hồng', aliases: ['crm-suppliers'] },
+    { slug: 'xuong-gia-cong', tabId: 'crm', crmRole: 'SUBCONTRACTOR', title: 'Danh sách Xưởng gia công | In Lạc Hồng', aliases: ['crm-subcontractors'] },
+    { slug: 'nhat-ky-cham-soc', tabId: 'crm-care', title: 'Nhật ký Chăm sóc Khách hàng | In Lạc Hồng', aliases: ['crm-care'] },
+    { slug: 'hop-dong-kinh-doanh', tabId: 'contracts', title: 'Hợp đồng Kinh doanh | In Lạc Hồng', aliases: ['contracts'] },
+
+    // 5. Quản lý nhân sự
+    { slug: 'nhan-vien', tabId: 'employees', title: 'Quản lý Nhân sự - Nhân viên | In Lạc Hồng', aliases: ['employees'] },
+    { slug: 'cong-tac-vien', tabId: 'collaborators', title: 'Quản lý Cộng tác viên (CTV) | In Lạc Hồng', aliases: ['collaborators', 'ctv'] },
+    { slug: 'hop-dong-lao-dong', tabId: 'labor-contracts', title: 'Hợp đồng Lao động & Phụ lục | In Lạc Hồng', aliases: ['labor-contracts', 'hdld'] },
+
+    // 6. Chat
+    { slug: 'chat-da-kenh', tabId: 'chat', title: 'Chat đa kênh Zalo & Facebook | In Lạc Hồng', aliases: ['chat'] },
+
+    // 7. Tài chính
+    { slug: 'cong-no-khach-hang', tabId: 'finance', subtab: 'customer-debt', title: 'Sổ nợ & Công nợ Khách hàng | In Lạc Hồng', aliases: ['customer-debt'] },
+    { slug: 'cong-no-nha-cung-cap', tabId: 'finance', subtab: 'supplier-debt', title: 'Công nợ Nhà cung cấp | In Lạc Hồng', aliases: ['supplier-debt'] },
+    { slug: 'cong-no-xuong-gia-cong', tabId: 'finance', subtab: 'subcontractor-debt', title: 'Công nợ Xưởng gia công | In Lạc Hồng', aliases: ['subcontractor-debt'] },
+    { slug: 'hoa-hong-nhan-vien', tabId: 'finance', subtab: 'sales-commission', title: 'Bảng tính Hoa hồng Nhân viên & CTV | In Lạc Hồng', aliases: ['sales-commission'] },
+    { slug: 'thu-chi-noi-bo', tabId: 'finance', subtab: 'internal-finance', title: 'Sổ quỹ & Thu chi nội bộ | In Lạc Hồng', aliases: ['internal-finance', 'finance', 'so-quy'] },
+
+    // 8. Cấu hình giá
+    { slug: 'cau-hinh-gia', tabId: 'admin-hub', action: 'openPricingConfigModal', title: 'Cấu hình Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['pricing', 'pricing-config'] },
+
+    // 9. Quản trị Danh mục Dùng chung
+    { slug: 'danh-muc-dung-chung', tabId: 'categories', title: 'Quản trị Danh mục Dùng chung | In Lạc Hồng', aliases: ['danh-muc', 'categories', 'master-categories', 'danh-muc-dung-chung'] }
+];
+
+window.currentRouteSlug = null;
+
+// Find a route by slug, alias, or tabId + options
+window.findRoute = function(identifier, options = {}) {
+    if (!identifier) return window.ROUTE_DEFINITIONS[0];
+    const key = String(identifier).trim().toLowerCase().replace(/^[\/#]+|[\/]+$/g, '');
+
+    // 1. If options.subtab or options.crmRole is provided, prioritize specific subtab/role match
+    if (options.subtab) {
+        const subMatched = window.ROUTE_DEFINITIONS.find(r => (r.tabId === key || r.slug === key) && r.subtab === options.subtab);
+        if (subMatched) return subMatched;
+    }
+    if (options.crmRole) {
+        const roleMatched = window.ROUTE_DEFINITIONS.find(r => (r.tabId === key || r.slug === key) && r.crmRole === options.crmRole);
+        if (roleMatched) return roleMatched;
+    }
+
+    // 2. Try matching exact slug
+    let matched = window.ROUTE_DEFINITIONS.find(r => r.slug === key);
+    if (matched) return matched;
+
+    // 3. Try matching aliases
+    matched = window.ROUTE_DEFINITIONS.find(r => r.aliases && r.aliases.includes(key));
+    if (matched) return matched;
+
+    // 4. Try matching tabId
+    matched = window.ROUTE_DEFINITIONS.find(r => r.tabId === key);
+    if (matched) return matched;
+
+    return null;
+};
+
+// Main routing function with recursion protection
+window._isNavigating = false;
+window.navigateTo = function(identifier, pushHistory = true, options = {}) {
+    if (window._isNavigating) {
+        console.warn("[Router] Navigation already in progress, skipping re-entrant call:", identifier);
         return;
     }
-    
-    // Check permission
-    if (typeof window.getRequiredPermission === 'function') {
-        const requiredPermission = window.getRequiredPermission(tabId);
-        if (requiredPermission && currentUser.role !== 'ADMIN' && (!currentUser.permissions || !currentUser.permissions[requiredPermission])) {
-            alert("Bạn không có quyền truy cập chức năng này!");
-            if (tabId !== 'dashboard') {
-                switchTab('dashboard');
-            }
+    window._isNavigating = true;
+    try {
+        const route = window.findRoute(identifier, options) || window.ROUTE_DEFINITIONS[0];
+        if (!route) return;
+
+        // Check user authentication
+        const currentUser = JSON.parse(localStorage.getItem("ihp_current_user"));
+        if (!currentUser) {
+            const loginOverlay = document.getElementById("loginScreen");
+            if (loginOverlay) loginOverlay.style.display = "flex";
             return;
         }
+
+        // Check user permission
+        if (typeof window.getRequiredPermission === 'function') {
+            const requiredPermission = window.getRequiredPermission(route.tabId);
+            if (requiredPermission && currentUser.role !== 'ADMIN' && (!currentUser.permissions || !currentUser.permissions[requiredPermission])) {
+                alert("Bạn không có quyền truy cập chức năng này!");
+                if (route.tabId !== 'dashboard') {
+                    window._isNavigating = false;
+                    window.navigateTo('tong-quan', false);
+                }
+                return;
+            }
+        }
+
+        window.currentRouteSlug = route.slug;
+
+        // Manage browser URL & History
+        const isFile = window.location.protocol === 'file:';
+        const targetUrl = isFile ? '#' + route.slug : '/' + route.slug;
+        const historyState = {
+            slug: route.slug,
+            tabId: route.tabId,
+            subtab: route.subtab,
+            crmRole: route.crmRole
+        };
+
+        if (pushHistory) {
+            const currentPath = isFile 
+                ? (window.location.hash || '').replace(/^#\/?/, '') 
+                : window.location.pathname.replace(/^\/+|\/+$/g, '');
+            if (currentPath !== route.slug) {
+                try {
+                    window.history.pushState(historyState, route.title, targetUrl);
+                } catch (e) {
+                    console.warn("History pushState warning:", e);
+                }
+            } else {
+                try {
+                    window.history.replaceState(historyState, route.title, targetUrl);
+                } catch (e) {}
+            }
+        } else {
+            try {
+                window.history.replaceState(historyState, route.title, targetUrl);
+            } catch (e) {}
+        }
+
+        // Update document title for SEO
+        if (route.title) {
+            document.title = route.title;
+        }
+
+        // Activate the view in UI
+        window.activateView(route);
+    } finally {
+        window._isNavigating = false;
     }
+};
+
+// Render and activate the tab / subtab view
+window.activateView = function(route) {
+    if (!route) return;
+    const tabId = route.tabId;
 
     // Hide all tab panes
     const panes = document.querySelectorAll(".tab-pane");
@@ -14308,17 +14952,26 @@ function switchTab(tabId) {
     menuItems.forEach(item => item.classList.remove("active"));
 
     // Activate the chosen pane
-    let paneId = tabId;
-    const activePane = document.getElementById(`${paneId}Tab`);
+    const activePane = document.getElementById(`${tabId}Tab`);
     if (activePane) activePane.classList.add("active");
 
     // Highlight the sidebar item
-    const activeMenu = document.querySelector(`.menu-item[data-tab="${tabId}"]`);
+    let activeMenu = document.querySelector(`.menu-item[data-slug="${route.slug}"]`);
+    if (!activeMenu) {
+        activeMenu = document.querySelector(`.menu-item[data-tab="${tabId}"]`);
+    }
     if (activeMenu) {
         activeMenu.classList.add("active");
-        // Also highlight parent if it is in submenu
-        const parentBtn = activeMenu.closest('.menu-group')?.querySelector('.menu-parent');
-        if (parentBtn) parentBtn.classList.add('active');
+        // Expand parent submenu if it is in a collapsible group
+        const menuGroup = activeMenu.closest('.menu-group');
+        if (menuGroup) {
+            const parentBtn = menuGroup.querySelector('.menu-parent');
+            if (parentBtn) parentBtn.classList.add('active');
+            const subList = menuGroup.querySelector('.submenu-list');
+            if (subList) subList.style.display = 'flex';
+            const arrow = menuGroup.querySelector('.menu-arrow');
+            if (arrow) arrow.style.transform = 'rotate(180deg)';
+        }
     }
 
     // Highlight bottom navigation bar active tab
@@ -14344,9 +14997,25 @@ function switchTab(tabId) {
     };
     
     const highlightTabId = parentHubMap[tabId] || tabId;
-    const activeBottomNavItem = document.querySelector(`.bottom-nav-bar .bottom-nav-item[data-tab="${highlightTabId}"]`);
+    const activeBottomNavItem = document.querySelector(`.bottom-nav-bar .bottom-nav-item[data-tab="${highlightTabId}"]`) ||
+                                document.querySelector(`.bottom-nav-bar .bottom-nav-item[data-slug="${route.slug}"]`);
     if (activeBottomNavItem) {
         activeBottomNavItem.classList.add("active");
+    }
+
+    // Trigger subtab / filter if defined in route
+    if (tabId === 'online-sales' && typeof window.switchOnlineSalesSubTab === 'function') {
+        window.switchOnlineSalesSubTab(route.subtab || 'online-dashboard', false);
+    } else if (tabId === 'finance' && typeof window.switchFinanceSubTab === 'function') {
+        window.switchFinanceSubTab(route.subtab || 'customer-debt', false);
+    } else if (tabId === 'crm' && route.crmRole && typeof window.switchCrmRoleFilter === 'function') {
+        window.switchCrmRoleFilter(route.crmRole, false);
+    }
+
+    if (route.action === 'openPricingConfigModal') {
+        if (typeof window.openPricingConfigModal === 'function') {
+            setTimeout(window.openPricingConfigModal, 150);
+        }
     }
 
     if (window.lucide && typeof lucide.createIcons === 'function') {
@@ -14357,32 +15026,35 @@ function switchTab(tabId) {
         window.applyUserPermissions();
     }
 
-    if (tabId === "quotes") {
+    // Trigger tab specific renderers
+    if (tabId === "quotes" && typeof renderQuotes === 'function') {
         const queryEl = document.getElementById("quoteSearchInput");
         if (queryEl) queryEl.value = "";
         renderQuotes();
-    } else if (tabId === "prod-orders") {
+    } else if (tabId === "prod-orders" && typeof renderProdOrders === 'function') {
         const queryEl = document.getElementById("prodOrderSearchInput");
         if (queryEl) queryEl.value = "";
         const statusSelect = document.getElementById("prodOrderFilterStatus");
         if (statusSelect) statusSelect.value = "all";
         renderProdOrders();
-    } else if (tabId === "contracts") {
+    } else if (tabId === "contracts" && typeof renderContracts === 'function') {
         const queryEl = document.getElementById("contractSearchInput");
         if (queryEl) queryEl.value = "";
         renderContracts();
-    } else if (tabId === "employees") {
+    } else if (tabId === "employees" && typeof renderEmployees === 'function') {
         const queryEl = document.getElementById("employeeSearchInput");
         if (queryEl) queryEl.value = "";
         renderEmployees();
-    } else if (tabId === "collaborators") {
+    } else if (tabId === "collaborators" && typeof renderCollaborators === 'function') {
         const queryEl = document.getElementById("collaboratorSearchInput");
         if (queryEl) queryEl.value = "";
         renderCollaborators();
-    } else if (tabId === "labor-contracts") {
+    } else if (tabId === "labor-contracts" && typeof renderLaborContracts === 'function') {
         const queryEl = document.getElementById("laborContractSearchInput");
         if (queryEl) queryEl.value = "";
         renderLaborContracts();
+    } else if (tabId === "categories") {
+        if (typeof renderMasterCategories === 'function') renderMasterCategories();
     } else if (tabId === "warehouse") {
         if (window.renderWarehouse) window.renderWarehouse();
     } else if (tabId === "crm-care") {
@@ -14414,11 +15086,10 @@ function switchTab(tabId) {
     };
 
     if (titles[tabId]) {
-        title.textContent = titles[tabId].text;
-        sub.textContent = titles[tabId].sub;
+        if (title) title.textContent = titles[tabId].text;
+        if (sub) sub.textContent = titles[tabId].sub;
     }
 
-    // Refresh charts if dashboard
     if (tabId === "dashboard") {
         if (title) title.style.display = "none";
         if (sub) sub.style.display = "none";
@@ -14427,10 +15098,10 @@ function switchTab(tabId) {
         if (title) title.style.display = "block";
         if (sub) sub.style.display = "block";
     }
-    if (tabId === "crm") {
+    if (tabId === "crm" && typeof renderCRM === 'function') {
         renderCRM();
     }
-    if (tabId === "chat") {
+    if (tabId === "chat" && typeof renderChat === 'function') {
         renderChat();
     }
     if (tabId === "warehouse") {
@@ -14439,27 +15110,58 @@ function switchTab(tabId) {
     if (tabId === "panorama") {
         if (window.renderPanorama) window.renderPanorama();
     }
-    if (tabId === "online-sales") {
-        let hasVisible = false;
-        document.querySelectorAll(".online-subtab-pane").forEach(pane => {
-            if (pane.style.display === "block") {
-                hasVisible = true;
-            }
-        });
-        if (!hasVisible) {
-            window.switchOnlineSalesSubTab('online-dashboard');
-        }
-    }
-    if (tabId === "finance") {
+    if (tabId === "finance" && typeof renderFinance === 'function') {
         renderFinance();
-        // Check if any subtab pane is active; if not, default to ledger (Sổ quỹ dòng tiền)
-        const activeSubPane = document.querySelector(".fin-subtab-content.active");
-        if (!activeSubPane) {
-            const defaultPane = document.getElementById("finSubtab-ledger");
-            if (defaultPane) defaultPane.classList.add("active");
-        }
     }
+};
+
+// Compatibility wrapper for switchTab
+function switchTab(tabId, pushHistory = true, options = {}) {
+    window.navigateTo(tabId, pushHistory, options);
 }
+window.switchTab = switchTab;
+
+// Handle initial route or browser URL on load
+window.handleCurrentUrlRoute = function(pushHistory = false) {
+    const isFile = window.location.protocol === 'file:';
+    let path = isFile 
+        ? (window.location.hash || '').replace(/^#\/?/, '') 
+        : window.location.pathname.replace(/^\/+|\/+$/g, '');
+
+    if (!path && window.location.hash) {
+        path = window.location.hash.replace(/^#\/?/, '');
+    }
+
+    if (!path || path === 'index.html') {
+        path = 'tong-quan';
+    }
+
+    const route = window.findRoute(path);
+    if (route) {
+        window.navigateTo(route.slug, pushHistory);
+        return true;
+    }
+    window.navigateTo('tong-quan', pushHistory);
+    return false;
+};
+
+// Listen for browser Back / Forward buttons
+window.addEventListener('popstate', function(e) {
+    if (e.state && e.state.slug) {
+        window.navigateTo(e.state.slug, false);
+    } else {
+        window.handleCurrentUrlRoute(false);
+    }
+});
+
+// Listen for hash changes
+window.addEventListener('hashchange', function() {
+    window.handleCurrentUrlRoute(false);
+});
+
+window.handleHashRoute = function() {
+    return window.handleCurrentUrlRoute(false);
+};
 
 function updateClock() {
     const now = new Date();
@@ -16963,7 +17665,14 @@ function setupEventListeners() {
     }
     
     // Global filter helper for submenu links
-    window.switchCrmRoleFilter = function(role) {
+    window.switchCrmRoleFilter = function(role, updateUrl = true) {
+        if (updateUrl && window.findRoute) {
+            const route = window.findRoute('crm', { crmRole: role });
+            if (route && window.currentRouteSlug !== route.slug) {
+                window.navigateTo(route.slug, true);
+                return;
+            }
+        }
         activeCrmRoleFilter = role;
         
         // Match submenu item highlighting
@@ -16977,7 +17686,6 @@ function setupEventListeners() {
         });
         
         // Trigger tab navigation and re-render table
-        switchTab('crm');
         filterCRMTable();
     };
 
@@ -17016,32 +17724,8 @@ function setupEventListeners() {
         });
     });
 
-    window.switchFinanceSubTab = function(subtabId) {
-        switchTab('finance');
-        
-        // Update active class on inner buttons
-        const finBtns = document.querySelectorAll(".fin-subtab-btn");
-        finBtns.forEach(btn => {
-            if (btn.getAttribute("data-subtab") === subtabId) {
-                btn.classList.add("active");
-            } else {
-                btn.classList.remove("active");
-            }
-        });
-
-        // Directly display the correct finance sub-pane and trigger render
-        const subtabPanes = document.querySelectorAll(".fin-subtab-content");
-        subtabPanes.forEach(pane => pane.classList.remove("active"));
-        const targetPane = document.getElementById(`finSubtab-${subtabId}`);
-        if (targetPane) targetPane.classList.add("active");
-
-        if (subtabId === "sales-commission" && window.renderSalesCommissions) {
-            window.renderSalesCommissions();
-        }
-        if (subtabId === "internal-finance" && window.renderInternalTransactions) {
-            window.renderInternalTransactions();
-        }
-    };
+    // Legacy alias helper: routes to master window.switchFinanceSubTab
+    // (Master definition is already declared at top of Router)
 
     // KPI Cards click event linking
     const registerKpiClick = (cardId, subtabId) => {
@@ -22682,7 +23366,15 @@ async function sendTelegramOrderAlert(order) {
 // ONLINE SALES SUBMODULE BUSINESS LOGIC & COMMISSION SYSTEM
 // ==========================================================================
 
-window.switchOnlineSalesSubTab = function(subtab) {
+window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
+    if (updateUrl && window.findRoute) {
+        const route = window.findRoute('online-sales', { subtab });
+        if (route && window.currentRouteSlug !== route.slug) {
+            window.navigateTo(route.slug, true);
+            return;
+        }
+    }
+
     document.querySelectorAll(".online-subtab-pane").forEach(pane => {
         pane.style.display = "none";
     });
@@ -23944,15 +24636,68 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
         const addrEl = document.getElementById("pdfCustomerAddress") || document.getElementById("pdfShippingAddress");
         if (addrEl) addrEl.textContent = addrStr || "N/A";
 
-        if (document.getElementById("pdfOrderDate")) document.getElementById("pdfOrderDate").textContent = order.created_at || (order.order_date || new Date().toLocaleDateString('vi-VN'));
+        // Format Order Date cleanly
+        if (document.getElementById("pdfOrderDate")) {
+            let rawDate = order.created_at || order.order_date;
+            let formattedDate = rawDate;
+            if (rawDate) {
+                try {
+                    const d = new Date(rawDate);
+                    if (!isNaN(d.getTime())) {
+                        const day = String(d.getDate()).padStart(2, '0');
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const year = d.getFullYear();
+                        const hours = String(d.getHours()).padStart(2, '0');
+                        const minutes = String(d.getMinutes()).padStart(2, '0');
+                        formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+                    }
+                } catch (e) {}
+            }
+            document.getElementById("pdfOrderDate").textContent = formattedDate || new Date().toLocaleDateString('vi-VN');
+        }
         
         const salesChannelStr = [order.sales_channel, order.salesperson ? `(NVKD: ${order.salesperson})` : ''].filter(Boolean).join(" ");
         if (document.getElementById("pdfPaymentMethod")) document.getElementById("pdfPaymentMethod").textContent = salesChannelStr || 'Bán trực tiếp';
 
-        // Payments
+        // 1. Calculate Subtotal from items or order properties
+        let subtotal = 0;
+        if (order.items && order.items.length > 0) {
+            subtotal = order.items.reduce((sum, item) => {
+                const qty = Number(item.qty || item.quantity || 1);
+                const price = Number(item.price || item.sale_price || 0);
+                const itemTot = item.item_total !== undefined ? Number(item.item_total) : (qty * price);
+                return sum + itemTot;
+            }, 0);
+        } else if (order.subtotal !== undefined && order.subtotal !== null && Number(order.subtotal) > 0) {
+            subtotal = Number(order.subtotal);
+        } else {
+            subtotal = Number(order.total_amount || 0);
+        }
+
+        // 2. Discount
+        const discount = Number(order.discount || order.discount_amount || 0);
+
+        // 3. VAT Rate & Amount
+        const vatRate = Number(order.vat_rate !== undefined ? order.vat_rate : (order.vat_percent || 0));
+        let vatAmount = Number(order.vat_amount || 0);
+        if (!vatAmount && vatRate > 0) {
+            const taxable = Math.max(0, subtotal - discount);
+            vatAmount = Math.round(taxable * (vatRate / 100));
+        }
+
+        // 4. Shipping Fee
+        const shipFee = Number(order.ship_fee !== undefined ? order.ship_fee : (order.shipping_fee || 0));
+
+        // 5. Grand Total
+        let grandTotal = Number(order.total_amount || 0);
+        if (!grandTotal || grandTotal === 0) {
+            grandTotal = Math.max(0, subtotal - discount + vatAmount + shipFee);
+        }
+
+        // Payments & Debt calculation
         const payments = state.transactions.filter(t => t.reference_id === order.id && t.type === 'RECEIPT');
-        const totalPaid = Math.max(order.paid_amount || 0, payments.reduce((sum, t) => sum + t.amount, 0));
-        const remainingDebt = Math.max(0, (order.total_amount || 0) - totalPaid);
+        const totalPaid = Math.max(Number(order.paid_amount || 0), payments.reduce((sum, t) => sum + Number(t.amount || 0), 0));
+        const remainingDebt = Math.max(0, grandTotal - totalPaid);
         
         let statusText = "";
         if (totalPaid === 0) {
@@ -23962,7 +24707,18 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
         } else {
             statusText = "Đã thanh toán đủ";
         }
-        if (document.getElementById("pdfPaymentStatus")) document.getElementById("pdfPaymentStatus").textContent = statusText;
+        
+        const paymentStatusEl = document.getElementById("pdfPaymentStatus");
+        if (paymentStatusEl) {
+            paymentStatusEl.textContent = statusText;
+            if (totalPaid >= grandTotal && grandTotal > 0) {
+                paymentStatusEl.style.color = "#108f53";
+            } else if (totalPaid > 0) {
+                paymentStatusEl.style.color = "#d97706";
+            } else {
+                paymentStatusEl.style.color = "#e11d48";
+            }
+        }
         
         // Render Line Items Table
         const pdfItemsBody = document.getElementById("pdfItemsBody");
@@ -23978,11 +24734,11 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
                     const unitStr = item.unit || (prod ? prod.unit : 'Chiếc');
                     const qty = item.qty || item.quantity || 1;
                     const price = item.price || item.sale_price || 0;
-                    const itemTotal = item.item_total || (qty * price);
+                    const itemTotal = item.item_total !== undefined ? item.item_total : (qty * price);
 
                     const row = document.createElement("tr");
                     row.innerHTML = `
-                        <td style="padding:8px; border:1px solid #ddd; text-align:center;">${idx + 1}</td>
+                        <td style="padding:8px 4px; border:1px solid #ddd; text-align:center;">${idx + 1}</td>
                         <td style="padding:8px; border:1px solid #ddd;"><strong>${item.sku}</strong> - ${prodName}${brandStr}${noteStr}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:center;">${unitStr}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:center;">${qty}</td>
@@ -23994,24 +24750,73 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
             } else {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td style="padding:8px; border:1px solid #ddd; text-align:center;">1</td>
+                    <td style="padding:8px 4px; border:1px solid #ddd; text-align:center;">1</td>
                     <td style="padding:8px; border:1px solid #ddd;">${order.job_name || 'Đơn hàng sản xuất'}</td>
                     <td style="padding:8px; border:1px solid #ddd; text-align:center;">Lô</td>
                     <td style="padding:8px; border:1px solid #ddd; text-align:center;">1</td>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:right;">${typeof formatMoney === 'function' ? formatMoney(order.total_amount) : order.total_amount}</td>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:right;"><strong>${typeof formatMoney === 'function' ? formatMoney(order.total_amount) : order.total_amount}</strong></td>
+                    <td style="padding:8px; border:1px solid #ddd; text-align:right;">${typeof formatMoney === 'function' ? formatMoney(grandTotal) : grandTotal}</td>
+                    <td style="padding:8px; border:1px solid #ddd; text-align:right;"><strong>${typeof formatMoney === 'function' ? formatMoney(grandTotal) : grandTotal}</strong></td>
                 `;
                 pdfItemsBody.appendChild(row);
             }
         }
 
-        // Total Summaries
-        if (document.getElementById("pdfSubtotalAmount")) document.getElementById("pdfSubtotalAmount").textContent = typeof formatMoney === 'function' ? formatMoney(order.total_goods || order.total_amount) : order.total_amount;
-        if (document.getElementById("pdfDiscountAmount")) document.getElementById("pdfDiscountAmount").textContent = typeof formatMoney === 'function' ? formatMoney(order.discount || 0) : (order.discount || 0);
-        if (document.getElementById("pdfVatAmount")) document.getElementById("pdfVatAmount").textContent = typeof formatMoney === 'function' ? formatMoney(order.vat_amount || 0) : (order.vat_amount || 0);
-        if (document.getElementById("pdfGrandTotal")) document.getElementById("pdfGrandTotal").textContent = typeof formatMoney === 'function' ? formatMoney(order.total_amount) : order.total_amount;
-        if (document.getElementById("pdfPaidAmount")) document.getElementById("pdfPaidAmount").textContent = typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid;
-        if (document.getElementById("pdfRemainingDebt")) document.getElementById("pdfRemainingDebt").textContent = typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt;
+        // Total Summaries & Helper Formatting
+        const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${Number(v || 0).toLocaleString('vi-VN')}đ`;
+        const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+        // Real IDs in index.html:
+        setEl("pdfSubtotal", fmt(subtotal));
+        setEl("pdfDiscount", discount > 0 ? `-${fmt(discount)}` : "-0đ");
+        setEl("pdfVat", fmt(vatAmount));
+        setEl("pdfShipFee", fmt(shipFee));
+        setEl("pdfTotal", fmt(grandTotal));
+
+        // Update VAT Label
+        const vatLabelEl = document.getElementById("pdfVatLabel");
+        if (vatLabelEl) {
+            vatLabelEl.textContent = vatRate > 0 ? `Thuế VAT (${vatRate}%):` : "Thuế VAT:";
+        }
+
+        // Backward compatibility IDs
+        setEl("pdfSubtotalAmount", fmt(subtotal));
+        setEl("pdfDiscountAmount", discount > 0 ? `-${fmt(discount)}` : "-0đ");
+        setEl("pdfVatAmount", fmt(vatAmount));
+        setEl("pdfGrandTotal", fmt(grandTotal));
+        setEl("pdfPaidAmount", fmt(totalPaid));
+        setEl("pdfRemainingDebt", fmt(remainingDebt));
+
+        // Order Notes Banner
+        const orderNotes = (order.notes || order.note || "").trim();
+        const noteBox = document.getElementById("pdfOrderNotesContainer");
+        const noteText = document.getElementById("pdfOrderNotes");
+        if (noteBox && noteText) {
+            if (orderNotes) {
+                noteText.textContent = orderNotes;
+                noteBox.style.display = "block";
+            } else {
+                noteBox.style.display = "none";
+            }
+        }
+        const noteBox2 = document.getElementById("pdfNotesContainer");
+        const noteText2 = document.getElementById("pdfNotesText");
+        if (noteBox2 && noteText2) {
+            if (orderNotes) {
+                noteText2.textContent = orderNotes;
+                noteBox2.style.display = "block";
+            } else {
+                noteBox2.style.display = "none";
+            }
+        }
+
+        // Dynamic VietQR generator
+        const qrContainer = document.getElementById("pdfQrContainer");
+        if (qrContainer) {
+            const qrAmt = remainingDebt > 0 ? remainingDebt : grandTotal;
+            const cleanCode = (order.order_number || orderId).replace(/[^a-zA-Z0-9_-]/g, '');
+            const qrUrl = `https://img.vietqr.io/image/970422-0907861111-compact2.png?amount=${qrAmt}&addInfo=${encodeURIComponent(cleanCode)}&accountName=HOANG%20QUANG%20HUY`;
+            qrContainer.innerHTML = `<img src="${qrUrl}" alt="VietQR MBBank" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:4px;" />`;
+        }
 
         openModal("onlineOrderInvoicePdfModal");
     } catch (e) {
@@ -26431,8 +27236,7 @@ window.activeCommissionFilter = "ALL";
 
 window.switchCommissionView = function(role) {
     window.activeCommissionFilter = role;
-    switchTab('finance');
-    switchFinanceSubTab('sales-commission');
+    window.switchFinanceSubTab('sales-commission');
 };
 
 window.renderSalesCommissions = function() {
@@ -26843,38 +27647,141 @@ window.viewSalesCommissionPaymentHistory = function(salesperson) {
 // ==========================================================================
 window.renderEmployees = function() {
     const query = (document.getElementById("employeeSearchInput")?.value || "").toLowerCase().trim();
+    const roleFilter = (document.getElementById("employeeRoleFilter")?.value || "").trim();
+    const branchFilter = (document.getElementById("employeeBranchFilter")?.value || "").trim();
+    const deptFilter = (document.getElementById("employeeDeptFilter")?.value || "").trim();
+    const statusFilter = (document.getElementById("employeeStatusFilter")?.value || "").trim();
 
-    const filtered = state.salespersons.filter(s => s.role === "SALESPERSON" && (
-        s.code.toLowerCase().includes(query) ||
-        s.name.toLowerCase().includes(query) ||
-        s.phone.toLowerCase().includes(query) ||
-        (s.email || "").toLowerCase().includes(query)
-    ));
+    const filtered = state.salespersons.filter(s => {
+        // Exclude pure collaborators which are managed separately in collaboratorsTab
+        if (s.role === "COLLABORATOR") return false;
+        
+        // Filter by role / personnel type
+        if (roleFilter) {
+            if (roleFilter === "SALESPERSON") {
+                if (s.role !== "SALESPERSON" && s.role !== "OFFICIAL" && s.role) return false;
+            } else {
+                if (s.role !== roleFilter) return false;
+            }
+        }
+
+        // Filter by branch
+        if (branchFilter && (s.branch || "").indexOf(branchFilter.split(" - ")[0]) === -1 && s.branch !== branchFilter) {
+            return false;
+        }
+
+        // Filter by department
+        if (deptFilter && (s.department || "").indexOf(deptFilter) === -1 && s.department !== deptFilter) {
+            return false;
+        }
+
+        // Filter by status
+        if (statusFilter) {
+            const rawStatus = s.status === true ? "ACTIVE" : (s.status === false ? "RESIGNED" : (s.status || "ACTIVE"));
+            if (rawStatus !== statusFilter) return false;
+        }
+
+        // Text search
+        if (query) {
+            const combined = [
+                s.code, s.name, s.phone, s.email, s.title, s.department, s.branch,
+                s.hometown, s.address, s.education, s.major, s.referral_code
+            ].filter(Boolean).join(" ").toLowerCase();
+            if (!combined.includes(query)) return false;
+        }
+
+        return true;
+    });
 
     const tableBody = document.querySelector("#employeesTable tbody");
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
     if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="8" class="text-muted text-center">Không tìm thấy nhân viên nào</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="10" class="text-muted text-center" style="padding: 24px;">Không tìm thấy nhân viên nào phù hợp với bộ lọc</td></tr>`;
         return;
     }
 
     filtered.forEach(s => {
+        const rawStatus = s.status === true ? "ACTIVE" : (s.status === false ? "RESIGNED" : (s.status || "ACTIVE"));
+        let statusBadge = `<span class="badge bg-success" style="font-size:0.75rem;">Đang làm việc</span>`;
+        if (rawStatus === "PROBATION" || s.role === "PROBATION") {
+            statusBadge = `<span class="badge" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-size:0.75rem; font-weight:600;">Thử việc</span>`;
+        } else if (rawStatus === "INTERN" || s.role === "INTERN") {
+            statusBadge = `<span class="badge" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; font-size:0.75rem; font-weight:600;">Thực tập sinh</span>`;
+        } else if (rawStatus === "PARTTIME" || s.role === "PARTTIME") {
+            statusBadge = `<span class="badge bg-info" style="font-size:0.75rem;">Thời vụ</span>`;
+        } else if (rawStatus === "ON_LEAVE") {
+            statusBadge = `<span class="badge bg-secondary" style="font-size:0.75rem;">Nghỉ phép</span>`;
+        } else if (rawStatus === "RESIGNED") {
+            statusBadge = `<span class="badge bg-danger" style="font-size:0.75rem;">Đã nghỉ việc</span>`;
+        }
+
+        let roleTag = "";
+        if (s.role === "PROBATION") {
+            roleTag = `<span class="badge" style="background:#fef3c7; color:#b45309; font-size:0.68rem; padding:1px 5px; border-radius:4px; font-weight:600; border:1px solid #fde68a;">Thử việc</span>`;
+        } else if (s.role === "INTERN") {
+            roleTag = `<span class="badge" style="background:#e0f2fe; color:#0369a1; font-size:0.68rem; padding:1px 5px; border-radius:4px; font-weight:600; border:1px solid #bae6fd;">Thực tập sinh</span>`;
+        } else if (s.role === "PARTTIME") {
+            roleTag = `<span class="badge" style="background:#f3e8ff; color:#6b21a8; font-size:0.68rem; padding:1px 5px; border-radius:4px; font-weight:600;">Thời vụ</span>`;
+        }
+
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><strong>${s.code}</strong></td>
-            <td><strong>${s.name}</strong></td>
-            <td>${s.phone}</td>
-            <td>${s.email || 'N/A'}</td>
-            <td><strong>${s.commission_rate}%</strong></td>
-            <td><code>${s.referral_code}</code></td>
-            <td><a href="${s.referral_link}" target="_blank" style="font-size:0.8rem; text-decoration:underline;">${s.referral_link}</a></td>
             <td>
-                <div class="card-actions-row">
-                    <button class="btn btn-info" style="padding: 4px 8px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;" onclick="window.showEmployeeWorkHistoryModal('${s.id}')"><i data-lucide="history" style="width:12px; height:12px;"></i> Lịch sử</button>
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openEditEmployee('${s.id}')">Sửa</button>
-                    <button class="btn-icon" style="color:var(--danger)" onclick="deleteEmployee('${s.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <strong style="color:var(--text-primary); font-size:0.92rem;">${s.name}</strong>
+                        ${s.gender ? `<span class="badge" style="background:var(--bg-secondary); color:var(--text-secondary); font-size:0.7rem; padding:1px 5px;">${s.gender}</span>` : ''}
+                        ${roleTag}
+                    </div>
+                    <span style="font-size:0.78rem; color:var(--accent); font-weight:600; display:inline-flex; align-items:center; gap:3px;">
+                        <i data-lucide="briefcase" style="width:11px; height:11px;"></i> ${s.title || 'Nhân viên'}
+                    </span>
+                </div>
+            </td>
+            <td>
+                <div style="font-size:0.83rem; font-weight:500; display:flex; align-items:center; gap:4px;">
+                    <i data-lucide="map-pin" style="width:12px; height:12px; color:#ef4444; flex-shrink:0;"></i>
+                    <span>${s.branch || 'Hà Nội'}</span>
+                </div>
+            </td>
+            <td>
+                <span class="badge" style="background:#e0e7ff; color:#3730a3; font-size:0.75rem; font-weight:600; padding:4px 8px; border-radius:6px; display:inline-block;">
+                    ${s.department || 'Kinh doanh'}
+                </span>
+            </td>
+            <td>
+                <div style="display:flex; flex-direction:column; gap:2px; font-size:0.82rem;">
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <i data-lucide="phone" style="width:11px; height:11px; color:#10b981;"></i>
+                        <span>${s.phone || '---'}</span>
+                    </div>
+                    ${s.email ? `<div style="display:flex; align-items:center; gap:4px; color:var(--text-secondary); font-size:0.75rem;"><i data-lucide="mail" style="width:11px; height:11px; color:#3b82f6;"></i><span>${s.email}</span></div>` : ''}
+                </div>
+            </td>
+            <td>
+                <div style="display:flex; flex-direction:column; gap:2px; font-size:0.8rem;">
+                    <div><span style="color:var(--text-secondary);">Quê:</span> <strong>${s.hometown || 'Chưa rõ'}</strong></div>
+                    <div style="color:var(--text-secondary); font-size:0.75rem; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.address || s.permanent_address || ''}">${s.address || s.permanent_address || '---'}</div>
+                </div>
+            </td>
+            <td>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <span class="badge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:600; padding:2px 6px; border-radius:4px; display:inline-block; width:fit-content;">
+                        ${s.education || 'Đại học'}
+                    </span>
+                    ${s.major ? `<span style="font-size:0.73rem; color:var(--text-secondary); max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.major}">${s.major}</span>` : ''}
+                </div>
+            </td>
+            <td>${statusBadge}</td>
+            <td><strong style="color:var(--accent); font-size:0.88rem;">${s.commission_rate || 0}%</strong></td>
+            <td>
+                <div class="card-actions-row" style="display:flex; gap:4px; align-items:center;">
+                    <button class="btn btn-info" style="padding: 4px 8px; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 4px;" onclick="window.showEmployeeWorkHistoryModal('${s.id}')" title="Xem lịch sử công tác & điều chuyển"><i data-lucide="history" style="width:12px; height:12px;"></i> LS</button>
+                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.72rem;" onclick="openEditEmployee('${s.id}')">Sửa</button>
+                    <button class="btn-icon" style="color:var(--danger); padding:4px;" onclick="deleteEmployee('${s.id}')" title="Xóa"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button>
                 </div>
             </td>
         `;
@@ -26890,25 +27797,73 @@ window.openEditEmployee = function(id) {
     const s = state.salespersons.find(item => item.id === id);
     if (!s) return;
 
-    document.getElementById("salespersonModalTitle").textContent = "Cập nhật thông tin nhân viên";
+    document.getElementById("salespersonModalTitle").innerHTML = `<i data-lucide="user-check" style="width:20px; height:20px; color:var(--accent);"></i> <span>Cập nhật hồ sơ nhân sự: ${s.name}</span>`;
     document.getElementById("salespersonIdInput").value = s.id;
-    document.getElementById("salespersonCode").value = s.code;
-    document.getElementById("salespersonRole").value = s.role;
-    document.getElementById("salespersonName").value = s.name;
-    document.getElementById("salespersonPhone").value = s.phone;
-    document.getElementById("salespersonEmail").value = s.email || "";
-    document.getElementById("salespersonCommissionRate").value = s.commission_rate;
-    document.getElementById("salespersonReferralCode").value = s.referral_code;
+    document.getElementById("salespersonCode").value = s.code || "";
+    document.getElementById("salespersonRole").value = s.role || "SALESPERSON";
 
-    document.getElementById("salespersonTitle").value = s.title || "Nhân viên";
-    document.getElementById("salespersonDepartment").value = s.department || "";
-    document.getElementById("salespersonBranch").value = s.branch || "";
+    // Pre-configured Organization fields
+    const branchEl = document.getElementById("salespersonBranch");
+    if (branchEl) branchEl.value = s.branch || "Hà Nội - Trụ sở chính & Văn phòng";
+    const deptEl = document.getElementById("salespersonDepartment");
+    if (deptEl) deptEl.value = s.department || "Phòng Kinh Doanh & Tiếp Thị";
+    const titleEl = document.getElementById("salespersonTitle");
+    if (titleEl) titleEl.value = s.title || "Nhân Viên Kinh Doanh (Sales Executive)";
+    const statusEl = document.getElementById("salespersonStatus");
+    if (statusEl) {
+        const rawStatus = s.status === true ? "ACTIVE" : (s.status === false ? "RESIGNED" : (s.status || "ACTIVE"));
+        statusEl.value = rawStatus;
+    }
+    const joinDateEl = document.getElementById("salespersonJoinDate");
+    if (joinDateEl) joinDateEl.value = s.join_date || "";
+
+    // Identity and Address
+    document.getElementById("salespersonName").value = s.name || "";
+    const genderEl = document.getElementById("salespersonGender");
+    if (genderEl) genderEl.value = s.gender || "Nam";
     document.getElementById("salespersonBirthday").value = s.birthday || "";
+    const idCardEl = document.getElementById("salespersonIdCard");
+    if (idCardEl) idCardEl.value = s.id_card || "";
+    const idCardDateEl = document.getElementById("salespersonIdCardDate");
+    if (idCardDateEl) idCardDateEl.value = s.id_card_date || "";
+    const idCardPlaceEl = document.getElementById("salespersonIdCardPlace");
+    if (idCardPlaceEl) idCardPlaceEl.value = s.id_card_place || "";
+    const hometownEl = document.getElementById("salespersonHometown");
+    if (hometownEl) hometownEl.value = s.hometown || "";
+    const permAddressEl = document.getElementById("salespersonPermanentAddress");
+    if (permAddressEl) permAddressEl.value = s.permanent_address || "";
     document.getElementById("salespersonAddress").value = s.address || "";
+
+    // Education & Qualifications
+    const eduEl = document.getElementById("salespersonEducation");
+    if (eduEl) eduEl.value = s.education || "Đại học";
+    const majorEl = document.getElementById("salespersonMajor");
+    if (majorEl) majorEl.value = s.major || "";
+    const schoolEl = document.getElementById("salespersonSchool");
+    if (schoolEl) schoolEl.value = s.school || "";
+
+    // Tax, Insurance & Bank
+    const taxEl = document.getElementById("salespersonTaxCode");
+    if (taxEl) taxEl.value = s.tax_code || s.personal_tax_code || "";
+    const insEl = document.getElementById("salespersonInsuranceCode");
+    if (insEl) insEl.value = s.insurance_code || "";
+    const bankAccEl = document.getElementById("salespersonBankAccount");
+    if (bankAccEl) bankAccEl.value = s.bank_account || "";
+    const bankNameEl = document.getElementById("salespersonBankName");
+    if (bankNameEl) bankNameEl.value = s.bank_name || "";
+
+    // Contacts & Sales
+    document.getElementById("salespersonPhone").value = s.phone || "";
+    document.getElementById("salespersonEmail").value = s.email || "";
     document.getElementById("salespersonZalo").value = s.zalo || "";
     document.getElementById("salespersonFacebook").value = s.facebook || "";
+    document.getElementById("salespersonCommissionRate").value = s.commission_rate ?? 5;
+    document.getElementById("salespersonReferralCode").value = s.referral_code || "";
+    const notesEl = document.getElementById("salespersonNotes");
+    if (notesEl) notesEl.value = s.notes || "";
 
     openModal("salespersonModal");
+    if (window.lucide) lucide.createIcons();
 };
 
 window.deleteEmployee = function(id) {
@@ -26997,49 +27952,263 @@ window.deleteCollaborator = function(id) {
     populateSalespersonsDropdowns();
 };
 
+// Global attachments state for modals
+window.currentLaborContractAttachments = [];
+window.currentAppendixAttachments = [];
+window.currentHistoryContractId = null;
+
+// Lightbox helper
+window.openLightbox = function(src, caption) {
+    const modal = document.getElementById("imageLightboxModal");
+    const img = document.getElementById("lightboxImage");
+    const cap = document.getElementById("lightboxCaption");
+    if (img) img.src = src;
+    if (cap) cap.textContent = caption || "";
+    if (typeof openModal === "function") {
+        openModal("imageLightboxModal");
+    } else if (modal) {
+        modal.classList.add("active");
+    }
+};
+
+// Global fix for Pricing Config Modal
+window.openPricingConfigModal = function() {
+    if (typeof openModal === "function") {
+        openModal("pricingConfigModal");
+    } else {
+        const m = document.getElementById("pricingConfigModal");
+        if (m) m.classList.add("active");
+    }
+};
+
+// Auto-fill employee details when choosing employee in Labor Contract Form
+window.syncLaborContractEmployeeProfile = function(empId) {
+    if (!empId) return;
+    const emp = (state.salespersons || []).find(s => s.id === empId);
+    if (!emp) return;
+
+    // Check if there is an existing contract for this employee to pre-fill
+    const existingContract = (state.labor_contracts || []).slice().reverse().find(c => c.employee_id === empId);
+
+    const deptEl = document.getElementById("laborContractDepartment");
+    if (deptEl) {
+        deptEl.value = (existingContract && existingContract.department) || emp.department || "Kinh doanh";
+    }
+
+    const jobTitleEl = document.getElementById("laborContractJobTitle");
+    if (jobTitleEl) {
+        jobTitleEl.value = (existingContract && existingContract.job_title) || emp.job_title || emp.title || (emp.role === "SALESPERSON" ? "Nhân viên kinh doanh" : "Cộng tác viên");
+    }
+
+    const birthEl = document.getElementById("laborContractBirthDate");
+    if (birthEl) {
+        birthEl.value = (existingContract && existingContract.birth_date) || emp.birth_date || emp.birthday || "";
+    }
+
+    const hometownEl = document.getElementById("laborContractHometown");
+    if (hometownEl) {
+        hometownEl.value = (existingContract && existingContract.hometown) || emp.hometown || "";
+    }
+
+    const eduEl = document.getElementById("laborContractEducation");
+    if (eduEl) {
+        eduEl.value = (existingContract && existingContract.education) || emp.education || "Đại học";
+    }
+
+    const insEl = document.getElementById("laborContractInsuranceCode");
+    if (insEl) {
+        insEl.value = (existingContract && existingContract.insurance_code) || emp.insurance_code || "";
+    }
+
+    const taxEl = document.getElementById("laborContractPersonalTaxCode");
+    if (taxEl) {
+        taxEl.value = (existingContract && existingContract.personal_tax_code) || emp.personal_tax_code || emp.tax_code || "";
+    }
+
+    const bankEl = document.getElementById("laborContractBankAccount");
+    if (bankEl) {
+        bankEl.value = (existingContract && existingContract.bank_account) || (emp.bank_account ? (emp.bank_name ? `${emp.bank_account} - ${emp.bank_name}` : emp.bank_account) : "");
+    }
+};
+
+// Render attachment chips in Labor Contract Modal
+window.renderLaborContractAttachmentChips = function() {
+    const container = document.getElementById("laborContractAttachmentList");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!window.currentLaborContractAttachments || window.currentLaborContractAttachments.length === 0) {
+        container.innerHTML = '<span style="font-size:0.8rem; color:var(--text-secondary); font-style:italic;">Chưa có tệp / ảnh nào được đính kèm.</span>';
+        return;
+    }
+
+    window.currentLaborContractAttachments.forEach((att, idx) => {
+        const isImage = att.type && att.type.startsWith("image/");
+        const chip = document.createElement("div");
+        chip.className = "attachment-chip";
+        
+        let previewHtml = '';
+        if (isImage && att.data) {
+            previewHtml = `<img src="${att.data}" class="chip-thumb" onclick="window.openLightbox('${att.data}', '${escapeHtml(att.name)}')">`;
+        } else {
+            previewHtml = `<i data-lucide="file-text" style="width:20px; height:20px; color:var(--accent);"></i>`;
+        }
+
+        const sizeStr = att.size ? `(${(att.size / 1024).toFixed(0)} KB)` : '';
+
+        chip.innerHTML = `
+            ${previewHtml}
+            <div class="chip-info" style="cursor:pointer;" title="${escapeHtml(att.name)}">
+                <span class="chip-name" style="max-width:130px; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:middle;">${escapeHtml(att.name)}</span>
+                <span style="font-size:0.7rem; color:var(--text-secondary); margin-left:4px;">${sizeStr}</span>
+            </div>
+            <button type="button" class="chip-remove" onclick="window.removeLaborContractAttachment(${idx})" title="Xóa tệp"><i data-lucide="x"></i></button>
+        `;
+        container.appendChild(chip);
+    });
+
+    if (window.lucide) lucide.createIcons();
+};
+
+window.removeLaborContractAttachment = function(idx) {
+    if (window.currentLaborContractAttachments) {
+        window.currentLaborContractAttachments.splice(idx, 1);
+        window.renderLaborContractAttachmentChips();
+    }
+};
+
+window.handleLaborContractFileUpload = function(e) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (!Array.isArray(window.currentLaborContractAttachments)) {
+        window.currentLaborContractAttachments = [];
+    }
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            window.currentLaborContractAttachments.push({
+                id: 'att_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                data: evt.target.result,
+                upload_date: new Date().toISOString()
+            });
+            window.renderLaborContractAttachmentChips();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    e.target.value = '';
+};
+
+// Render Labor Contracts Table
 window.renderLaborContracts = function() {
     const tableBody = document.querySelector("#laborContractsTable tbody");
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
     const query = (document.getElementById("laborContractSearchInput")?.value || "").toLowerCase().trim();
+    const deptFilter = (document.getElementById("laborContractDeptFilter")?.value || "").trim();
+    const statusFilter = (document.getElementById("laborContractStatusFilter")?.value || "").trim();
 
-    const filtered = state.labor_contracts.filter(c => {
-        const emp = state.salespersons.find(s => s.id === c.employee_id);
+    const filtered = (state.labor_contracts || []).filter(c => {
+        const emp = (state.salespersons || []).find(s => s.id === c.employee_id);
         const empName = emp ? emp.name.toLowerCase() : "";
-        return c.contract_number.toLowerCase().includes(query) ||
+        const jobTitle = (c.job_title || emp?.job_title || "").toLowerCase();
+        const hometown = (c.hometown || emp?.hometown || "").toLowerCase();
+        const dept = c.department || emp?.department || "";
+        const status = c.status || "ACTIVE";
+
+        const matchesQuery = !query || 
+               c.contract_number.toLowerCase().includes(query) ||
                empName.includes(query) ||
-               c.contract_type.toLowerCase().includes(query);
+               jobTitle.includes(query) ||
+               hometown.includes(query) ||
+               (c.contract_type || "").toLowerCase().includes(query);
+
+        const matchesDept = !deptFilter || dept === deptFilter;
+        const matchesStatus = !statusFilter || status === statusFilter;
+
+        return matchesQuery && matchesDept && matchesStatus;
     });
 
     if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="9" class="text-muted text-center">Không tìm thấy hợp đồng lao động nào</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="10" class="text-muted text-center" style="padding:28px;">Không tìm thấy hợp đồng lao động nào phù hợp</td></tr>`;
         return;
     }
 
     filtered.forEach(c => {
-        const emp = state.salespersons.find(s => s.id === c.employee_id);
-        
+        const emp = (state.salespersons || []).find(s => s.id === c.employee_id);
+        const dept = c.department || emp?.department || "Chưa phân loại";
+        const jobTitle = c.job_title || emp?.job_title || emp?.title || "Nhân viên";
+
         const statusBadges = {
-            ACTIVE: '<span class="badge badge-success">Đang hiệu lực</span>',
-            EXPIRED: '<span class="badge badge-warning">Đã hết hạn</span>',
-            TERMINATED: '<span class="badge badge-danger">Đã chấm dứt</span>'
+            ACTIVE: '<span class="badge badge-success" style="font-weight:600;">Đang hiệu lực</span>',
+            EXPIRED: '<span class="badge badge-warning" style="font-weight:600;">Đã hết hạn</span>',
+            TERMINATED: '<span class="badge badge-danger" style="font-weight:600;">Đã chấm dứt</span>'
         };
+
+        const deptColorMap = {
+            "Ban Giám Đốc": "background:rgba(239, 68, 68, 0.12); color:#dc2626; border:1px solid rgba(239, 68, 68, 0.3);",
+            "Kinh doanh": "background:rgba(59, 130, 246, 0.12); color:#2563eb; border:1px solid rgba(59, 130, 246, 0.3);",
+            "Kỹ thuật & Thiết kế": "background:rgba(139, 92, 246, 0.12); color:#7c3aed; border:1px solid rgba(139, 92, 246, 0.3);",
+            "Kế toán - Tài chính": "background:rgba(16, 185, 129, 0.12); color:#059669; border:1px solid rgba(16, 185, 129, 0.3);",
+            "Xưởng In & Sản Xuất": "background:rgba(245, 158, 11, 0.12); color:#d97706; border:1px solid rgba(245, 158, 11, 0.3);",
+            "Kho & Vận chuyển": "background:rgba(100, 116, 139, 0.12); color:#475569; border:1px solid rgba(100, 116, 139, 0.3);"
+        };
+        const deptStyle = deptColorMap[dept] || "background:var(--bg-hover); color:var(--text-secondary);";
+
+        // Count history and attachments
+        const historyCount = Array.isArray(c.history) ? c.history.length : 1;
+        const totalAttachments = (Array.isArray(c.attachments) ? c.attachments.length : 0) +
+            (Array.isArray(c.history) ? c.history.reduce((sum, h) => sum + (Array.isArray(h.attachments) ? h.attachments.length : 0), 0) : 0);
+
+        const signDateStr = c.sign_date ? new Date(c.sign_date).toLocaleDateString('vi-VN') : '—';
+        const startDateStr = c.start_date ? new Date(c.start_date).toLocaleDateString('vi-VN') : '—';
+        const endDateStr = c.end_date ? new Date(c.end_date).toLocaleDateString('vi-VN') : '<span style="color:var(--text-secondary); font-style:italic;">Không thời hạn</span>';
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${c.contract_number}</strong></td>
-            <td><strong>${emp ? emp.name : 'N/A'}</strong></td>
-            <td>${new Date(c.sign_date).toLocaleDateString('vi-VN')}</td>
-            <td>${new Date(c.start_date).toLocaleDateString('vi-VN')}</td>
-            <td>${c.end_date ? new Date(c.end_date).toLocaleDateString('vi-VN') : 'Không xác định'}</td>
-            <td><strong>${formatMoney(c.base_salary)}</strong></td>
-            <td><span class="badge badge-secondary">${c.contract_type}</span></td>
+            <td>
+                <div style="font-weight:700; color:var(--accent); font-family:monospace; font-size:0.95rem;">${escapeHtml(c.contract_number)}</div>
+                ${totalAttachments > 0 ? `<div style="margin-top:2px; font-size:0.72rem; color:var(--text-secondary); display:inline-flex; align-items:center; gap:3px;"><i data-lucide="paperclip" style="width:12px; height:12px;"></i> ${totalAttachments} tệp</div>` : ''}
+            </td>
+            <td>
+                <div style="font-weight:600; color:var(--text-primary);">${emp ? escapeHtml(emp.name) : 'Chưa gán'}</div>
+                <div style="font-size:0.78rem; color:var(--text-secondary);">${escapeHtml(jobTitle)}</div>
+            </td>
+            <td>
+                <span class="badge" style="${deptStyle} padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:600; white-space:nowrap;">
+                    ${escapeHtml(dept)}
+                </span>
+            </td>
+            <td>
+                <div style="font-size:0.85rem;">Ký: <strong>${signDateStr}</strong></div>
+                <div style="font-size:0.75rem; color:var(--text-secondary);">Bắt đầu: ${startDateStr}</div>
+            </td>
+            <td>
+                <div style="font-size:0.85rem;">${endDateStr}</div>
+            </td>
+            <td>
+                <strong style="color:var(--success); font-size:0.92rem;">${formatMoney(c.base_salary)}</strong>
+            </td>
+            <td>
+                <span class="badge badge-secondary" style="font-size:0.75rem;">${escapeHtml(c.contract_type || 'Xác định thời hạn')}</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-secondary" onclick="window.openLaborContractHistoryModal('${c.id}')" style="padding:4px 9px; font-size:0.75rem; display:inline-flex; align-items:center; gap:5px; border-radius:6px;" title="Xem lịch sử ký, phụ lục & đính kèm">
+                    <i data-lucide="history" style="width:13px; height:13px; color:var(--accent);"></i>
+                    <span>${historyCount} lần ký / PL</span>
+                </button>
+            </td>
             <td>${statusBadges[c.status] || c.status}</td>
             <td>
-                <div class="card-actions-row">
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openEditLaborContract('${c.id}')">Sửa</button>
-                    <button class="btn-icon" style="color:var(--danger)" onclick="deleteLaborContract('${c.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
+                <div class="card-actions-row" style="display:flex; gap:6px; align-items:center;">
+                    <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="window.openEditLaborContract('${c.id}')" title="Chỉnh sửa thông tin HĐ">Sửa</button>
+                    <button class="btn-icon" style="color:var(--danger);" onclick="window.deleteLaborContract('${c.id}')" title="Xóa hợp đồng"><i data-lucide="trash-2" style="width:15px; height:15px;"></i></button>
                 </div>
             </td>
         `;
@@ -27054,42 +28223,458 @@ window.renderLaborContracts = function() {
 window.populateLaborContractEmployeesDropdown = function() {
     const select = document.getElementById("laborContractEmployeeId");
     if (!select) return;
-    select.innerHTML = "";
+    select.innerHTML = '<option value="">-- Chọn nhân viên --</option>';
 
-    state.salespersons.forEach(s => {
+    (state.salespersons || []).forEach(s => {
         const option = document.createElement("option");
         option.value = s.id;
-        option.textContent = `${s.code} - ${s.name} (${s.role === 'SALESPERSON' ? 'Nhân viên' : 'CTV'})`;
+        option.textContent = `${s.code || 'NV'} - ${s.name} (${s.role === 'SALESPERSON' ? 'Nhân viên' : 'CTV'})`;
         select.appendChild(option);
     });
 };
 
 window.openEditLaborContract = function(id) {
-    const c = state.labor_contracts.find(item => item.id === id);
+    const c = (state.labor_contracts || []).find(item => item.id === id);
     if (!c) return;
 
-    document.getElementById("laborContractModalTitle").textContent = "Cập nhật hợp đồng lao động";
+    document.getElementById("laborContractModalTitle").textContent = "Cập nhật hợp đồng lao động & Hồ sơ";
     document.getElementById("laborContractIdInput").value = c.id;
     document.getElementById("laborContractNumber").value = c.contract_number;
     
     populateLaborContractEmployeesDropdown();
     document.getElementById("laborContractEmployeeId").value = c.employee_id;
+
+    const emp = (state.salespersons || []).find(s => s.id === c.employee_id);
+    document.getElementById("laborContractDepartment").value = c.department || emp?.department || "Kinh doanh";
+    document.getElementById("laborContractJobTitle").value = c.job_title || emp?.job_title || emp?.title || "";
+    
+    document.getElementById("laborContractBirthDate").value = c.birth_date || emp?.birth_date || "";
+    document.getElementById("laborContractHometown").value = c.hometown || emp?.hometown || "";
+    document.getElementById("laborContractEducation").value = c.education || emp?.education || "Đại học";
+    document.getElementById("laborContractInsuranceCode").value = c.insurance_code || emp?.insurance_code || "";
+    document.getElementById("laborContractPersonalTaxCode").value = c.personal_tax_code || emp?.personal_tax_code || "";
+    document.getElementById("laborContractBankAccount").value = c.bank_account || emp?.bank_account || "";
     
     document.getElementById("laborContractSignDate").value = c.sign_date;
     document.getElementById("laborContractStartDate").value = c.start_date;
     document.getElementById("laborContractEndDate").value = c.end_date || "";
     document.getElementById("laborContractBaseSalary").value = c.base_salary;
     document.getElementById("laborContractType").value = c.contract_type;
-    document.getElementById("laborContractStatus").value = c.status;
+    document.getElementById("laborContractStatus").value = c.status || "ACTIVE";
+
+    // Load attachments
+    window.currentLaborContractAttachments = Array.isArray(c.attachments) ? JSON.parse(JSON.stringify(c.attachments)) : [];
+    window.renderLaborContractAttachmentChips();
 
     openModal("laborContractModal");
 };
 
 window.deleteLaborContract = function(id) {
     if (!confirm("Bạn có chắc chắn muốn xóa hợp đồng lao động này không?")) return;
-    const newContracts = state.labor_contracts.filter(c => c.id !== id);
+    const newContracts = (state.labor_contracts || []).filter(c => c.id !== id);
     state.updateState("labor_contracts", newContracts);
     renderLaborContracts();
+};
+
+// ==========================================
+// HISTORY & APPENDIX MODAL IMPLEMENTATION
+// ==========================================
+window.openLaborContractHistoryModal = function(contractId) {
+    window.currentHistoryContractId = contractId;
+    const c = (state.labor_contracts || []).find(item => item.id === contractId);
+    if (!c) return;
+
+    const emp = (state.salespersons || []).find(s => s.id === c.employee_id);
+    const subTitleEl = document.getElementById("histModalSubtitle");
+    if (subTitleEl) {
+        subTitleEl.textContent = `Hợp đồng số: ${c.contract_number} | Nhân sự: ${emp ? emp.name : 'N/A'}`;
+    }
+
+    // 1. Render Employee Summary Card
+    const cardEl = document.getElementById("histEmployeeSummaryCard");
+    if (cardEl) {
+        const dept = c.department || emp?.department || "Chưa phân loại";
+        const jobTitle = c.job_title || emp?.job_title || emp?.title || "Nhân viên";
+        const hometown = c.hometown || emp?.hometown || "Chưa cập nhật";
+        const edu = c.education || emp?.education || "Đại học";
+        const birth = c.birth_date || emp?.birth_date || "Chưa cập nhật";
+        const bhxh = c.insurance_code || emp?.insurance_code || "Chưa có";
+        const mst = c.personal_tax_code || emp?.personal_tax_code || "Chưa có";
+        const stk = c.bank_account || emp?.bank_account || "Chưa có";
+
+        cardEl.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <div style="font-size:1.1rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px;">
+                        <span>${emp ? escapeHtml(emp.name) : 'N/A'}</span>
+                        <span class="badge badge-primary" style="font-size:0.75rem;">${emp?.code || 'NV'}</span>
+                        <span class="badge badge-secondary" style="font-size:0.75rem;">${escapeHtml(dept)}</span>
+                    </div>
+                    <div style="margin-top:4px; font-size:0.85rem; color:var(--text-secondary);">
+                        Vị trí / Chức vụ hiện tại: <strong style="color:var(--accent);">${escapeHtml(jobTitle)}</strong> | Lương hiện hành: <strong style="color:var(--success);">${formatMoney(c.base_salary)}</strong>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span class="badge ${c.status === 'ACTIVE' ? 'badge-success' : (c.status === 'EXPIRED' ? 'badge-warning' : 'badge-danger')}">
+                        ${c.status === 'ACTIVE' ? 'HĐ Đang hiệu lực' : (c.status === 'EXPIRED' ? 'HĐ Đã hết hạn' : 'HĐ Đã chấm dứt')}
+                    </span>
+                </div>
+            </div>
+            <div style="margin-top:12px; display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; font-size:0.8rem; border-top:1px dashed var(--border-color); padding-top:10px;">
+                <div><strong>Quê quán:</strong> ${escapeHtml(hometown)}</div>
+                <div><strong>Sinh nhật:</strong> ${escapeHtml(birth)}</div>
+                <div><strong>Trình độ:</strong> ${escapeHtml(edu)}</div>
+                <div><strong>Mã số BHXH:</strong> ${escapeHtml(bhxh)}</div>
+                <div><strong>MST cá nhân:</strong> ${escapeHtml(mst)}</div>
+                <div><strong>STK ngân hàng:</strong> ${escapeHtml(stk)}</div>
+            </div>
+        `;
+    }
+
+    // Hide add appendix container by default
+    const addCont = document.getElementById("addAppendixFormContainer");
+    if (addCont) addCont.style.display = "none";
+
+    // 2. Render Timeline
+    window.renderLaborContractTimeline(c);
+
+    // 3. Render All Attachments
+    window.renderLaborContractAllAttachments(c);
+
+    openModal("laborContractHistoryModal");
+};
+
+window.renderLaborContractTimeline = function(c) {
+    const container = document.getElementById("histTimelineContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    // Build timeline items list: original contract + history entries
+    if (!Array.isArray(c.history) || c.history.length === 0) {
+        c.history = [{
+            id: 'orig_' + c.id,
+            type: 'ORIGINAL',
+            title: 'Hợp đồng ban đầu',
+            number: c.contract_number,
+            date: c.sign_date || c.start_date,
+            effective_date: c.start_date,
+            salary: c.base_salary,
+            job_title: c.job_title || 'Nhân viên',
+            department: c.department || 'Kinh doanh',
+            note: 'Ký kết hợp đồng lao động lần đầu',
+            attachments: Array.isArray(c.attachments) ? c.attachments : []
+        }];
+    }
+
+    c.history.forEach((item, index) => {
+        const isOriginal = item.type === 'ORIGINAL' || index === 0;
+        const itemEl = document.createElement("div");
+        itemEl.className = "timeline-item";
+
+        const badgeText = isOriginal ? 'Ký HĐ gốc' : (item.change_type || 'Phụ lục hợp đồng');
+        const badgeClass = isOriginal ? 'badge-primary' : 'badge-warning';
+
+        const dateStr = item.date ? new Date(item.date).toLocaleDateString('vi-VN') : '—';
+
+        let changesSummary = '';
+        if (item.salary && (!item.old_salary || item.salary !== item.old_salary)) {
+            changesSummary += `<div>• Mức lương: ${item.old_salary ? `<del style="color:var(--text-secondary);">${formatMoney(item.old_salary)}</del> ➔ ` : ''}<strong style="color:var(--success);">${formatMoney(item.salary)}</strong></div>`;
+        }
+        if (item.job_title && (!item.old_title || item.job_title !== item.old_title)) {
+            changesSummary += `<div>• Chức vụ / Vị trí: ${item.old_title ? `<del style="color:var(--text-secondary);">${escapeHtml(item.old_title)}</del> ➔ ` : ''}<strong style="color:var(--accent);">${escapeHtml(item.job_title)}</strong></div>`;
+        }
+        if (item.department && (!item.old_dept || item.department !== item.old_dept)) {
+            changesSummary += `<div>• Phòng ban: ${item.old_dept ? `<del style="color:var(--text-secondary);">${escapeHtml(item.old_dept)}</del> ➔ ` : ''}<strong>${escapeHtml(item.department)}</strong></div>`;
+        }
+
+        // Attachments for this item
+        let attHtml = '';
+        if (Array.isArray(item.attachments) && item.attachments.length > 0) {
+            attHtml = `
+                <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;">
+                    ${item.attachments.map(att => {
+                        const isImg = att.type && att.type.startsWith("image/");
+                        if (isImg && att.data) {
+                            return `<div class="attachment-chip" style="cursor:pointer;" onclick="window.openLightbox('${att.data}', '${escapeHtml(att.name)}')" title="Xem ảnh">
+                                <img src="${att.data}" class="chip-thumb">
+                                <span class="chip-name" style="max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(att.name)}</span>
+                            </div>`;
+                        } else {
+                            return `<a href="${att.data || '#'}" download="${escapeHtml(att.name)}" class="attachment-chip" style="text-decoration:none;" title="Tải xuống tài liệu">
+                                <i data-lucide="file-text" style="width:16px; height:16px; color:var(--accent);"></i>
+                                <span class="chip-name" style="max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(att.name)}</span>
+                            </a>`;
+                        }
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Delete appendix button (if not original)
+        let deleteBtn = '';
+        if (!isOriginal) {
+            deleteBtn = `
+                <button type="button" class="btn-icon" style="color:var(--danger); padding:2px; margin-left:auto;" onclick="window.deleteLaborContractAppendix('${item.id}')" title="Xóa phụ lục này">
+                    <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                </button>
+            `;
+        }
+
+        itemEl.innerHTML = `
+            <div class="timeline-dot ${isOriginal ? 'origin' : 'amendment'}"></div>
+            <div class="timeline-content">
+                <div class="timeline-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="badge ${badgeClass}" style="font-size:0.75rem;">${badgeText}</span>
+                        <strong style="font-size:0.9rem; color:var(--text-primary); font-family:monospace;">${escapeHtml(item.number || c.contract_number)}</strong>
+                        <span style="font-size:0.8rem; color:var(--text-secondary);">Ngày ký: ${dateStr}</span>
+                    </div>
+                    ${deleteBtn}
+                </div>
+                ${changesSummary ? `<div style="font-size:0.82rem; margin-bottom:6px; line-height:1.5;">${changesSummary}</div>` : ''}
+                ${item.note ? `<div style="font-size:0.8rem; color:var(--text-secondary); background:var(--bg-card); padding:6px 10px; border-radius:6px; border-left:3px solid var(--accent);"><i data-lucide="message-square" style="width:12px; height:12px; margin-right:4px; vertical-align:middle;"></i> ${escapeHtml(item.note)}</div>` : ''}
+                ${attHtml}
+            </div>
+        `;
+        container.appendChild(itemEl);
+    });
+
+    if (window.lucide) lucide.createIcons();
+};
+
+window.renderLaborContractAllAttachments = function(c) {
+    const container = document.getElementById("histAllAttachmentsList");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const all = [];
+    if (Array.isArray(c.attachments)) {
+        c.attachments.forEach(a => all.push({ ...a, source: 'HĐ Lao Động' }));
+    }
+    if (Array.isArray(c.history)) {
+        c.history.forEach(h => {
+            if (Array.isArray(h.attachments)) {
+                h.attachments.forEach(a => all.push({ ...a, source: h.number || h.change_type || 'Phụ lục' }));
+            }
+        });
+    }
+
+    if (all.length === 0) {
+        container.innerHTML = '<span style="font-size:0.8rem; color:var(--text-secondary); font-style:italic;">Chưa có tài liệu hoặc ảnh scan nào được lưu trữ.</span>';
+        return;
+    }
+
+    all.forEach(att => {
+        const isImg = att.type && att.type.startsWith("image/");
+        const chip = document.createElement("div");
+        chip.className = "attachment-chip";
+        chip.style.cssText = "padding:8px 12px; cursor:pointer;";
+
+        if (isImg && att.data) {
+            chip.innerHTML = `
+                <img src="${att.data}" class="chip-thumb" style="width:36px; height:36px; border-radius:6px;">
+                <div class="chip-info" style="display:flex; flex-direction:column; gap:2px;">
+                    <span class="chip-name" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;">${escapeHtml(att.name)}</span>
+                    <span style="font-size:0.7rem; color:var(--text-secondary);">${escapeHtml(att.source)} • ${(att.size ? (att.size/1024).toFixed(0) : 0)} KB</span>
+                </div>
+                <button type="button" class="btn-icon" style="color:var(--accent); margin-left:6px;" title="Xem ảnh lớn"><i data-lucide="eye" style="width:14px; height:14px;"></i></button>
+            `;
+            chip.onclick = () => window.openLightbox(att.data, att.name);
+        } else {
+            chip.innerHTML = `
+                <i data-lucide="file-text" style="width:28px; height:28px; color:var(--accent);"></i>
+                <div class="chip-info" style="display:flex; flex-direction:column; gap:2px;">
+                    <span class="chip-name" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;">${escapeHtml(att.name)}</span>
+                    <span style="font-size:0.7rem; color:var(--text-secondary);">${escapeHtml(att.source)} • ${(att.size ? (att.size/1024).toFixed(0) : 0)} KB</span>
+                </div>
+                <a href="${att.data || '#'}" download="${escapeHtml(att.name)}" class="btn-icon" style="color:var(--accent); margin-left:6px;" title="Tải xuống"><i data-lucide="download" style="width:14px; height:14px;"></i></a>
+            `;
+        }
+        container.appendChild(chip);
+    });
+
+    if (window.lucide) lucide.createIcons();
+};
+
+window.toggleAddAppendixForm = function() {
+    const cont = document.getElementById("addAppendixFormContainer");
+    if (!cont) return;
+
+    if (cont.style.display === "none" || !cont.style.display) {
+        cont.style.display = "block";
+        const form = document.getElementById("addAppendixForm");
+        if (form) form.reset();
+        window.currentAppendixAttachments = [];
+        window.renderAppendixAttachmentChips();
+
+        const c = (state.labor_contracts || []).find(item => item.id === window.currentHistoryContractId);
+        if (c) {
+            const count = (c.history || []).length;
+            document.getElementById("appxNumber").value = `PL-${String(count).padStart(2, '0')}/${c.contract_number}`;
+            document.getElementById("appxDate").value = new Date().toISOString().split('T')[0];
+            document.getElementById("appxSalary").value = c.base_salary;
+            document.getElementById("appxJobTitle").value = c.job_title || "";
+            document.getElementById("appxDepartment").value = c.department || "";
+        }
+    } else {
+        cont.style.display = "none";
+    }
+};
+
+window.onAppendixTypeChange = function(type) {
+    if (type === "Điều chỉnh mức lương") {
+        document.getElementById("appxSalary")?.focus();
+    } else if (type === "Bổ nhiệm / Đổi chức vụ") {
+        document.getElementById("appxJobTitle")?.focus();
+    } else if (type === "Chuyển phòng ban") {
+        document.getElementById("appxDepartment")?.focus();
+    }
+};
+
+window.handleAppendixFileUpload = function(e) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (!Array.isArray(window.currentAppendixAttachments)) {
+        window.currentAppendixAttachments = [];
+    }
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            window.currentAppendixAttachments.push({
+                id: 'att_appx_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                data: evt.target.result,
+                upload_date: new Date().toISOString()
+            });
+            window.renderAppendixAttachmentChips();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    e.target.value = '';
+};
+
+window.renderAppendixAttachmentChips = function() {
+    const container = document.getElementById("appxAttachmentList");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!window.currentAppendixAttachments || window.currentAppendixAttachments.length === 0) return;
+
+    window.currentAppendixAttachments.forEach((att, idx) => {
+        const isImage = att.type && att.type.startsWith("image/");
+        const chip = document.createElement("div");
+        chip.className = "attachment-chip";
+
+        let previewHtml = '';
+        if (isImage && att.data) {
+            previewHtml = `<img src="${att.data}" class="chip-thumb" onclick="window.openLightbox('${att.data}', '${escapeHtml(att.name)}')">`;
+        } else {
+            previewHtml = `<i data-lucide="file-text" style="width:18px; height:18px; color:var(--accent);"></i>`;
+        }
+
+        chip.innerHTML = `
+            ${previewHtml}
+            <span class="chip-name" style="max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(att.name)}</span>
+            <button type="button" class="chip-remove" onclick="window.removeAppendixAttachment(${idx})" title="Xóa tệp"><i data-lucide="x"></i></button>
+        `;
+        container.appendChild(chip);
+    });
+
+    if (window.lucide) lucide.createIcons();
+};
+
+window.removeAppendixAttachment = function(idx) {
+    if (window.currentAppendixAttachments) {
+        window.currentAppendixAttachments.splice(idx, 1);
+        window.renderAppendixAttachmentChips();
+    }
+};
+
+window.saveLaborContractAppendix = function(e) {
+    e.preventDefault();
+    const c = (state.labor_contracts || []).find(item => item.id === window.currentHistoryContractId);
+    if (!c) return;
+
+    const number = document.getElementById("appxNumber").value.trim();
+    const date = document.getElementById("appxDate").value;
+    const changeType = document.getElementById("appxChangeType").value;
+    const newSalary = parseInt(document.getElementById("appxSalary").value) || c.base_salary;
+    const newJobTitle = document.getElementById("appxJobTitle").value.trim() || c.job_title;
+    const newDepartment = document.getElementById("appxDepartment").value || c.department;
+    const note = document.getElementById("appxNote").value.trim();
+
+    if (!Array.isArray(c.history)) c.history = [];
+
+    const oldSalary = c.base_salary;
+    const oldTitle = c.job_title;
+    const oldDept = c.department;
+
+    const appendixItem = {
+        id: 'appx_' + Date.now(),
+        type: 'AMENDMENT',
+        number,
+        date,
+        change_type: changeType,
+        old_salary: oldSalary,
+        salary: newSalary,
+        old_title: oldTitle,
+        job_title: newJobTitle,
+        old_dept: oldDept,
+        department: newDepartment,
+        note,
+        attachments: [...window.currentAppendixAttachments]
+    };
+
+    c.history.push(appendixItem);
+
+    // Apply updates to current contract
+    c.base_salary = newSalary;
+    if (newJobTitle) c.job_title = newJobTitle;
+    if (newDepartment) c.department = newDepartment;
+
+    // Update state
+    const newContracts = state.labor_contracts.map(item => item.id === c.id ? c : item);
+    state.updateState("labor_contracts", newContracts);
+
+    // Synchronize to employee in salespersons
+    const emp = (state.salespersons || []).find(s => s.id === c.employee_id);
+    if (emp) {
+        if (newDepartment) emp.department = newDepartment;
+        if (newJobTitle) {
+            emp.job_title = newJobTitle;
+            emp.title = newJobTitle;
+        }
+        const newSalespersons = state.salespersons.map(s => s.id === emp.id ? emp : s);
+        state.updateState("salespersons", newSalespersons);
+    }
+
+    // Refresh UI
+    window.toggleAddAppendixForm();
+    window.renderLaborContractTimeline(c);
+    window.renderLaborContractAllAttachments(c);
+    window.renderLaborContracts();
+
+    alert("Đã thêm phụ lục hợp đồng và cập nhật thông tin nhân sự thành công!");
+};
+
+window.deleteLaborContractAppendix = function(appendixId) {
+    if (!confirm("Bạn có chắc chắn muốn xóa phụ lục này khỏi lịch sử hợp đồng?")) return;
+    const c = (state.labor_contracts || []).find(item => item.id === window.currentHistoryContractId);
+    if (!c || !Array.isArray(c.history)) return;
+
+    c.history = c.history.filter(h => h.id !== appendixId);
+
+    const newContracts = state.labor_contracts.map(item => item.id === c.id ? c : item);
+    state.updateState("labor_contracts", newContracts);
+
+    window.renderLaborContractTimeline(c);
+    window.renderLaborContractAllAttachments(c);
+    window.renderLaborContracts();
 };
 
 window.populateSalespersonsDropdowns = function() {
@@ -27655,18 +29240,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Employees Tab Hooks
     document.getElementById("employeeSearchInput")?.addEventListener("input", renderEmployees);
+    document.getElementById("employeeRoleFilter")?.addEventListener("change", renderEmployees);
+    document.getElementById("employeeBranchFilter")?.addEventListener("change", renderEmployees);
+    document.getElementById("employeeDeptFilter")?.addEventListener("change", renderEmployees);
+    document.getElementById("employeeStatusFilter")?.addEventListener("change", renderEmployees);
+
     document.getElementById("btnNewEmployee")?.addEventListener("click", () => {
         document.getElementById("salespersonForm").reset();
         document.getElementById("salespersonIdInput").value = "";
-        document.getElementById("salespersonModalTitle").textContent = "Thêm nhân viên mới";
+        document.getElementById("salespersonModalTitle").innerHTML = `<i data-lucide="user-plus" style="width:20px; height:20px; color:var(--accent);"></i> <span>Thêm nhân viên mới</span>`;
         
         const codeSuffix = String(state.salespersons.length + 1).padStart(3, '0');
         document.getElementById("salespersonCode").value = `SALES-${codeSuffix}`;
         document.getElementById("salespersonRole").value = "SALESPERSON";
+        document.getElementById("salespersonBranch").value = "Hà Nội - Trụ sở chính & Văn phòng";
+        document.getElementById("salespersonDepartment").value = "Phòng Kinh Doanh & Tiếp Thị";
+        document.getElementById("salespersonTitle").value = "Nhân Viên Kinh Doanh (Sales Executive)";
+        document.getElementById("salespersonStatus").value = "ACTIVE";
+        document.getElementById("salespersonJoinDate").value = new Date().toISOString().split('T')[0];
+        document.getElementById("salespersonGender").value = "Nam";
+        document.getElementById("salespersonEducation").value = "Đại học";
         document.getElementById("salespersonCommissionRate").value = 5;
         document.getElementById("salespersonReferralCode").value = `ref${codeSuffix}`;
         
         openModal("salespersonModal");
+        if (window.lucide) lucide.createIcons();
     });
 
     // Collaborators Tab Hooks
@@ -27674,30 +29272,55 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnNewCollaborator")?.addEventListener("click", () => {
         document.getElementById("salespersonForm").reset();
         document.getElementById("salespersonIdInput").value = "";
-        document.getElementById("salespersonModalTitle").textContent = "Thêm cộng tác viên mới";
+        document.getElementById("salespersonModalTitle").innerHTML = `<i data-lucide="user-plus" style="width:20px; height:20px; color:var(--accent);"></i> <span>Thêm cộng tác viên mới</span>`;
         
         const codeSuffix = String(state.salespersons.length + 1).padStart(3, '0');
         document.getElementById("salespersonCode").value = `CTV-${codeSuffix}`;
         document.getElementById("salespersonRole").value = "COLLABORATOR";
+        document.getElementById("salespersonBranch").value = "Hà Nội - Trụ sở chính & Văn phòng";
+        document.getElementById("salespersonDepartment").value = "Phòng Kinh Doanh & Tiếp Thị";
+        document.getElementById("salespersonTitle").value = "Cộng Tác Viên Kinh Doanh";
+        document.getElementById("salespersonStatus").value = "ACTIVE";
+        document.getElementById("salespersonJoinDate").value = new Date().toISOString().split('T')[0];
         document.getElementById("salespersonCommissionRate").value = 10;
         document.getElementById("salespersonReferralCode").value = `ref${codeSuffix}`;
         
         openModal("salespersonModal");
+        if (window.lucide) lucide.createIcons();
     });
 
     document.getElementById("btnCloseSalespersonModal")?.addEventListener("click", () => closeModal("salespersonModal"));
     document.getElementById("btnCancelSalesperson")?.addEventListener("click", () => closeModal("salespersonModal"));
     
-    // Auto prefix code on role change
+    // Auto prefix code & preset values on role change
     document.getElementById("salespersonRole")?.addEventListener("change", function() {
         const role = this.value;
         const codeSuffix = String(state.salespersons.length + 1).padStart(3, '0');
         if (role === "SALESPERSON") {
             document.getElementById("salespersonCode").value = `SALES-${codeSuffix}`;
             document.getElementById("salespersonCommissionRate").value = 5;
+            document.getElementById("salespersonTitle").value = "Nhân Viên Kinh Doanh (Sales Executive)";
+            document.getElementById("salespersonStatus").value = "ACTIVE";
+        } else if (role === "PROBATION") {
+            document.getElementById("salespersonCode").value = `TV-${codeSuffix}`;
+            document.getElementById("salespersonCommissionRate").value = 5;
+            document.getElementById("salespersonTitle").value = "Nhân viên thử việc";
+            document.getElementById("salespersonStatus").value = "PROBATION";
+        } else if (role === "INTERN") {
+            document.getElementById("salespersonCode").value = `TTS-${codeSuffix}`;
+            document.getElementById("salespersonCommissionRate").value = 3;
+            document.getElementById("salespersonTitle").value = "Thực tập sinh (Intern)";
+            document.getElementById("salespersonStatus").value = "INTERN";
+        } else if (role === "PARTTIME") {
+            document.getElementById("salespersonCode").value = `NV-${codeSuffix}`;
+            document.getElementById("salespersonCommissionRate").value = 5;
+            document.getElementById("salespersonTitle").value = "Nhân viên thời vụ";
+            document.getElementById("salespersonStatus").value = "PARTTIME";
         } else {
             document.getElementById("salespersonCode").value = `CTV-${codeSuffix}`;
             document.getElementById("salespersonCommissionRate").value = 10;
+            document.getElementById("salespersonTitle").value = "Cộng Tác Viên Kinh Doanh";
+            document.getElementById("salespersonStatus").value = "ACTIVE";
         }
     });
 
@@ -27731,22 +29354,41 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("salespersonForm")?.addEventListener("submit", function(e) {
         e.preventDefault();
         const id = document.getElementById("salespersonIdInput").value;
-        const code = document.getElementById("salespersonCode").value;
+        const code = document.getElementById("salespersonCode").value.trim();
         const role = document.getElementById("salespersonRole").value;
-        const name = document.getElementById("salespersonName").value;
-        const phone = document.getElementById("salespersonPhone").value;
-        const email = document.getElementById("salespersonEmail").value;
+        const branch = document.getElementById("salespersonBranch").value;
+        const department = document.getElementById("salespersonDepartment").value;
+        const title = document.getElementById("salespersonTitle").value;
+        const status = document.getElementById("salespersonStatus").value;
+        const joinDate = document.getElementById("salespersonJoinDate").value;
+
+        const name = document.getElementById("salespersonName").value.trim();
+        const gender = document.getElementById("salespersonGender").value;
+        const birthday = document.getElementById("salespersonBirthday").value;
+        const idCard = document.getElementById("salespersonIdCard").value.trim();
+        const idCardDate = document.getElementById("salespersonIdCardDate").value;
+        const idCardPlace = document.getElementById("salespersonIdCardPlace").value.trim();
+        const hometown = document.getElementById("salespersonHometown").value.trim();
+        const permanentAddress = document.getElementById("salespersonPermanentAddress").value.trim();
+        const address = document.getElementById("salespersonAddress").value.trim();
+
+        const education = document.getElementById("salespersonEducation").value;
+        const major = document.getElementById("salespersonMajor").value.trim();
+        const school = document.getElementById("salespersonSchool").value.trim();
+
+        const taxCode = document.getElementById("salespersonTaxCode").value.trim();
+        const insuranceCode = document.getElementById("salespersonInsuranceCode").value.trim();
+        const bankAccount = document.getElementById("salespersonBankAccount").value.trim();
+        const bankName = document.getElementById("salespersonBankName").value.trim();
+
+        const phone = document.getElementById("salespersonPhone").value.trim();
+        const email = document.getElementById("salespersonEmail").value.trim();
+        const zalo = document.getElementById("salespersonZalo").value.trim();
+        const facebook = document.getElementById("salespersonFacebook").value.trim();
         const rate = parseFloat(document.getElementById("salespersonCommissionRate").value) || 0;
         const refCode = document.getElementById("salespersonReferralCode").value.trim();
         const refLink = `https://inlachongjsc.web.app/?ref=${refCode}`;
-
-        const title = document.getElementById("salespersonTitle").value;
-        const department = document.getElementById("salespersonDepartment").value.trim();
-        const branch = document.getElementById("salespersonBranch").value.trim();
-        const birthday = document.getElementById("salespersonBirthday").value;
-        const address = document.getElementById("salespersonAddress").value.trim();
-        const zalo = document.getElementById("salespersonZalo").value.trim();
-        const facebook = document.getElementById("salespersonFacebook").value.trim();
+        const notes = document.getElementById("salespersonNotes").value.trim();
 
         const todayStr = new Date().toISOString().split('T')[0];
 
@@ -27754,12 +29396,11 @@ document.addEventListener("DOMContentLoaded", () => {
             // Edit
             const newSales = state.salespersons.map(s => {
                 if (s.id === id) {
-                    // Check for changes to generate automatic history event
                     const history = s.work_history || [];
                     const changed = (s.title !== title) || (s.department !== department) || (s.branch !== branch) || (s.role !== role);
                     
                     if (changed) {
-                        const contractType = role === "SALESPERSON" ? "Chính thức" : "CTV";
+                        const contractType = role === "PROBATION" || status === "PROBATION" ? "Thử việc" : (role === "INTERN" || status === "INTERN" ? "Thực tập sinh" : (role === "PARTTIME" || status === "PARTTIME" ? "Thời vụ" : (role === "COLLABORATOR" ? "CTV" : "Chính thức")));
                         history.push({
                             id: "hist_" + Math.random().toString(36).substring(2, 9),
                             date: todayStr,
@@ -27767,13 +29408,20 @@ document.addEventListener("DOMContentLoaded", () => {
                             title: title,
                             department: department,
                             branch: branch,
-                            note: `Cập nhật bổ nhiệm / thay đổi thông tin từ Hồ sơ nhân sự`
+                            note: `Điều chuyển / Bổ nhiệm vị trí công tác mới`
                         });
                     }
 
                     return { 
                         ...s, code, role, name, phone, email, commission_rate: rate, referral_code: refCode, referral_link: refLink,
-                        title, department, branch, birthday, address, zalo, facebook,
+                        title, department, branch, status, join_date: joinDate,
+                        gender, birthday, id_card: idCard, id_card_date: idCardDate, id_card_place: idCardPlace,
+                        hometown, permanent_address: permanentAddress, address,
+                        education, major, school,
+                        tax_code: taxCode, personal_tax_code: taxCode,
+                        insurance_code: insuranceCode,
+                        bank_account: bankAccount, bank_name: bankName,
+                        zalo, facebook, notes,
                         work_history: history
                     };
                 }
@@ -27783,15 +29431,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             // New
             const newId = "s_" + Math.random().toString(36).substring(2, 9);
-            const contractType = role === "SALESPERSON" ? "Thử việc" : "CTV";
+            const contractType = role === "PROBATION" || status === "PROBATION" ? "Thử việc" : (role === "INTERN" || status === "INTERN" ? "Thực tập sinh" : (role === "PARTTIME" || status === "PARTTIME" ? "Thời vụ" : (role === "COLLABORATOR" ? "CTV" : "Chính thức")));
             const initialHistory = [{
                 id: "hist_" + Math.random().toString(36).substring(2, 9),
-                date: todayStr,
+                date: joinDate || todayStr,
                 contract_type: contractType,
-                title: title || "Nhân viên",
-                department: department || "Kinh doanh",
-                branch: branch || "Trụ sở chính",
-                note: "Khởi tạo hồ sơ nhân sự mới"
+                title: title || (role === "INTERN" ? "Thực tập sinh" : (role === "PROBATION" ? "Nhân viên thử việc" : "Nhân Viên Kinh Doanh")),
+                department: department || "Phòng Kinh Doanh & Tiếp Thị",
+                branch: branch || "Hà Nội - Trụ sở chính & Văn phòng",
+                note: "Khởi tạo hồ sơ nhân sự mới trong hệ thống"
             }];
 
             const newSp = {
@@ -27804,8 +29452,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 commission_rate: rate,
                 referral_code: refCode,
                 referral_link: refLink,
-                status: true,
-                title, department, branch, birthday, address, zalo, facebook,
+                status: status || "ACTIVE",
+                join_date: joinDate || todayStr,
+                title,
+                department,
+                branch,
+                gender,
+                birthday,
+                id_card: idCard,
+                id_card_date: idCardDate,
+                id_card_place: idCardPlace,
+                hometown,
+                permanent_address: permanentAddress,
+                address,
+                education,
+                major,
+                school,
+                tax_code: taxCode,
+                personal_tax_code: taxCode,
+                insurance_code: insuranceCode,
+                bank_account: bankAccount,
+                bank_name: bankName,
+                zalo,
+                facebook,
+                notes,
                 work_history: initialHistory
             };
             const newSales = [...state.salespersons, newSp];
@@ -27820,8 +29490,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Labor Contracts Tab Hooks
     document.getElementById("laborContractSearchInput")?.addEventListener("input", renderLaborContracts);
+    document.getElementById("laborContractDeptFilter")?.addEventListener("change", renderLaborContracts);
+    document.getElementById("laborContractStatusFilter")?.addEventListener("change", renderLaborContracts);
+
     document.getElementById("btnNewLaborContract")?.addEventListener("click", () => {
-        document.getElementById("laborContractForm").reset();
+        const form = document.getElementById("laborContractForm");
+        if (form) form.reset();
         document.getElementById("laborContractIdInput").value = "";
         document.getElementById("laborContractModalTitle").textContent = "Tạo hợp đồng lao động mới";
         
@@ -27831,7 +29505,13 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("laborContractSignDate").value = new Date().toISOString().split('T')[0];
         document.getElementById("laborContractStartDate").value = new Date().toISOString().split('T')[0];
         document.getElementById("laborContractBaseSalary").value = 10000000;
-        
+        document.getElementById("laborContractDepartment").value = "Kinh doanh";
+        document.getElementById("laborContractJobTitle").value = "Nhân viên kinh doanh";
+        document.getElementById("laborContractEducation").value = "Đại học";
+
+        window.currentLaborContractAttachments = [];
+        window.renderLaborContractAttachmentChips();
+
         populateLaborContractEmployeesDropdown();
         openModal("laborContractModal");
     });
@@ -27842,8 +29522,18 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("laborContractForm")?.addEventListener("submit", function(e) {
         e.preventDefault();
         const id = document.getElementById("laborContractIdInput").value;
-        const number = document.getElementById("laborContractNumber").value;
+        const number = document.getElementById("laborContractNumber").value.trim();
         const employeeId = document.getElementById("laborContractEmployeeId").value;
+        const department = document.getElementById("laborContractDepartment").value;
+        const jobTitle = document.getElementById("laborContractJobTitle").value.trim();
+        
+        const birthDate = document.getElementById("laborContractBirthDate").value;
+        const hometown = document.getElementById("laborContractHometown").value.trim();
+        const education = document.getElementById("laborContractEducation").value;
+        const insuranceCode = document.getElementById("laborContractInsuranceCode").value.trim();
+        const personalTaxCode = document.getElementById("laborContractPersonalTaxCode").value.trim();
+        const bankAccount = document.getElementById("laborContractBankAccount").value.trim();
+
         const signDate = document.getElementById("laborContractSignDate").value;
         const startDate = document.getElementById("laborContractStartDate").value;
         const endDate = document.getElementById("laborContractEndDate").value;
@@ -27851,31 +29541,105 @@ document.addEventListener("DOMContentLoaded", () => {
         const type = document.getElementById("laborContractType").value;
         const status = document.getElementById("laborContractStatus").value;
 
+        const attachments = Array.isArray(window.currentLaborContractAttachments) ? [...window.currentLaborContractAttachments] : [];
+
         if (id) {
-            // Edit
+            // Edit existing contract
             const newContracts = state.labor_contracts.map(c => {
                 if (c.id === id) {
-                    return { ...c, contract_number: number, employee_id: employeeId, sign_date: signDate, start_date: startDate, end_date: endDate, base_salary: baseSalary, contract_type: type, status };
+                    const history = Array.isArray(c.history) ? [...c.history] : [{
+                        id: 'orig_' + c.id,
+                        type: 'ORIGINAL',
+                        title: 'Hợp đồng ban đầu',
+                        number: c.contract_number,
+                        date: c.sign_date,
+                        salary: c.base_salary,
+                        job_title: c.job_title || jobTitle,
+                        department: c.department || department,
+                        note: 'Khởi tạo hợp đồng lao động'
+                    }];
+                    return { 
+                        ...c, 
+                        contract_number: number, 
+                        employee_id: employeeId, 
+                        department,
+                        job_title: jobTitle,
+                        birth_date: birthDate,
+                        hometown,
+                        education,
+                        insurance_code: insuranceCode,
+                        personal_tax_code: personalTaxCode,
+                        bank_account: bankAccount,
+                        sign_date: signDate, 
+                        start_date: startDate, 
+                        end_date: endDate, 
+                        base_salary: baseSalary, 
+                        contract_type: type, 
+                        status,
+                        attachments,
+                        history
+                    };
                 }
                 return c;
             });
             state.updateState("labor_contracts", newContracts);
         } else {
-            // New
+            // Create new contract
             const newId = "lc_" + Math.random().toString(36).substring(2, 9);
+            const initialHistory = [{
+                id: 'orig_' + newId,
+                type: 'ORIGINAL',
+                title: 'Hợp đồng ban đầu',
+                number: number,
+                date: signDate,
+                effective_date: startDate,
+                salary: baseSalary,
+                job_title: jobTitle,
+                department: department,
+                note: 'Ký kết hợp đồng lao động ban đầu',
+                attachments: [...attachments]
+            }];
+
             const newContract = {
                 id: newId,
                 contract_number: number,
                 employee_id: employeeId,
+                department,
+                job_title: jobTitle,
+                birth_date: birthDate,
+                hometown,
+                education,
+                insurance_code: insuranceCode,
+                personal_tax_code: personalTaxCode,
+                bank_account: bankAccount,
                 sign_date: signDate,
                 start_date: startDate,
                 end_date: endDate,
                 base_salary: baseSalary,
                 contract_type: type,
-                status
+                status,
+                attachments,
+                history: initialHistory
             };
             const newContracts = [...state.labor_contracts, newContract];
             state.updateState("labor_contracts", newContracts);
+        }
+
+        // Synchronize HR profile back to employee in state.salespersons
+        const emp = (state.salespersons || []).find(s => s.id === employeeId);
+        if (emp) {
+            emp.department = department;
+            emp.job_title = jobTitle;
+            emp.title = jobTitle;
+            emp.birth_date = birthDate;
+            emp.hometown = hometown;
+            emp.education = education;
+            emp.insurance_code = insuranceCode;
+            emp.personal_tax_code = personalTaxCode;
+            emp.bank_account = bankAccount;
+
+            const newSalespersons = state.salespersons.map(s => s.id === emp.id ? emp : s);
+            state.updateState("salespersons", newSalespersons);
         }
 
         closeModal("laborContractModal");
@@ -32143,3 +33907,480 @@ window.saveOnlineOrderTracking = function(e) {
         alert(`Đã cập nhật quy trình đơn hàng ${order.order_number} thành công!`);
     }
 };
+
+
+// ==========================================================================
+// MASTER CATEGORIES MANAGEMENT (QUẢN TRỊ DANH MỤC DÙNG CHUNG)
+// ==========================================================================
+window.currentSelectedCategoryKey = "hr_branch";
+
+window.renderMasterCategories = function() {
+    if (!window.currentSelectedCategoryKey || !state.master_categories[window.currentSelectedCategoryKey]) {
+        window.currentSelectedCategoryKey = "hr_branch";
+    }
+    window.renderMasterCategoryNav();
+    window.selectMasterCategory(window.currentSelectedCategoryKey);
+    window.syncMasterCategoriesToDropdowns();
+};
+
+window.renderMasterCategoryNav = function() {
+    const navContainer = document.getElementById("masterCategoryNavList");
+    if (!navContainer || !state.master_categories) return;
+
+    const moduleMap = {
+        hr: { name: "Nhân sự & Hợp đồng", icon: "users", color: "#3b82f6" },
+        prod: { name: "Sản xuất & Kỹ thuật", icon: "factory", color: "#f59e0b" },
+        sales: { name: "Bán hàng & Vận chuyển", icon: "shopping-cart", color: "#10b981" },
+        fin: { name: "Tài chính & Sổ quỹ", icon: "wallet", color: "#8b5cf6" },
+        crm: { name: "Đối tác & Khách hàng", icon: "building", color: "#ec4899" }
+    };
+
+    const modules = {};
+    let totalCategoriesCount = 0;
+
+    Object.keys(state.master_categories).forEach(catKey => {
+        const cat = state.master_categories[catKey];
+        const mod = cat.module || 'hr';
+        if (!modules[mod]) modules[mod] = [];
+        modules[mod].push(cat);
+        totalCategoriesCount++;
+    });
+
+    const badgeEl = document.getElementById("categoryModuleCountBadge");
+    if (badgeEl) badgeEl.textContent = `${totalCategoriesCount} danh mục`;
+
+    let html = "";
+    Object.keys(moduleMap).forEach(modKey => {
+        const modInfo = moduleMap[modKey];
+        const catList = modules[modKey] || [];
+        if (catList.length === 0) return;
+
+        html += `
+            <div class="category-module-group" style="margin-bottom: 12px; background: var(--bg-primary); border-radius: 8px; padding: 6px; border: 1px solid var(--border-color);">
+                <div class="category-module-title" style="display:flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px; padding: 4px 6px;">
+                    <i data-lucide="${modInfo.icon}" style="width:14px; height:14px; color:${modInfo.color}; flex-shrink:0;"></i>
+                    <span>${modInfo.name}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:3px;">
+        `;
+
+        catList.forEach(cat => {
+            const isSelected = (window.currentSelectedCategoryKey === cat.key);
+            const activeClass = isSelected ? ' active' : '';
+            const activeCount = Array.isArray(cat.items) ? cat.items.filter(i => i.status === 'ACTIVE').length : 0;
+            
+            html += `
+                <button type="button" class="category-nav-btn${activeClass}" onclick="window.selectMasterCategory('${cat.key}')" style="display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; padding:7px 10px; border-radius:6px; font-size:0.83rem; border:none; cursor:pointer; background:${isSelected ? 'var(--accent)' : 'transparent'}; color:${isSelected ? '#ffffff' : 'var(--text-primary)'}; transition:all 0.15s ease;">
+                    <span style="display:flex; align-items:center; gap:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        <i data-lucide="${cat.icon || 'tag'}" style="width:15px; height:15px; flex-shrink:0;"></i>
+                        <span style="font-weight:${isSelected ? '600' : '500'};">${cat.name}</span>
+                    </span>
+                    <span class="badge" style="background:${isSelected ? 'rgba(255,255,255,0.25)' : 'var(--bg-hover)'}; color:${isSelected ? '#ffffff' : 'var(--text-secondary)'}; font-size:0.75rem; border-radius:10px; padding:2px 6px;">${activeCount}</span>
+                </button>
+            `;
+        });
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    navContainer.innerHTML = html;
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.selectMasterCategory = function(catKey) {
+    if (!state.master_categories || !state.master_categories[catKey]) {
+        catKey = Object.keys(state.master_categories)[0] || 'hr_branch';
+    }
+    window.currentSelectedCategoryKey = catKey;
+
+    const cat = state.master_categories[catKey];
+    if (!cat) return;
+
+    // Update Header
+    const nameEl = document.getElementById("currentCategoryName");
+    const descEl = document.getElementById("currentCategoryDesc");
+    const iconEl = document.getElementById("currentCategoryIcon");
+    if (nameEl) nameEl.textContent = cat.name;
+    if (descEl) descEl.textContent = cat.desc;
+    if (iconEl && cat.icon) {
+        iconEl.setAttribute("data-lucide", cat.icon);
+    }
+
+    // Refresh Nav to update active button
+    window.renderMasterCategoryNav();
+
+    // Render Table
+    window.renderCategoryItemsTable();
+};
+
+window.renderCategoryItemsTable = function() {
+    const tbody = document.getElementById("categoryItemsTableBody");
+    if (!tbody) return;
+
+    const catKey = window.currentSelectedCategoryKey || 'hr_branch';
+    const cat = (state.master_categories && state.master_categories[catKey]) ? state.master_categories[catKey] : null;
+
+    if (!cat) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted" style="padding:24px;">Không tìm thấy dữ liệu danh mục</td></tr>`;
+        return;
+    }
+
+    const query = (document.getElementById("categoryItemSearchInput")?.value || "").toLowerCase().trim();
+    const statusFilter = (document.getElementById("categoryItemStatusFilter")?.value || "").trim();
+
+    let items = Array.isArray(cat.items) ? [...cat.items] : [];
+    items.sort((a, b) => (Number(a.order) || 999) - (Number(b.order) || 999));
+
+    const filtered = items.filter(item => {
+        const matchesQuery = !query || 
+            (item.code && item.code.toLowerCase().includes(query)) ||
+            (item.name && item.name.toLowerCase().includes(query)) ||
+            (item.desc && item.desc.toLowerCase().includes(query));
+
+        const matchesStatus = !statusFilter || item.status === statusFilter;
+        return matchesQuery && matchesStatus;
+    });
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 36px 16px;">
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+                        <i data-lucide="inbox" style="width:36px; height:36px; color:var(--text-secondary); opacity:0.5;"></i>
+                        <span style="color:var(--text-secondary); font-size:0.9rem;">Chưa có mục nào trong danh mục này hoặc không khớp kết quả tìm kiếm</span>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="window.openNewCategoryItemModal('${catKey}')" style="margin-top:6px; display:inline-flex; align-items:center; gap:4px;">
+                            <i data-lucide="plus" style="width:14px; height:14px;"></i> Thêm mục mới ngay
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    let rowsHtml = "";
+    filtered.forEach((item, index) => {
+        const isActive = (item.status === 'ACTIVE');
+        const statusBadge = isActive 
+            ? `<span class="badge" style="background:rgba(16, 185, 129, 0.12); color:#10b981; border:1px solid rgba(16, 185, 129, 0.3); font-weight:600; padding:3px 8px; border-radius:12px; cursor:pointer;" onclick="window.toggleCategoryItemStatus('${catKey}', '${item.id}')" title="Nhấp để tạm dừng mục này">Đang dùng</span>`
+            : `<span class="badge" style="background:rgba(239, 68, 68, 0.12); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); font-weight:600; padding:3px 8px; border-radius:12px; cursor:pointer;" onclick="window.toggleCategoryItemStatus('${catKey}', '${item.id}')" title="Nhấp để kích hoạt lại">Tạm dừng</span>`;
+
+        rowsHtml += `
+            <tr style="transition:background 0.15s ease;">
+                <td style="text-align: center; color: var(--text-secondary); font-size: 0.85rem;">${index + 1}</td>
+                <td>
+                    <span style="font-family: monospace; font-size: 0.82rem; font-weight: 700; background: var(--bg-hover); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); color: var(--accent);">
+                        ${item.code || '—'}
+                    </span>
+                </td>
+                <td style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">
+                    ${item.name || ''}
+                </td>
+                <td style="color: var(--text-secondary); font-size: 0.85rem; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.desc || ''}">
+                    ${item.desc || '—'}
+                </td>
+                <td style="text-align: center; font-weight: 600; color: var(--text-primary); font-size: 0.85rem;">
+                    ${item.order || (index + 1)}
+                </td>
+                <td style="text-align: center;">
+                    ${statusBadge}
+                </td>
+                <td style="text-align: center;">
+                    <div style="display: inline-flex; align-items: center; gap: 4px;">
+                        <button type="button" class="btn-action" title="Chỉnh sửa" onclick="window.openEditCategoryItemModal('${catKey}', '${item.id}')" style="background:none; border:none; padding:4px 6px; cursor:pointer; color:var(--text-secondary); border-radius:4px;">
+                            <i data-lucide="edit" style="width:15px; height:15px;"></i>
+                        </button>
+                        <button type="button" class="btn-action" title="Xóa" onclick="window.deleteCategoryItem('${catKey}', '${item.id}')" style="background:none; border:none; padding:4px 6px; cursor:pointer; color:#ef4444; border-radius:4px;">
+                            <i data-lucide="trash-2" style="width:15px; height:15px;"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = rowsHtml;
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.openNewCategoryItemModal = function(catKey) {
+    const key = catKey || window.currentSelectedCategoryKey || 'hr_branch';
+    const form = document.getElementById("categoryItemForm");
+    if (form) form.reset();
+
+    const titleEl = document.getElementById("categoryItemModalTitle");
+    if (titleEl) {
+        titleEl.innerHTML = `<i data-lucide="plus-circle" style="width: 20px; height: 20px; color: var(--accent);"></i><span>Thêm mục danh mục mới</span>`;
+    }
+
+    document.getElementById("categoryItemKeyInput").value = key;
+    document.getElementById("categoryItemIdInput").value = "";
+
+    const keySelect = document.getElementById("categoryItemKeySelect");
+    if (keySelect && state.master_categories) {
+        keySelect.innerHTML = Object.keys(state.master_categories).map(k => {
+            const c = state.master_categories[k];
+            return `<option value="${k}" ${k === key ? 'selected' : ''}>[${c.moduleName}] ${c.name}</option>`;
+        }).join("");
+    }
+
+    const cat = state.master_categories[key];
+    const nextOrder = (cat && Array.isArray(cat.items)) ? cat.items.length + 1 : 1;
+    const orderInput = document.getElementById("categoryItemOrder");
+    if (orderInput) orderInput.value = nextOrder;
+
+    const statusSelect = document.getElementById("categoryItemStatus");
+    if (statusSelect) statusSelect.value = "ACTIVE";
+
+    openModal("categoryItemModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.openEditCategoryItemModal = function(catKey, itemId) {
+    const cat = state.master_categories ? state.master_categories[catKey] : null;
+    if (!cat || !Array.isArray(cat.items)) return;
+
+    const item = cat.items.find(i => i.id === itemId);
+    if (!item) return;
+
+    const titleEl = document.getElementById("categoryItemModalTitle");
+    if (titleEl) {
+        titleEl.innerHTML = `<i data-lucide="edit-3" style="width: 20px; height: 20px; color: var(--accent);"></i><span>Chỉnh sửa: ${item.name}</span>`;
+    }
+
+    document.getElementById("categoryItemKeyInput").value = catKey;
+    document.getElementById("categoryItemIdInput").value = item.id;
+
+    const keySelect = document.getElementById("categoryItemKeySelect");
+    if (keySelect && state.master_categories) {
+        keySelect.innerHTML = Object.keys(state.master_categories).map(k => {
+            const c = state.master_categories[k];
+            return `<option value="${k}" ${k === catKey ? 'selected' : ''}>[${c.moduleName}] ${c.name}</option>`;
+        }).join("");
+        keySelect.value = catKey;
+    }
+
+    document.getElementById("categoryItemCode").value = item.code || "";
+    document.getElementById("categoryItemName").value = item.name || "";
+    document.getElementById("categoryItemDesc").value = item.desc || "";
+    document.getElementById("categoryItemOrder").value = item.order || 1;
+    document.getElementById("categoryItemStatus").value = item.status || "ACTIVE";
+
+    openModal("categoryItemModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.deleteCategoryItem = function(catKey, itemId) {
+    const cat = state.master_categories ? state.master_categories[catKey] : null;
+    if (!cat || !Array.isArray(cat.items)) return;
+
+    const item = cat.items.find(i => i.id === itemId);
+    if (!item) return;
+
+    if (!confirm(`Bạn có chắc chắn muốn xóa mục "${item.name}" khỏi danh mục "${cat.name}"?`)) {
+        return;
+    }
+
+    cat.items = cat.items.filter(i => i.id !== itemId);
+    state.updateState("master_categories", state.master_categories);
+
+    window.syncMasterCategoriesToDropdowns();
+    window.renderMasterCategoryNav();
+    window.renderCategoryItemsTable();
+
+    if (typeof showToast === 'function') {
+        showToast(`Đã xóa mục "${item.name}" thành công!`, "info");
+    }
+};
+
+window.toggleCategoryItemStatus = function(catKey, itemId) {
+    const cat = state.master_categories ? state.master_categories[catKey] : null;
+    if (!cat || !Array.isArray(cat.items)) return;
+
+    const item = cat.items.find(i => i.id === itemId);
+    if (!item) return;
+
+    item.status = (item.status === 'ACTIVE') ? 'INACTIVE' : 'ACTIVE';
+    state.updateState("master_categories", state.master_categories);
+
+    window.syncMasterCategoriesToDropdowns();
+    window.renderMasterCategoryNav();
+    window.renderCategoryItemsTable();
+
+    const statusLabel = (item.status === 'ACTIVE') ? 'Đang dùng' : 'Tạm dừng';
+    if (typeof showToast === 'function') {
+        showToast(`Đã đổi trạng thái sang "${statusLabel}"!`, "success");
+    }
+};
+
+window.handleCategoryItemFormSubmit = function(e) {
+    e.preventDefault();
+    const catKey = document.getElementById("categoryItemKeySelect")?.value || document.getElementById("categoryItemKeyInput")?.value;
+    const itemId = document.getElementById("categoryItemIdInput")?.value;
+    const code = (document.getElementById("categoryItemCode")?.value || "").trim();
+    const name = (document.getElementById("categoryItemName")?.value || "").trim();
+    const desc = (document.getElementById("categoryItemDesc")?.value || "").trim();
+    const order = parseInt(document.getElementById("categoryItemOrder")?.value, 10) || 1;
+    const status = document.getElementById("categoryItemStatus")?.value || "ACTIVE";
+
+    if (!catKey || !state.master_categories || !state.master_categories[catKey]) {
+        alert("Vui lòng chọn danh mục hợp lệ!");
+        return;
+    }
+
+    const cat = state.master_categories[catKey];
+    if (!Array.isArray(cat.items)) cat.items = [];
+
+    if (itemId) {
+        const existing = cat.items.find(i => i.id === itemId);
+        if (existing) {
+            existing.code = code;
+            existing.name = name;
+            existing.desc = desc;
+            existing.order = order;
+            existing.status = status;
+        } else {
+            cat.items.push({ id: itemId, code, name, desc, order, status });
+        }
+    } else {
+        const dup = cat.items.find(i => i.code && i.code.toLowerCase() === code.toLowerCase());
+        if (dup) {
+            if (!confirm(`Mã mục "${code}" đã tồn tại trong danh mục này. Bạn vẫn muốn tiếp tục lưu?`)) {
+                return;
+            }
+        }
+        const newId = "mitem_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
+        cat.items.push({ id: newId, code, name, desc, order, status });
+    }
+
+    state.updateState("master_categories", state.master_categories);
+    closeModal("categoryItemModal");
+
+    window.currentSelectedCategoryKey = catKey;
+    window.syncMasterCategoriesToDropdowns();
+    window.renderMasterCategoryNav();
+    window.renderCategoryItemsTable();
+
+    if (typeof showToast === 'function') {
+        showToast(`Đã lưu mục danh mục "${name}" thành công!`, "success");
+    }
+};
+
+window.syncMasterCategoriesToDropdowns = function() {
+    if (!state.master_categories) return;
+
+    const populateSelect = (selectId, items, placeholder = null, formatFn = null) => {
+        const select = document.getElementById(selectId);
+        if (!select || !Array.isArray(items)) return;
+        const currentVal = select.value;
+
+        let optionsHtml = "";
+        if (placeholder !== null) {
+            optionsHtml += `<option value="">${placeholder}</option>`;
+        }
+
+        const activeItems = items.filter(i => i.status === 'ACTIVE').sort((a, b) => (Number(a.order) || 999) - (Number(b.order) || 999));
+        activeItems.forEach(item => {
+            const label = formatFn ? formatFn(item) : item.name;
+            const val = item.name;
+            optionsHtml += `<option value="${val}">${label}</option>`;
+        });
+
+        select.innerHTML = optionsHtml;
+        if (currentVal && activeItems.some(i => i.name === currentVal || i.code === currentVal)) {
+            select.value = currentVal;
+        }
+    };
+
+    // 1. Branches
+    const branches = state.master_categories.hr_branch?.items || [];
+    populateSelect("salespersonBranch", branches);
+    populateSelect("employeeBranchFilter", branches, "🏢 Tất cả chi nhánh");
+
+    // 2. Departments
+    const depts = state.master_categories.hr_department?.items || [];
+    populateSelect("salespersonDepartment", depts);
+    populateSelect("laborContractDepartment", depts);
+    populateSelect("userFormDepartment", depts, "-- Chọn phòng ban --");
+    populateSelect("employeeDeptFilter", depts, "📁 Tất cả phòng ban");
+    populateSelect("laborContractDeptFilter", depts, "-- Tất cả phòng ban --");
+
+    // 3. Titles / Positions
+    const titles = state.master_categories.hr_title?.items || [];
+    populateSelect("salespersonTitle", titles);
+    populateSelect("laborContractJobTitle", titles);
+
+    // 4. Educations
+    const edus = state.master_categories.hr_education?.items || [];
+    populateSelect("salespersonEducation", edus);
+    populateSelect("laborContractEducation", edus);
+
+    // 5. Labor Contract Types
+    const contractTypes = state.master_categories.hr_contract_type?.items || [];
+    populateSelect("laborContractType", contractTypes);
+
+    // 6. Production UOMs
+    const uoms = state.master_categories.prod_uom?.items || [];
+    populateSelect("materialUom", uoms);
+
+    // 7. Categories select in Modal
+    const keySelect = document.getElementById("categoryItemKeySelect");
+    if (keySelect && state.master_categories) {
+        const currentKey = keySelect.value;
+        keySelect.innerHTML = Object.keys(state.master_categories).map(k => {
+            const c = state.master_categories[k];
+            return `<option value="${k}" ${k === currentKey ? 'selected' : ''}>[${c.moduleName}] ${c.name}</option>`;
+        }).join("");
+        if (currentKey) keySelect.value = currentKey;
+    }
+};
+
+// Bind Category Management Event Listeners on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+    // Initial dropdown synchronization
+    setTimeout(() => {
+        if (typeof window.syncMasterCategoriesToDropdowns === 'function') {
+            window.syncMasterCategoriesToDropdowns();
+        }
+    }, 50);
+
+    // Search and filter in master categories tab
+    document.getElementById("categoryItemSearchInput")?.addEventListener("input", () => {
+        if (typeof window.renderCategoryItemsTable === 'function') window.renderCategoryItemsTable();
+    });
+
+    document.getElementById("categoryItemStatusFilter")?.addEventListener("change", () => {
+        if (typeof window.renderCategoryItemsTable === 'function') window.renderCategoryItemsTable();
+    });
+
+    // Add item button
+    document.getElementById("btnNewCategoryItem")?.addEventListener("click", () => {
+        if (typeof window.openNewCategoryItemModal === 'function') {
+            window.openNewCategoryItemModal(window.currentSelectedCategoryKey);
+        }
+    });
+
+    // Category select in modal change
+    document.getElementById("categoryItemKeySelect")?.addEventListener("change", function() {
+        const selectedKey = this.value;
+        const keyInput = document.getElementById("categoryItemKeyInput");
+        if (keyInput) keyInput.value = selectedKey;
+        const cat = state.master_categories ? state.master_categories[selectedKey] : null;
+        const nextOrder = (cat && Array.isArray(cat.items)) ? cat.items.length + 1 : 1;
+        const orderInput = document.getElementById("categoryItemOrder");
+        if (orderInput && !document.getElementById("categoryItemIdInput")?.value) {
+            orderInput.value = nextOrder;
+        }
+    });
+
+    // Category Item Form Submit
+    document.getElementById("categoryItemForm")?.addEventListener("submit", window.handleCategoryItemFormSubmit);
+});

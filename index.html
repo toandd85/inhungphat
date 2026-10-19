@@ -22,6 +22,13 @@
         })();
     </script>
 
+        <!-- Base URL for SEO Friendly Routing -->
+    <script>
+        if (window.location.protocol !== 'file:') {
+            document.write('<base href="/">');
+        }
+    </script>
+
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -192,19 +199,14 @@
 
             <nav class="sidebar-menu">
 
-                <a href="#dashboard" class="menu-item active" data-tab="dashboard">
-
+                <a href="/tong-quan" class="menu-item active" data-slug="tong-quan" data-tab="dashboard">
                     <i data-lucide="layout-dashboard"></i>
-
                     <span>Tổng quan</span>
-
                 </a>
 
                 <!-- Bán hàng Online Collapsible Root -->
-
                 <div class="menu-group">
-
-                    <button class="menu-item menu-parent" data-tab="online-sales" onclick="toggleSubmenu(this); switchTab('online-sales')" style="display: flex; align-items: center; justify-content: space-between; width: 100%; border: none; background: none; font-family: inherit; cursor: pointer; padding-right: 12px;">
+                    <button class="menu-item menu-parent" data-slug="ban-hang-online" data-tab="online-sales" onclick="toggleSubmenu(this); window.navigateTo('ban-hang-online')" style="display: flex; align-items: center; justify-content: space-between; width: 100%; border: none; background: none; font-family: inherit; cursor: pointer; padding-right: 12px;">
                         <span style="display: flex; align-items: center; gap: 12px;">
                             <i data-lucide="shopping-cart"></i>
                             <span>Bán hàng Online</span>
@@ -216,387 +218,210 @@
                     </button>
 
                     <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 8px; margin-top: 4px;">
-
                         <!-- Đơn hàng collapsible group inside -->
-
                         <div class="menu-group" style="width: 100%;">
-
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); switchTab('online-sales'); switchOnlineSalesSubTab('online-dashboard');" style="padding: 8px 12px; font-size: 0.9rem;">
-
+                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('ban-hang-online');" style="padding: 8px 12px; font-size: 0.9rem;">
                                 <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i>
-
                                 <span>Đơn hàng</span>
-
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
-
                             </button>
-
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-dashboard')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/ban-hang-online" class="menu-item submenu-item" data-slug="ban-hang-online" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="bar-chart-2" style="width: 12px; height: 12px;"></i>
-
                                     <span>Báo cáo & Tổng quan</span>
-
                                 </a>
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-orders'); if (typeof window.openNewOnlineOrderModal === 'function') { window.openNewOnlineOrderModal(); }" style="padding: 6px 12px; font-size: 0.85rem;">
+                                <a href="/dat-hang" class="menu-item submenu-item" data-slug="dat-hang" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="plus" style="width: 12px; height: 12px;"></i>
                                     <span>Đặt hàng</span>
                                 </a>
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-invoices')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/hoa-don" class="menu-item submenu-item" data-slug="hoa-don" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="file-text" style="width: 12px; height: 12px;"></i>
-
                                     <span>Hóa đơn</span>
-
                                 </a>
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-returns')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/tra-hang" class="menu-item submenu-item" data-slug="tra-hang" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i>
-
                                     <span>Trả hàng</span>
-
                                 </a>
-
                             </div>
-
                         </div>
 
                         <!-- Hàng hoá collapsible group inside -->
-
                         <div class="menu-group" style="width: 100%;">
-
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); switchTab('online-sales'); switchOnlineSalesSubTab('online-products');" style="padding: 8px 12px; font-size: 0.9rem;">
-
+                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('hang-hoa');" style="padding: 8px 12px; font-size: 0.9rem;">
                                 <i data-lucide="package" style="width: 16px; height: 16px;"></i>
-
                                 <span>Hàng hóa</span>
-
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
-
                             </button>
-
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-products')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/hang-hoa" class="menu-item submenu-item" data-slug="hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="list" style="width: 12px; height: 12px;"></i>
-
                                     <span>Danh sách hàng hóa</span>
-
                                 </a>
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-prices')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/thiet-lap-gia" class="menu-item submenu-item" data-slug="thiet-lap-gia" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="tags" style="width: 12px; height: 12px;"></i>
-
                                     <span>Thiết lập giá</span>
-
                                 </a>
-
                             </div>
-
                         </div>
 
                         <!-- Quản lý kho collapsible group -->
-
                         <div class="menu-group" style="width: 100%;">
-
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); switchTab('online-sales'); switchOnlineSalesSubTab('online-stock');" style="padding: 8px 12px; font-size: 0.9rem;">
-
+                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('ton-kho');" style="padding: 8px 12px; font-size: 0.9rem;">
                                 <i data-lucide="warehouse" style="width: 16px; height: 16px;"></i>
-
                                 <span>Quản lý kho</span>
-
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
-
                             </button>
-
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-stock')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/ton-kho" class="menu-item submenu-item" data-slug="ton-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="package" style="width: 12px; height: 12px;"></i>
-
                                     <span>Tồn kho hàng hóa</span>
-
                                 </a>
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-inventory-check')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/kiem-ke-kho" class="menu-item submenu-item" data-slug="kiem-ke-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="check-square" style="width: 12px; height: 12px;"></i>
-
                                     <span>Kiểm kê kho hàng</span>
-
                                 </a>
-
-                                <a href="#online-sales" class="menu-item submenu-item" data-tab="online-sales" onclick="switchOnlineSalesSubTab('online-internal-exits')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                                <a href="/xuat-kho-noi-bo" class="menu-item submenu-item" data-slug="xuat-kho-noi-bo" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
-
                                     <span>Xuất kho nội bộ</span>
-
                                 </a>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
 
                 <!-- Sản xuất Collapsible Group -->
-
                 <div class="menu-group">
-
                     <button class="menu-item menu-parent" onclick="toggleSubmenu(this)">
-
                         <i data-lucide="wrench"></i>
-
                         <span>Sản xuất</span>
-
                         <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 14px; height: 14px; transition: transform 0.2s;"></i>
-
                     </button>
-
                     <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                        <a href="#quotes" class="menu-item submenu-item" data-tab="quotes" id="menuItemQuotes" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/tinh-gia" class="menu-item submenu-item" data-slug="tinh-gia" data-tab="quotes" id="menuItemQuotes" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="calculator" style="width: 14px; height: 14px;"></i>
-
                             <span>Tính giá</span>
-
                         </a>
-
-                        <a href="javascript:void(0)" class="menu-item submenu-item" id="menuItemPricingSettings" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.openPricingConfigModal()">
-
+                        <a href="/cau-hinh-gia" class="menu-item submenu-item" data-slug="cau-hinh-gia" id="menuItemPricingSettings" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.navigateTo('cau-hinh-gia')">
                             <i data-lucide="sliders" style="width: 14px; height: 14px;"></i>
-
                             <span>Thiết lập giá</span>
-
                         </a>
-
-                        <a href="#prod-orders" class="menu-item submenu-item" data-tab="prod-orders" id="menuItemProdOrders" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/don-hang-san-xuat" class="menu-item submenu-item" data-slug="don-hang-san-xuat" data-tab="prod-orders" id="menuItemProdOrders" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
-
                             <span>Đơn hàng sản xuất</span>
-
                         </a>
-
-                        <a href="#production" class="menu-item submenu-item" data-tab="production" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/lenh-san-xuat" class="menu-item submenu-item" data-slug="lenh-san-xuat" data-tab="production" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="gauge" style="width: 14px; height: 14px;"></i>
-
                             <span>Lệnh sản xuất</span>
-
                         </a>
-
-                        <a href="#subcontracting" class="menu-item submenu-item" data-tab="subcontracting" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/gia-cong-ngoai" class="menu-item submenu-item" data-slug="gia-cong-ngoai" data-tab="subcontracting" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="users" style="width: 14px; height: 14px;"></i>
-
                             <span>Gia công ngoài</span>
-
                         </a>
-
-                        <a href="#inventory" class="menu-item submenu-item" data-tab="inventory" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/kho-vat-tu" class="menu-item submenu-item" data-slug="kho-vat-tu" data-tab="inventory" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="package" style="width: 14px; height: 14px;"></i>
-
                             <span>Kho vật tư</span>
-
                         </a>
-
                     </div>
-
                 </div>
 
                 <!-- Khách hàng (CRM) collapsible group -->
-
                 <div class="menu-group">
-
                     <button class="menu-item menu-parent" onclick="toggleSubmenu(this)">
-
                         <i data-lucide="book-open"></i>
-
                         <span>Khách hàng (CRM)</span>
-
                         <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 14px; height: 14px; transition: transform 0.2s;"></i>
-
                     </button>
-
                     <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                        <a href="#crm" class="menu-item submenu-item" data-tab="crm" onclick="switchCrmRoleFilter('all')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/doi-tac" class="menu-item submenu-item" data-slug="doi-tac" data-tab="crm" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="users" style="width: 12px; height: 12px;"></i>
-
                             <span>Tất cả đối tác</span>
-
                         </a>
-
-                        <a href="#crm" class="menu-item submenu-item" data-tab="crm" onclick="switchCrmRoleFilter('CUSTOMER')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/khach-hang" class="menu-item submenu-item" data-slug="khach-hang" data-tab="crm" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="user-check" style="width: 12px; height: 12px;"></i>
-
                             <span>Khách hàng</span>
-
                         </a>
-
-                        <a href="#crm" class="menu-item submenu-item" data-tab="crm" onclick="switchCrmRoleFilter('SUPPLIER')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/nha-cung-cap" class="menu-item submenu-item" data-slug="nha-cung-cap" data-tab="crm" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="truck" style="width: 12px; height: 12px;"></i>
-
                             <span>Nhà cung cấp</span>
-
                         </a>
-
-                        <a href="#crm" class="menu-item submenu-item" data-tab="crm" onclick="switchCrmRoleFilter('SUBCONTRACTOR')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/xuong-gia-cong" class="menu-item submenu-item" data-slug="xuong-gia-cong" data-tab="crm" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="factory" style="width: 12px; height: 12px;"></i>
-
                             <span>Xưởng gia công</span>
-
                         </a>
-
-                        <a href="#crm-care" class="menu-item submenu-item" data-tab="crm-care" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/nhat-ky-cham-soc" class="menu-item submenu-item" data-slug="nhat-ky-cham-soc" data-tab="crm-care" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="notebook-tabs" style="width: 12px; height: 12px;"></i>
-
                             <span>Nhật ký Chăm sóc</span>
-
                         </a>
-
-                        <a href="#contracts" class="menu-item submenu-item" data-tab="contracts" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/hop-dong-kinh-doanh" class="menu-item submenu-item" data-slug="hop-dong-kinh-doanh" data-tab="contracts" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="file-signature" style="width: 12px; height: 12px;"></i>
-
                             <span>Hợp đồng kinh doanh</span>
-
                         </a>
-
                     </div>
-
                 </div>
 
                 <!-- Quản lý nhân sự collapsible group -->
-
                 <div class="menu-group">
-
                     <button class="menu-item menu-parent" onclick="toggleSubmenu(this)">
-
                         <i data-lucide="shield-check"></i>
-
                         <span>Quản lý nhân sự</span>
-
                         <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 14px; height: 14px; transition: transform 0.2s;"></i>
-
                     </button>
-
                     <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                        <a href="#employees" class="menu-item submenu-item" data-tab="employees" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/nhan-vien" class="menu-item submenu-item" data-slug="nhan-vien" data-tab="employees" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="users" style="width: 12px; height: 12px;"></i>
-
                             <span>Nhân viên</span>
-
                         </a>
-
-                        <a href="#collaborators" class="menu-item submenu-item" data-tab="collaborators" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/cong-tac-vien" class="menu-item submenu-item" data-slug="cong-tac-vien" data-tab="collaborators" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="user-plus" style="width: 12px; height: 12px;"></i>
-
                             <span>Cộng tác viên</span>
-
                         </a>
-
-                        <a href="#labor-contracts" class="menu-item submenu-item" data-tab="labor-contracts" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/hop-dong-lao-dong" class="menu-item submenu-item" data-slug="hop-dong-lao-dong" data-tab="labor-contracts" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="file-text" style="width: 12px; height: 12px;"></i>
-
                             <span>Hợp đồng lao động</span>
-
                         </a>
-
                     </div>
-
                 </div>
 
-                <a href="#chat" class="menu-item" data-tab="chat">
-
+                <a href="/chat-da-kenh" class="menu-item" data-slug="chat-da-kenh" data-tab="chat">
                     <i data-lucide="message-square"></i>
-
                     <span>Chat đa kênh</span>
-
                 </a>
 
                 <!-- Thu chi & Tài chính Collapsible Group with sub-menu items -->
-
                 <div class="menu-group">
-
-                    <button class="menu-item menu-parent" onclick="toggleSubmenu(this); switchTab('finance')">
-
+                    <button class="menu-item menu-parent" onclick="toggleSubmenu(this); window.navigateTo('thu-chi-noi-bo')">
                         <i data-lucide="wallet"></i>
-
                         <span>Thu chi & Tài chính</span>
-
                         <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 14px; height: 14px; transition: transform 0.2s;"></i>
-
                     </button>
-
                     <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-
-                        <a href="#finance" class="menu-item submenu-item" data-tab="finance" onclick="switchFinanceSubTab('customer-debt')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/cong-no-khach-hang" class="menu-item submenu-item" data-slug="cong-no-khach-hang" data-tab="finance" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="users" style="width: 12px; height: 12px;"></i>
-
                             <span>Công nợ khách hàng</span>
-
                         </a>
-
-                        <a href="#finance" class="menu-item submenu-item" data-tab="finance" onclick="switchFinanceSubTab('supplier-debt')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/cong-no-nha-cung-cap" class="menu-item submenu-item" data-slug="cong-no-nha-cung-cap" data-tab="finance" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="truck" style="width: 12px; height: 12px;"></i>
-
                             <span>Công nợ nhà cung cấp</span>
-
                         </a>
-
-                        <a href="#finance" class="menu-item submenu-item" data-tab="finance" onclick="switchFinanceSubTab('subcontractor-debt')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/cong-no-xuong-gia-cong" class="menu-item submenu-item" data-slug="cong-no-xuong-gia-cong" data-tab="finance" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="factory" style="width: 12px; height: 12px;"></i>
-
                             <span>Công nợ Xưởng gia công</span>
-
                         </a>
-
-                        <a href="#finance" class="menu-item submenu-item" data-tab="finance" onclick="switchFinanceSubTab('sales-commission')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/hoa-hong-nhan-vien" class="menu-item submenu-item" data-slug="hoa-hong-nhan-vien" data-tab="finance" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="award" style="width: 12px; height: 12px;"></i>
-
                             <span>Hoa hồng nhân viên/CTV</span>
-
                         </a>
-
-                        <a href="#finance" class="menu-item submenu-item" data-tab="finance" onclick="switchFinanceSubTab('internal-finance')" style="padding: 6px 12px; font-size: 0.85rem;">
-
+                        <a href="/thu-chi-noi-bo" class="menu-item submenu-item" data-slug="thu-chi-noi-bo" data-tab="finance" style="padding: 6px 12px; font-size: 0.85rem;">
                             <i data-lucide="landmark" style="width: 12px; height: 12px;"></i>
-
                             <span>Thu chi nội bộ</span>
-
                         </a>
-
                     </div>
-
                 </div>
+
+                <a href="/danh-muc-dung-chung" class="menu-item" data-slug="danh-muc-dung-chung" data-tab="categories">
+                    <i data-lucide="layers"></i>
+                    <span>Danh mục dùng chung</span>
+                </a>
 
             </nav>
 
@@ -1058,6 +883,15 @@
                             <div class="hub-info">
                                 <h3>Cấu hình Giá & Chiết khấu</h3>
                                 <p>Cấu hình mốc số lượng sản xuất, hệ số lợi nhuận & chiết khấu sỉ Online</p>
+                            </div>
+                        </div>
+                        <div class="hub-card" onclick="switchTab('categories')">
+                            <div class="hub-icon gradient-3">
+                                <i data-lucide="layers"></i>
+                            </div>
+                            <div class="hub-info">
+                                <h3>Danh mục dùng chung</h3>
+                                <p>Cấu hình danh mục dùng chung của từng module quản lý</p>
                             </div>
                         </div>
                     </div>
@@ -3686,23 +3520,99 @@
                         </button>
                     </div>
 
-                    <div class="actions-bar">
+                    <div class="actions-bar" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">
 
-                        <div class="search-box">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex: 1; min-width: 300px;">
 
-                            <i data-lucide="search"></i>
+                            <div class="search-box" style="flex: 1; min-width: 220px;">
 
-                            <input type="text" placeholder="Tìm kiếm nhân viên..." id="employeeSearchInput">
+                                <i data-lucide="search"></i>
+
+                                <input type="text" placeholder="Tìm kiếm theo Tên, Mã NV, SĐT, Email, Chức vụ..." id="employeeSearchInput">
+
+                            </div>
+
+                            <select class="form-select" id="employeeRoleFilter" style="width: auto; min-width: 165px;">
+
+                                <option value="">👥 Tất cả loại nhân sự</option>
+
+                                <option value="SALESPERSON">Nhân viên chính thức</option>
+
+                                <option value="PROBATION">Nhân viên thử việc</option>
+
+                                <option value="INTERN">Thực tập sinh</option>
+
+                                <option value="PARTTIME">Thời vụ / Bán thời gian</option>
+
+                            </select>
+
+                            <select class="form-select" id="employeeBranchFilter" style="width: auto; min-width: 170px;">
+
+                                <option value="">🏢 Tất cả chi nhánh</option>
+
+                                <option value="Hà Nội - Trụ sở chính & Văn phòng">Hà Nội - Trụ sở chính</option>
+
+                                <option value="Xưởng In & Sản xuất Hà Nội">Xưởng In Hà Nội</option>
+
+                                <option value="Chi nhánh Miền Nam (TP. Hồ Chí Minh)">Chi nhánh Miền Nam (TP.HCM)</option>
+
+                                <option value="Chi nhánh Miền Trung (Đà Nẵng)">Chi nhánh Đà Nẵng</option>
+
+                                <option value="Kho vận & Trung chuyển Bắc Ninh">Kho vận Bắc Ninh</option>
+
+                            </select>
+
+                            <select class="form-select" id="employeeDeptFilter" style="width: auto; min-width: 170px;">
+
+                                <option value="">📁 Tất cả phòng ban</option>
+
+                                <option value="Ban Giám Đốc">Ban Giám Đốc</option>
+
+                                <option value="Phòng Kinh Doanh & Tiếp Thị">Kinh Doanh & Tiếp Thị</option>
+
+                                <option value="Phòng Kỹ Thuật & Thiết Kế">Kỹ Thuật & Thiết Kế</option>
+
+                                <option value="Phòng Kế Toán - Tài Chính">Kế Toán - Tài Chính</option>
+
+                                <option value="Phân Xưởng In Offset & Kỹ Thuật Số">Phân Xưởng In Offset</option>
+
+                                <option value="Phân Xưởng Gia Công & Thành Phẩm">Phân Xưởng Gia Công</option>
+
+                                <option value="Phòng Quản Lý Chất Lượng (QA/QC)">Chất Lượng (QA/QC)</option>
+
+                                <option value="Phòng Kho Vận & Điều Vận">Kho Vận & Điều Vận</option>
+
+                                <option value="Phòng Hành Chính - Nhân Sự">Hành Chính - Nhân Sự</option>
+
+                            </select>
+
+                            <select class="form-select" id="employeeStatusFilter" style="width: auto; min-width: 150px;">
+
+                                <option value="">📌 Tất cả trạng thái</option>
+
+                                <option value="ACTIVE">Đang làm việc</option>
+
+                                <option value="PROBATION">Thử việc</option>
+
+                                <option value="INTERN">Thực tập sinh</option>
+
+                                <option value="PARTTIME">Thời vụ / Bán thời gian</option>
+
+                                <option value="ON_LEAVE">Nghỉ phép / Tạm hoãn</option>
+
+                                <option value="RESIGNED">Đã thôi việc</option>
+
+                            </select>
 
                         </div>
 
                         <div class="filter-actions">
 
-                            <button class="btn btn-primary" id="btnNewEmployee">
+                            <button class="btn btn-primary" id="btnNewEmployee" style="display: inline-flex; align-items: center; gap: 8px;">
 
                                 <i data-lucide="plus"></i>
 
-                                <span>Thêm nhân viên</span>
+                                <span>Thêm nhân viên mới</span>
 
                             </button>
 
@@ -3720,19 +3630,23 @@
 
                                     <tr>
 
-                                        <th>Mã số</th>
+                                        <th>Mã NV</th>
 
-                                        <th>Họ và tên</th>
+                                        <th>Nhân viên & Chức vụ</th>
 
-                                        <th>Số điện thoại</th>
+                                        <th>Chi nhánh</th>
 
-                                        <th>Email</th>
+                                        <th>Phòng ban</th>
 
-                                        <th>Tỷ lệ hoa hồng (%)</th>
+                                        <th>Liên hệ</th>
 
-                                        <th>Mã giới thiệu</th>
+                                        <th>Quê quán & Nơi ở</th>
 
-                                        <th>Link giới thiệu</th>
+                                        <th>Trình độ</th>
+
+                                        <th>Trạng thái</th>
+
+                                        <th>Hoa hồng</th>
 
                                         <th>Thao tác</th>
 
@@ -3844,28 +3758,34 @@
                         </button>
                     </div>
 
-                    <div class="actions-bar">
-
-                        <div class="search-box">
-
-                            <i data-lucide="search"></i>
-
-                            <input type="text" placeholder="Tìm kiếm hợp đồng lao động..." id="laborContractSearchInput">
-
+                    <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+                        <div style="display:flex; align-items:center; gap:10px; flex-grow:1; flex-wrap:wrap;">
+                            <div class="search-box" style="min-width:240px; margin:0;">
+                                <i data-lucide="search"></i>
+                                <input type="text" placeholder="Tìm số HĐ, nhân viên, chức vụ, quê quán..." id="laborContractSearchInput">
+                            </div>
+                            <select class="form-select" id="laborContractDeptFilter" onchange="renderLaborContracts()" style="width:auto; height:38px; font-size:0.85rem; font-weight:600; color:var(--accent);">
+                                <option value="">-- Tất cả phòng ban --</option>
+                                <option value="Ban Giám Đốc">Ban Giám Đốc</option>
+                                <option value="Kinh doanh">Phòng Kinh Doanh (Sales)</option>
+                                <option value="Kỹ thuật & Thiết kế">Phòng Kỹ Thuật & Thiết Kế</option>
+                                <option value="Kế toán - Tài chính">Phòng Kế Toán - Tài Chính</option>
+                                <option value="Xưởng In & Sản Xuất">Xưởng In & Sản Xuất</option>
+                                <option value="Kho & Vận chuyển">Bộ Phận Kho & Vận Chuyển</option>
+                            </select>
+                            <select class="form-select" id="laborContractStatusFilter" onchange="renderLaborContracts()" style="width:auto; height:38px; font-size:0.85rem;">
+                                <option value="">-- Tất cả trạng thái --</option>
+                                <option value="ACTIVE">Đang hiệu lực</option>
+                                <option value="EXPIRED">Đã hết hạn</option>
+                                <option value="TERMINATED">Đã chấm dứt</option>
+                            </select>
                         </div>
-
                         <div class="filter-actions">
-
                             <button class="btn btn-primary" id="btnNewLaborContract">
-
                                 <i data-lucide="plus"></i>
-
                                 <span>Tạo HĐ lao động</span>
-
                             </button>
-
                         </div>
-
                     </div>
 
                     <div class="card mt-4">
@@ -3875,29 +3795,18 @@
                             <table class="table" id="laborContractsTable">
 
                                 <thead>
-
                                     <tr>
-
                                         <th>Số HĐLĐ</th>
-
-                                        <th>Nhân viên</th>
-
-                                        <th>Ngày ký</th>
-
-                                        <th>Ngày bắt đầu</th>
-
+                                        <th>Nhân viên & Chức vụ</th>
+                                        <th>Phòng ban</th>
+                                        <th>Ngày ký & Bắt đầu</th>
                                         <th>Ngày kết thúc</th>
-
                                         <th>Lương cơ bản</th>
-
-                                        <th>Loại hợp đồng</th>
-
+                                        <th>Loại HĐ</th>
+                                        <th>Lịch sử & Phụ lục</th>
                                         <th>Trạng thái</th>
-
                                         <th>Thao tác</th>
-
                                     </tr>
-
                                 </thead>
 
                                 <tbody>
@@ -4579,6 +4488,89 @@
 
                 </section>
 
+                <!-- 8. MASTER CATEGORIES TAB (QUẢN TRỊ DANH MỤC DÙNG CHUNG) -->
+                <section id="categoriesTab" class="tab-pane">
+                    <div class="mobile-back-header" style="margin-bottom: 16px; padding: 12px 16px 0 16px;">
+                        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px 0; border-left: 4px solid var(--accent); padding-left: 8px; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="layers" style="width:20px; height:20px; color:var(--accent);"></i>
+                            <span>Quản trị danh mục dùng chung</span>
+                        </h2>
+                        <button class="btn btn-secondary" onclick="window.goBackToHub('categories')" style="display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="arrow-left" style="width:16px; height:16px;"></i>
+                            <span>Quay lại Menu</span>
+                        </button>
+                    </div>
+
+                    <div class="categories-layout">
+                        <!-- Left Navigation: Modules & Master Categories List -->
+                        <div class="card" style="padding: 14px; max-height: calc(100vh - 140px); overflow-y: auto;">
+                            <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 12px; padding: 4px 6px; display:flex; align-items:center; justify-content:space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                                <span>Phân loại theo Module</span>
+                                <span class="badge" id="categoryModuleCountBadge" style="background:var(--accent); color:#fff; font-size:0.75rem;">17 danh mục</span>
+                            </div>
+                            
+                            <div id="masterCategoryNavList" style="display: flex; flex-direction: column; gap: 10px;">
+                                <!-- Dynamic Module Category Groups rendered by renderMasterCategoryNav() -->
+                            </div>
+                        </div>
+
+                        <!-- Right Content: Current Category Items Management Table -->
+                        <div class="card" style="padding: 20px;">
+                            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+                                <div>
+                                    <h3 id="currentCategoryTitle" style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+                                        <i id="currentCategoryIcon" data-lucide="building-2" style="width: 22px; height: 22px; color: var(--accent);"></i>
+                                        <span id="currentCategoryName">Chi nhánh làm việc</span>
+                                    </h3>
+                                    <p id="currentCategoryDesc" style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Các văn phòng, xưởng sản xuất, chi nhánh của công ty</p>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <button class="btn btn-primary" id="btnNewCategoryItem" style="display: inline-flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="plus"></i>
+                                        <span>Thêm mục mới</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Search & Filter Controls -->
+                            <div class="actions-bar" style="margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">
+                                <div class="search-box" style="flex: 1; min-width: 240px;">
+                                    <i data-lucide="search"></i>
+                                    <input type="text" placeholder="Tìm kiếm theo mã, tên hoặc ghi chú..." id="categoryItemSearchInput">
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <select class="form-select" id="categoryItemStatusFilter" style="width: auto; min-width: 150px;">
+                                        <option value="">Tất cả trạng thái</option>
+                                        <option value="ACTIVE">Đang kích hoạt</option>
+                                        <option value="INACTIVE">Tạm dừng (Ẩn)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Items Table -->
+                            <div class="table-responsive">
+                                <table class="table" id="categoryItemsTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50px;">STT</th>
+                                            <th style="width: 130px;">Mã mục (Code)</th>
+                                            <th>Tên danh mục hiển thị</th>
+                                            <th>Ghi chú / Diễn giải</th>
+                                            <th style="width: 80px; text-align: center;">Thứ tự</th>
+                                            <th style="width: 130px; text-align: center;">Trạng thái</th>
+                                            <th style="width: 110px; text-align: center;">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categoryItemsTableBody">
+                                        <!-- Rendered dynamically by renderCategoryItemsTable() -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
 
         </main>
@@ -4590,6 +4582,69 @@
     <!-- MODALS SECTION -->
 
     <!-- ========================================== -->
+
+    <!-- Modal: Add / Edit Master Category Item -->
+    <div class="modal" id="categoryItemModal">
+        <div class="modal-dialog" style="max-width: 520px;">
+            <div class="modal-content" style="border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
+                    <h2 id="categoryItemModalTitle" style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="plus-circle" style="width: 20px; height: 20px; color: var(--accent);"></i>
+                        <span>Thêm mục danh mục mới</span>
+                    </h2>
+                    <button class="btn-close" type="button" onclick="closeModal('categoryItemModal')" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-secondary);"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <form id="categoryItemForm">
+                        <input type="hidden" id="categoryItemKeyInput">
+                        <input type="hidden" id="categoryItemIdInput">
+                        
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label for="categoryItemKeySelect" style="font-weight: 600; font-size: 0.85rem;">Thuộc danh mục *</label>
+                            <select class="form-select" id="categoryItemKeySelect" required>
+                                <!-- Categories populated dynamically -->
+                            </select>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-bottom: 14px;">
+                            <div class="form-group">
+                                <label for="categoryItemCode" style="font-weight: 600; font-size: 0.85rem;">Mã mục (Code) *</label>
+                                <input type="text" class="form-input" id="categoryItemCode" placeholder="Ví dụ: HN-HQ" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categoryItemName" style="font-weight: 600; font-size: 0.85rem;">Tên mục hiển thị *</label>
+                                <input type="text" class="form-input" id="categoryItemName" placeholder="Tên mục danh mục..." required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label for="categoryItemDesc" style="font-weight: 600; font-size: 0.85rem;">Ghi chú / Diễn giải chi tiết</label>
+                            <textarea class="form-input" id="categoryItemDesc" rows="2" placeholder="Ghi chú thêm về mục danh mục này..."></textarea>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+                            <div class="form-group">
+                                <label for="categoryItemOrder" style="font-weight: 600; font-size: 0.85rem;">Thứ tự hiển thị</label>
+                                <input type="number" class="form-input" id="categoryItemOrder" value="1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="categoryItemStatus" style="font-weight: 600; font-size: 0.85rem;">Trạng thái áp dụng *</label>
+                                <select class="form-select" id="categoryItemStatus" required>
+                                    <option value="ACTIVE">Kích hoạt (Đang dùng)</option>
+                                    <option value="INACTIVE">Tạm dừng (Ẩn)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('categoryItemModal')">Hủy bỏ</button>
+                            <button type="submit" class="btn btn-primary" style="flex-grow: 1; font-weight: 600;">Lưu mục danh mục</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal 1: Smart Quote & New Order Modal -->
 
@@ -7483,177 +7538,481 @@
 
     </div>
 
-    <!-- Modal: Create / Edit Salesperson/CTV -->
+    <!-- Modal: Create / Edit Salesperson/CTV / Employee Profile -->
 
     <div class="modal" id="salespersonModal">
 
-        <div class="modal-dialog" style="max-width: 500px;">
+        <div class="modal-dialog" style="max-width: 860px; max-height: 90vh; overflow-y: auto;">
 
-            <div class="modal-content">
+            <div class="modal-content" style="border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
 
-                <div class="modal-header">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
 
-                    <h2 id="salespersonModalTitle">Thêm nhân viên kinh doanh / CTV mới</h2>
+                    <h2 id="salespersonModalTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
 
-                    <button class="btn-close" id="btnCloseSalespersonModal"><i data-lucide="x"></i></button>
+                        <i data-lucide="user-plus" style="width: 22px; height: 22px; color: var(--accent);"></i>
+
+                        <span>Thêm nhân viên mới</span>
+
+                    </h2>
+
+                    <button class="btn-close" id="btnCloseSalespersonModal" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-secondary);"><i data-lucide="x"></i></button>
 
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 20px;">
 
                     <form id="salespersonForm">
 
                         <input type="hidden" id="salespersonIdInput">
 
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <!-- SECTION 1: CƠ CẤU TỔ CHỨC & VỊ TRÍ CÔNG TÁC (CẤU HÌNH SẴN) -->
 
-                            <div class="form-group">
+                        <div style="background: var(--bg-primary); padding: 14px 16px; border-radius: 8px; border-left: 4px solid var(--accent); margin-bottom: 16px;">
 
-                                <label for="salespersonCode">Mã số</label>
+                            <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
 
-                                <input type="text" class="form-input" id="salespersonCode" placeholder="SALES-XXX hoặc CTV-XXX" required>
+                                <i data-lucide="building-2" style="width: 16px; height: 16px; color: var(--accent);"></i> 1. Cơ cấu tổ chức & Vị trí công tác
 
-                            </div>
+                            </h3>
 
-                            <div class="form-group">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
 
-                                <label for="salespersonRole">Vai trò</label>
+                                <div class="form-group">
 
-                                <select class="form-select" id="salespersonRole" required>
+                                    <label for="salespersonCode" style="font-size: 0.82rem; font-weight: 600;">Mã nhân viên / CTV *</label>
 
-                                    <option value="SALESPERSON">Nhân viên kinh doanh</option>
+                                    <input type="text" class="form-input" id="salespersonCode" placeholder="SALES-001 hoặc CTV-001" required>
 
-                                    <option value="COLLABORATOR">Cộng tác viên (CTV)</option>
+                                </div>
 
-                                </select>
+                                <div class="form-group">
+
+                                    <label for="salespersonRole" style="font-size: 0.82rem; font-weight: 600;">Phân loại nhân sự *</label>
+
+                                    <select class="form-select" id="salespersonRole" required>
+
+                                        <option value="SALESPERSON">Nhân viên chính thức</option>
+
+                                        <option value="PROBATION">Nhân viên thử việc</option>
+
+                                        <option value="INTERN">Thực tập sinh</option>
+
+                                        <option value="COLLABORATOR">Cộng tác viên (CTV)</option>
+
+                                        <option value="PARTTIME">Thời vụ / Bán thời gian</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonBranch" style="font-size: 0.82rem; font-weight: 600;">Chi nhánh làm việc *</label>
+
+                                    <select class="form-select" id="salespersonBranch" required>
+
+                                        <option value="Hà Nội - Trụ sở chính & Văn phòng">Hà Nội - Trụ sở chính & Văn phòng</option>
+
+                                        <option value="Xưởng In & Sản xuất Hà Nội">Xưởng In & Sản xuất Hà Nội</option>
+
+                                        <option value="Chi nhánh Miền Nam (TP. Hồ Chí Minh)">Chi nhánh Miền Nam (TP. Hồ Chí Minh)</option>
+
+                                        <option value="Chi nhánh Miền Trung (Đà Nẵng)">Chi nhánh Miền Trung (Đà Nẵng)</option>
+
+                                        <option value="Kho vận & Trung chuyển Bắc Ninh">Kho vận & Trung chuyển Bắc Ninh</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonDepartment" style="font-size: 0.82rem; font-weight: 600;">Phòng ban trực thuộc *</label>
+
+                                    <select class="form-select" id="salespersonDepartment" required>
+
+                                        <option value="Phòng Kinh Doanh & Tiếp Thị">Phòng Kinh Doanh & Tiếp Thị</option>
+
+                                        <option value="Phòng Kỹ Thuật & Thiết Kế">Phòng Kỹ Thuật & Thiết Kế</option>
+
+                                        <option value="Ban Giám Đốc">Ban Giám Đốc</option>
+
+                                        <option value="Phòng Kế Toán - Tài Chính">Phòng Kế Toán - Tài Chính</option>
+
+                                        <option value="Phân Xưởng In Offset & Kỹ Thuật Số">Phân Xưởng In Offset & Kỹ Thuật Số</option>
+
+                                        <option value="Phân Xưởng Gia Công & Thành Phẩm">Phân Xưởng Gia Công & Thành Phẩm</option>
+
+                                        <option value="Phòng Quản Lý Chất Lượng (QA/QC)">Phòng Quản Lý Chất Lượng (QA/QC)</option>
+
+                                        <option value="Phòng Kho Vận & Điều Vận">Phòng Kho Vận & Điều Vận</option>
+
+                                        <option value="Phòng Hành Chính - Nhân Sự">Phòng Hành Chính - Nhân Sự</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonTitle" style="font-size: 0.82rem; font-weight: 600;">Chức vụ / Vị trí đảm nhiệm *</label>
+
+                                    <select class="form-select" id="salespersonTitle" required>
+
+                                        <option value="Nhân Viên Kinh Doanh (Sales Executive)">Nhân Viên Kinh Doanh (Sales Executive)</option>
+
+                                        <option value="Nhân viên thử việc">Nhân viên thử việc</option>
+
+                                        <option value="Thực tập sinh (Intern)">Thực tập sinh (Intern)</option>
+
+                                        <option value="Trưởng Phòng Kinh Doanh">Trưởng Phòng Kinh Doanh</option>
+
+                                        <option value="Phó Phòng Kinh Doanh">Phó Phòng Kinh Doanh</option>
+
+                                        <option value="Trưởng Nhóm Bán Hàng Online">Trưởng Nhóm Bán Hàng Online</option>
+
+                                        <option value="Chuyên Viên Thiết Kế Đồ Họa">Chuyên Viên Thiết Kế Đồ Họa</option>
+
+                                        <option value="Trưởng Phòng Kỹ Thuật & Thiết Kế">Trưởng Phòng Kỹ Thuật & Thiết Kế</option>
+
+                                        <option value="Kỹ Thuật Viên / Thợ Máy In Offset">Kỹ Thuật Viên / Thợ Máy In Offset</option>
+
+                                        <option value="Thợ Gia Công & Thành Phẩm">Thợ Gia Công & Thành Phẩm</option>
+
+                                        <option value="Quản Đốc / Trưởng Ca Phân Xưởng">Quản Đốc / Trưởng Ca Phân Xưởng</option>
+
+                                        <option value="Kế Toán Tổng Hợp & Công Nợ">Kế Toán Tổng Hợp & Công Nợ</option>
+
+                                        <option value="Kế Toán Thanh Toán & Kho">Kế Toán Thanh Toán & Kho</option>
+
+                                        <option value="Kế Toán Trưởng">Kế Toán Trưởng</option>
+
+                                        <option value="Thủ Kho">Thủ Kho</option>
+
+                                        <option value="Nhân Viên Giao Nhận & Vận Chuyển">Nhân Viên Giao Nhận & Vận Chuyển</option>
+
+                                        <option value="Chuyên Viên Hành Chính - Nhân Sự">Chuyên Viên Hành Chính - Nhân Sự</option>
+
+                                        <option value="Cộng Tác Viên Kinh Doanh">Cộng Tác Viên Kinh Doanh</option>
+
+                                        <option value="Phó Tổng Giám Đốc">Phó Tổng Giám Đốc (PTGĐ)</option>
+
+                                        <option value="Tổng Giám Đốc / Giám Đốc">Tổng Giám Đốc / Giám Đốc</option>
+
+                                        <option value="Khác">Khác</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonStatus" style="font-size: 0.82rem; font-weight: 600;">Trạng thái công tác *</label>
+
+                                    <select class="form-select" id="salespersonStatus" required>
+
+                                        <option value="ACTIVE">Đang làm việc (Chính thức)</option>
+
+                                        <option value="PROBATION">Thử việc</option>
+
+                                        <option value="INTERN">Thực tập sinh</option>
+
+                                        <option value="PARTTIME">Thời vụ / Bán thời gian</option>
+
+                                        <option value="ON_LEAVE">Nghỉ phép / Tạm hoãn</option>
+
+                                        <option value="RESIGNED">Đã thôi việc</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonJoinDate" style="font-size: 0.82rem; font-weight: 600;">Ngày bắt đầu làm việc</label>
+
+                                    <input type="date" class="form-input" id="salespersonJoinDate">
+
+                                </div>
 
                             </div>
 
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 12px;">
+                        <!-- SECTION 2: THÔNG TIN NHÂN THÂN & CƯ TRÚ -->
 
-                            <label for="salespersonName">Họ và tên nhân viên/CTV *</label>
+                        <div style="background: var(--bg-primary); padding: 14px 16px; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 16px;">
 
-                            <input type="text" class="form-input" id="salespersonName" placeholder="Ví dụ: Nguyễn Văn A" required>
+                            <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
 
-                        </div>
+                                <i data-lucide="user" style="width: 16px; height: 16px; color: #3b82f6;"></i> 2. Thông tin nhân thân & Địa chỉ cư trú
 
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            </h3>
 
-                            <div class="form-group">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
 
-                                <label for="salespersonPhone">Số điện thoại *</label>
+                                <div class="form-group">
 
-                                <input type="text" class="form-input" id="salespersonPhone" placeholder="Ví dụ: 0987654321" required>
+                                    <label for="salespersonName" style="font-size: 0.82rem; font-weight: 600;">Họ và tên nhân sự *</label>
+
+                                    <input type="text" class="form-input" id="salespersonName" placeholder="Ví dụ: Nguyễn Văn An" required>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonGender" style="font-size: 0.82rem; font-weight: 600;">Giới tính</label>
+
+                                    <select class="form-select" id="salespersonGender">
+
+                                        <option value="Nam">Nam</option>
+
+                                        <option value="Nữ">Nữ</option>
+
+                                        <option value="Khác">Khác</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonBirthday" style="font-size: 0.82rem; font-weight: 600;">Ngày sinh nhật</label>
+
+                                    <input type="date" class="form-input" id="salespersonBirthday">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonIdCard" style="font-size: 0.82rem; font-weight: 600;">Số CCCD / CMND</label>
+
+                                    <input type="text" class="form-input" id="salespersonIdCard" placeholder="Ví dụ: 001295001234">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonIdCardDate" style="font-size: 0.82rem; font-weight: 600;">Ngày cấp CCCD</label>
+
+                                    <input type="date" class="form-input" id="salespersonIdCardDate">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonIdCardPlace" style="font-size: 0.82rem; font-weight: 600;">Nơi cấp CCCD</label>
+
+                                    <input type="text" class="form-input" id="salespersonIdCardPlace" placeholder="Cục CS QLHC về TTXH">
+
+                                </div>
+
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+
+                                <div class="form-group">
+
+                                    <label for="salespersonHometown" style="font-size: 0.82rem; font-weight: 600;">Quê quán / Nguyên quán</label>
+
+                                    <input type="text" class="form-input" id="salespersonHometown" placeholder="Ví dụ: Hà Nam, Hà Nội, Hải Phòng...">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonPermanentAddress" style="font-size: 0.82rem; font-weight: 600;">Hộ khẩu thường trú</label>
+
+                                    <input type="text" class="form-input" id="salespersonPermanentAddress" placeholder="Địa chỉ theo sổ hộ khẩu / CCCD">
+
+                                </div>
 
                             </div>
 
                             <div class="form-group">
 
-                                <label for="salespersonEmail">Email</label>
+                                <label for="salespersonAddress" style="font-size: 0.82rem; font-weight: 600;">Nơi ở hiện tại / Tạm trú</label>
 
-                                <input type="email" class="form-input" id="salespersonEmail" placeholder="Ví dụ: anv@gmail.com">
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-
-                            <div class="form-group">
-
-                                <label for="salespersonCommissionRate">Tỷ lệ hoa hồng (%) *</label>
-
-                                <input type="number" class="form-input" id="salespersonCommissionRate" value="5" min="0" max="100" required>
-
-                            </div>
-
-                            <div class="form-group">
-
-                                <label for="salespersonReferralCode">Mã giới thiệu *</label>
-
-                                <input type="text" class="form-input" id="salespersonReferralCode" placeholder="Ví dụ: nguyenvana" required>
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-
-                            <div class="form-group">
-
-                                <label for="salespersonTitle">Chức vụ</label>
-
-                                <select class="form-select" id="salespersonTitle">
-
-                                    <option value="Nhân viên">Nhân viên</option>
-
-                                    <option value="Trưởng phòng">Trưởng phòng</option>
-
-                                    <option value="Giám đốc chi nhánh">Giám đốc chi nhánh</option>
-
-                                    <option value="Phó Tổng Giám đốc">Phó Tổng Giám đốc (PTGĐ)</option>
-
-                                    <option value="Khác">Khác</option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="form-group">
-
-                                <label for="salespersonDepartment">Bộ phận / Phòng</label>
-
-                                <input type="text" class="form-input" id="salespersonDepartment" placeholder="Ví dụ: Kinh doanh">
-
-                            </div>
-
-                            <div class="form-group">
-
-                                <label for="salespersonBranch">Chi nhánh</label>
-
-                                <input type="text" class="form-input" id="salespersonBranch" placeholder="Ví dụ: Trụ sở chính">
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 12px;">
-
-                            <div class="form-group">
-
-                                <label for="salespersonBirthday">Ngày sinh nhật</label>
-
-                                <input type="date" class="form-input" id="salespersonBirthday">
-
-                            </div>
-
-                            <div class="form-group">
-
-                                <label for="salespersonAddress">Địa chỉ</label>
-
-                                <input type="text" class="form-input" id="salespersonAddress" placeholder="Ví dụ: 123 Đường ABC, Quận 1, TP.HCM">
+                                <input type="text" class="form-input" id="salespersonAddress" placeholder="Ví dụ: Số 25 ngõ 168 Cầu Giấy, Hà Nội">
 
                             </div>
 
                         </div>
 
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <!-- SECTION 3: HỌC VẤN & BẰNG CẤP CHUYÊN MÔN -->
 
-                            <div class="form-group">
+                        <div style="background: var(--bg-primary); padding: 14px 16px; border-radius: 8px; border-left: 4px solid #8b5cf6; margin-bottom: 16px;">
 
-                                <label for="salespersonZalo">Số Zalo</label>
+                            <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
 
-                                <input type="text" class="form-input" id="salespersonZalo" placeholder="Ví dụ: 0987654321">
+                                <i data-lucide="graduation-cap" style="width: 16px; height: 16px; color: #8b5cf6;"></i> 3. Trình độ học vấn & Chuyên môn
+
+                            </h3>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+
+                                <div class="form-group">
+
+                                    <label for="salespersonEducation" style="font-size: 0.82rem; font-weight: 600;">Trình độ học vấn</label>
+
+                                    <select class="form-select" id="salespersonEducation">
+
+                                        <option value="Đại học">Đại học</option>
+
+                                        <option value="Thạc sĩ">Thạc sĩ</option>
+
+                                        <option value="Tiến sĩ">Tiến sĩ</option>
+
+                                        <option value="Cao đẳng">Cao đẳng</option>
+
+                                        <option value="Trung cấp">Trung cấp</option>
+
+                                        <option value="Chứng chỉ nghề / Đào tạo kỹ thuật">Chứng chỉ nghề / Đào tạo kỹ thuật</option>
+
+                                        <option value="Trung học phổ thông (THPT)">Trung học phổ thông (THPT)</option>
+
+                                        <option value="Khác">Khác</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonMajor" style="font-size: 0.82rem; font-weight: 600;">Chuyên ngành đào tạo</label>
+
+                                    <input type="text" class="form-input" id="salespersonMajor" placeholder="Quản trị kinh doanh, Thiết kế đồ họa, Kế toán...">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonSchool" style="font-size: 0.82rem; font-weight: 600;">Trường / Cơ sở đào tạo</label>
+
+                                    <input type="text" class="form-input" id="salespersonSchool" placeholder="Ví dụ: ĐH Bách Khoa, ĐH Kinh Tế Quốc Dân...">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- SECTION 4: TÀI CHÍNH, THUẾ & BẢO HIỂM -->
+
+                        <div style="background: var(--bg-primary); padding: 14px 16px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-bottom: 16px;">
+
+                            <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+
+                                <i data-lucide="credit-card" style="width: 16px; height: 16px; color: #f59e0b;"></i> 4. Thuế, Bảo hiểm & Ngân hàng
+
+                            </h3>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+
+                                <div class="form-group">
+
+                                    <label for="salespersonTaxCode" style="font-size: 0.82rem; font-weight: 600;">Mã số thuế (MST) cá nhân</label>
+
+                                    <input type="text" class="form-input" id="salespersonTaxCode" placeholder="Ví dụ: 8012345678">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonInsuranceCode" style="font-size: 0.82rem; font-weight: 600;">Mã số Bảo hiểm xã hội (BHXH)</label>
+
+                                    <input type="text" class="form-input" id="salespersonInsuranceCode" placeholder="Ví dụ: 0123456789">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonBankAccount" style="font-size: 0.82rem; font-weight: 600;">Số tài khoản ngân hàng</label>
+
+                                    <input type="text" class="form-input" id="salespersonBankAccount" placeholder="Ví dụ: 190345678901">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonBankName" style="font-size: 0.82rem; font-weight: 600;">Ngân hàng & Chi nhánh</label>
+
+                                    <input type="text" class="form-input" id="salespersonBankName" placeholder="Ví dụ: Techcombank - CN Ba Đình">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- SECTION 5: THÔNG TIN LIÊN HỆ & BÁN HÀNG -->
+
+                        <div style="background: var(--bg-primary); padding: 14px 16px; border-radius: 8px; border-left: 4px solid #10b981; margin-bottom: 16px;">
+
+                            <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+
+                                <i data-lucide="phone-call" style="width: 16px; height: 16px; color: #10b981;"></i> 5. Liên hệ & Kinh doanh
+
+                            </h3>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+
+                                <div class="form-group">
+
+                                    <label for="salespersonPhone" style="font-size: 0.82rem; font-weight: 600;">Số điện thoại liên lạc *</label>
+
+                                    <input type="text" class="form-input" id="salespersonPhone" placeholder="Ví dụ: 0987654321" required>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonEmail" style="font-size: 0.82rem; font-weight: 600;">Email công việc / cá nhân</label>
+
+                                    <input type="email" class="form-input" id="salespersonEmail" placeholder="Ví dụ: nhanvien@inlachong.com">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonZalo" style="font-size: 0.82rem; font-weight: 600;">Số Zalo</label>
+
+                                    <input type="text" class="form-input" id="salespersonZalo" placeholder="Ví dụ: 0987654321">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonFacebook" style="font-size: 0.82rem; font-weight: 600;">Facebook URL</label>
+
+                                    <input type="text" class="form-input" id="salespersonFacebook" placeholder="Ví dụ: facebook.com/an.nguyen">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonCommissionRate" style="font-size: 0.82rem; font-weight: 600;">Tỷ lệ hoa hồng (%) *</label>
+
+                                    <input type="number" class="form-input" id="salespersonCommissionRate" value="5" min="0" max="100" required>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="salespersonReferralCode" style="font-size: 0.82rem; font-weight: 600;">Mã giới thiệu *</label>
+
+                                    <input type="text" class="form-input" id="salespersonReferralCode" placeholder="Ví dụ: annguyen" required>
+
+                                </div>
 
                             </div>
 
                             <div class="form-group">
 
-                                <label for="salespersonFacebook">Facebook</label>
+                                <label for="salespersonNotes" style="font-size: 0.82rem; font-weight: 600;">Ghi chú thêm về nhân sự</label>
 
-                                <input type="text" class="form-input" id="salespersonFacebook" placeholder="Ví dụ: fb.com/nguyenvana">
+                                <input type="text" class="form-input" id="salespersonNotes" placeholder="Ghi chú kinh nghiệm, khen thưởng, đặc điểm công việc...">
 
                             </div>
 
@@ -7663,7 +8022,7 @@
 
                             <button type="button" class="btn btn-secondary" id="btnCancelSalesperson">Hủy bỏ</button>
 
-                            <button type="submit" class="btn btn-primary" style="flex-grow: 1;">Lưu thông tin</button>
+                            <button type="submit" class="btn btn-primary" style="flex-grow: 1; font-weight: 600;">Lưu hồ sơ nhân sự</button>
 
                         </div>
 
@@ -7819,140 +8178,290 @@
 
     </div>
 
-    <!-- Modal: Create / Edit Labor Contract -->
-
+    <!-- Modal: Create / Edit Labor Contract (Expanded HR Profile & Attachments) -->
     <div class="modal" id="laborContractModal">
-
-        <div class="modal-dialog" style="max-width: 550px;">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-
-                    <h2 id="laborContractModalTitle">Tạo hợp đồng lao động mới</h2>
-
+        <div class="modal-dialog" style="max-width: 820px;">
+            <div class="modal-content" style="border-radius: 14px;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px 20px;">
+                    <h2 id="laborContractModalTitle" style="font-size: 1.15rem; font-weight: 700; color: var(--accent); margin:0;">Tạo hợp đồng lao động mới</h2>
                     <button class="btn-close" id="btnCloseLaborContractModal"><i data-lucide="x"></i></button>
-
                 </div>
-
-                <div class="modal-body">
-
+                <div class="modal-body" style="padding: 20px; max-height: 80vh; overflow-y: auto;">
                     <form id="laborContractForm">
-
                         <input type="hidden" id="laborContractIdInput">
 
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-
-                            <div class="form-group">
-
-                                <label for="laborContractNumber">Số HĐLĐ</label>
-
-                                <input type="text" class="form-input" id="laborContractNumber" placeholder="HĐLĐ-YYYY-XXXX" required>
-
+                        <!-- KHỐI 1: HỢP ĐỒNG & VỊ TRÍ LÀM VIỆC -->
+                        <div style="background:var(--bg-hover); padding:14px; border:1px solid var(--border-color); border-radius:10px; margin-bottom:14px;">
+                            <h4 style="margin:0 0 10px 0; font-size:0.9rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="briefcase" style="width:16px; height:16px;"></i> 1. Thông tin hợp đồng & Vị trí làm việc
+                            </h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group">
+                                    <label for="laborContractNumber" style="font-weight:600; font-size:0.85rem;">Số HĐLĐ *</label>
+                                    <input type="text" class="form-input" id="laborContractNumber" placeholder="HĐLĐ-YYYY-XXXX" required style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractEmployeeId" style="font-weight:600; font-size:0.85rem;">Nhân viên *</label>
+                                    <select class="form-select" id="laborContractEmployeeId" required style="height:38px;" onchange="window.syncLaborContractEmployeeProfile(this.value)">
+                                        <!-- Dynamic list of employees -->
+                                    </select>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-
-                                <label for="laborContractEmployeeId">Nhân viên / CTV</label>
-
-                                <select class="form-select" id="laborContractEmployeeId" required>
-
-                                    <!-- Dynamic list of employees/collaborators -->
-
-                                </select>
-
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label for="laborContractDepartment" style="font-weight:600; font-size:0.85rem;">Phòng ban làm việc *</label>
+                                    <select class="form-select" id="laborContractDepartment" required style="height:38px;">
+                                        <option value="Ban Giám Đốc">Ban Giám Đốc</option>
+                                        <option value="Kinh doanh">Phòng Kinh Doanh (Sales)</option>
+                                        <option value="Kỹ thuật & Thiết kế">Phòng Kỹ Thuật & Thiết Kế</option>
+                                        <option value="Kế toán - Tài chính">Phòng Kế Toán - Tài Chính</option>
+                                        <option value="Xưởng In & Sản Xuất">Xưởng In & Sản Xuất</option>
+                                        <option value="Kho & Vận chuyển">Bộ Phận Kho & Vận Chuyển</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractJobTitle" style="font-weight:600; font-size:0.85rem;">Chức vụ / Vị trí / Cấp bậc *</label>
+                                    <input type="text" class="form-input" id="laborContractJobTitle" placeholder="Ví dụ: Trưởng phòng, Nhân viên kinh doanh, Kỹ thuật in..." required style="height:38px;">
+                                </div>
                             </div>
-
                         </div>
 
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-
-                            <div class="form-group">
-
-                                <label for="laborContractSignDate">Ngày ký</label>
-
-                                <input type="date" class="form-input" id="laborContractSignDate" required>
-
+                        <!-- KHỐI 2: HỒ SƠ NHÂN SỰ CÁ NHÂN -->
+                        <div style="background:var(--bg-hover); padding:14px; border:1px solid var(--border-color); border-radius:10px; margin-bottom:14px;">
+                            <h4 style="margin:0 0 10px 0; font-size:0.9rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="user-check" style="width:16px; height:16px;"></i> 2. Hồ sơ cá nhân nhân viên
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group">
+                                    <label for="laborContractBirthDate" style="font-weight:600; font-size:0.85rem;">Sinh nhật (Ngày sinh)</label>
+                                    <input type="date" class="form-input" id="laborContractBirthDate" style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractHometown" style="font-weight:600; font-size:0.85rem;">Quê quán</label>
+                                    <input type="text" class="form-input" id="laborContractHometown" placeholder="Ví dụ: Nam Định, Hà Nội..." style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractEducation" style="font-weight:600; font-size:0.85rem;">Trình độ học vấn</label>
+                                    <select class="form-select" id="laborContractEducation" style="height:38px;">
+                                        <option value="Đại học">Đại học</option>
+                                        <option value="Cao đẳng">Cao đẳng</option>
+                                        <option value="Trung cấp">Trung cấp</option>
+                                        <option value="Thạc sĩ">Thạc sĩ</option>
+                                        <option value="Cử nhân">Cử nhân</option>
+                                        <option value="Chứng chỉ nghề">Chứng chỉ nghề</option>
+                                        <option value="Phổ thông">Phổ thông</option>
+                                    </select>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-
-                                <label for="laborContractStartDate">Ngày bắt đầu</label>
-
-                                <input type="date" class="form-input" id="laborContractStartDate" required>
-
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label for="laborContractInsuranceCode" style="font-weight:600; font-size:0.85rem;">Mã số BHXH</label>
+                                    <input type="text" class="form-input" id="laborContractInsuranceCode" placeholder="Số sổ BHXH..." style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractPersonalTaxCode" style="font-weight:600; font-size:0.85rem;">MST cá nhân</label>
+                                    <input type="text" class="form-input" id="laborContractPersonalTaxCode" placeholder="Mã số thuế TNCN..." style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractBankAccount" style="font-weight:600; font-size:0.85rem;">STK ngân hàng</label>
+                                    <input type="text" class="form-input" id="laborContractBankAccount" placeholder="STK - Tên ngân hàng..." style="height:38px;">
+                                </div>
                             </div>
-
-                            <div class="form-group">
-
-                                <label for="laborContractEndDate">Ngày kết thúc</label>
-
-                                <input type="date" class="form-input" id="laborContractEndDate" placeholder="Bỏ trống nếu không thời hạn">
-
-                            </div>
-
                         </div>
 
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-
-                            <div class="form-group">
-
-                                <label for="laborContractBaseSalary">Lương cơ bản (VNĐ)</label>
-
-                                <input type="number" class="form-input" id="laborContractBaseSalary" required min="0">
-
+                        <!-- KHỐI 3: THỜI HẠN & TIỀN LƯƠNG -->
+                        <div style="background:var(--bg-hover); padding:14px; border:1px solid var(--border-color); border-radius:10px; margin-bottom:14px;">
+                            <h4 style="margin:0 0 10px 0; font-size:0.9rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="dollar-sign" style="width:16px; height:16px;"></i> 3. Thời hạn hợp đồng & Mức lương
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group">
+                                    <label for="laborContractSignDate" style="font-weight:600; font-size:0.85rem;">Ngày ký *</label>
+                                    <input type="date" class="form-input" id="laborContractSignDate" required style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractStartDate" style="font-weight:600; font-size:0.85rem;">Ngày bắt đầu *</label>
+                                    <input type="date" class="form-input" id="laborContractStartDate" required style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractEndDate" style="font-weight:600; font-size:0.85rem;">Ngày kết thúc</label>
+                                    <input type="date" class="form-input" id="laborContractEndDate" placeholder="Bỏ trống nếu không thời hạn" style="height:38px;">
+                                </div>
                             </div>
-
-                            <div class="form-group">
-
-                                <label for="laborContractType">Loại hợp đồng</label>
-
-                                <select class="form-select" id="laborContractType" required>
-
-                                    <option value="Thử việc">Thử việc</option>
-
-                                    <option value="Xác định thời hạn">Xác định thời hạn</option>
-
-                                    <option value="Không xác định thời hạn">Không xác định thời hạn</option>
-
-                                </select>
-
+                            <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label for="laborContractBaseSalary" style="font-weight:600; font-size:0.85rem;">Lương cơ bản (VNĐ) *</label>
+                                    <input type="number" class="form-input" id="laborContractBaseSalary" required min="0" step="100000" style="height:38px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractType" style="font-weight:600; font-size:0.85rem;">Loại hợp đồng *</label>
+                                    <select class="form-select" id="laborContractType" required style="height:38px;">
+                                        <option value="Thử việc">Thử việc</option>
+                                        <option value="Hợp đồng thực tập">Hợp đồng thực tập</option>
+                                        <option value="Xác định thời hạn">Xác định thời hạn</option>
+                                        <option value="Không xác định thời hạn">Không xác định thời hạn</option>
+                                        <option value="Hợp đồng khoán việc">Hợp đồng khoán việc</option>
+                                        <option value="Hợp đồng thời vụ">Hợp đồng thời vụ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="laborContractStatus" style="font-weight:600; font-size:0.85rem;">Trạng thái *</label>
+                                    <select class="form-select" id="laborContractStatus" required style="height:38px;">
+                                        <option value="ACTIVE">Đang có hiệu lực</option>
+                                        <option value="EXPIRED">Đã hết hạn</option>
+                                        <option value="TERMINATED">Đã chấm dứt</option>
+                                    </select>
+                                </div>
                             </div>
-
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 16px;">
-
-                            <label for="laborContractStatus">Trạng thái hợp đồng</label>
-
-                            <select class="form-select" id="laborContractStatus" required>
-
-                                <option value="ACTIVE">Đang có hiệu lực</option>
-
-                                <option value="EXPIRED">Đã hết hạn</option>
-
-                                <option value="TERMINATED">Đã chấm dứt</option>
-
-                            </select>
-
+                        <!-- KHỐI 4: ĐÍNH KÈM FILE / ẢNH (ATTACHMENTS) -->
+                        <div style="background:var(--bg-hover); padding:14px; border:1px solid var(--border-color); border-radius:10px; margin-bottom:14px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <h4 style="margin:0; font-size:0.9rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">
+                                    <i data-lucide="paperclip" style="width:16px; height:16px;"></i> 4. Đính kèm file hợp đồng / ảnh scan / quyết định
+                                </h4>
+                                <label class="btn btn-secondary" style="padding:4px 10px; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                                    <i data-lucide="upload" style="width:12px; height:12px;"></i> Tải file/ảnh lên
+                                    <input type="file" id="laborContractFileInput" multiple accept="image/*,.pdf,.doc,.docx" style="display:none;" onchange="window.handleLaborContractFileUpload(event)">
+                                </label>
+                            </div>
+                            <p style="margin:0 0 10px 0; font-size:0.75rem; color:var(--text-secondary);">Hỗ trợ hình ảnh scan (JPG, PNG), tài liệu PDF, văn bản Word...</p>
+                            <div class="attachment-preview-grid" id="laborContractAttachmentList">
+                                <!-- Dynamic attachment chips -->
+                            </div>
                         </div>
 
                         <div class="form-actions" style="display: flex; gap: 12px; margin-top: 20px;">
-
                             <button type="button" class="btn btn-secondary" id="btnCancelLaborContract">Hủy bỏ</button>
-
-                            <button type="submit" class="btn btn-primary" style="flex-grow: 1;">Lưu hợp đồng</button>
-
+                            <button type="submit" class="btn btn-primary" style="flex-grow: 1; font-weight:600;">Lưu hợp đồng lao động</button>
                         </div>
-
                     </form>
-
                 </div>
-
             </div>
-
         </div>
+    </div>
 
+    <!-- Modal: Lịch Sử Ký HĐ & Phụ Lục Hợp Đồng -->
+    <div class="modal" id="laborContractHistoryModal">
+        <div class="modal-dialog" style="max-width: 850px;">
+            <div class="modal-content" style="border-radius: 14px;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding: 16px 20px;">
+                    <div>
+                        <h3 id="histModalTitle" style="margin:0; font-size:1.15rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="history"></i> Lịch Sử Ký HĐ & Phụ Lục Hợp Đồng
+                        </h3>
+                        <p id="histModalSubtitle" style="margin:4px 0 0 0; font-size:0.82rem; color:var(--text-secondary);"></p>
+                    </div>
+                    <button type="button" class="btn-close" onclick="closeModal('laborContractHistoryModal')"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body" style="padding: 20px; max-height: 80vh; overflow-y: auto;">
+                    <!-- Employee Profile Summary Card -->
+                    <div id="histEmployeeSummaryCard" style="background:var(--bg-hover); border:1px solid var(--border-color); border-radius:10px; padding:14px; margin-bottom:16px;"></div>
+
+                    <!-- Action: Add Amendment / Appendix -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="git-commit" style="color:var(--accent);"></i> Quá trình ký kết & Thay đổi phụ lục
+                        </h4>
+                        <button type="button" class="btn btn-primary" onclick="window.toggleAddAppendixForm()" style="padding:6px 12px; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="plus-circle" style="width:14px; height:14px;"></i> Thêm phụ lục / Thay đổi HĐ
+                        </button>
+                    </div>
+
+                    <!-- Hidden Form to Add Amendment / Appendix -->
+                    <div id="addAppendixFormContainer" style="display:none; background:var(--bg-card); border:1px solid var(--accent); border-radius:10px; padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                        <h5 style="margin:0 0 12px 0; font-size:0.9rem; font-weight:700; color:var(--accent);">Ký phụ lục mới / Điều chỉnh hợp đồng</h5>
+                        <form id="addAppendixForm" onsubmit="window.saveLaborContractAppendix(event)">
+                            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem; font-weight:600;">Số phụ lục *</label>
+                                    <input type="text" class="form-input" id="appxNumber" placeholder="PL-01/HĐLĐ-..." required style="height:36px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem; font-weight:600;">Ngày ký / Hiệu lực *</label>
+                                    <input type="date" class="form-input" id="appxDate" required style="height:36px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem; font-weight:600;">Loại thay đổi *</label>
+                                    <select class="form-select" id="appxChangeType" required style="height:36px;" onchange="window.onAppendixTypeChange(this.value)">
+                                        <option value="Điều chỉnh mức lương">Điều chỉnh mức lương</option>
+                                        <option value="Bổ nhiệm / Đổi chức vụ">Bổ nhiệm / Đổi chức vụ</option>
+                                        <option value="Chuyển phòng ban">Chuyển phòng ban</option>
+                                        <option value="Gia hạn hợp đồng">Gia hạn hợp đồng</option>
+                                        <option value="Thay đổi tổng hợp">Thay đổi tổng hợp</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem; font-weight:600;">Lương mới (VNĐ)</label>
+                                    <input type="number" class="form-input" id="appxSalary" min="0" step="100000" style="height:36px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem; font-weight:600;">Chức vụ / Vị trí mới</label>
+                                    <input type="text" class="form-input" id="appxJobTitle" placeholder="Chức vụ mới..." style="height:36px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem; font-weight:600;">Phòng ban mới</label>
+                                    <select class="form-select" id="appxDepartment" style="height:36px;">
+                                        <option value="">-- Giữ nguyên --</option>
+                                        <option value="Ban Giám Đốc">Ban Giám Đốc</option>
+                                        <option value="Kinh doanh">Phòng Kinh Doanh (Sales)</option>
+                                        <option value="Kỹ thuật & Thiết kế">Phòng Kỹ Thuật & Thiết Kế</option>
+                                        <option value="Kế toán - Tài chính">Phòng Kế Toán - Tài Chính</option>
+                                        <option value="Xưởng In & Sản Xuất">Xưởng In & Sản Xuất</option>
+                                        <option value="Kho & Vận chuyển">Bộ Phận Kho & Vận Chuyển</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.8rem; font-weight:600;">Lý do / Nội dung phụ lục</label>
+                                <input type="text" class="form-input" id="appxNote" placeholder="Ví dụ: Tăng lương hiệu quả công tác quý 2, bổ nhiệm phó phòng..." style="height:36px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:0.8rem; font-weight:600;">Đính kèm file/ảnh phụ lục</label>
+                                <input type="file" id="appxFileInput" multiple accept="image/*,.pdf,.doc,.docx" class="form-input" style="height:36px; padding:4px 8px;" onchange="window.handleAppendixFileUpload(event)">
+                                <div class="attachment-preview-grid" id="appxAttachmentList"></div>
+                            </div>
+                            <div style="display:flex; justify-content:flex-end; gap:8px;">
+                                <button type="button" class="btn btn-secondary" onclick="window.toggleAddAppendixForm()" style="padding:6px 12px; font-size:0.8rem;">Hủy</button>
+                                <button type="submit" class="btn btn-primary" style="padding:6px 16px; font-size:0.8rem; font-weight:600;">Lưu phụ lục</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Timeline List -->
+                    <div class="history-timeline" id="histTimelineContainer">
+                        <!-- Rendered dynamically -->
+                    </div>
+
+                    <!-- All Attached Documents List -->
+                    <div style="margin-top:20px; padding-top:14px; border-top:1px solid var(--border-color);">
+                        <h4 style="margin:0 0 10px 0; font-size:0.9rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="folder" style="color:var(--accent);"></i> Toàn bộ tài liệu & Ảnh scan của nhân viên
+                        </h4>
+                        <div class="attachment-preview-grid" id="histAllAttachmentsList">
+                            <!-- All files preview -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:14px 20px; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('laborContractHistoryModal')">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div class="modal" id="imageLightboxModal" style="z-index:99999;">
+        <div class="modal-dialog" style="max-width:90vw; max-height:90vh; display:flex; align-items:center; justify-content:center;">
+            <div class="modal-content" style="background:transparent; border:none; box-shadow:none; text-align:center; position:relative;">
+                <button type="button" class="btn-close" onclick="closeModal('imageLightboxModal')" style="position:absolute; top:-30px; right:0; color:#fff; font-size:1.5rem; background:rgba(0,0,0,0.6); border-radius:50%; width:32px; height:32px; border:none; cursor:pointer;">&times;</button>
+                <img id="lightboxImage" src="" style="max-width:85vw; max-height:85vh; border-radius:8px; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                <p id="lightboxCaption" style="color:#fff; margin-top:8px; font-weight:600;"></p>
+            </div>
+        </div>
     </div>
 
     <!-- Modal: Thu nợ đơn hàng -->
@@ -9142,15 +9651,17 @@
 
                                 <tr style="background:#108f53; color:#fff;">
 
+                                    <th style="padding:10px 4px; border:1px solid #ddd; text-align:center; width:45px;">STT</th>
+
                                     <th style="padding:10px; border:1px solid #ddd; text-align:left;">Sản phẩm</th>
 
                                     <th style="padding:10px; border:1px solid #ddd; text-align:center; width:80px;">Đơn vị</th>
 
-                                    <th style="padding:10px; border:1px solid #ddd; text-align:center; width:80px;">SL</th>
+                                    <th style="padding:10px; border:1px solid #ddd; text-align:center; width:70px;">SL</th>
 
                                     <th style="padding:10px; border:1px solid #ddd; text-align:right; width:120px;">Đơn giá</th>
 
-                                    <th style="padding:10px; border:1px solid #ddd; text-align:right; width:140px;">Thành tiền</th>
+                                    <th style="padding:10px; border:1px solid #ddd; text-align:right; width:135px;">Thành tiền</th>
 
                                 </tr>
 
@@ -9214,7 +9725,7 @@
 
                                 <div style="display:flex; justify-content:space-between;">
 
-                                    <span>Thuế VAT (8%):</span>
+                                    <span id="pdfVatLabel">Thuế VAT (8%):</span>
 
                                     <strong id="pdfVat">0đ</strong>
 
@@ -9509,29 +10020,29 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261012_cal_tracking"></script>
+    <script src="/app.js?v=20261019_invoice_fix"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
     <nav class="bottom-nav-bar">
-        <button class="bottom-nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+        <button class="bottom-nav-item active" data-slug="tong-quan" data-tab="dashboard" onclick="window.navigateTo('tong-quan')">
             <i data-lucide="layout-dashboard"></i>
             <span>Tổng quan</span>
         </button>
-        <button class="bottom-nav-item" data-tab="production-hub" onclick="switchTab('production-hub')">
+        <button class="bottom-nav-item" data-slug="san-xuat" data-tab="production-hub" onclick="window.navigateTo('san-xuat')">
             <i data-lucide="wrench"></i>
             <span>Sản xuất</span>
         </button>
         <div class="bottom-nav-center-wrapper">
-            <button class="bottom-nav-item bottom-nav-sales-highlight" data-tab="sales-hub" onclick="switchTab('sales-hub')">
+            <button class="bottom-nav-item bottom-nav-sales-highlight" data-slug="ban-hang-online" data-tab="sales-hub" onclick="window.navigateTo('ban-hang-online')">
                 <i data-lucide="shopping-cart"></i>
             </button>
         </div>
-        <button class="bottom-nav-item" data-tab="finance-hub" onclick="switchTab('finance-hub')">
+        <button class="bottom-nav-item" data-slug="tai-chinh" data-tab="finance-hub" onclick="window.navigateTo('tai-chinh')">
             <i data-lucide="wallet"></i>
             <span>Tài chính</span>
         </button>
-        <button class="bottom-nav-item" data-tab="admin-hub" onclick="switchTab('admin-hub')">
+        <button class="bottom-nav-item" data-slug="quan-tri" data-tab="admin-hub" onclick="window.navigateTo('quan-tri')">
             <i data-lucide="shield-check"></i>
             <span>Quản trị</span>
         </button>
