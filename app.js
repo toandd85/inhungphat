@@ -14240,6 +14240,69 @@ const DEFAULT_ONLINE_STOCK_LOGS = [
     { id: "log-3", created_at: "2026-06-20T10:30:00Z", sku: "SP-003", type: "IMPORT", qty: 1200, note: "Nhập kho ban đầu" }
 ];
 
+const DEFAULT_ONLINE_IMPORT_RECORDS = [
+    {
+        id: "IMP-20261019-001",
+        batch_id: "LO-20261019-01",
+        created_at: "2026-10-19T09:30:00Z",
+        sku: "SP000007",
+        name: "Thuyền",
+        unit: "Chiếc",
+        supplier: "Decal Nguyễn Xiển",
+        qty: 1500,
+        cost_price: 8700,
+        total_cost: 13050000,
+        creator: "Admin / Quản lý kho",
+        source: "EXCEL",
+        note: "Nhập bổ sung lô hàng từ xưởng Decal Nguyễn Xiển"
+    },
+    {
+        id: "IMP-20261019-002",
+        batch_id: "LO-20261019-01",
+        created_at: "2026-10-19T09:30:00Z",
+        sku: "TD04C",
+        name: "Hộp TD04C",
+        unit: "Chiếc",
+        supplier: "Tuấn Dung",
+        qty: 1000,
+        cost_price: 44000,
+        total_cost: 44000000,
+        creator: "Admin / Quản lý kho",
+        source: "EXCEL",
+        note: "Nhập bổ sung lô hàng từ NCC Tuấn Dung"
+    },
+    {
+        id: "IMP-20261019-003",
+        batch_id: "LO-20261019-01",
+        created_at: "2026-10-19T09:30:00Z",
+        sku: "TD08C",
+        name: "Hộp TD08C",
+        unit: "Chiếc",
+        supplier: "Tuấn Dung",
+        qty: 1200,
+        cost_price: 49900,
+        total_cost: 59880000,
+        creator: "Admin / Quản lý kho",
+        source: "EXCEL",
+        note: "Nhập bổ sung hộp quà tặng Tuấn Dung"
+    },
+    {
+        id: "IMP-20261018-004",
+        batch_id: "LO-20261018-01",
+        created_at: "2026-10-18T14:15:00Z",
+        sku: "TD02B",
+        name: "Hộp TD02B",
+        unit: "Chiếc",
+        supplier: "Tuấn Dung",
+        qty: 1000,
+        cost_price: 40000,
+        total_cost: 40000000,
+        creator: "Thủ kho Bích Ngọc",
+        source: "MANUAL",
+        note: "Nhập kho hoàn thiện sản phẩm"
+    }
+];
+
 const DEFAULT_ONLINE_ORDERS = [];
 
 // Initial State Store
@@ -14260,6 +14323,10 @@ class AppState {
         }
 
         this.online_stock_logs = this.load("online_stock_logs", DEFAULT_ONLINE_STOCK_LOGS);
+        this.online_import_records = this.load("online_import_records", DEFAULT_ONLINE_IMPORT_RECORDS);
+        if (!this.online_import_records || this.online_import_records.length === 0) {
+            this.online_import_records = DEFAULT_ONLINE_IMPORT_RECORDS;
+        }
         // Orders permanently cleared on user request
         if (!localStorage.getItem("ihp_clean_orders_v5")) {
             this.online_orders = [];
@@ -14987,6 +15054,7 @@ window.ROUTE_DEFINITIONS = [
     { slug: 'hoa-don', tabId: 'online-sales', subtab: 'online-invoices', title: 'Hóa đơn Bán hàng Online | In Lạc Hồng', aliases: ['online-invoices'] },
     { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Trả hàng Online | In Lạc Hồng', aliases: ['online-returns'] },
     { slug: 'hang-hoa', tabId: 'online-sales', subtab: 'online-products', title: 'Danh mục Hàng hóa Sản phẩm | In Lạc Hồng', aliases: ['online-products', 'san-pham', 'danh-sach-hang-hoa'] },
+    { slug: 'nhap-hang-hoa', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập hàng hóa & Bổ sung kho | In Lạc Hồng', aliases: ['nhap-hang', 'nhap-hang-hoa', 'online-import-goods', 'nhap-kho-hang-hoa'] },
     { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
     { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Tồn kho Hàng hóa | In Lạc Hồng', aliases: ['online-stock', 'ton-kho-hang-hoa'] },
     { slug: 'kiem-ke-kho', tabId: 'online-sales', subtab: 'online-inventory-check', title: 'Kiểm kê Kho hàng hóa | In Lạc Hồng', aliases: ['online-inventory-check'] },
@@ -23629,6 +23697,7 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         else if (subtab === "online-invoices") label = "📄 Xuất hoá đơn";
         else if (subtab === "online-products") label = "📦 Danh sách Hàng hóa";
         else if (subtab === "online-prices" || subtab === "online-pricing") label = "🏷️ Thiết lập Giá";
+        else if (subtab === "online-import-goods") label = "📥 Nhập hàng hóa & Bổ sung kho";
         titleEl.innerHTML = label;
     }
     
@@ -23640,6 +23709,8 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         renderOnlinePrices();
     } else if (subtab === "online-products") {
         renderOnlineProducts();
+    } else if (subtab === "online-import-goods") {
+        if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
     } else if (subtab === "online-stock") {
         window.renderOnlineStock();
         window.renderOnlineStockLogs();
@@ -26303,6 +26374,10 @@ function handleOnlineImportStockSubmit(e) {
     }
     const fullNote = `${sourceLabel} ${note}`;
     
+    const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+    const creatorName = currentUser.name || currentUser.username || "Admin / Quản lý kho";
+    const costPrice = Number(prod.cost_price || prod.import_price || 0);
+
     const logId = "log_" + Math.random().toString(36).substring(2, 9);
     const newLog = {
         id: logId,
@@ -26310,16 +26385,40 @@ function handleOnlineImportStockSubmit(e) {
         sku,
         type: "IMPORT",
         qty,
-        note: fullNote
+        note: fullNote,
+        creator: creatorName
     };
     state.online_stock_logs.push(newLog);
+
+    // Save to detailed import history records
+    const importRecId = "IMP-" + new Date().toISOString().slice(0,10).replace(/-/g, "") + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+    const newImportRec = {
+        id: importRecId,
+        batch_id: "MANUAL-" + new Date().toISOString().slice(0,10).replace(/-/g, ""),
+        created_at: new Date().toISOString(),
+        sku: prod.sku,
+        name: prod.name,
+        unit: prod.unit || "Cái",
+        supplier: (source === "EXTERNAL_SUPPLIER" ? document.getElementById("onlineImportSupplier")?.value : "Tự sản xuất") || prod.supplier || "NCC Khác",
+        qty: qty,
+        cost_price: costPrice,
+        total_cost: qty * costPrice,
+        creator: creatorName,
+        source: "MANUAL",
+        note: fullNote,
+        type: "IMPORT"
+    };
+    if (!state.online_import_records) state.online_import_records = [];
+    state.online_import_records.unshift(newImportRec);
     
     state.updateState("online_products", state.online_products);
     state.updateState("online_stock_logs", state.online_stock_logs);
+    state.updateState("online_import_records", state.online_import_records);
     
     document.getElementById("onlineImportStockModal")?.classList.remove("active");
     renderOnlineProducts();
     renderOnlineStockLogs();
+    if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
 }
 
 window.renderOnlineSales = function() {
@@ -35459,3 +35558,519 @@ document.addEventListener("DOMContentLoaded", () => {
     // Category Item Form Submit
     document.getElementById("categoryItemForm")?.addEventListener("submit", window.handleCategoryItemFormSubmit);
 });
+
+
+// ==========================================================================
+// NHẬP HÀNG HÓA, EXCEL IMPORT/EXPORT & LỊCH SỬ BỔ SUNG KHO
+// ==========================================================================
+
+window.renderOnlineImportGoods = function() {
+    const tableBody = document.querySelector("#onlineImportGoodsTable tbody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+
+    const records = state.online_import_records || [];
+    
+    // 1. Populate Supplier filter dropdown
+    const supFilter = document.getElementById("onlineImportHistorySupplierFilter");
+    if (supFilter) {
+        const curVal = supFilter.value;
+        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH");
+        const uniqueSups = new Set(suppliers.map(s => s.name));
+        records.forEach(r => { if (r.supplier) uniqueSups.add(r.supplier); });
+
+        const count = supFilter.options.length;
+        if (count <= 1 || count !== uniqueSups.size + 1) {
+            supFilter.innerHTML = '<option value="">-- Tất cả Nhà cung cấp --</option>';
+            Array.from(uniqueSups).sort((a,b) => (a||"").localeCompare(b||"", 'vi')).forEach(sName => {
+                if (sName) supFilter.innerHTML += `<option value="${sName}">${sName}</option>`;
+            });
+            supFilter.value = curVal;
+        }
+    }
+
+    // 2. Filter records
+    const query = document.getElementById("onlineImportHistorySearchInput")?.value.toLowerCase().trim() || "";
+    const selectedSup = document.getElementById("onlineImportHistorySupplierFilter")?.value || "";
+    const period = document.getElementById("onlineImportHistoryPeriodFilter")?.value || "all";
+
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    const filtered = records.filter(r => {
+        if (!r) return false;
+        const matchSup = !selectedSup || r.supplier === selectedSup;
+        if (!matchSup) return false;
+
+        const timeStr = r.created_at || "";
+        if (period === "today") {
+            if (!timeStr.startsWith(todayStr)) return false;
+        } else if (period === "this_week") {
+            const rDate = new Date(timeStr);
+            const diffDays = (now - rDate) / (1000 * 60 * 60 * 24);
+            if (diffDays > 7) return false;
+        } else if (period === "this_month") {
+            const thisMonthStr = now.toISOString().slice(0, 7);
+            if (!timeStr.startsWith(thisMonthStr)) return false;
+        } else if (period === "last_month") {
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const lastMonthStr = lastMonth.toISOString().slice(0, 7);
+            if (!timeStr.startsWith(lastMonthStr)) return false;
+        }
+
+        if (query) {
+            const sku = String(r.sku || "").toLowerCase();
+            const name = String(r.name || "").toLowerCase();
+            const sup = String(r.supplier || "").toLowerCase();
+            const creator = String(r.creator || "").toLowerCase();
+            const note = String(r.note || "").toLowerCase();
+            const id = String(r.id || "").toLowerCase();
+            return sku.includes(query) || name.includes(query) || sup.includes(query) || creator.includes(query) || note.includes(query) || id.includes(query);
+        }
+        return true;
+    });
+
+    // 3. Update KPI cards
+    let totalQty = 0;
+    let totalCost = 0;
+    const supSet = new Set();
+    records.forEach(r => {
+        totalQty += (parseInt(r.qty) || 0);
+        totalCost += (parseFloat(r.total_cost) || ((parseInt(r.qty) || 0) * (parseFloat(r.cost_price) || 0)));
+        if (r.supplier) supSet.add(r.supplier);
+    });
+
+    const kpiCount = document.getElementById("kpiImportTotalCount");
+    const kpiQty = document.getElementById("kpiImportTotalQty");
+    const kpiAmount = document.getElementById("kpiImportTotalAmount");
+    const kpiSup = document.getElementById("kpiImportSupplierCount");
+
+    if (kpiCount) kpiCount.textContent = records.length.toLocaleString('vi-VN');
+    if (kpiQty) kpiQty.textContent = totalQty.toLocaleString('vi-VN');
+    if (kpiAmount) kpiAmount.textContent = formatMoney(totalCost);
+    if (kpiSup) kpiSup.textContent = supSet.size.toLocaleString('vi-VN');
+
+    // 4. Render Table Rows
+    if (filtered.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không tìm thấy lịch sử nhập hàng phù hợp</td></tr>`;
+        return;
+    }
+
+    filtered.forEach(rec => {
+        const row = document.createElement("tr");
+        const dateObj = new Date(rec.created_at);
+        const timeFormatted = isNaN(dateObj.getTime()) ? rec.created_at : dateObj.toLocaleString('vi-VN');
+        const lineTotal = rec.total_cost || (rec.qty * (rec.cost_price || 0));
+
+        row.innerHTML = `
+            <td style="white-space:nowrap; font-size:0.85rem;"><i data-lucide="calendar" style="width:13px; height:13px; display:inline-block; vertical-align:middle; color:var(--text-secondary);"></i> ${timeFormatted}</td>
+            <td><span style="font-family:monospace; font-weight:700; color:var(--primary); font-size:0.85rem;">${rec.id || '---'}</span></td>
+            <td><strong>${rec.sku}</strong></td>
+            <td><strong>${rec.name || '---'}</strong></td>
+            <td>${rec.unit || 'Cái'}</td>
+            <td><span style="display:inline-block; padding:3px 8px; border-radius:4px; background:rgba(59,130,246,0.08); color:#2563eb; font-weight:600; font-size:0.82rem;">${rec.supplier || '---'}</span></td>
+            <td style="text-align:right;"><span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${Number(rec.qty || 0).toLocaleString('vi-VN')}</span></td>
+            <td style="text-align:right; font-weight:500;">${formatMoney(rec.cost_price || 0)}</td>
+            <td style="text-align:right; font-weight:700; color:var(--text);">${formatMoney(lineTotal)}</td>
+            <td><span style="display:inline-flex; align-items:center; gap:4px; font-weight:600; color:#334155; font-size:0.85rem;"><i data-lucide="user-check" style="width:14px; height:14px; color:#0284c7;"></i> ${rec.creator || 'Admin'}</span></td>
+            <td style="font-size:0.82rem; color:#64748b;">${rec.note || ''}</td>
+            <td style="text-align:center;">
+                <button class="btn-icon text-danger" onclick="window.deleteOnlineImportRecord('${rec.id}')" title="Xóa bản ghi này"><i data-lucide="trash-2"></i></button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+// 1. Tải file mẫu Excel chuẩn
+window.downloadImportExcelTemplate = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const aoa = [
+        ["STT", "Mã SKU (*)", "Tên hàng hóa (*)", "Đơn vị tính", "Nhà cung cấp (*)", "Số lượng nhập (*)", "Giá nhập (đ)", "Giá bán lẻ (đ)", "Giá sỉ (đ)", "Ghi chú"],
+        [1, "SP000007", "Thuyền", "Chiếc", "Decal Nguyễn Xiển", 500, 8700, 11000, 9900, "Nhập bổ sung đợt 1"],
+        [2, "TD04C", "Hộp TD04C", "Chiếc", "Tuấn Dung", 300, 44000, 55555, 50000, "Bổ sung hàng bán sỉ"],
+        [3, "TD08C", "Hộp TD08C", "Chiếc", "Tuấn Dung", 200, 49900, 62963, 56667, "Hộp quà tặng"],
+        [4, "SP-MOI-01", "Hộp carton nắp gài 25x20x6", "Hộp", "Bao Bì Lạc Hồng", 1000, 4500, 8000, 6500, "Sản phẩm mới thêm"]
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+    // Set column widths
+    ws['!cols'] = [
+        { wch: 6 },  // STT
+        { wch: 15 }, // Mã SKU
+        { wch: 30 }, // Tên hàng hóa
+        { wch: 12 }, // ĐVT
+        { wch: 25 }, // Nhà cung cấp
+        { wch: 16 }, // SL nhập
+        { wch: 14 }, // Giá nhập
+        { wch: 14 }, // Giá bán lẻ
+        { wch: 14 }, // Giá sỉ
+        { wch: 30 }  // Ghi chú
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Mau_Nhap_Hang");
+    XLSX.writeFile(wb, "Mau_Nhap_Hang_Hoa_InLacHong.xlsx");
+};
+
+// 2. Đọc file Excel người dùng tải lên và mở modal xem trước
+window.handleExcelImportGoodsFile = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        try {
+            const data = new Uint8Array(evt.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const ws = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+
+            if (!rows || rows.length === 0) {
+                alert("File Excel không có dữ liệu!");
+                return;
+            }
+
+            const parsedItems = [];
+            rows.forEach((r, idx) => {
+                const sku = String(r['Mã SKU (*)'] || r['Mã SKU'] || r['Mã hàng'] || r['SKU'] || r['sku'] || '').trim();
+                const name = String(r['Tên hàng hóa (*)'] || r['Tên hàng hóa'] || r['Tên hàng'] || r['Tên sản phẩm'] || r['name'] || '').trim();
+                if (!sku && !name) return;
+
+                const unit = String(r['Đơn vị tính'] || r['Đơn vị'] || r['ĐVT'] || r['unit'] || 'Cái').trim();
+                const supplier = String(r['Nhà cung cấp (*)'] || r['Nhà cung cấp'] || r['NCC'] || r['supplier'] || '').trim();
+                const qty = parseInt(r['Số lượng nhập (*)'] || r['Số lượng nhập'] || r['Số lượng'] || r['SL'] || r['qty'] || 0) || 0;
+                const costPrice = parseFloat(r['Giá nhập (đ)'] || r['Giá nhập'] || r['Đơn giá nhập'] || r['cost_price'] || 0) || 0;
+                const price = parseFloat(r['Giá bán lẻ (đ)'] || r['Giá bán'] || r['Giá lẻ'] || r['price'] || 0) || 0;
+                const wholesalePrice = parseFloat(r['Giá sỉ (đ)'] || r['Giá buôn'] || r['wholesale_price'] || 0) || 0;
+                const note = String(r['Ghi chú'] || r['note'] || '').trim();
+
+                parsedItems.push({
+                    sku: sku || ('SP' + (state.online_products.length + idx + 1).toString().padStart(6, '0')),
+                    name: name || ('Sản phẩm ' + sku),
+                    unit: unit || 'Cái',
+                    supplier: supplier,
+                    qty: qty,
+                    cost_price: costPrice,
+                    price: price,
+                    wholesale_price: wholesalePrice,
+                    note: note
+                });
+            });
+
+            if (parsedItems.length === 0) {
+                alert("Không tìm thấy hàng hóa hợp lệ trong file Excel. Vui lòng tải file mẫu để kiểm tra đúng cột!");
+                return;
+            }
+
+            window.showExcelImportPreviewModal(parsedItems, file.name);
+        } catch (err) {
+            console.error("Lỗi khi đọc file Excel:", err);
+            alert("Lỗi khi đọc file Excel: " + err.message);
+        } finally {
+            e.target.value = "";
+        }
+    };
+    reader.readAsArrayBuffer(file);
+};
+
+// 3. Hiển thị modal xem trước
+window.showExcelImportPreviewModal = function(items, fileName) {
+    window._pendingExcelImportItems = items;
+
+    const modal = document.getElementById("onlineExcelImportPreviewModal");
+    if (!modal) return;
+
+    const titleFile = document.getElementById("excelPreviewFileName");
+    if (titleFile) titleFile.textContent = "Tập tin: " + fileName;
+
+    const countEl = document.getElementById("excelPreviewCount");
+    const qtyEl = document.getElementById("excelPreviewTotalQty");
+    const costEl = document.getElementById("excelPreviewTotalCost");
+
+    let totalQty = 0;
+    let totalCost = 0;
+    items.forEach(item => {
+        totalQty += (item.qty || 0);
+        totalCost += (item.qty * (item.cost_price || 0));
+    });
+
+    if (countEl) countEl.textContent = items.length.toLocaleString('vi-VN');
+    if (qtyEl) qtyEl.textContent = totalQty.toLocaleString('vi-VN');
+    if (costEl) costEl.textContent = formatMoney(totalCost);
+
+    const tableBody = document.querySelector("#onlineExcelPreviewTable tbody");
+    if (tableBody) {
+        tableBody.innerHTML = "";
+        items.forEach((item, idx) => {
+            const cleanSku = String(item.sku).trim().toUpperCase();
+            const existing = (state.online_products || []).find(p => String(p.sku).trim().toUpperCase() === cleanSku);
+            const statusHtml = existing 
+                ? `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.1); color:#059669; font-weight:600; font-size:0.78rem;">+ Tồn hiện có: ${existing.stock_qty}</span>`
+                : `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(2,132,199,0.1); color:#0284c7; font-weight:600; font-size:0.78rem;">+ Hàng mới</span>`;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><strong>${item.sku}</strong></td>
+                <td><strong>${item.name}</strong></td>
+                <td>${item.unit}</td>
+                <td>${item.supplier || '---'}</td>
+                <td style="text-align:right; font-weight:700; color:#10b981;">+${item.qty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right;">${formatMoney(item.cost_price)}</td>
+                <td style="text-align:right; font-weight:600;">${formatMoney(item.qty * item.cost_price)}</td>
+                <td>${statusHtml}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    const btnText = document.getElementById("btnConfirmExcelImportText");
+    if (btnText) btnText.textContent = `Xác nhận nhập kho (${items.length} mặt hàng)`;
+
+    modal.classList.add("active");
+};
+
+// 4. Xác nhận và cập nhật vào hệ thống
+window.confirmExcelImportGoods = function() {
+    const items = window._pendingExcelImportItems;
+    if (!items || items.length === 0) return;
+
+    const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+    const creatorName = currentUser.name || currentUser.username || "Admin / Quản lý kho";
+    const batchId = "LO-EXCEL-" + new Date().toISOString().slice(0, 10).replace(/-/g, "");
+
+    let totalQty = 0;
+    let totalCost = 0;
+
+    if (!state.online_import_records) state.online_import_records = [];
+
+    items.forEach(item => {
+        const cleanSku = String(item.sku).trim().toUpperCase();
+        let prod = (state.online_products || []).find(p => String(p.sku).trim().toUpperCase() === cleanSku);
+
+        const itemQty = parseInt(item.qty) || 0;
+        const itemCost = parseFloat(item.cost_price) || 0;
+        const itemPrice = parseFloat(item.price) || (itemCost > 0 ? itemCost * 1.3 : 0);
+        const itemWholesale = parseFloat(item.wholesale_price) || (itemCost > 0 ? itemCost * 1.15 : 0);
+
+        if (prod) {
+            prod.stock_qty = (parseInt(prod.stock_qty) || 0) + itemQty;
+            if (itemCost > 0) {
+                prod.cost_price = itemCost;
+                prod.import_price = itemCost;
+            }
+            if (itemPrice > 0) prod.price = itemPrice;
+            if (itemWholesale > 0) prod.wholesale_price = itemWholesale;
+            if (item.supplier) {
+                prod.supplier = item.supplier;
+                prod.brand = item.supplier;
+            }
+        } else {
+            prod = {
+                sku: cleanSku,
+                name: item.name,
+                unit: item.unit || "Cái",
+                supplier: item.supplier || "",
+                brand: item.supplier || "",
+                cost_price: itemCost,
+                import_price: itemCost,
+                price: itemPrice || (itemCost * 1.3),
+                wholesale_price: itemWholesale || (itemCost * 1.15),
+                stock_qty: itemQty,
+                min_stock_qty: 100,
+                category: "BOX"
+            };
+            state.online_products.push(prod);
+        }
+
+        totalQty += itemQty;
+        totalCost += (itemQty * itemCost);
+
+        // Add to import history records
+        const importRecId = "IMP-" + new Date().toISOString().slice(0,10).replace(/-/g, "") + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+        const newRecord = {
+            id: importRecId,
+            batch_id: batchId,
+            created_at: new Date().toISOString(),
+            sku: prod.sku,
+            name: prod.name,
+            unit: prod.unit || "Cái",
+            supplier: item.supplier || prod.supplier || "NCC Khác",
+            qty: itemQty,
+            cost_price: itemCost || prod.cost_price || 0,
+            total_cost: itemQty * (itemCost || prod.cost_price || 0),
+            creator: creatorName,
+            source: "EXCEL",
+            note: item.note || `Nhập từ file Excel [Lô: ${batchId}]`,
+            type: "IMPORT"
+        };
+        state.online_import_records.unshift(newRecord);
+
+        // Mirror in online_stock_logs
+        state.online_stock_logs.push({
+            id: "log_" + Math.random().toString(36).substring(2, 9),
+            created_at: new Date().toISOString(),
+            sku: prod.sku,
+            type: "IMPORT",
+            qty: itemQty,
+            note: `[Nhập Excel - ${batchId}] ${item.note || ''}`,
+            creator: creatorName
+        });
+    });
+
+    state.updateState("online_products", state.online_products);
+    state.updateState("online_import_records", state.online_import_records);
+    state.updateState("online_stock_logs", state.online_stock_logs);
+
+    document.getElementById("onlineExcelImportPreviewModal")?.classList.remove("active");
+    window._pendingExcelImportItems = null;
+
+    alert(`🎉 Nhập hàng loạt thành công!\nĐã cập nhật ${items.length} mặt hàng, tổng số lượng bổ sung: ${totalQty.toLocaleString('vi-VN')} với giá trị: ${formatMoney(totalCost)}.`);
+
+    if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
+    if (window.renderOnlineProducts) window.renderOnlineProducts();
+    if (window.renderOnlineStock) window.renderOnlineStock();
+};
+
+// 5. Xuất Excel lịch sử nhập hàng hóa
+window.exportImportHistoryToExcel = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const records = state.online_import_records || [];
+    if (records.length === 0) {
+        alert("Chưa có lịch sử nhập hàng nào để xuất!");
+        return;
+    }
+
+    const exportRows = records.map((r, idx) => ({
+        "STT": idx + 1,
+        "Mã phiếu": r.id || "",
+        "Mã lô": r.batch_id || "",
+        "Thời gian": new Date(r.created_at).toLocaleString('vi-VN'),
+        "Mã SKU": r.sku,
+        "Tên hàng hóa": r.name,
+        "Đơn vị tính": r.unit || "Cái",
+        "Nhà cung cấp": r.supplier || "",
+        "Số lượng bổ sung": r.qty || 0,
+        "Đơn giá nhập (đ)": r.cost_price || 0,
+        "Thành tiền (đ)": r.total_cost || ((r.qty || 0) * (r.cost_price || 0)),
+        "Người nhập bổ sung": r.creator || "Admin",
+        "Hình thức": r.source === "EXCEL" ? "Nhập Excel" : "Thủ công",
+        "Ghi chú": r.note || ""
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportRows);
+    ws['!cols'] = [
+        { wch: 6 },  // STT
+        { wch: 18 }, // Mã phiếu
+        { wch: 16 }, // Mã lô
+        { wch: 20 }, // Thời gian
+        { wch: 14 }, // Mã SKU
+        { wch: 28 }, // Tên hàng
+        { wch: 10 }, // ĐVT
+        { wch: 24 }, // NCC
+        { wch: 16 }, // SL
+        { wch: 14 }, // Giá nhập
+        { wch: 16 }, // Thành tiền
+        { wch: 20 }, // Người nhập
+        { wch: 14 }, // Hình thức
+        { wch: 30 }  // Ghi chú
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Lich_Su_Nhap_Hang");
+    const today = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Lich_Su_Nhap_Hang_InLacHong_${today}.xlsx`);
+};
+
+// 6. Xuất Excel danh sách hàng hóa
+window.exportOnlineProductsToExcel = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const products = state.online_products || [];
+    if (products.length === 0) {
+        alert("Chưa có hàng hóa nào để xuất!");
+        return;
+    }
+
+    const exportRows = products.map((p, idx) => ({
+        "STT": idx + 1,
+        "Mã SKU": p.sku,
+        "Tên hàng hóa": p.name,
+        "Đơn vị tính": p.unit || "Cái",
+        "Nhà cung cấp": p.supplier || p.brand || "",
+        "Giá nhập (đ)": p.cost_price || p.import_price || 0,
+        "Giá bán lẻ (đ)": p.price || 0,
+        "Giá sỉ (đ)": p.wholesale_price || 0,
+        "Tồn kho thực tế": p.stock_qty || 0,
+        "Mức tồn tối thiểu cảnh báo": p.min_stock_qty || 0,
+        "Tình trạng tồn kho": (p.stock_qty < p.min_stock_qty) ? "Cảnh báo sắp hết" : "Đủ hàng"
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportRows);
+    ws['!cols'] = [
+        { wch: 6 },  // STT
+        { wch: 14 }, // Mã SKU
+        { wch: 30 }, // Tên hàng hóa
+        { wch: 12 }, // ĐVT
+        { wch: 24 }, // Nhà cung cấp
+        { wch: 14 }, // Giá nhập
+        { wch: 14 }, // Giá lẻ
+        { wch: 14 }, // Giá sỉ
+        { wch: 16 }, // Tồn kho
+        { wch: 18 }, // Tồn min
+        { wch: 20 }  // Tình trạng
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Danh_Sach_Hang_Hoa");
+    const today = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Danh_Sach_Hang_Hoa_InLacHong_${today}.xlsx`);
+};
+
+// 7. Xóa một bản ghi lịch sử nhập hàng và tùy chọn hoàn tác tồn kho
+window.deleteOnlineImportRecord = function(recId) {
+    const records = state.online_import_records || [];
+    const idx = records.findIndex(r => r.id === recId);
+    if (idx === -1) return;
+
+    const rec = records[idx];
+    if (!confirm(`Bạn có chắc chắn muốn xóa bản ghi nhập hàng "${rec.id}" của mặt hàng "${rec.name}"?`)) {
+        return;
+    }
+
+    const revertStock = confirm(`Bạn có muốn HOÀN TÁC số lượng tồn kho (trừ lại ${rec.qty} sản phẩm cho mã SKU ${rec.sku}) không?\n- Bấm OK để trừ lại tồn kho.\n- Bấm Cancel để chỉ xóa nhật ký và giữ nguyên tồn kho.`);
+    if (revertStock) {
+        const prod = (state.online_products || []).find(p => p.sku === rec.sku);
+        if (prod) {
+            prod.stock_qty = Math.max(0, (parseInt(prod.stock_qty) || 0) - (parseInt(rec.qty) || 0));
+        }
+    }
+
+    records.splice(idx, 1);
+    state.updateState("online_import_records", records);
+    state.updateState("online_products", state.online_products);
+
+    if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
+    if (window.renderOnlineProducts) window.renderOnlineProducts();
+    if (window.renderOnlineStock) window.renderOnlineStock();
+};
