@@ -15054,7 +15054,7 @@ window.ROUTE_DEFINITIONS = [
     { slug: 'hoa-don', tabId: 'online-sales', subtab: 'online-invoices', title: 'Hóa đơn Bán hàng Online | In Lạc Hồng', aliases: ['online-invoices'] },
     { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Trả hàng Online | In Lạc Hồng', aliases: ['online-returns'] },
     { slug: 'hang-hoa', tabId: 'online-sales', subtab: 'online-products', title: 'Danh mục Hàng hóa Sản phẩm | In Lạc Hồng', aliases: ['online-products', 'san-pham', 'danh-sach-hang-hoa'] },
-    { slug: 'nhap-hang-hoa', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập hàng hóa & Bổ sung kho | In Lạc Hồng', aliases: ['nhap-hang', 'nhap-hang-hoa', 'online-import-goods', 'nhap-kho-hang-hoa'] },
+    { slug: 'nhap-kho-hang-hoa', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập kho hàng hóa (Bổ sung số lượng) | In Lạc Hồng', aliases: ['nhap-kho', 'nhap-hang-hoa', 'online-import-goods', 'nhap-kho-hang-hoa'] },
     { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
     { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Tồn kho Hàng hóa | In Lạc Hồng', aliases: ['online-stock', 'ton-kho-hang-hoa'] },
     { slug: 'kiem-ke-kho', tabId: 'online-sales', subtab: 'online-inventory-check', title: 'Kiểm kê Kho hàng hóa | In Lạc Hồng', aliases: ['online-inventory-check'] },
@@ -23697,7 +23697,7 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         else if (subtab === "online-invoices") label = "📄 Xuất hoá đơn";
         else if (subtab === "online-products") label = "📦 Danh sách Hàng hóa";
         else if (subtab === "online-prices" || subtab === "online-pricing") label = "🏷️ Thiết lập Giá";
-        else if (subtab === "online-import-goods") label = "📥 Nhập hàng hóa & Bổ sung kho";
+        else if (subtab === "online-import-goods") label = "📥 Nhập kho hàng hóa (Bổ sung số lượng)";
         titleEl.innerHTML = label;
     }
     
@@ -36073,4 +36073,226 @@ window.deleteOnlineImportRecord = function(recId) {
     if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
     if (window.renderOnlineProducts) window.renderOnlineProducts();
     if (window.renderOnlineStock) window.renderOnlineStock();
+};
+
+
+// ==========================================================================
+// NHẬP DANH MỤC HÀNG HÓA TỪ EXCEL (CATALOG IMPORT)
+// ==========================================================================
+
+// 1. Tải mẫu Excel Danh mục Hàng hóa
+window.downloadProductCatalogTemplate = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const aoa = [
+        ["STT", "Mã SKU (*)", "Tên hàng hóa (*)", "Đơn vị tính", "Nhà cung cấp (*)", "Giá nhập (đ)", "Giá bán lẻ (đ)", "Giá sỉ (đ)", "Số lượng tồn kho ban đầu", "Mức tồn tối thiểu"],
+        [1, "SP000007", "Thuyền", "Chiếc", "Decal Nguyễn Xiển", 8700, 11000, 9900, 2500, 100],
+        [2, "TD04C", "Hộp TD04C", "Chiếc", "Tuấn Dung", 44000, 55555, 50000, 2500, 100],
+        [3, "TD08C", "Hộp TD08C", "Chiếc", "Tuấn Dung", 49900, 62963, 56667, 2500, 100],
+        [4, "TD02B", "Hộp TD02B", "Chiếc", "Tuấn Dung", 40000, 50000, 45000, 2500, 100],
+        [5, "SP-MOI-01", "Hộp carton nắp gài 25x20x6", "Hộp", "Bao Bì Lạc Hồng", 4500, 8000, 6500, 1000, 100]
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = [
+        { wch: 6 },  // STT
+        { wch: 15 }, // Mã SKU
+        { wch: 32 }, // Tên hàng hóa
+        { wch: 12 }, // ĐVT
+        { wch: 25 }, // Nhà cung cấp
+        { wch: 14 }, // Giá nhập
+        { wch: 14 }, // Giá bán lẻ
+        { wch: 14 }, // Giá sỉ
+        { wch: 22 }, // Tồn ban đầu
+        { wch: 18 }  // Tồn min
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Danh_Muc_Hang_Hoa");
+    XLSX.writeFile(wb, "Mau_Danh_Muc_Hang_Hoa_InLacHong.xlsx");
+};
+
+// 2. Xử lý đọc file Excel nạp vào Danh mục Hàng hóa
+window.handleExcelImportCatalogFile = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        try {
+            const data = new Uint8Array(evt.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const ws = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+
+            if (!rows || rows.length === 0) {
+                alert("File Excel không có dữ liệu!");
+                return;
+            }
+
+            const parsedProducts = [];
+            rows.forEach((r, idx) => {
+                const sku = String(r['Mã SKU (*)'] || r['Mã SKU'] || r['Mã hàng'] || r['SKU'] || r['sku'] || '').trim();
+                const name = String(r['Tên hàng hóa (*)'] || r['Tên hàng hóa'] || r['Tên hàng'] || r['Tên sản phẩm'] || r['name'] || '').trim();
+                if (!sku && !name) return;
+
+                const unit = String(r['Đơn vị tính'] || r['Đơn vị'] || r['ĐVT'] || r['unit'] || 'Cái').trim();
+                const supplier = String(r['Nhà cung cấp (*)'] || r['Nhà cung cấp'] || r['NCC'] || r['supplier'] || '').trim();
+                const costPrice = parseFloat(r['Giá nhập (đ)'] || r['Giá nhập'] || r['Đơn giá nhập'] || r['cost_price'] || 0) || 0;
+                const price = parseFloat(r['Giá bán lẻ (đ)'] || r['Giá bán lẻ'] || r['Giá bán'] || r['Giá lẻ'] || r['price'] || 0) || (costPrice > 0 ? costPrice * 1.3 : 0);
+                const wholesalePrice = parseFloat(r['Giá sỉ (đ)'] || r['Giá sỉ'] || r['Giá buôn'] || r['wholesale_price'] || 0) || (costPrice > 0 ? costPrice * 1.15 : 0);
+                const stockQty = parseInt(r['Số lượng tồn kho ban đầu'] || r['Số lượng tồn ban đầu'] || r['Tồn kho ban đầu'] || r['Tồn kho'] || r['stock_qty'] || 0) || 0;
+                const minStock = parseInt(r['Mức tồn tối thiểu'] || r['Tồn tối thiểu'] || r['min_stock_qty'] || 100) || 100;
+
+                parsedProducts.push({
+                    sku: sku || ('SP' + (state.online_products.length + idx + 1).toString().padStart(6, '0')),
+                    name: name || ('Sản phẩm ' + sku),
+                    unit: unit || 'Cái',
+                    supplier: supplier,
+                    brand: supplier,
+                    cost_price: costPrice,
+                    import_price: costPrice,
+                    price: price,
+                    wholesale_price: wholesalePrice,
+                    stock_qty: stockQty,
+                    min_stock_qty: minStock,
+                    category: "BOX"
+                });
+            });
+
+            if (parsedProducts.length === 0) {
+                alert("Không tìm thấy hàng hóa hợp lệ trong file Excel. Vui lòng tải file mẫu danh mục để kiểm tra đúng cột!");
+                return;
+            }
+
+            window.showCatalogImportPreviewModal(parsedProducts, file.name);
+        } catch (err) {
+            console.error("Lỗi khi đọc file Excel danh mục:", err);
+            alert("Lỗi khi đọc file Excel: " + err.message);
+        } finally {
+            e.target.value = "";
+        }
+    };
+    reader.readAsArrayBuffer(file);
+};
+
+// 3. Hiển thị modal xem trước nạp danh mục hàng hóa
+window.showCatalogImportPreviewModal = function(items, fileName) {
+    window._pendingCatalogImportItems = items;
+
+    const modal = document.getElementById("onlineCatalogImportPreviewModal");
+    if (!modal) return;
+
+    const titleFile = document.getElementById("catalogPreviewFileName");
+    if (titleFile) titleFile.textContent = "Tập tin: " + fileName;
+
+    let newCount = 0;
+    let updateCount = 0;
+    const tableBody = document.querySelector("#onlineCatalogPreviewTable tbody");
+    if (tableBody) {
+        tableBody.innerHTML = "";
+        items.forEach((item, idx) => {
+            const cleanSku = String(item.sku).trim().toUpperCase();
+            const existing = (state.online_products || []).find(p => String(p.sku).trim().toUpperCase() === cleanSku);
+            let statusHtml = "";
+            if (existing) {
+                updateCount++;
+                statusHtml = `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(245,158,11,0.1); color:#d97706; font-weight:600; font-size:0.78rem;">Cập nhật thông tin</span>`;
+            } else {
+                newCount++;
+                statusHtml = `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.1); color:#059669; font-weight:600; font-size:0.78rem;">Tạo mới sản phẩm</span>`;
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><strong>${item.sku}</strong></td>
+                <td><strong>${item.name}</strong></td>
+                <td>${item.unit}</td>
+                <td>${item.supplier || '---'}</td>
+                <td style="text-align:right; font-weight:500;">${formatMoney(item.cost_price)}</td>
+                <td style="text-align:right; font-weight:600; color:var(--primary);">${formatMoney(item.price)}</td>
+                <td style="text-align:right; font-weight:600; color:var(--success);">${formatMoney(item.wholesale_price)}</td>
+                <td style="text-align:right;">${item.stock_qty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:center;">${statusHtml}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    const countEl = document.getElementById("catalogPreviewCount");
+    const newEl = document.getElementById("catalogPreviewNewCount");
+    const updateEl = document.getElementById("catalogPreviewUpdateCount");
+
+    if (countEl) countEl.textContent = items.length.toLocaleString('vi-VN');
+    if (newEl) newEl.textContent = newCount.toLocaleString('vi-VN');
+    if (updateEl) updateEl.textContent = updateCount.toLocaleString('vi-VN');
+
+    const btnText = document.getElementById("btnConfirmCatalogImportText");
+    if (btnText) btnText.textContent = `Xác nhận nạp (${items.length} mặt hàng) vào Danh mục`;
+
+    modal.classList.add("active");
+};
+
+// 4. Xác nhận nạp danh mục hàng hóa
+window.confirmExcelImportCatalog = function() {
+    const items = window._pendingCatalogImportItems;
+    if (!items || items.length === 0) return;
+
+    let addedCount = 0;
+    let updatedCount = 0;
+
+    items.forEach(item => {
+        const cleanSku = String(item.sku).trim().toUpperCase();
+        let prod = (state.online_products || []).find(p => String(p.sku).trim().toUpperCase() === cleanSku);
+
+        if (prod) {
+            updatedCount++;
+            prod.name = item.name;
+            prod.unit = item.unit;
+            if (item.supplier) {
+                prod.supplier = item.supplier;
+                prod.brand = item.supplier;
+            }
+            if (item.cost_price > 0) {
+                prod.cost_price = item.cost_price;
+                prod.import_price = item.cost_price;
+            }
+            if (item.price > 0) prod.price = item.price;
+            if (item.wholesale_price > 0) prod.wholesale_price = item.wholesale_price;
+            if (item.min_stock_qty > 0) prod.min_stock_qty = item.min_stock_qty;
+        } else {
+            addedCount++;
+            state.online_products.push(item);
+
+            if (item.stock_qty > 0) {
+                state.online_stock_logs.push({
+                    id: "log_" + Math.random().toString(36).substring(2, 9),
+                    created_at: new Date().toISOString(),
+                    sku: cleanSku,
+                    type: "IMPORT",
+                    qty: item.stock_qty,
+                    note: "Khởi tạo tồn kho từ Excel danh mục hàng hóa"
+                });
+            }
+        }
+    });
+
+    state.updateState("online_products", state.online_products);
+    state.updateState("online_stock_logs", state.online_stock_logs);
+
+    document.getElementById("onlineCatalogImportPreviewModal")?.classList.remove("active");
+    window._pendingCatalogImportItems = null;
+
+    alert(`🎉 Đã nạp thành công ${items.length} mặt hàng vào Danh mục Hàng hóa!\n- Thêm mới: ${addedCount} sản phẩm.\n- Cập nhật thông tin: ${updatedCount} sản phẩm.`);
+
+    if (window.renderOnlineProducts) window.renderOnlineProducts();
 };

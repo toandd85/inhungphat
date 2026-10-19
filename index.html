@@ -257,10 +257,6 @@
                                     <i data-lucide="list" style="width: 12px; height: 12px;"></i>
                                     <span>Danh sách hàng hóa</span>
                                 </a>
-                                <a href="/nhap-hang-hoa" class="menu-item submenu-item" data-slug="nhap-hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="download" style="width: 12px; height: 12px;"></i>
-                                    <span>Nhập hàng hóa</span>
-                                </a>
                                 <a href="/thiet-lap-gia" class="menu-item submenu-item" data-slug="thiet-lap-gia" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="tags" style="width: 12px; height: 12px;"></i>
                                     <span>Thiết lập giá</span>
@@ -276,9 +272,9 @@
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
                             </button>
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-                                <a href="/nhap-hang-hoa" class="menu-item submenu-item" data-slug="nhap-hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                <a href="/nhap-kho-hang-hoa" class="menu-item submenu-item" data-slug="nhap-kho-hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="download" style="width: 12px; height: 12px;"></i>
-                                    <span>Nhập hàng hóa</span>
+                                    <span>Nhập kho (bổ sung SL)</span>
                                 </a>
                                 <a href="/ton-kho" class="menu-item submenu-item" data-slug="ton-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="package" style="width: 12px; height: 12px;"></i>
@@ -1837,13 +1833,18 @@
                                 </select>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                <button class="btn btn-secondary" onclick="window.navigateTo('nhap-hang-hoa')" style="display:flex; align-items:center; gap:6px;">
-                                    <i data-lucide="download"></i>
-                                    <span>📥 Nhập hàng hóa</span>
+                                <button class="btn btn-secondary" onclick="window.downloadProductCatalogTemplate()" style="display:flex; align-items:center; gap:6px; font-weight:500;" title="Tải file mẫu Excel danh mục hàng hóa">
+                                    <i data-lucide="download-cloud"></i>
+                                    <span>Mẫu Excel</span>
                                 </button>
+                                <button class="btn btn-primary" onclick="document.getElementById('excelImportCatalogFileInput').click()" style="display:flex; align-items:center; gap:6px; background:#0284c7; border:none;" title="Nhập danh sách hàng hóa hàng loạt từ file Excel vào danh mục">
+                                    <i data-lucide="file-up"></i>
+                                    <span>Nhập từ Excel</span>
+                                </button>
+                                <input type="file" id="excelImportCatalogFileInput" accept=".xlsx, .xls, .csv" style="display:none;" onchange="window.handleExcelImportCatalogFile(event)">
                                 <button class="btn btn-secondary" onclick="window.exportOnlineProductsToExcel()" style="display:flex; align-items:center; gap:6px;" title="Xuất danh sách hàng hóa ra file Excel">
                                     <i data-lucide="file-spreadsheet"></i>
-                                    <span>📊 Xuất Excel</span>
+                                    <span>Xuất Excel</span>
                                 </button>
                                 <button class="btn btn-primary" id="btnNewOnlineProduct" onclick="window.openNewOnlineProductModal('ADD')" style="display:flex; align-items:center; gap:6px;">
                                     <i data-lucide="plus"></i>
@@ -7136,6 +7137,63 @@
 
     </div>
 
+    <!-- Modal: Catalog Excel Import Preview Modal -->
+    <div class="modal" id="onlineCatalogImportPreviewModal" style="z-index: 200060;">
+        <div class="modal-dialog" style="max-width: 950px; width: 95%;">
+            <div class="modal-content">
+                <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:16px 20px;">
+                    <div>
+                        <h2 style="font-size:1.2rem; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="package-plus" style="color:#0284c7;"></i>
+                            <span>Xem trước Danh mục Hàng hóa từ Excel</span>
+                        </h2>
+                        <small id="catalogPreviewFileName" style="color:var(--text-secondary); font-size:0.8rem;"></small>
+                    </div>
+                    <button class="btn-close" onclick="document.getElementById('onlineCatalogImportPreviewModal').classList.remove('active')"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body" style="padding:20px; max-height:calc(85vh - 130px); overflow-y:auto;">
+                    <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap; background:rgba(2,132,199,0.06); padding:12px 16px; border-radius:8px; border:1px solid rgba(2,132,199,0.2);">
+                        <div>Tổng số mặt hàng: <strong id="catalogPreviewCount" style="color:#0284c7;">0</strong></div>
+                        <div>Mặt hàng mới: <strong id="catalogPreviewNewCount" style="color:#10b981;">0</strong></div>
+                        <div>Cập nhật thông tin: <strong id="catalogPreviewUpdateCount" style="color:#f59e0b;">0</strong></div>
+                    </div>
+                    <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:12px;">
+                        <i data-lucide="info" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i>
+                        Các sản phẩm sau khi xác nhận sẽ được nạp trực tiếp vào <strong>Danh sách hàng hóa</strong> của hệ thống.
+                    </div>
+                    <div class="table-responsive" style="max-height:360px; overflow-y:auto; border:1px solid var(--border-color); border-radius:6px;">
+                        <table class="table" id="onlineCatalogPreviewTable" style="margin:0; font-size:0.85rem;">
+                            <thead style="position:sticky; top:0; background:var(--bg-card); z-index:1;">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã SKU</th>
+                                    <th>Tên hàng hóa</th>
+                                    <th>ĐVT</th>
+                                    <th>Nhà cung cấp</th>
+                                    <th style="text-align:right;">Giá nhập</th>
+                                    <th style="text-align:right;">Giá bán lẻ</th>
+                                    <th style="text-align:right;">Giá sỉ</th>
+                                    <th style="text-align:right;">Tồn ban đầu</th>
+                                    <th style="text-align:center;">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; padding:16px 20px; border-top:1px solid var(--border-color);">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('onlineCatalogImportPreviewModal').classList.remove('active')">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmCatalogImport" onclick="window.confirmExcelImportCatalog()" style="background:#0284c7; border:none; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="check-circle-2"></i>
+                        <span id="btnConfirmCatalogImportText">Xác nhận nạp vào Danh mục Hàng hóa</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: Excel Import Preview Modal -->
     <div class="modal" id="onlineExcelImportPreviewModal" style="z-index: 200050;">
         <div class="modal-dialog" style="max-width: 900px; width: 95%;">
@@ -10401,7 +10459,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_import_goods_excel"></script>
+    <script src="/app.js?v=20261019_catalog_vs_restock"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
