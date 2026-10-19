@@ -14137,6 +14137,10 @@ class AppState {
                     p.min_stock_qty = typeof p.min_stock_qty === 'number' ? p.min_stock_qty : 10;
                     p.price = typeof p.price === 'number' ? p.price : 0;
                     p.wholesale_price = typeof p.wholesale_price === 'number' ? p.wholesale_price : 0;
+                    p.cost_price = typeof p.cost_price === 'number' ? p.cost_price : (typeof p.import_price === 'number' ? p.import_price : 0);
+                    p.import_price = p.cost_price;
+                    p.supplier = p.supplier || p.brand || '';
+                    p.brand = p.supplier;
                     
                     // Auto configure retail quantity price tiers if missing
                     if (!p.retail_qty_prices || p.retail_qty_prices.length === 0) {
@@ -21137,9 +21141,10 @@ async function sendTelegramOrderAlert(order) {
             columns: [
                 { name: 'Mã SKU', type: 'text', getValue: (p) => p.sku },
                 { name: 'Ảnh', type: 'image', getValue: (p) => p.image || '' },
-                { name: 'Mã vạch', type: 'text', getValue: (p) => p.barcode || 'N/A' },
                 { name: 'Tên hàng hóa', type: 'text', getValue: (p) => p.name },
                 { name: 'Đơn vị', type: 'text', getValue: (p) => p.unit },
+                { name: 'Nhà cung cấp', type: 'text', getValue: (p) => p.supplier || p.brand || '' },
+                { name: 'Giá nhập', type: 'number', getValue: (p) => p.cost_price || p.import_price || 0 },
                 { name: 'Giá bán lẻ', type: 'number', getValue: (p) => p.price },
                 { name: 'Giá bán sỉ', type: 'number', getValue: (p) => p.wholesale_price },
                 { name: 'Tồn kho', type: 'number', getValue: (p) => p.stock_qty },
@@ -21618,6 +21623,11 @@ async function sendTelegramOrderAlert(order) {
                 'Mã vạch': 'barcode',
                 'Tên hàng hóa': 'name',
                 'Đơn vị': 'unit',
+                'Nhà cung cấp': (item, val) => { item.supplier = String(val).trim(); item.brand = item.supplier; },
+                'NCC': (item, val) => { item.supplier = String(val).trim(); item.brand = item.supplier; },
+                'Thương hiệu': (item, val) => { item.supplier = String(val).trim(); item.brand = item.supplier; },
+                'Giá nhập': (item, val) => { item.cost_price = Number(val) || 0; item.import_price = item.cost_price; },
+                'Đơn giá nhập': (item, val) => { item.cost_price = Number(val) || 0; item.import_price = item.cost_price; },
                 'Giá bán lẻ': (item, val) => { item.price = Number(val) || 0; },
                 'Giá bán sỉ': (item, val) => { item.wholesale_price = Number(val) || 0; },
                 'Tồn kho': (item, val) => { item.stock_qty = Number(val) || 0; },
@@ -21626,9 +21636,12 @@ async function sendTelegramOrderAlert(order) {
             newRecordGenerator: (excelId) => ({
                 sku: excelId,
                 image: '',
-                barcode: '',
                 name: '',
                 unit: 'Cái',
+                supplier: '',
+                brand: '',
+                cost_price: 0,
+                import_price: 0,
                 price: 0,
                 wholesale_price: 0,
                 stock_qty: 0,
@@ -23847,6 +23860,21 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         imgPreview.src = "";
         imgPreview.style.display = "none";
     }
+
+    // Populate Supplier datalist
+    const dl = document.getElementById("onlineProductSupplierDatalist");
+    if (dl) {
+        dl.innerHTML = "";
+        const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH");
+        const knownSuppliers = new Set(suppliers.map(s => s.name));
+        (state.online_products || []).forEach(p => {
+            if (p.supplier) knownSuppliers.add(p.supplier);
+            if (p.brand) knownSuppliers.add(p.brand);
+        });
+        knownSuppliers.forEach(sName => {
+            if (sName) dl.innerHTML += `<option value="${sName}">`;
+        });
+    }
     
     const titleEl = document.getElementById("onlineProductModalTitle");
     const skuInput = document.getElementById("onlineProductSku");
@@ -23857,6 +23885,8 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         skuInput.readOnly = false;
         if (stockGroup) stockGroup.style.display = "block";
         document.getElementById("onlineProductAction").value = "ADD";
+        if (document.getElementById("onlineProductSupplier")) document.getElementById("onlineProductSupplier").value = "";
+        if (document.getElementById("onlineProductCostPrice")) document.getElementById("onlineProductCostPrice").value = 0;
     } else {
         titleEl.textContent = "Sửa thông tin hàng hóa";
         skuInput.value = sku;
@@ -23869,10 +23899,15 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         if (prod) {
             document.getElementById("onlineProductName").value = prod.name;
             document.getElementById("onlineProductUnit").value = prod.unit;
+            if (document.getElementById("onlineProductSupplier")) {
+                document.getElementById("onlineProductSupplier").value = prod.supplier || prod.brand || "";
+            }
+            if (document.getElementById("onlineProductCostPrice")) {
+                document.getElementById("onlineProductCostPrice").value = prod.cost_price || prod.import_price || 0;
+            }
             document.getElementById("onlineProductPrice").value = prod.price;
             document.getElementById("onlineProductWholesalePrice").value = prod.wholesale_price;
             document.getElementById("onlineProductMinStock").value = prod.min_stock_qty;
-            document.getElementById("onlineProductBarcode").value = prod.barcode || "";
             if (prod.image && imgPreview) {
                 imgPreview.src = prod.image;
                 imgPreview.style.display = "block";
@@ -23881,7 +23916,7 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
     }
     
     modal.classList.add("active");
-}
+};
 
 window.openOnlineImportStockModal = function() {
     const modal = document.getElementById("onlineImportStockModal");
@@ -25952,10 +25987,11 @@ function handleOnlineProductSubmit(e) {
     const sku = document.getElementById("onlineProductSku").value.trim().toUpperCase();
     const name = document.getElementById("onlineProductName").value.trim();
     const unit = document.getElementById("onlineProductUnit").value.trim();
+    const supplier = document.getElementById("onlineProductSupplier")?.value.trim() || "";
+    const costPrice = parseFloat(document.getElementById("onlineProductCostPrice")?.value) || 0;
     const price = parseFloat(document.getElementById("onlineProductPrice").value) || 0;
     const wholesalePrice = parseFloat(document.getElementById("onlineProductWholesalePrice").value) || 0;
     const minStock = parseInt(document.getElementById("onlineProductMinStock").value) || 0;
-    const barcode = document.getElementById("onlineProductBarcode").value.trim();
     
     const imgPreview = document.getElementById("onlineProductImagePreview");
     const image = (imgPreview && imgPreview.style.display !== "none") ? imgPreview.src : "";
@@ -25969,9 +26005,12 @@ function handleOnlineProductSubmit(e) {
         const newProd = {
             sku,
             image,
-            barcode,
             name,
             unit,
+            supplier,
+            brand: supplier,
+            cost_price: costPrice,
+            import_price: costPrice,
             price,
             wholesale_price: wholesalePrice,
             stock_qty: initialStock,
@@ -25996,10 +26035,13 @@ function handleOnlineProductSubmit(e) {
         if (prod) {
             prod.name = name;
             prod.unit = unit;
+            prod.supplier = supplier;
+            prod.brand = supplier;
+            prod.cost_price = costPrice;
+            prod.import_price = costPrice;
             prod.price = price;
             prod.wholesale_price = wholesalePrice;
             prod.min_stock_qty = minStock;
-            prod.barcode = barcode;
             prod.image = image;
         }
     }
@@ -26288,13 +26330,14 @@ window.renderOnlineProducts = function() {
     if (!tableBody) return;
     tableBody.innerHTML = "";
     
-    const query = document.getElementById("onlineProductSearchInput")?.value.toLowerCase() || "";
+    const query = document.getElementById("onlineProductSearchInput")?.value.toLowerCase().trim() || "";
     
     const filteredProducts = (state.online_products || []).filter(p => {
         if (!p) return false;
         const sku = String(p.sku || "").toLowerCase();
         const name = String(p.name || "").toLowerCase();
-        return sku.includes(query) || name.includes(query);
+        const supplier = String(p.supplier || p.brand || "").toLowerCase();
+        return sku.includes(query) || name.includes(query) || supplier.includes(query);
     });
     
     filteredProducts.forEach(prod => {
@@ -26307,15 +26350,26 @@ window.renderOnlineProducts = function() {
         } else {
             imgHtml = `<div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.04); border-radius:4px; border:1px dashed var(--border-color); color:var(--text-secondary);"><i data-lucide="image" style="width:14px; height:14px;"></i></div>`;
         }
+
+        const supplierName = prod.supplier || prod.brand || "";
+        const supplierHtml = supplierName 
+            ? `<span style="font-weight:500; color:var(--text);">${supplierName}</span>` 
+            : `<span style="color:var(--text-secondary); font-style:italic;">---</span>`;
+        
+        const costPrice = Number(prod.cost_price || prod.import_price || 0);
+        const costHtml = costPrice > 0 
+            ? `<span style="font-weight:600; color:#64748b;">${formatMoney(costPrice)}</span>` 
+            : `<span style="color:var(--text-secondary);">0đ</span>`;
         
         row.innerHTML = `
             <td><strong>${prod.sku}</strong></td>
             <td>${imgHtml}</td>
-            <td>${prod.barcode || 'N/A'}</td>
-            <td>${prod.name}</td>
-            <td>${prod.unit}</td>
-            <td>${formatMoney(prod.price)}</td>
-            <td>${formatMoney(prod.wholesale_price)}</td>
+            <td><strong>${prod.name}</strong></td>
+            <td>${prod.unit || 'Cái'}</td>
+            <td>${supplierHtml}</td>
+            <td>${costHtml}</td>
+            <td style="font-weight:600; color:var(--primary);">${formatMoney(prod.price)}</td>
+            <td style="font-weight:600; color:var(--success);">${formatMoney(prod.wholesale_price)}</td>
             <td><strong class="${isLow ? 'text-danger' : 'text-success'}">${prod.stock_qty}</strong> / ${prod.min_stock_qty}</td>
             <td>
                 <div class="card-actions-row">

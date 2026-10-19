@@ -1837,11 +1837,13 @@
 
                                         <th>Ảnh</th>
 
-                                        <th>Mã vạch</th>
-
                                         <th>Tên hàng hóa</th>
 
                                         <th>Đơn vị</th>
+
+                                        <th>Nhà cung cấp</th>
+
+                                        <th>Giá nhập</th>
 
                                         <th>Giá bán lẻ</th>
 
@@ -6657,15 +6659,25 @@
 
                             <div class="form-group">
 
-                                <label for="onlineProductBarcode">Mã vạch (Barcode)</label>
+                                <label for="onlineProductSupplier">Nhà cung cấp</label>
 
-                                <input type="text" class="form-input" id="onlineProductBarcode" placeholder="Ví dụ: 893609870001">
+                                <input type="text" class="form-input" id="onlineProductSupplier" list="onlineProductSupplierDatalist" placeholder="Chọn hoặc nhập NCC...">
+
+                                <datalist id="onlineProductSupplierDatalist"></datalist>
 
                             </div>
 
                         </div>
 
-                        <div class="form-grid">
+                        <div class="form-grid" style="grid-template-columns: repeat(3, 1fr);">
+
+                            <div class="form-group">
+
+                                <label for="onlineProductCostPrice">Giá nhập (đ)</label>
+
+                                <input type="number" class="form-input" id="onlineProductCostPrice" value="0" min="0" placeholder="0">
+
+                            </div>
 
                             <div class="form-group">
 
@@ -10198,7 +10210,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_retail_tiers"></script>
+    <script src="/app.js?v=20261019_supplier_costprice"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
