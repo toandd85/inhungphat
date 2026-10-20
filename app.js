@@ -14627,7 +14627,8 @@ function renderAll() {
 }
 
 function formatMoney(amount) {
-    return amount.toLocaleString('vi-VN') + "đ";
+    const val = Math.round(Number(amount) || 0);
+    return val.toLocaleString('vi-VN') + "đ";
 }
 
 function renderKPIs() {
@@ -24606,13 +24607,13 @@ window.calculateServiceItemPricing = function(sku, qty) {
         return {
             price: Math.round(minFee / qty),
             item_total: minFee,
-            price_note: `Tối thiểu ${formatMoney(minFee)}đ`
+            price_note: `Tối thiểu ${formatMoney(minFee)}`
         };
     } else {
         return {
             price: unitPrice,
             item_total: rawTotal,
-            price_note: `${formatMoney(unitPrice)}đ/${service.unit || 'bộ'}`
+            price_note: `${formatMoney(unitPrice)}/${service.unit || 'bộ'}`
         };
     }
 };
@@ -25119,15 +25120,15 @@ window.renderPosCart = function() {
         const noteBadge = item.price_note ? `<small style="display:block; font-size:0.68rem; color:#b45309; font-weight:600;">${item.price_note}</small>` : '';
 
         row.innerHTML = `
-            <span style="width: 36px; text-align: center; color:#64748b; font-size:0.8rem;">${idx + 1}</span>
+            <span style="width: 32px; text-align: center; color:#64748b; font-size:0.8rem;">${idx + 1}</span>
             <div style="flex: 1; padding-left: 6px; overflow:hidden;">
                 <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.name}">${item.name}</div>
                 <div style="font-size:0.75rem; color:#64748b;">
                     SKU: <strong>${item.sku}</strong> ${priceBadge}
                 </div>
             </div>
-            <span style="width: 65px; text-align: center; font-size:0.8rem; color:#475569;">${item.unit}</span>
-            <div style="width: 105px; text-align: center;">
+            <span style="width: 55px; text-align: center; font-size:0.8rem; color:#475569;">${item.unit}</span>
+            <div style="width: 125px; text-align: center;">
                 <div class="pos-qty-control">
                     <button type="button" class="pos-qty-btn" onclick="window.addPosItem('${item.sku}', -1)">-</button>
                     <input type="number" class="pos-qty-input" value="${item.qty}" min="1" onchange="window.updatePosItemQty('${item.sku}', this.value)" onfocus="this.select()">
@@ -25138,10 +25139,10 @@ window.renderPosCart = function() {
                 ${typeof formatMoney === 'function' ? formatMoney(item.price) : item.price}
                 ${noteBadge}
             </div>
-            <div style="width: 115px; text-align: right; font-weight:700; color:#0284c7;">
+            <div style="width: 120px; text-align: right; font-weight:700; color:#0284c7;">
                 ${typeof formatMoney === 'function' ? formatMoney(item.item_total) : item.item_total}
             </div>
-            <div style="width: 36px; text-align: center;">
+            <div style="width: 32px; text-align: center;">
                 <button type="button" class="pos-del-btn" onclick="window.removePosItem('${item.sku}')" title="Xóa mặt hàng này">
                     <i data-lucide="trash-2" style="width:15px; height:15px;"></i>
                 </button>
@@ -25167,13 +25168,16 @@ window.recalcPosTotals = function() {
     const totalQty = goodsItems.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
     const processingFee = serviceItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
 
-    const discountVal = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
+    const discountPercent = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
     const shipFeeVal = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
     const vatPercent = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
 
-    // YÊU CẦU 5: Phí VAT tính sau tất cả dịch vụ kể cả gia công và vận chuyển
-    // Tổng trước thuế = Tiền hàng + Phí gia công + Phí vận chuyển - Chiết khấu
-    const totalBeforeVat = Math.max(0, subtotal + processingFee + shipFeeVal - discountVal);
+    // Chiết khấu tính theo % trên tổng tiền hàng + gia công + vận chuyển
+    const totalBeforeDiscount = subtotal + processingFee + shipFeeVal;
+    const discountVal = Math.round(totalBeforeDiscount * (discountPercent / 100));
+
+    // YÊU CẦU: Thuế VAT tính sau tất cả hàng hoá, dịch vụ gia công và vận chuyển (sau khi trừ chiết khấu)
+    const totalBeforeVat = Math.max(0, totalBeforeDiscount - discountVal);
     const vatVal = Math.round(totalBeforeVat * (vatPercent / 100));
     const grandTotal = totalBeforeVat + vatVal;
 
@@ -25182,16 +25186,28 @@ window.recalcPosTotals = function() {
     const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
     setTxt("posTotalQtyCount", totalQty);
     setTxt("posSubtotalAmount", fmt(subtotal));
-    setTxt("posDiscountAmount", discountVal > 0 ? `-${fmt(discountVal)}` : "-0đ");
-    setTxt("posShipFeeAmount", fmt(shipFeeVal));
-    setTxt("posVatAmount", fmt(vatVal));
-    setTxt("posGrandTotalAmount", fmt(grandTotal));
 
     const procRow = document.getElementById("posProcessingSummaryRow");
     if (procRow) {
         procRow.style.display = processingFee > 0 ? "flex" : "none";
         setTxt("posProcessingFeeAmount", `+${fmt(processingFee)}`);
     }
+
+    setTxt("posShipFeeAmount", fmt(shipFeeVal));
+
+    const discountRow = document.getElementById("posDiscountRowLabel");
+    if (discountRow) {
+        discountRow.textContent = discountPercent > 0 ? `Chiết khấu (${discountPercent}%):` : "Chiết khấu / Giảm giá:";
+    }
+    setTxt("posDiscountAmount", discountVal > 0 ? `-${fmt(discountVal)}` : "-0đ");
+
+    const vatRow = document.getElementById("posVatRowLabel");
+    if (vatRow) {
+        vatRow.textContent = vatPercent > 0 ? `Thuế VAT (${vatPercent}%):` : "Thuế VAT:";
+    }
+    setTxt("posVatAmount", vatVal > 0 ? `+${fmt(vatVal)}` : "+0đ");
+
+    setTxt("posGrandTotalAmount", fmt(grandTotal));
 };
 
 // Submit POS Order (isDraft = true: Lưu nháp, isDraft = false: Xác nhận / Thanh toán)
@@ -25206,7 +25222,7 @@ window.submitPosOrder = function(isDraft = false) {
         const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
         const salesperson = currentUser.name || "Admin";
 
-        const discount = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
+        const discountPercent = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
         const vatRate = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
         const shipFee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
         const paymentMethod = document.getElementById("posPaymentMethodSelect")?.value || "BANK_TRANSFER";
@@ -25219,8 +25235,12 @@ window.submitPosOrder = function(isDraft = false) {
         const subtotal = goodsItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
         const processingFee = serviceItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
 
-        // VAT tính sau tất cả dịch vụ kể cả gia công và vận chuyển
-        const totalBeforeVat = Math.max(0, subtotal + processingFee + shipFee - discount);
+        // Chiết khấu tính theo % trên tổng tiền hàng + gia công + vận chuyển
+        const totalBeforeDiscount = subtotal + processingFee + shipFee;
+        const discount = Math.round(totalBeforeDiscount * (discountPercent / 100));
+
+        // VAT tính sau tất cả hàng hoá, dịch vụ gia công và vận chuyển (sau khi trừ chiết khấu)
+        const totalBeforeVat = Math.max(0, totalBeforeDiscount - discount);
         const vatAmount = Math.round(totalBeforeVat * (vatRate / 100));
         const totalAmount = totalBeforeVat + vatAmount;
 
@@ -25263,7 +25283,14 @@ window.submitPosOrder = function(isDraft = false) {
             price_book: window.posSelectedPriceBook || "RETAIL",
             subtotal: subtotal,
             processing_fee: processingFee,
-            processing_services: procResult.services,
+            processing_services: serviceItems.map(s => ({
+                sku: s.sku,
+                name: s.name,
+                qty: s.qty,
+                price: s.price,
+                total: s.item_total
+            })),
+            discount_percent: discountPercent,
             discount: discount,
             vat_rate: vatRate,
             vat_amount: vatAmount,

@@ -5852,9 +5852,9 @@ select.form-select, .form-select {
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     overflow: hidden;
-    height: 28px;
+    height: 30px;
     background: #ffffff;
-    width: 95px;
+    width: 115px;
     margin: 0 auto;
 }
 
@@ -5864,7 +5864,7 @@ select.form-select, .form-select {
 }
 
 .pos-qty-btn {
-    width: 26px;
+    width: 28px;
     height: 100%;
     border: none;
     background: #f1f5f9;
@@ -5875,6 +5875,7 @@ select.form-select, .form-select {
     justify-content: center;
     font-weight: 700;
     font-size: 0.95rem;
+    flex-shrink: 0;
 }
 
 .pos-qty-btn:hover {
@@ -5887,15 +5888,31 @@ select.form-select, .form-select {
 }
 
 .pos-qty-input {
-    width: 43px;
+    flex: 1;
+    width: 100%;
+    min-width: 45px;
     height: 100%;
     border: none;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 700;
     outline: none;
     color: inherit;
     background: transparent;
+    padding: 0 2px;
+}
+
+.pos-qty-input::-webkit-outer-spin-button,
+.pos-qty-input::-webkit-inner-spin-button,
+.pos-mini-input::-webkit-outer-spin-button,
+.pos-mini-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pos-qty-input,
+.pos-mini-input {
+    -moz-appearance: textfield;
 }
 
 .pos-del-btn {
@@ -5937,7 +5954,7 @@ select.form-select, .form-select {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: #475569;
 }
 
@@ -5946,15 +5963,22 @@ select.form-select, .form-select {
 }
 
 .pos-mini-input {
-    height: 28px;
-    padding: 2px 6px;
+    height: 30px;
+    padding: 2px 8px;
     border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
     text-align: right;
     width: 90px;
     background: #ffffff;
     color: inherit;
+    transition: border-color 0.15s ease;
+}
+
+.pos-mini-input:focus {
+    border-color: #0284c7;
+    outline: none;
 }
 
 [data-theme="dark"] .pos-mini-input {

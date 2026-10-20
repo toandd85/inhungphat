@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261019_auto_pricebook">
+    <link rel="stylesheet" href="/style.css?v=20261020_pos_ui_percent_vat">
 
     <script>
 
@@ -6355,13 +6355,13 @@
                 <div class="pos-left-panel">
                     <!-- Line Items Table Header -->
                     <div class="pos-cart-header">
-                        <span style="width: 36px; text-align: center;">STT</span>
+                        <span style="width: 32px; text-align: center;">STT</span>
                         <span style="flex: 1; padding-left: 6px;">Tên hàng hóa / Mã SKU</span>
-                        <span style="width: 65px; text-align: center;">ĐVT</span>
-                        <span style="width: 105px; text-align: center;">Số lượng</span>
+                        <span style="width: 55px; text-align: center;">ĐVT</span>
+                        <span style="width: 125px; text-align: center;">Số lượng</span>
                         <span style="width: 110px; text-align: right;">Đơn giá</span>
-                        <span style="width: 115px; text-align: right;">Thành tiền</span>
-                        <span style="width: 36px; text-align: center;"></span>
+                        <span style="width: 120px; text-align: right;">Thành tiền</span>
+                        <span style="width: 32px; text-align: center;"></span>
                     </div>
 
                     <!-- Line Items Scrollable List -->
@@ -6373,16 +6373,25 @@
                     <div class="pos-cart-extras">
                         <div class="pos-extra-row">
                             <div class="pos-extra-item">
-                                <label><i data-lucide="tag" style="width:13px; height:13px;"></i> Giảm giá:</label>
-                                <input type="number" id="posOrderDiscount" class="pos-mini-input" value="0" min="0" placeholder="0" oninput="window.recalcPosTotals()">
+                                <label><i data-lucide="tag" style="width:13px; height:13px;"></i> Giảm giá (%):</label>
+                                <div style="display:inline-flex; align-items:center; position:relative;">
+                                    <input type="number" id="posOrderDiscount" class="pos-mini-input" value="0" min="0" max="100" step="0.5" placeholder="0" style="width:75px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
+                                    <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--text-secondary); pointer-events:none; font-weight:700;">%</span>
+                                </div>
                             </div>
                             <div class="pos-extra-item">
                                 <label><i data-lucide="percent" style="width:13px; height:13px;"></i> Thuế VAT (%):</label>
-                                <input type="number" id="posOrderVat" class="pos-mini-input" value="8" min="0" max="100" style="width:55px;" oninput="window.recalcPosTotals()">
+                                <div style="display:inline-flex; align-items:center; position:relative;">
+                                    <input type="number" id="posOrderVat" class="pos-mini-input" value="8" min="0" max="100" style="width:70px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
+                                    <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--text-secondary); pointer-events:none; font-weight:700;">%</span>
+                                </div>
                             </div>
                             <div class="pos-extra-item">
                                 <label><i data-lucide="truck" style="width:13px; height:13px;"></i> Phí ship:</label>
-                                <input type="number" id="posOrderShipFee" class="pos-mini-input" value="0" min="0" placeholder="0" oninput="window.recalcPosTotals()">
+                                <div style="display:inline-flex; align-items:center; position:relative;">
+                                    <input type="number" id="posOrderShipFee" class="pos-mini-input" value="0" min="0" step="5000" placeholder="0" style="width:110px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
+                                    <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--text-secondary); pointer-events:none; font-weight:700;">đ</span>
+                                </div>
                             </div>
                         </div>
 
@@ -6398,21 +6407,21 @@
                             <span>Tổng tiền hàng (<strong id="posTotalQtyCount">0</strong> SP):</span>
                             <strong id="posSubtotalAmount">0đ</strong>
                         </div>
-                        <div class="pos-summary-row" style="color: #dc2626;">
-                            <span>Chiết khấu / Giảm giá:</span>
-                            <strong id="posDiscountAmount">-0đ</strong>
-                        </div>
-                        <div class="pos-summary-row">
-                            <span>Thuế VAT:</span>
-                            <strong id="posVatAmount">0đ</strong>
-                        </div>
                         <div class="pos-summary-row" id="posProcessingSummaryRow" style="display:none; color: #0284c7;">
                             <span>Phí gia công thêm:</span>
                             <strong id="posProcessingFeeAmount">+0đ</strong>
                         </div>
-                        <div class="pos-summary-row">
+                        <div class="pos-summary-row" id="posShipSummaryRow">
                             <span>Phí vận chuyển:</span>
                             <strong id="posShipFeeAmount">0đ</strong>
+                        </div>
+                        <div class="pos-summary-row" style="color: #dc2626;">
+                            <span id="posDiscountRowLabel">Chiết khấu / Giảm giá:</span>
+                            <strong id="posDiscountAmount">-0đ</strong>
+                        </div>
+                        <div class="pos-summary-row" style="color: #059669;">
+                            <span id="posVatRowLabel">Thuế VAT (8%):</span>
+                            <strong id="posVatAmount">+0đ</strong>
                         </div>
                         <div class="pos-summary-row total-highlight">
                             <span>KHÁCH PHẢI TRẢ:</span>
@@ -10595,7 +10604,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_dynamic_processing_services"></script>
+    <script src="/app.js?v=20261020_pos_ui_percent_vat"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
