@@ -26810,8 +26810,8 @@ window.renderOnlineSales = function() {
         const customer = state.partners.find(p => p.id === o.customer_id);
         const custName = o.customer_name || (customer ? customer.name : "Khách hàng");
         const custPhone = o.customer_phone || (customer ? customer.phone : "");
-        const phoneHtml = custPhone ? `<br><small style="color:var(--text-secondary);"><i data-lucide="phone" style="width:10px; height:10px;"></i> ${custPhone}</small>` : "";
-        const locationStr = (o.customer_region || o.customer_address) ? `${o.customer_region || ''} ${o.customer_address ? `<br><small style="color:var(--text-secondary);">${o.customer_address}</small>` : ''}` : '-';
+        const phoneHtml = custPhone ? ` <small style="color:var(--text-secondary); margin-left:4px;"><i data-lucide="phone" style="width:10px; height:10px;"></i> ${custPhone}</small>` : "";
+        const locationStr = (o.customer_region || o.customer_address) ? `${o.customer_region || ''}${o.customer_address ? (o.customer_region ? ' - ' : '') + o.customer_address : ''}` : '-';
 
         const items = o.items || [];
         let productsHtml = '<span class="text-muted">-</span>';
@@ -26822,12 +26822,12 @@ window.renderOnlineSales = function() {
             const moreCount = items.length - 1;
 
             const firstItemHtml = `
-                <div style="margin-bottom:2px; display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                <div style="display:inline-flex; align-items:center; flex-wrap:nowrap; gap:4px; white-space:nowrap;">
                     <span>• <strong>${firstItem.sku}</strong>: ${firstPName}</span>
                     <span class="badge badge-secondary" style="font-size:0.7rem; font-weight:700;">x${firstItem.qty}</span>
                     ${moreCount > 0 ? `
                         <button type="button" class="order-items-more-btn" data-count="${moreCount}" onclick="window.toggleOrderItemsExpand('${o.id}', this)" style="padding: 1px 7px; font-size: 0.68rem; border-radius: 4px; background: rgba(16, 143, 83, 0.12); border: 1px solid #108f53; color: #108f53; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; transition: all 0.15s ease;" title="Xem thêm ${moreCount} sản phẩm khác trong đơn này">
-                            +${moreCount} xem thêm
+                            +${moreCount}
                         </button>
                     ` : ''}
                 </div>
@@ -26838,7 +26838,7 @@ window.renderOnlineSales = function() {
                 const restItems = items.slice(1).map(item => {
                     const prod = (state.online_products || []).find(p => p.sku === item.sku);
                     const pName = item.name || (prod ? prod.name : item.sku);
-                    return `<div style="margin-bottom:3px; font-size:0.75rem; color:var(--text-secondary);">• <strong>${item.sku}</strong>: ${pName} <span class="badge badge-secondary" style="font-size:0.68rem; font-weight:600;">x${item.qty}</span></div>`;
+                    return `<div style="margin-bottom:3px; font-size:0.75rem; color:var(--text-secondary); white-space:nowrap;">• <strong>${item.sku}</strong>: ${pName} <span class="badge badge-secondary" style="font-size:0.68rem; font-weight:600;">x${item.qty}</span></div>`;
                 }).join("");
                 moreItemsHtml = `
                     <div id="orderItemsMore_${o.id}" style="display:none; margin-top:5px; padding:4px 0 2px 8px; border-left:2px solid #108f53; background: rgba(16, 143, 83, 0.04); border-radius: 0 4px 4px 0;">
@@ -26847,12 +26847,12 @@ window.renderOnlineSales = function() {
                 `;
             }
 
-            productsHtml = `<div class="order-items-box">${firstItemHtml}${moreItemsHtml}</div>`;
+            productsHtml = `<div class="order-items-box" style="white-space:nowrap;">${firstItemHtml}${moreItemsHtml}</div>`;
         }
 
         const salesInfoHtml = `
-            ${o.sales_channel ? `<span class="badge badge-info" style="font-size:0.7rem; margin-bottom:2px;">${o.sales_channel}</span>` : ''}
-            ${o.salesperson ? `<br><span class="badge badge-primary" style="font-size:0.7rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</span>` : ''}
+            ${o.sales_channel ? `<span class="badge badge-info" style="font-size:0.7rem; margin-right:4px;">${o.sales_channel}</span>` : ''}
+            ${o.salesperson ? `<span class="badge badge-primary" style="font-size:0.7rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</span>` : ''}
         `;
 
         const payments = state.transactions.filter(t => t.reference_id === o.id && t.type === 'RECEIPT');
@@ -26883,15 +26883,15 @@ window.renderOnlineSales = function() {
             invBadge = `<span class="workflow-badge workflow-badge-inv-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa xuất hóa đơn VAT (Click để cập nhật)"><i data-lucide="file-text" style="width:11px; height:11px;"></i> Chưa xuất HĐ</span>`;
         }
 
-        // Cột Trạng thái quy trình: Chỉ hiển thị Giao hàng và Xuất HĐ (Công nợ và Đã thu đã hiển thị ở cột liền kề)
+        // Cột Trạng thái quy trình: Hiển thị gọn gàng trên 1 dòng
         const workflowColHtml = `
-            <div class="workflow-badges-col" style="display:flex; flex-direction:column; gap:4px;">
-                <div style="display:flex; gap:4px; flex-wrap:wrap;">${deliveryBadge}</div>
-                <div style="display:flex; gap:4px; flex-wrap:wrap;">${invBadge}</div>
+            <div class="workflow-badges-col" style="display:inline-flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap;">
+                ${deliveryBadge}
+                ${invBadge}
             </div>
         `;
 
-        const trackButton = `<button class="btn-icon" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Theo dõi & Cập nhật quy trình (Tạm ứng / Giao hàng / Thu tiền / Hóa đơn)"><i data-lucide="activity" style="color:var(--accent);"></i></button>`;
+        const trackButton = `<button class="btn-icon" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Theo dõi & Cập nhật quy trình"><i data-lucide="activity" style="color:var(--accent);"></i></button>`;
         const viewPdfButton = `<button class="btn-icon" onclick="openOnlineOrderInvoicePdf('${o.id}')" title="Xem Hóa Đơn PDF/Chi tiết"><i data-lucide="file-text" style="color:var(--info);"></i></button>`;
         const editButton = `<button class="btn-icon" onclick="window.openNewOnlineOrderModal('EDIT', '${o.id}')" title="Sửa đơn hàng"><i data-lucide="edit" style="color:var(--warning);"></i></button>`;
         const contractButton = `<button class="btn-icon" onclick="window.quickCreateContract('${o.id}', true)" title="Làm hợp đồng nhanh"><i data-lucide="file-signature" style="color:#6366f1;"></i></button>`;
@@ -26906,7 +26906,7 @@ window.renderOnlineSales = function() {
             cancelButton = `<button class="btn-icon" onclick="window.cancelOnlineOrder('${o.id}')" title="Hủy đơn hàng"><i data-lucide="x-circle" style="color:#d97706;"></i></button>`;
         }
         
-        let actionButtons = `<div style="display:flex; gap:4px;">${trackButton}${viewPdfButton}${editButton}${payButton}${cancelButton}${contractButton}</div>`;
+        let actionButtons = `<div style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">${trackButton}${viewPdfButton}${editButton}${payButton}${cancelButton}${contractButton}</div>`;
 
         const formattedDate = o.created_at ? (typeof o.created_at === 'string' ? o.created_at.split('T')[0] : new Date(o.created_at).toLocaleDateString('vi-VN')) : '-';
 
@@ -26914,12 +26914,12 @@ window.renderOnlineSales = function() {
         row.innerHTML = `
             <td>
                 <a href="javascript:void(0)" onclick="openOnlineOrderInvoicePdf('${o.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${o.order_number}</strong></a>
-                ${o.sales_channel ? `<br><span class="badge badge-info" style="font-size:0.68rem;">${o.sales_channel}</span>` : ''}
+                ${o.sales_channel ? ` <span class="badge badge-info" style="font-size:0.68rem; margin-left:4px;">${o.sales_channel}</span>` : ''}
             </td>
-            <td><small>${formattedDate}</small></td>
+            <td style="text-align:center;"><small>${formattedDate}</small></td>
             <td>
                 <strong>${custName}</strong>${phoneHtml}
-                ${o.salesperson ? `<br><small class="text-muted"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</small>` : ''}
+                ${o.salesperson ? ` <small class="text-muted" style="margin-left:4px;"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</small>` : ''}
             </td>
             <td><small>${locationStr}</small></td>
             <td style="max-width: 220px; font-size: 0.8rem;">${productsHtml}</td>
