@@ -6815,27 +6815,36 @@ select.form-select, .form-select {
 
 .pos-checkout-btn {
     flex: 1;
-    height: 52px;
-    background: linear-gradient(135deg, #108f53 0%, #0b7a46 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 6px 18px rgba(16, 143, 83, 0.45);
-    transition: all 0.2s ease;
+    height: 60px !important;
+    min-height: 60px !important;
+    background: linear-gradient(135deg, #108f53 0%, #059669 50%, #047857 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 12px !important;
+    font-size: 1.2rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.6px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    box-shadow: 0 8px 24px rgba(16, 143, 83, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.25) !important;
+    transition: all 0.2s ease !important;
+    text-transform: uppercase !important;
 }
 
 .pos-checkout-btn:hover {
-    background: linear-gradient(135deg, #0b7a46 0%, #064e2b 100%);
-    box-shadow: 0 6px 18px rgba(16, 143, 83, 0.45);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #0b7a46 0%, #064e2b 100%) !important;
+    box-shadow: 0 10px 28px rgba(16, 143, 83, 0.6) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+}
+
+.pos-checkout-btn i,
+.pos-checkout-btn svg {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 2.8 !important;
 }
 
 /* ==========================================================================
@@ -7460,8 +7469,21 @@ select.form-select, .form-select {
     .pos-checkout-btn {
         width: 100% !important;
         flex: 1 1 100% !important;
-        height: 46px !important;
-        font-size: 1rem !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        font-size: 1.2rem !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        letter-spacing: 0.6px !important;
+        box-shadow: 0 8px 24px rgba(16, 143, 83, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.25) !important;
+        margin-bottom: 4px !important;
+    }
+
+    .pos-checkout-btn i,
+    .pos-checkout-btn svg {
+        width: 24px !important;
+        height: 24px !important;
+        stroke-width: 2.8 !important;
     }
 
     /* Product Catalog Grid on Mobile */
