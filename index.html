@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_sales_hub_nav_v23">
+    <link rel="stylesheet" href="/style.css?v=20261020_auto_box_images_v24">
 
     <script>
 
@@ -1890,9 +1890,9 @@
                                     <i data-lucide="file-spreadsheet"></i>
                                     <span>Xuất Excel</span>
                                 </button>
-                                <button class="btn btn-outline" onclick="if(confirm('Khôi phục lại toàn bộ ảnh sản phẩm mẫu?')){ window.restoreAllProductImages(true); alert('Đã khôi phục toàn bộ ảnh sản phẩm thành công!'); }" style="display:flex; align-items:center; gap:6px; border-color:#108f53; color:#108f53; font-weight:600;" title="Lấy lại toàn bộ ảnh sản phẩm mẫu">
+                                <button class="btn btn-outline" onclick="if(confirm('Tự động tạo và cập nhật lại toàn bộ ảnh hộp quà chuyên nghiệp cho danh mục?')){ const cnt = window.autoUpdateAllMissingProductImages(true); alert('Đã cập nhật ảnh thành công cho ' + cnt + ' sản phẩm!'); }" style="display:flex; align-items:center; gap:6px; border-color:#108f53; color:#108f53; font-weight:600;" title="Tự động cập nhật ảnh mẫu hộp quà chuyên nghiệp cho tất cả hàng hóa">
                                     <i data-lucide="image"></i>
-                                    <span>Lấy lại ảnh mẫu</span>
+                                    <span>Cập nhật ảnh</span>
                                 </button>
                                 <button class="btn btn-primary" id="btnNewOnlineProduct" onclick="window.openNewOnlineProductModal('ADD')" style="display:flex; align-items:center; gap:6px;">
                                     <i data-lucide="plus"></i>
@@ -10866,7 +10866,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_sales_hub_nav_v23"></script>
+    <script src="/app.js?v=20261020_auto_box_images_v24"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

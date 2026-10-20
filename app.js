@@ -13477,6 +13477,87 @@ const DEFAULT_ONLINE_IMPORT_RECORDS = [
 
 const DEFAULT_ONLINE_ORDERS = [];
 
+// ==========================================================================
+// DYNAMIC LUXURY PRODUCT BOX SVG GENERATOR FOR ALL SKUS
+// ==========================================================================
+window.generateProductBoxSvg = function(sku, name, category, supplier) {
+    sku = String(sku || 'SP').trim().toUpperCase();
+    name = String(name || sku).trim();
+    supplier = String(supplier || 'In Lạc Hồng').trim();
+
+    // Deterministic hash based on SKU
+    let hash = 0;
+    for (let i = 0; i < sku.length; i++) {
+        hash = (hash << 5) - hash + sku.charCodeAt(i);
+        hash |= 0;
+    }
+    const colorIndex = Math.abs(hash) % 10;
+    
+    const palettes = [
+        { bg1: "%23991b1b", bg2: "%23450a0a", text: "%23fef08a", sub: "%23fecaca" }, // Đỏ rượu vang & Vàng kim
+        { bg1: "%230f766e", bg2: "%23134e4a", text: "%23fef08a", sub: "%2399f6e4" }, // Xanh lục bảo & Vàng
+        { bg1: "%231e3a8a", bg2: "%23172554", text: "%23fef08a", sub: "%23bfdbfe" }, // Xanh hoàng gia & Vàng
+        { bg1: "%23c2410c", bg2: "%237c2d12", text: "%23fef08a", sub: "%23fed7aa" }, // Cam đất sang trọng
+        { bg1: "%23701a75", bg2: "%234a044e", text: "%23fef08a", sub: "%23f5d0fe" }, // Tím quý tộc & Vàng
+        { bg1: "%23047857", bg2: "%23064e3b", text: "%23fef08a", sub: "%23a7f3d0" }, // Xanh ngọc bích & Vàng
+        { bg1: "%23b45309", bg2: "%2378350f", text: "%23ffffff", sub: "%23fef3c7" }, // Hổ phách kim loại
+        { bg1: "%23831843", bg2: "%23500724", text: "%23fef08a", sub: "%23fbcfe8" }, // Hồng ngọc & Vàng
+        { bg1: "%23334155", bg2: "%230f172a", text: "%23fef08a", sub: "%23cbd5e1" }, // Xám titan cao cấp
+        { bg1: "%23b91c1c", bg2: "%237f1d1d", text: "%23fef08a", sub: "%23fee2e2" }  // Đỏ tươi Tết & Vàng
+    ];
+    
+    const theme = palettes[colorIndex];
+    const safeSkuId = sku.replace(/[^a-zA-Z0-9]/g, '_');
+    
+    // Clean display name (remove redundant 'Hộp' prefix if present)
+    let displayName = name.replace(/^Hộp\s+/i, '').trim();
+    if (displayName.length > 13) displayName = displayName.substring(0, 12) + '…';
+
+    const brandDisplay = supplier.toLowerCase().includes('lạc hồng') ? 'LẠC HỒNG' : (supplier.toUpperCase().substring(0, 12) || 'HỘP QUÀ TẾT');
+
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 100 100'>`
+        + `<defs>`
+        + `<linearGradient id='grad_${safeSkuId}' x1='0%' y1='0%' x2='100%' y2='100%'>`
+        + `<stop offset='0%' stop-color='${theme.bg1}'/>`
+        + `<stop offset='100%' stop-color='${theme.bg2}'/>`
+        + `</linearGradient>`
+        + `</defs>`
+        + `<rect width='100' height='100' rx='12' fill='url(%23grad_${safeSkuId})' stroke='${theme.text}' stroke-width='1.5'/>`
+        + `<rect x='4' y='4' width='92' height='92' rx='9' fill='none' stroke='${theme.text}' stroke-width='0.6' stroke-dasharray='2,2' opacity='0.75'/>`
+        + `<text x='50' y='21' fill='${theme.text}' font-size='7' font-family='sans-serif' font-weight='bold' letter-spacing='0.6' text-anchor='middle'>${brandDisplay}</text>`
+        + `<line x1='18' y1='25' x2='82' y2='25' stroke='${theme.text}' stroke-width='0.5' opacity='0.6'/>`
+        + `<text x='50' y='52' fill='${theme.text}' font-size='15' font-family='sans-serif' font-weight='900' text-anchor='middle'>${sku}</text>`
+        + `<text x='50' y='68' fill='%23ffffff' font-size='8.5' font-family='sans-serif' font-weight='600' text-anchor='middle'>${displayName || sku}</text>`
+        + `<polygon points='50,76 52.5,81 58,81 53.5,84.5 55.5,90 50,86.5 44.5,90 46.5,84.5 42,81 47.5,81' fill='${theme.text}'/>`
+        + `</svg>`;
+
+    return `data:image/svg+xml;utf8,${svg}`;
+};
+
+window.autoUpdateAllMissingProductImages = function(forceAll = false) {
+    if (!window.state || !Array.isArray(window.state.online_products)) return 0;
+    const defImgMap = {};
+    (DEFAULT_ONLINE_PRODUCTS || []).forEach(dp => {
+        if (dp && dp.sku && dp.image) defImgMap[dp.sku] = dp.image;
+    });
+    let count = 0;
+    window.state.online_products.forEach(p => {
+        if (!p || !p.sku) return;
+        const currentImg = String(p.image || "").trim();
+        if (forceAll || !currentImg || currentImg === "null" || currentImg.length < 15) {
+            p.image = defImgMap[p.sku] || window.generateProductBoxSvg(p.sku, p.name, p.category, p.supplier || p.brand);
+            count++;
+        }
+    });
+    if (count > 0) {
+        window.state.save("online_products", window.state.online_products);
+        if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
+        if (typeof window.renderOnlineProductsTable === 'function') window.renderOnlineProductsTable();
+        if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+    }
+    return count;
+};
+
 // Initial State Store
 class AppState {
     constructor() {
@@ -13494,7 +13575,7 @@ class AppState {
             localStorage.setItem("ihp_tet_2027_seeded_v1", "true");
         }
 
-        // Tự động khôi phục toàn bộ ảnh sản phẩm nếu bị rỗng hoặc mất do cơ chế dọn dẹp trước đây
+        // Tự động khôi phục và tạo ảnh sản phẩm cho TOÀN BỘ sản phẩm trong danh mục
         if (Array.isArray(this.online_products)) {
             const defImgMap = {};
             (DEFAULT_ONLINE_PRODUCTS || []).forEach(dp => {
@@ -13502,24 +13583,14 @@ class AppState {
             });
             let shouldSaveImages = false;
             this.online_products.forEach(p => {
-                if (p && p.sku && defImgMap[p.sku]) {
-                    if (!p.image || String(p.image).trim() === "" || p.image === "null") {
-                        p.image = defImgMap[p.sku];
+                if (p && p.sku) {
+                    const currentImg = String(p.image || "").trim();
+                    if (!currentImg || currentImg === "null" || currentImg.length < 15) {
+                        p.image = defImgMap[p.sku] || window.generateProductBoxSvg(p.sku, p.name, p.category, p.supplier || p.brand);
                         shouldSaveImages = true;
                     }
                 }
             });
-            if (!localStorage.getItem("ihp_restore_images_v22")) {
-                this.online_products.forEach(p => {
-                    if (p && p.sku && defImgMap[p.sku]) {
-                        if (!p.image || String(p.image).trim() === "") {
-                            p.image = defImgMap[p.sku];
-                            shouldSaveImages = true;
-                        }
-                    }
-                });
-                localStorage.setItem("ihp_restore_images_v22", "true");
-            }
             if (shouldSaveImages) {
                 this.save("online_products", this.online_products);
             }
@@ -13969,6 +14040,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize Auth Database & Setup Permissions
     if (typeof initUsersDatabase === 'function') initUsersDatabase();
     if (typeof window.applyUserPermissions === 'function') window.applyUserPermissions();
+    if (typeof window.autoUpdateAllMissingProductImages === 'function') window.autoUpdateAllMissingProductImages(false);
 
     // Initialise globally declared mobile navigation elements
     sidebarEl = document.querySelector(".sidebar");
@@ -27238,25 +27310,10 @@ window.viewFullOnlineProductImage = function(sku) {
 };
 
 window.restoreAllProductImages = function(forceAll = false) {
-    if (!state || !Array.isArray(state.online_products)) return 0;
-    const defImgMap = {};
-    (DEFAULT_ONLINE_PRODUCTS || []).forEach(dp => {
-        if (dp && dp.sku && dp.image) defImgMap[dp.sku] = dp.image;
-    });
-    let restored = 0;
-    state.online_products.forEach(p => {
-        if (p && p.sku && defImgMap[p.sku]) {
-            if (forceAll || !p.image || String(p.image).trim() === "" || p.image === "null") {
-                p.image = defImgMap[p.sku];
-                restored++;
-            }
-        }
-    });
-    state.save("online_products", state.online_products);
-    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
-    if (typeof window.renderOnlineProductsTable === 'function') window.renderOnlineProductsTable();
-    if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
-    return restored;
+    if (typeof window.autoUpdateAllMissingProductImages === 'function') {
+        return window.autoUpdateAllMissingProductImages(forceAll);
+    }
+    return 0;
 };
 
 
