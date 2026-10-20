@@ -14493,8 +14493,8 @@ window.activateView = function(route) {
     bottomNavItems.forEach(item => item.classList.remove("active"));
     
     const parentHubMap = {
-        'online-sales': 'online-sales',
-        'sales-hub': 'online-sales',
+        'online-sales': 'sales-hub',
+        'sales-hub': 'sales-hub',
         'quotes': 'production-hub',
         'prod-orders': 'production-hub',
         'production': 'production-hub',
