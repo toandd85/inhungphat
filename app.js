@@ -26618,6 +26618,26 @@ function handleOnlineImportStockSubmit(e) {
     if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
 }
 
+window.toggleOrderItemsExpand = function(orderId, btn) {
+    const moreEl = document.getElementById("orderItemsMore_" + orderId);
+    if (!moreEl) return;
+    const isHidden = moreEl.style.display === "none";
+    moreEl.style.display = isHidden ? "block" : "none";
+    if (btn) {
+        const count = btn.getAttribute("data-count") || "";
+        btn.textContent = isHidden ? "Thu gọn ▲" : `+${count} xem thêm`;
+        if (isHidden) {
+            btn.style.background = "rgba(239, 68, 68, 0.12)";
+            btn.style.borderColor = "#ef4444";
+            btn.style.color = "#ef4444";
+        } else {
+            btn.style.background = "rgba(16, 143, 83, 0.12)";
+            btn.style.borderColor = "#108f53";
+            btn.style.color = "#108f53";
+        }
+    }
+};
+
 window.renderOnlineSales = function() {
     const tableBody = document.querySelector("#onlineOrdersTable tbody");
     if (!tableBody) return;
@@ -26731,11 +26751,42 @@ window.renderOnlineSales = function() {
         const phoneHtml = custPhone ? `<br><small style="color:var(--text-secondary);"><i data-lucide="phone" style="width:10px; height:10px;"></i> ${custPhone}</small>` : "";
         const locationStr = (o.customer_region || o.customer_address) ? `${o.customer_region || ''} ${o.customer_address ? `<br><small style="color:var(--text-secondary);">${o.customer_address}</small>` : ''}` : '-';
 
-        const productsHtml = (o.items || []).map(item => {
-            const prod = state.online_products.find(p => p.sku === item.sku);
-            const pName = item.name || (prod ? prod.name : item.sku);
-            return `<div style="margin-bottom:2px;">• <strong>${item.sku}</strong>: ${pName} <span class="badge badge-secondary" style="font-size:0.7rem;">x${item.qty}</span></div>`;
-        }).join("");
+        const items = o.items || [];
+        let productsHtml = '<span class="text-muted">-</span>';
+        if (items.length > 0) {
+            const firstItem = items[0];
+            const firstProd = (state.online_products || []).find(p => p.sku === firstItem.sku);
+            const firstPName = firstItem.name || (firstProd ? firstProd.name : firstItem.sku);
+            const moreCount = items.length - 1;
+
+            const firstItemHtml = `
+                <div style="margin-bottom:2px; display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                    <span>• <strong>${firstItem.sku}</strong>: ${firstPName}</span>
+                    <span class="badge badge-secondary" style="font-size:0.7rem; font-weight:700;">x${firstItem.qty}</span>
+                    ${moreCount > 0 ? `
+                        <button type="button" class="order-items-more-btn" data-count="${moreCount}" onclick="window.toggleOrderItemsExpand('${o.id}', this)" style="padding: 1px 7px; font-size: 0.68rem; border-radius: 4px; background: rgba(16, 143, 83, 0.12); border: 1px solid #108f53; color: #108f53; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; transition: all 0.15s ease;" title="Xem thêm ${moreCount} sản phẩm khác trong đơn này">
+                            +${moreCount} xem thêm
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            let moreItemsHtml = '';
+            if (moreCount > 0) {
+                const restItems = items.slice(1).map(item => {
+                    const prod = (state.online_products || []).find(p => p.sku === item.sku);
+                    const pName = item.name || (prod ? prod.name : item.sku);
+                    return `<div style="margin-bottom:3px; font-size:0.75rem; color:var(--text-secondary);">• <strong>${item.sku}</strong>: ${pName} <span class="badge badge-secondary" style="font-size:0.68rem; font-weight:600;">x${item.qty}</span></div>`;
+                }).join("");
+                moreItemsHtml = `
+                    <div id="orderItemsMore_${o.id}" style="display:none; margin-top:5px; padding:4px 0 2px 8px; border-left:2px solid #108f53; background: rgba(16, 143, 83, 0.04); border-radius: 0 4px 4px 0;">
+                        ${restItems}
+                    </div>
+                `;
+            }
+
+            productsHtml = `<div class="order-items-box">${firstItemHtml}${moreItemsHtml}</div>`;
+        }
 
         const salesInfoHtml = `
             ${o.sales_channel ? `<span class="badge badge-info" style="font-size:0.7rem; margin-bottom:2px;">${o.sales_channel}</span>` : ''}
@@ -26746,14 +26797,7 @@ window.renderOnlineSales = function() {
         const totalPaid = Math.max(o.paid_amount || 0, payments.reduce((sum, t) => sum + t.amount, 0));
         const remainingDebt = Math.max(0, (o.total_amount || 0) - totalPaid);
 
-        // 1. Tạm ứng badge
-        const depAmt = o.deposit_amount || 0;
-        const isDep = depAmt > 0 || o.deposit_status === "DEPOSITED";
-        const depositBadge = isDep ? 
-            `<span class="workflow-badge workflow-badge-deposit-yes" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đã tạm ứng ${formatMoney(depAmt)} (Click để xem/sửa)"><i data-lucide="dollar-sign" style="width:11px; height:11px;"></i> Ứng: ${formatMoney(depAmt)}</span>` : 
-            `<span class="workflow-badge workflow-badge-deposit-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa nhận tạm ứng (Click để cập nhật)"><i data-lucide="clock" style="width:11px; height:11px;"></i> Chưa ứng</span>`;
-
-        // 2. Giao hàng badge
+        // 1. Giao hàng badge (Trạng thái giao hàng)
         const delStat = o.delivery_status || "PENDING";
         let deliveryBadge = '';
         if (delStat === "DELIVERED") {
@@ -26766,19 +26810,7 @@ window.renderOnlineSales = function() {
             deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-pending" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa giao hàng cho khách (Click để cập nhật)"><i data-lucide="clock" style="width:11px; height:11px;"></i> Chưa giao</span>`;
         }
 
-        // 3. Thu tiền & Công nợ badge
-        let payColBadge = '';
-        if (remainingDebt <= 0 && (o.total_amount || 0) > 0) {
-            payColBadge = `<span class="workflow-badge workflow-badge-pay-full" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đã thu đủ 100% (Hết nợ)"><i data-lucide="check" style="width:11px; height:11px;"></i> Đã thu đủ</span>`;
-        } else if (o.collection_status === "COD_PENDING") {
-            payColBadge = `<span class="workflow-badge workflow-badge-pay-cod" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Thu COD: ${formatMoney(remainingDebt)} (Chờ đối soát)"><i data-lucide="package" style="width:11px; height:11px;"></i> Thu COD: ${formatMoney(remainingDebt)}</span>`;
-        } else if (totalPaid > 0) {
-            payColBadge = `<span class="workflow-badge workflow-badge-pay-debt" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Còn nợ: ${formatMoney(remainingDebt)} (Đã thu: ${formatMoney(totalPaid)})"><i data-lucide="alert-circle" style="width:11px; height:11px;"></i> Nợ: ${formatMoney(remainingDebt)}</span>`;
-        } else {
-            payColBadge = `<span class="workflow-badge workflow-badge-pay-debt" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa thu tiền (Nợ: ${formatMoney(remainingDebt)})"><i data-lucide="alert-circle" style="width:11px; height:11px;"></i> Chưa thu</span>`;
-        }
-
-        // 4. Hoá đơn VAT badge
+        // 2. Hoá đơn VAT badge (Trạng thái xuất hóa đơn)
         const invStat = o.invoice_status || "NOT_ISSUED";
         let invBadge = '';
         if (invStat === "ISSUED") {
@@ -26789,10 +26821,11 @@ window.renderOnlineSales = function() {
             invBadge = `<span class="workflow-badge workflow-badge-inv-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa xuất hóa đơn VAT (Click để cập nhật)"><i data-lucide="file-text" style="width:11px; height:11px;"></i> Chưa xuất HĐ</span>`;
         }
 
+        // Cột Trạng thái quy trình: Chỉ hiển thị Giao hàng và Xuất HĐ (Công nợ và Đã thu đã hiển thị ở cột liền kề)
         const workflowColHtml = `
-            <div class="workflow-badges-col">
-                <div style="display:flex; gap:4px; flex-wrap:wrap;">${depositBadge}${deliveryBadge}</div>
-                <div style="display:flex; gap:4px; flex-wrap:wrap;">${payColBadge}${invBadge}</div>
+            <div class="workflow-badges-col" style="display:flex; flex-direction:column; gap:4px;">
+                <div style="display:flex; gap:4px; flex-wrap:wrap;">${deliveryBadge}</div>
+                <div style="display:flex; gap:4px; flex-wrap:wrap;">${invBadge}</div>
             </div>
         `;
 
