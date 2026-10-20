@@ -13526,7 +13526,18 @@ class AppState {
             localStorage.removeItem("ihp_partners");
             localStorage.setItem("ihp_clean_orders_v5", "true");
         } else {
-            this.online_orders = this.load("online_orders", []);
+            // Permanent reset of online orders on user request
+            if (!localStorage.getItem("ihp_clean_online_orders_v8")) {
+                this.online_orders = [];
+                localStorage.setItem("ihp_online_orders", "[]");
+                if (Array.isArray(this.transactions)) {
+                    this.transactions = this.transactions.filter(t => !t || (!t.reference_id || !String(t.reference_id).startsWith("oo_")));
+                    localStorage.setItem("ihp_transactions", JSON.stringify(this.transactions));
+                }
+                localStorage.setItem("ihp_clean_online_orders_v8", "true");
+            } else {
+                this.online_orders = this.load("online_orders", []);
+            }
         }
         this.online_returns = this.load("online_returns", []);
         this.online_inventory_checks = this.load("online_inventory_checks", []);
