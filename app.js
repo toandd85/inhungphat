@@ -24356,6 +24356,14 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
         }
 
         window.posCatalogTab = "PRODUCTS";
+        if (typeof window.renderPosQuickServicesBar === "function") {
+            window.renderPosQuickServicesBar();
+        }
+        const servBtn = document.getElementById("posTabBtnServices");
+        if (servBtn) {
+            const servSpan = servBtn.querySelector("span");
+            if (servSpan) servSpan.textContent = `Dịch vụ Gia công (${(window.getProcessingServicesList() || []).length})`;
+        }
 
         // Handle EDIT mode
         if (mode === "EDIT" && orderId) {
@@ -24440,171 +24448,197 @@ window.closePosModal = function() {
 // Render Product Catalog Cards Grid (Right column)
 
 // ==========================================================================
-// DANH MỤC DỊCH VỤ GIA CÔNG POS (5 DỊCH VỤ)
+// DANH MỤC DỊCH VỤ GIA CÔNG POS (ĐỘNG & TỰ CẤU HÌNH BẬC THANG + MIN FEE)
 // ==========================================================================
 
-window.POS_SERVICES = [
+const DEFAULT_PROCESSING_SERVICES_LIST = [
     {
+        id: "DV-EPNHU",
         sku: "DV-EPNHU",
         name: "Ép nhũ - 1 màu 1 mặt (Hộp + Túi)",
         unit: "Bộ",
-        is_service: true,
-        category: "Dịch vụ gia công",
-        description: "1-100b: 18k | 101-200b: 15k | 201-300b: 12k | 301-400b: 10k | ≥401b: 8k",
-        badge: "Tối thiểu 1.800.000đ",
+        lead_time: "6 ngày từ ngày cọc & chốt thiết kế",
         min_fee: 1800000,
-        min_qty: 100,
+        note: "Chi phí tối thiểu là 1.800.000đ (Khách làm 1 bộ cũng hết 1.800.000đ, làm 100 bộ cũng 1.800.000đ).",
         icon: "sparkles",
         color: "#b45309",
-        bg: "#fef3c7"
+        bg: "#fef3c7",
+        badge: "Tối thiểu 1.800.000đ",
+        description: "1-100b: 18k | 101-200b: 15k | 201-300b: 12k | 301-400b: 10k | ≥401b: 8k",
+        is_service: true,
+        tiers: [
+            { min_qty: 1, max_qty: 100, price: 18000 },
+            { min_qty: 101, max_qty: 200, price: 15000 },
+            { min_qty: 201, max_qty: 300, price: 12000 },
+            { min_qty: 301, max_qty: 400, price: 10000 },
+            { min_qty: 401, max_qty: null, price: 8000 }
+        ]
     },
     {
+        id: "DV-KHAY-CC",
         sku: "DV-KHAY-CC",
         name: "Khay định hình Hộp cao cấp",
         unit: "Bộ",
-        is_service: true,
-        category: "Dịch vụ gia công",
-        description: "1-100b: 15k | 101-200b: 14k | 201-300b: 13k | 301-400b: 12k | ≥401b: 10k",
-        badge: "10k - 15k/bộ",
+        lead_time: "6 ngày từ ngày cọc & chốt thiết kế",
+        min_fee: 0,
+        note: "Áp dụng theo phân loại Hộp cao cấp.",
         icon: "layers",
         color: "#991b1b",
-        bg: "#fee2e2"
+        bg: "#fee2e2",
+        badge: "10k - 15k/bộ",
+        description: "1-100b: 15k | 101-200b: 14k | 201-300b: 13k | 301-400b: 12k | ≥401b: 10k",
+        is_service: true,
+        tiers: [
+            { min_qty: 1, max_qty: 100, price: 15000 },
+            { min_qty: 101, max_qty: 200, price: 14000 },
+            { min_qty: 201, max_qty: 300, price: 13000 },
+            { min_qty: 301, max_qty: 400, price: 12000 },
+            { min_qty: 401, max_qty: null, price: 10000 }
+        ]
     },
     {
+        id: "DV-KHAY-PT",
         sku: "DV-KHAY-PT",
         name: "Khay định hình Hộp phổ thông",
         unit: "Bộ",
-        is_service: true,
-        category: "Dịch vụ gia công",
-        description: "1-100b: 12k | 101-200b: 11k | 201-300b: 10k | 301-400b: 9k | ≥401b: 8k",
-        badge: "8k - 12k/bộ",
+        lead_time: "6 ngày từ ngày cọc & chốt thiết kế",
+        min_fee: 0,
+        note: "Áp dụng theo phân loại Hộp phổ thông.",
         icon: "box",
         color: "#0369a1",
-        bg: "#e0f2fe"
+        bg: "#e0f2fe",
+        badge: "8k - 12k/bộ",
+        description: "1-100b: 12k | 101-200b: 11k | 201-300b: 10k | 301-400b: 9k | ≥401b: 8k",
+        is_service: true,
+        tiers: [
+            { min_qty: 1, max_qty: 100, price: 12000 },
+            { min_qty: 101, max_qty: 200, price: 11000 },
+            { min_qty: 201, max_qty: 300, price: 10000 },
+            { min_qty: 301, max_qty: 400, price: 9000 },
+            { min_qty: 401, max_qty: null, price: 8000 }
+        ]
     },
     {
+        id: "DV-INDOCQUYEN",
         sku: "DV-INDOCQUYEN",
         name: "In mẫu độc quyền",
         unit: "Bộ",
-        is_service: true,
-        category: "Dịch vụ gia công",
-        description: "<1000 bộ: 8 triệu trọn gói | ≥1000 bộ: 8.000đ/bộ",
-        badge: "Tối thiểu 8.000.000đ",
+        lead_time: "7 - 10 ngày từ ngày cọc & chốt thiết kế",
         min_fee: 8000000,
-        min_qty: 1000,
+        note: "In dưới 1.000 bộ: 8.000.000đ trọn gói. Từ 1.000 bộ trở lên: +8.000đ/bộ.",
         icon: "printer",
         color: "#4338ca",
-        bg: "#ede9fe"
+        bg: "#ede9fe",
+        badge: "Tối thiểu 8.000.000đ",
+        description: "<1000 bộ: 8 triệu trọn gói | ≥1000 bộ: 8.000đ/bộ",
+        is_service: true,
+        tiers: [
+            { min_qty: 1, max_qty: 999, price: 8000 },
+            { min_qty: 1000, max_qty: null, price: 8000 }
+        ]
     },
     {
+        id: "DV-VACHNGAN",
         sku: "DV-VACHNGAN",
-        name: "Thêm vách ngăn",
+        name: "Phụ kiện: Thêm vách ngăn",
         unit: "Bộ",
-        is_service: true,
-        category: "Dịch vụ gia công",
-        description: "Phụ kiện vách ngăn hộp quà Tết",
-        badge: "5.000đ/bộ",
+        lead_time: "Theo tiến độ đơn hàng",
+        min_fee: 0,
+        note: "Bộ sản phẩm chưa bao gồm vách ngăn. Khách lấy thêm tính 5.000đ/bộ.",
         icon: "grid",
         color: "#047857",
-        bg: "#d1fae5"
+        bg: "#d1fae5",
+        badge: "5.000đ/bộ",
+        description: "Phụ kiện vách ngăn hộp quà Tết",
+        is_service: true,
+        tiers: [
+            { min_qty: 1, max_qty: null, price: 5000 }
+        ]
     }
 ];
 
+window.getProcessingServicesList = function() {
+    if (!state.processing_services_list || !Array.isArray(state.processing_services_list) || state.processing_services_list.length === 0) {
+        state.processing_services_list = state.load("processing_services_list", DEFAULT_PROCESSING_SERVICES_LIST);
+    }
+    return state.processing_services_list;
+};
+
+// Expose dynamic POS_SERVICES proxy
+Object.defineProperty(window, 'POS_SERVICES', {
+    get: function() {
+        return window.getProcessingServicesList();
+    },
+    set: function(val) {
+        state.processing_services_list = val;
+    },
+    configurable: true
+});
+
 window.calculateServiceItemPricing = function(sku, qty) {
     qty = Math.max(1, parseInt(qty) || 1);
-    const ps = state.processing_services || DEFAULT_PROCESSING_SERVICES;
+    const services = window.getProcessingServicesList();
+    const service = services.find(s => s.sku === sku || s.id === sku);
+    if (!service) return { price: 0, item_total: 0, price_note: "" };
 
-    if (sku === "DV-EPNHU") {
-        const cfg = ps.ep_nhu || DEFAULT_PROCESSING_SERVICES.ep_nhu;
-        const tiers = cfg.tiers || [];
-        const matchTier = tiers.find(t => {
-            const min = Number(t.min_qty) || 0;
-            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
-            return qty >= min && qty <= max;
-        });
-        const unitPrice = matchTier ? Number(matchTier.price) : 8000;
-        const minFee = Number(cfg.min_fee) || 1800000;
-        let rawTotal = qty * unitPrice;
-        // Nếu chưa đạt số lượng tối thiểu (100 bộ) hoặc chưa đạt chi phí tối thiểu
-        if (qty < 100 || rawTotal < minFee) {
-            return {
-                price: Math.round(minFee / qty),
-                item_total: minFee,
-                price_note: `Tối thiểu ${formatMoney(minFee)}`
-            };
+    const tiers = service.tiers || [];
+    let matchTier = tiers.find(t => {
+        const min = Number(t.min_qty) || 0;
+        const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "" && t.max_qty !== 0) ? Number(t.max_qty) : Infinity;
+        return qty >= min && qty <= max;
+    });
+
+    if (!matchTier && tiers.length > 0) {
+        const sorted = [...tiers].sort((a, b) => (Number(a.min_qty) || 0) - (Number(b.min_qty) || 0));
+        if (qty >= (Number(sorted[sorted.length - 1].min_qty) || 0)) {
+            matchTier = sorted[sorted.length - 1];
         } else {
-            return {
-                price: unitPrice,
-                item_total: rawTotal,
-                price_note: `${formatMoney(unitPrice)}/bộ`
-            };
+            matchTier = sorted[0];
         }
     }
 
-    if (sku === "DV-INDOCQUYEN") {
-        const cfg = ps.in_doc_quyen || DEFAULT_PROCESSING_SERVICES.in_doc_quyen;
-        const threshold = Number(cfg.threshold_qty) || 1000;
-        const minFee = Number(cfg.fixed_under_fee) || 8000000;
-        const unitPrice = Number(cfg.price_per_box) || 8000;
-        // Nếu chưa đạt số lượng tối thiểu (1.000 bộ)
-        if (qty < threshold) {
-            return {
-                price: Math.round(minFee / qty),
-                item_total: minFee,
-                price_note: `<1000b: Tối thiểu ${formatMoney(minFee)}`
-            };
-        } else {
-            return {
-                price: unitPrice,
-                item_total: qty * unitPrice,
-                price_note: `≥1000b: ${formatMoney(unitPrice)}/bộ`
-            };
-        }
-    }
+    const unitPrice = matchTier ? Number(matchTier.price) : (Number(service.price) || 0);
+    const rawTotal = qty * unitPrice;
+    const minFee = Number(service.min_fee) || 0;
 
-    if (sku === "DV-KHAY-CC") {
-        const cfg = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
-        const tiers = cfg.tiers_caocap || [];
-        const matchTier = tiers.find(t => {
-            const min = Number(t.min_qty) || 0;
-            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
-            return qty >= min && qty <= max;
-        });
-        const unitPrice = matchTier ? Number(matchTier.price) : 10000;
+    // Nếu có chi phí tối thiểu và tổng tiền chưa đạt mức tối thiểu
+    if (minFee > 0 && rawTotal < minFee) {
+        return {
+            price: Math.round(minFee / qty),
+            item_total: minFee,
+            price_note: `Tối thiểu ${formatMoney(minFee)}đ`
+        };
+    } else {
         return {
             price: unitPrice,
-            item_total: qty * unitPrice,
-            price_note: `Cao cấp: ${formatMoney(unitPrice)}/bộ`
+            item_total: rawTotal,
+            price_note: `${formatMoney(unitPrice)}đ/${service.unit || 'bộ'}`
         };
     }
+};
 
-    if (sku === "DV-KHAY-PT") {
-        const cfg = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
-        const tiers = cfg.tiers_phothong || [];
-        const matchTier = tiers.find(t => {
-            const min = Number(t.min_qty) || 0;
-            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
-            return qty >= min && qty <= max;
-        });
-        const unitPrice = matchTier ? Number(matchTier.price) : 8000;
-        return {
-            price: unitPrice,
-            item_total: qty * unitPrice,
-            price_note: `Phổ thông: ${formatMoney(unitPrice)}/bộ`
-        };
+window.renderPosQuickServicesBar = function() {
+    const bar = document.getElementById("posQuickServicesBar");
+    if (!bar) return;
+    const services = window.getProcessingServicesList();
+    let html = `
+        <span style="font-size: 0.74rem; font-weight: 700; color: #9a3412; display: inline-flex; align-items: center; gap: 4px;">
+            <i data-lucide="wrench" style="width: 12px; height: 12px;"></i> Thêm nhanh gia công:
+        </span>
+    `;
+    services.forEach(s => {
+        const minFeeText = s.min_fee > 0 ? ` (min ${formatMoney(s.min_fee)})` : '';
+        const shortName = (s.name || '').replace(" - 1 màu 1 mặt (Hộp + Túi)", "");
+        html += `
+            <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('${s.sku || s.id}')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="${s.name}${minFeeText}">
+                + ${shortName}
+            </button>
+        `;
+    });
+    bar.innerHTML = html;
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
     }
-
-    if (sku === "DV-VACHNGAN") {
-        const cfg = ps.vach_ngan || DEFAULT_PROCESSING_SERVICES.vach_ngan;
-        const unitPrice = Number(cfg.price_per_box) || 5000;
-        return {
-            price: unitPrice,
-            item_total: qty * unitPrice,
-            price_note: `${formatMoney(unitPrice)}/bộ`
-        };
-    }
-
-    return { price: 0, item_total: 0, price_note: "" };
 };
 
 window.switchPosCatalogTab = function(tab) {
@@ -24681,7 +24715,7 @@ window.renderPosCatalog = function() {
     if (window.posCatalogTab === "SERVICES") {
         const services = (window.POS_SERVICES || []).filter(s => {
             if (!query) return true;
-            return s.sku.toLowerCase().includes(query) || s.name.toLowerCase().includes(query) || s.description.toLowerCase().includes(query);
+            return (s.sku || '').toLowerCase().includes(query) || (s.name || '').toLowerCase().includes(query) || (s.description || '').toLowerCase().includes(query);
         });
 
         if (services.length === 0) {
@@ -24700,7 +24734,7 @@ window.renderPosCatalog = function() {
             card.style.background = "#fffdf5";
             card.style.cursor = "pointer";
             card.setAttribute("title", `Click để thêm dịch vụ ${s.name}`);
-            card.onclick = () => window.addPosServiceItem(s.sku);
+            card.onclick = () => window.addPosServiceItem(s.sku || s.id);
 
             card.innerHTML = `
                 <div>
@@ -27034,8 +27068,8 @@ window.switchPriceSettingTab = function(tabName) {
         if (btnServices) btnServices.classList.add("active");
         if (contentGoods) contentGoods.style.display = "none";
         if (contentServices) contentServices.style.display = "block";
-        if (typeof window.populateProcessingServicesInputs === "function") {
-            window.populateProcessingServicesInputs();
+        if (typeof window.renderProcessingServicesConfig === "function") {
+            window.renderProcessingServicesConfig();
         }
     } else {
         if (btnServices) btnServices.classList.remove("active");
@@ -27047,113 +27081,299 @@ window.switchPriceSettingTab = function(tabName) {
     if (window.lucide && typeof lucide.createIcons === "function") lucide.createIcons();
 };
 
-window.populateProcessingServicesInputs = function() {
-    const ps = state.processing_services || DEFAULT_PROCESSING_SERVICES;
+window.renderProcessingServicesConfig = function() {
+    const container = document.getElementById("processingServicesContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const services = window.getProcessingServicesList();
+    if (services.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:40px 20px; background:var(--bg-card); border:1px dashed var(--border-color); border-radius:8px; color:var(--text-secondary);">
+                <i data-lucide="wrench" style="width:40px; height:40px; margin-bottom:8px; opacity:0.5;"></i>
+                <div style="font-weight:600; font-size:1rem;">Chưa có dịch vụ gia công nào</div>
+                <p style="font-size:0.85rem; margin:4px 0 16px 0;">Bấm nút bên dưới để tạo dịch vụ gia công đầu tiên</p>
+                <button type="button" class="btn btn-primary" onclick="window.addNewProcessingService()">+ Thêm dịch vụ gia công</button>
+            </div>
+        `;
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    services.forEach((s, idx) => {
+        const card = document.createElement("div");
+        card.className = "card service-card-config";
+        card.dataset.serviceId = s.id || s.sku;
+        card.style.cssText = "padding:18px 20px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-card); display:flex; flex-direction:column; gap:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05);";
+
+        const tiers = s.tiers || [];
+        let tiersHtml = "";
+        tiers.forEach(t => {
+            tiersHtml += `
+                <div class="service-tier-row" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-size:0.82rem; color:var(--text-secondary); min-width:20px;">Từ</span>
+                    <input type="number" class="form-input tier-min" value="${t.min_qty}" min="1" style="width:80px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Từ SL" required>
+                    <span style="font-size:0.82rem; color:var(--text-secondary);">đến</span>
+                    <input type="number" class="form-input tier-max" value="${t.max_qty !== null && t.max_qty !== undefined ? t.max_qty : ''}" min="1" style="width:90px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Vô hạn">
+                    <span style="font-size:0.82rem; font-weight:700; white-space:nowrap; color:var(--text-primary);">-> Đơn giá:</span>
+                    <input type="number" class="form-input tier-price" value="${t.price !== undefined && t.price !== null ? t.price : ''}" min="0" step="100" style="width:130px; height:32px; padding:4px 8px; font-weight:700; color:#0284c7;" placeholder="Nhập số tiền..." required>
+                    <span style="font-size:0.82rem; color:var(--text-secondary); font-weight:600;">đ/${s.unit || 'bộ'}</span>
+                    <button type="button" class="btn-icon" onclick="this.closest('.service-tier-row').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px; margin-left:auto;" title="Xóa khoảng giá này">
+                        <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
+                    </button>
+                </div>
+            `;
+        });
+
+        card.innerHTML = `
+            <!-- Card Header -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border-color); padding-bottom:12px;">
+                <div style="display:flex; align-items:flex-start; gap:12px; flex:1; min-width:280px;">
+                    <div style="width:36px; height:36px; border-radius:8px; background:${s.bg || '#eff6ff'}; color:${s.color || '#2563eb'}; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; margin-top:2px;">
+                        <i data-lucide="${s.icon || 'wrench'}" style="width:20px; height:20px;"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span style="font-weight:700; font-size:0.95rem; color:#b45309;">${idx + 1}.</span>
+                            <input type="text" class="form-input service-name-input" value="${s.name}" placeholder="Nhập tên dịch vụ gia công..." style="font-weight:700; font-size:1rem; flex:1; min-width:220px; padding:4px 8px;" required>
+                            <span style="font-size:0.75rem; background:rgba(0,0,0,0.06); color:var(--text-secondary); padding:2px 8px; border-radius:4px; font-weight:700;">${s.sku || s.id}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:14px; margin-top:8px; flex-wrap:wrap; font-size:0.82rem;">
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <span style="color:var(--text-secondary);">Đơn vị tính:</span>
+                                <input type="text" class="form-input service-unit-input" value="${s.unit || 'Bộ'}" style="width:70px; height:26px; padding:2px 6px; font-size:0.82rem; font-weight:600;">
+                            </div>
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <span style="color:var(--text-secondary);">Thời gian:</span>
+                                <input type="text" class="form-input service-leadtime-input" value="${s.lead_time || ''}" placeholder="Ví dụ: 6 ngày từ ngày cọc & chốt thiết kế" style="width:260px; height:26px; padding:2px 6px; font-size:0.82rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="window.deleteProcessingService('${s.id || s.sku}')" style="padding:4px 10px; font-size:0.78rem; display:inline-flex; align-items:center; gap:4px;" title="Xóa dịch vụ này">
+                        <i data-lucide="trash-2" style="width:14px; height:14px;"></i> Xóa
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tiers Editor -->
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label style="font-size:0.85rem; font-weight:700; color:var(--text-primary); margin:0;">
+                        📊 Bảng bậc thang giá theo số lượng:
+                    </label>
+                </div>
+                <div class="service-tiers-container" data-service-id="${s.id || s.sku}" style="display:flex; flex-direction:column; gap:6px; background:var(--bg-hover); padding:10px 12px; border-radius:6px; border:1px solid var(--border-color);">
+                    ${tiersHtml}
+                </div>
+                <div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.addProcessingServiceTierRow('${s.id || s.sku}')" style="padding:4px 10px; font-size:0.78rem; display:inline-flex; align-items:center; gap:4px; background:var(--bg-card); border:1px solid var(--border-color);">
+                        <i data-lucide="plus" style="width:13px; height:13px;"></i> Thêm khoảng giá
+                    </button>
+                </div>
+            </div>
+
+            <!-- Minimum Fee Setting -->
+            <div style="padding:10px 14px; background:rgba(249, 115, 22, 0.08); border-left:4px solid #f97316; border-radius:6px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.83rem; color:#9a3412;">
+                    <i data-lucide="alert-triangle" style="width:16px; height:16px; flex-shrink:0;"></i>
+                    <span><strong>Chi phí tối thiểu:</strong> Nếu tổng tiền (Số lượng × Đơn giá) dưới mức này, tự động tính bằng chi phí tối thiểu.</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:0.83rem; font-weight:700; color:#9a3412;">Chi phí tối thiểu:</span>
+                    <input type="number" class="form-input service-minfee-input" value="${s.min_fee || 0}" min="0" step="1000" style="width:140px; height:32px; font-weight:700; color:#c2410c; text-align:right; font-size:0.9rem;" placeholder="0 = Không áp dụng">
+                    <span style="font-size:0.83rem; font-weight:700; color:#9a3412;">đ</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.addNewProcessingService = function() {
+    const services = window.getProcessingServicesList();
+    const newId = "DV-GC-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+    const newService = {
+        id: newId,
+        sku: newId,
+        name: "Dịch vụ gia công mới " + (services.length + 1),
+        unit: "Bộ",
+        lead_time: "3 - 5 ngày từ ngày chốt",
+        min_fee: 0,
+        note: "",
+        icon: "wrench",
+        color: "#d97706",
+        bg: "#fef3c7",
+        badge: "Gia công",
+        description: "Dịch vụ gia công bổ sung",
+        is_service: true,
+        tiers: [
+            { min_qty: 1, max_qty: 100, price: 10000 },
+            { min_qty: 101, max_qty: 300, price: 9000 },
+            { min_qty: 301, max_qty: null, price: 8000 }
+        ]
+    };
+    services.push(newService);
+    state.processing_services_list = services;
+    state.save("processing_services_list", services);
+    window.renderProcessingServicesConfig();
     
-    // Ép nhũ
-    const epNhu = ps.ep_nhu || DEFAULT_PROCESSING_SERVICES.ep_nhu;
-    const ep100 = epNhu.tiers?.find(t => t.max_qty === 100)?.price || 18000;
-    const ep200 = epNhu.tiers?.find(t => t.max_qty === 200)?.price || 15000;
-    const ep300 = epNhu.tiers?.find(t => t.max_qty === 300)?.price || 12000;
-    const ep400 = epNhu.tiers?.find(t => t.max_qty === 400)?.price || 10000;
-    const ep500 = epNhu.tiers?.find(t => t.min_qty >= 401 || t.max_qty === null)?.price || 8000;
-    
-    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-    setVal("procEpNhu_100", ep100);
-    setVal("procEpNhu_200", ep200);
-    setVal("procEpNhu_300", ep300);
-    setVal("procEpNhu_400", ep400);
-    setVal("procEpNhu_500", ep500);
-    setVal("procEpNhuMin", epNhu.min_fee || 1800000);
+    // Scroll to the newly added card
+    setTimeout(() => {
+        const lastCard = document.querySelector(`.service-card-config[data-service-id="${newId}"]`);
+        if (lastCard) {
+            lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const nameInput = lastCard.querySelector(".service-name-input");
+            if (nameInput) {
+                nameInput.focus();
+                nameInput.select();
+            }
+        }
+    }, 100);
+};
 
-    // Khay định hình
-    const khay = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
-    const cc = khay.tiers_caocap || [];
-    setVal("procKhayCC_100", cc.find(t => t.max_qty === 100)?.price || 15000);
-    setVal("procKhayCC_200", cc.find(t => t.max_qty === 200)?.price || 14000);
-    setVal("procKhayCC_300", cc.find(t => t.max_qty === 300)?.price || 13000);
-    setVal("procKhayCC_400", cc.find(t => t.max_qty === 400)?.price || 12000);
-    setVal("procKhayCC_500", cc.find(t => t.min_qty >= 401 || t.max_qty === null)?.price || 10000);
+window.deleteProcessingService = function(serviceId) {
+    let services = window.getProcessingServicesList();
+    const s = services.find(x => x.id === serviceId || x.sku === serviceId);
+    const sName = s ? s.name : serviceId;
+    if (!confirm(`Bạn có chắc chắn muốn xóa dịch vụ gia công "${sName}"?`)) return;
 
-    const pt = khay.tiers_phothong || [];
-    setVal("procKhayPT_100", pt.find(t => t.max_qty === 100)?.price || 12000);
-    setVal("procKhayPT_200", pt.find(t => t.max_qty === 200)?.price || 11000);
-    setVal("procKhayPT_300", pt.find(t => t.max_qty === 300)?.price || 10000);
-    setVal("procKhayPT_400", pt.find(t => t.max_qty === 400)?.price || 9000);
-    setVal("procKhayPT_500", pt.find(t => t.min_qty >= 401 || t.max_qty === null)?.price || 8000);
+    services = services.filter(x => x.id !== serviceId && x.sku !== serviceId);
+    state.processing_services_list = services;
+    state.save("processing_services_list", services);
+    window.renderProcessingServicesConfig();
+    if (typeof window.renderPosQuickServicesBar === "function") window.renderPosQuickServicesBar();
+    if (typeof window.renderPosCatalog === "function") window.renderPosCatalog();
+};
 
-    // In mẫu độc quyền
-    const inDq = ps.in_doc_quyen || DEFAULT_PROCESSING_SERVICES.in_doc_quyen;
-    setVal("procInDocQuyenUnder", inDq.fixed_under_fee || 8000000);
-    setVal("procInDocQuyenOver", inDq.price_per_box || 8000);
+window.addProcessingServiceTierRow = function(serviceId, minQty, maxQty, price) {
+    const container = document.querySelector(`.service-tiers-container[data-service-id="${serviceId}"]`);
+    if (!container) return;
 
-    // Vách ngăn
-    const vn = ps.vach_ngan || DEFAULT_PROCESSING_SERVICES.vach_ngan;
-    setVal("procVachNganPrice", vn.price_per_box || 5000);
+    if (minQty === undefined || minQty === null || minQty === '') {
+        const lastMaxInput = container.querySelector(".service-tier-row:last-child .tier-max");
+        if (lastMaxInput && lastMaxInput.value) {
+            minQty = parseInt(lastMaxInput.value) + 1;
+        } else {
+            minQty = 1;
+        }
+    }
+    if (maxQty === undefined) maxQty = '';
+    if (price === undefined) price = '';
+
+    const row = document.createElement("div");
+    row.className = "service-tier-row";
+    row.style.cssText = "display:flex; align-items:center; gap:8px; flex-wrap:wrap;";
+    row.innerHTML = `
+        <span style="font-size:0.82rem; color:var(--text-secondary); min-width:20px;">Từ</span>
+        <input type="number" class="form-input tier-min" value="${minQty}" min="1" style="width:80px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Từ SL" required>
+        <span style="font-size:0.82rem; color:var(--text-secondary);">đến</span>
+        <input type="number" class="form-input tier-max" value="${maxQty !== null && maxQty !== undefined ? maxQty : ''}" min="1" style="width:90px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Vô hạn">
+        <span style="font-size:0.82rem; font-weight:700; white-space:nowrap; color:var(--text-primary);">-> Đơn giá:</span>
+        <input type="number" class="form-input tier-price" value="${price !== undefined && price !== null ? price : ''}" min="0" step="100" style="width:130px; height:32px; padding:4px 8px; font-weight:700; color:#0284c7;" placeholder="Nhập số tiền..." required>
+        <span style="font-size:0.82rem; color:var(--text-secondary); font-weight:600;">đ</span>
+        <button type="button" class="btn-icon" onclick="this.closest('.service-tier-row').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px; margin-left:auto;" title="Xóa khoảng giá này">
+            <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
+        </button>
+    `;
+    container.appendChild(row);
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
 };
 
 window.saveProcessingServicesConfig = function() {
-    const getVal = (id, def) => {
-        const val = parseFloat(document.getElementById(id)?.value);
-        return isNaN(val) ? def : val;
-    };
+    const cards = document.querySelectorAll("#processingServicesContainer .service-card-config");
+    if (!cards || cards.length === 0) {
+        alert("Chưa có dịch vụ gia công nào để lưu!");
+        return;
+    }
 
-    const newConfig = {
-        ep_nhu: {
-            id: "ep_nhu",
-            name: "Ép nhũ - 1 màu 1 mặt (Hộp + Túi)",
-            lead_time: "6 ngày từ ngày cọc đơn hàng & chốt thiết kế",
-            min_fee: getVal("procEpNhuMin", 1800000),
-            note: "Chi phí tối thiểu là 1.800.000đ (Làm 1 bộ cũng hết 1.800.000đ, làm 100 bộ cũng 1.800.000đ).",
-            tiers: [
-                { min_qty: 1, max_qty: 100, price: getVal("procEpNhu_100", 18000) },
-                { min_qty: 101, max_qty: 200, price: getVal("procEpNhu_200", 15000) },
-                { min_qty: 201, max_qty: 300, price: getVal("procEpNhu_300", 12000) },
-                { min_qty: 301, max_qty: 400, price: getVal("procEpNhu_400", 10000) },
-                { min_qty: 401, max_qty: null, price: getVal("procEpNhu_500", 8000) }
-            ]
-        },
+    const currentList = window.getProcessingServicesList();
+    const updatedList = [];
+
+    cards.forEach(card => {
+        const id = card.dataset.serviceId;
+        const name = card.querySelector(".service-name-input")?.value.trim() || "Dịch vụ gia công";
+        const unit = card.querySelector(".service-unit-input")?.value.trim() || "Bộ";
+        const lead_time = card.querySelector(".service-leadtime-input")?.value.trim() || "";
+        const min_fee = parseFloat(card.querySelector(".service-minfee-input")?.value) || 0;
+
+        const tierRows = card.querySelectorAll(".service-tier-row");
+        const parsedTiers = Array.from(tierRows).map(row => {
+            const min_qty = parseInt(row.querySelector(".tier-min")?.value) || 1;
+            const maxVal = row.querySelector(".tier-max")?.value;
+            const max_qty = maxVal ? parseInt(maxVal) : null;
+            const price = parseFloat(row.querySelector(".tier-price")?.value) || 0;
+            return { min_qty, max_qty, price };
+        });
+
+        parsedTiers.sort((a, b) => a.min_qty - b.min_qty);
+
+        // Find existing metadata like icon, color, bg
+        const existing = currentList.find(x => x.id === id || x.sku === id) || {};
+
+        let badge = `${formatMoney(parsedTiers[0]?.price || 0)}đ/${unit}`;
+        if (min_fee > 0) {
+            badge = `Tối thiểu ${formatMoney(min_fee)}đ`;
+        } else if (parsedTiers.length > 1) {
+            const minP = Math.min(...parsedTiers.map(t => t.price));
+            const maxP = Math.max(...parsedTiers.map(t => t.price));
+            badge = `${formatMoney(minP)} - ${formatMoney(maxP)}đ`;
+        }
+
+        const tierDesc = parsedTiers.map(t => `${t.min_qty}-${t.max_qty || '∞'}: ${formatMoney(t.price)}đ`).join(' | ');
+
+        updatedList.push({
+            ...existing,
+            id: id,
+            sku: id,
+            name: name,
+            unit: unit,
+            lead_time: lead_time,
+            min_fee: min_fee,
+            icon: existing.icon || "wrench",
+            color: existing.color || "#d97706",
+            bg: existing.bg || "#fef3c7",
+            badge: badge,
+            description: tierDesc || name,
+            is_service: true,
+            tiers: parsedTiers
+        });
+    });
+
+    state.processing_services_list = updatedList;
+    state.save("processing_services_list", updatedList);
+    
+    // Also build and save legacy state.processing_services for backward compatibility
+    const epNhu = updatedList.find(s => s.sku === "DV-EPNHU");
+    const khayCC = updatedList.find(s => s.sku === "DV-KHAY-CC");
+    const khayPT = updatedList.find(s => s.sku === "DV-KHAY-PT");
+    const inDq = updatedList.find(s => s.sku === "DV-INDOCQUYEN");
+    const vachNgan = updatedList.find(s => s.sku === "DV-VACHNGAN");
+
+    state.processing_services = {
+        ep_nhu: epNhu || DEFAULT_PROCESSING_SERVICES.ep_nhu,
         khay_dinh_hinh: {
             id: "khay_dinh_hinh",
             name: "Khay định hình theo yêu cầu",
-            lead_time: "6 ngày từ ngày cọc đơn hàng & chốt thiết kế",
-            note: "Áp dụng theo phân loại Hộp cao cấp hoặc Hộp phổ thông.",
-            tiers_caocap: [
-                { min_qty: 1, max_qty: 100, price: getVal("procKhayCC_100", 15000) },
-                { min_qty: 101, max_qty: 200, price: getVal("procKhayCC_200", 14000) },
-                { min_qty: 201, max_qty: 300, price: getVal("procKhayCC_300", 13000) },
-                { min_qty: 301, max_qty: 400, price: getVal("procKhayCC_400", 12000) },
-                { min_qty: 401, max_qty: null, price: getVal("procKhayCC_500", 10000) }
-            ],
-            tiers_phothong: [
-                { min_qty: 1, max_qty: 100, price: getVal("procKhayPT_100", 12000) },
-                { min_qty: 101, max_qty: 200, price: getVal("procKhayPT_200", 11000) },
-                { min_qty: 201, max_qty: 300, price: getVal("procKhayPT_300", 10000) },
-                { min_qty: 301, max_qty: 400, price: getVal("procKhayPT_400", 9000) },
-                { min_qty: 401, max_qty: null, price: getVal("procKhayPT_500", 8000) }
-            ]
+            tiers_caocap: khayCC?.tiers || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh.tiers_caocap,
+            tiers_phothong: khayPT?.tiers || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh.tiers_phothong
         },
-        in_doc_quyen: {
-            id: "in_doc_quyen",
-            name: "In mẫu độc quyền (Không thay đổi kích thước phổ thông)",
-            lead_time: "7 - 10 ngày từ ngày cọc đơn hàng & chốt thiết kế",
-            note: "In dưới 1.000 bộ: 8.000.000đ + Tổng đơn hàng. Từ 1.000 bộ trở lên: +8.000đ/bộ.",
-            fixed_under_fee: getVal("procInDocQuyenUnder", 8000000),
-            price_per_box: getVal("procInDocQuyenOver", 8000),
-            threshold_qty: 1000
-        },
-        vach_ngan: {
-            id: "vach_ngan",
-            name: "Thêm vách ngăn",
-            lead_time: "Theo tiến độ đơn hàng",
-            note: "Bộ sản phẩm chưa bao gồm vách ngăn. Khách lấy thêm tính 5.000đ/bộ.",
-            price_per_box: getVal("procVachNganPrice", 5000)
-        }
+        in_doc_quyen: inDq || DEFAULT_PROCESSING_SERVICES.in_doc_quyen,
+        vach_ngan: vachNgan || DEFAULT_PROCESSING_SERVICES.vach_ngan
     };
+    state.save("processing_services", state.processing_services);
 
-    state.processing_services = newConfig;
-    state.save("processing_services", newConfig);
-    alert("Đã lưu bảng giá dịch vụ gia công 2027 thành công!");
+    alert(`Đã lưu thành công cấu hình cho ${updatedList.length} dịch vụ gia công!`);
+    window.renderProcessingServicesConfig();
+    if (typeof window.renderPosQuickServicesBar === "function") window.renderPosQuickServicesBar();
+    if (typeof window.renderPosCatalog === "function") window.renderPosCatalog();
     if (typeof window.recalcPosTotals === "function") window.recalcPosTotals();
 };
 
