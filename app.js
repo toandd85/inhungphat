@@ -14512,8 +14512,8 @@ window.activateView = function(route) {
     bottomNavItems.forEach(item => item.classList.remove("active"));
     
     const parentHubMap = {
-        'online-sales': 'sales-hub',
-        'sales-hub': 'sales-hub',
+        'online-sales': 'online-sales',
+        'sales-hub': 'online-sales',
         'quotes': 'production-hub',
         'prod-orders': 'production-hub',
         'production': 'production-hub',
@@ -14536,6 +14536,7 @@ window.activateView = function(route) {
     
     const highlightTabId = parentHubMap[tabId] || tabId;
     const activeBottomNavItem = document.querySelector(`.bottom-nav-bar .bottom-nav-item[data-tab="${highlightTabId}"]`) ||
+                                document.querySelector(`.bottom-nav-bar .bottom-nav-item[data-tab="${tabId}"]`) ||
                                 document.querySelector(`.bottom-nav-bar .bottom-nav-item[data-slug="${route.slug}"]`);
     if (activeBottomNavItem) {
         activeBottomNavItem.classList.add("active");

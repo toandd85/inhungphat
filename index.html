@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_cart_icon_v20">
+    <link rel="stylesheet" href="/style.css?v=20261020_sales_online_nav_v21">
 
     <script>
 
@@ -10862,7 +10862,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_cart_icon_v20"></script>
+    <script src="/app.js?v=20261020_sales_online_nav_v21"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -10876,7 +10876,7 @@
             <span>Sản xuất</span>
         </button>
         <div class="bottom-nav-center-wrapper">
-            <button class="bottom-nav-item bottom-nav-sales-highlight" id="btnBottomNavCreateOrder" onclick="document.getElementById('orderChoiceModal').classList.add('active');" title="Tạo đơn hàng nhanh">
+            <button class="bottom-nav-item bottom-nav-sales-highlight" id="btnBottomNavSalesOnline" data-slug="ban-hang-online" data-tab="online-sales" onclick="window.navigateTo('ban-hang-online')" title="Quản lý Bán hàng Online">
                 <i data-lucide="shopping-cart"></i>
             </button>
         </div>
