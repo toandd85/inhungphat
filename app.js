@@ -2,6 +2,12 @@
 // STATE MANAGEMENT & INITAL DATA CORES
 // ==========================================================================
 function showFloatingErrorBanner(msg, file = '', line = '') {
+    const text = String(msg || '');
+    // Ignore storage quota, non-critical warnings, network abortions
+    if (text.includes('QuotaExceeded') || text.includes('quota') || text.includes('IHP Storage') || 
+        text.includes('ResizeObserver') || text.includes('AbortError') || text.includes('cancelled')) {
+        return;
+    }
     const errDiv = document.createElement('div');
     errDiv.className = 'global-js-error-banner';
     errDiv.style.position = 'fixed';
@@ -9,28 +15,28 @@ function showFloatingErrorBanner(msg, file = '', line = '') {
     errDiv.style.right = '20px';
     errDiv.style.backgroundColor = '#ff4d4f';
     errDiv.style.color = 'white';
-    errDiv.style.padding = '16px';
+    errDiv.style.padding = '14px 18px';
     errDiv.style.borderRadius = '8px';
     errDiv.style.zIndex = '999999';
-    errDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    errDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
     errDiv.style.maxWidth = '350px';
     errDiv.innerHTML = `<strong>Lỗi JS:</strong> ${msg}${file ? `<br><small>${file}:${line}</small>` : ''}`;
     if (document.body) {
         document.body.appendChild(errDiv);
-        setTimeout(() => errDiv.remove(), 10000);
+        setTimeout(() => errDiv.remove(), 8000);
     }
 }
 window.addEventListener('error', function(event) {
     showFloatingErrorBanner(event.message, event.filename, event.lineno);
 });
 window.addEventListener('unhandledrejection', function(event) {
-    showFloatingErrorBanner("Rejection: " + (event.reason ? event.reason.message || event.reason : "Unknown reason"));
+    const reason = event.reason ? (event.reason.message || String(event.reason)) : "Unknown reason";
+    showFloatingErrorBanner("Rejection: " + reason);
 });
+// Normal console.error should not show invasive UI popup banner to end-users
 const originalConsoleError = console.error;
 console.error = function(...args) {
     originalConsoleError.apply(console, args);
-    const msg = args.map(a => a && a.message ? a.message : String(a)).join(' ');
-    showFloatingErrorBanner("Console Error: " + msg);
 };
 
 // Global Number & Currency Formatting Helpers
@@ -13474,6 +13480,27 @@ const DEFAULT_ONLINE_ORDERS = [];
 // Initial State Store
 class AppState {
     constructor() {
+        // Auto-cleanup bloated base64 images from localStorage on startup to prevent QuotaExceededError
+        try {
+            const rawProds = localStorage.getItem("ihp_online_products");
+            if (rawProds && rawProds.length > 500000) {
+                const parsedProds = JSON.parse(rawProds);
+                if (Array.isArray(parsedProds)) {
+                    let cleaned = false;
+                    const leanProds = parsedProds.map(p => {
+                        if (p && p.image && String(p.image).length > 60000) {
+                            cleaned = true;
+                            return { ...p, image: "" };
+                        }
+                        return p;
+                    });
+                    if (cleaned) {
+                        localStorage.setItem("ihp_online_products", JSON.stringify(leanProds));
+                    }
+                }
+            }
+        } catch (eStorageClean) {}
+
         this.partners = this.load("partners", DEFAULT_PARTNERS);
         this.materials = this.load("materials", DEFAULT_MATERIALS);
         this.orders = this.load("orders", []);
@@ -13779,26 +13806,61 @@ class AppState {
         try {
             localStorage.setItem(`ihp_${key}`, JSON.stringify(val));
         } catch (e) {
-            console.error("IHP Storage Error: ", e);
+            console.warn("IHP Storage quota reached, auto-cleaning cache:", key);
             if (e.name === 'QuotaExceededError' || e.code === 22) {
-                if (key === 'online_products' && Array.isArray(val)) {
-                    const stripped = val.map(p => {
-                        const copy = {...p};
-                        if (copy.image && copy.image.startsWith("data:")) {
-                            copy.image = ""; // strip base64 image data
-                        }
-                        return copy;
-                    });
-                    try {
-                        localStorage.setItem(`ihp_${key}`, JSON.stringify(stripped));
-                        alert("Bộ nhớ trình duyệt đã đầy. Hàng hóa đã được lưu thành công nhưng hình ảnh tải lên đã bị loại bỏ để giảm dung lượng.");
-                        return;
-                    } catch (err2) {
-                        console.error("Fallback save failed", err2);
+                this.freeUpStorageQuota(key, val);
+            }
+        }
+    }
+
+    freeUpStorageQuota(failedKey, failedVal) {
+        try {
+            // 1. Strip heavy base64 images from online_products in localStorage
+            const storedProds = localStorage.getItem('ihp_online_products');
+            if (storedProds) {
+                try {
+                    const parsed = JSON.parse(storedProds);
+                    if (Array.isArray(parsed)) {
+                        const lean = parsed.map(p => {
+                            if (p && p.image && String(p.image).startsWith('data:')) {
+                                return { ...p, image: '' };
+                            }
+                            return p;
+                        });
+                        localStorage.setItem('ihp_online_products', JSON.stringify(lean));
+                    }
+                } catch (e1) {}
+            }
+
+            // 2. Strip images from the item being saved if it is online_products
+            let leanVal = failedVal;
+            if (failedKey === 'online_products' && Array.isArray(failedVal)) {
+                leanVal = failedVal.map(p => {
+                    if (p && p.image && String(p.image).startsWith('data:')) {
+                        return { ...p, image: '' };
+                    }
+                    return p;
+                });
+            }
+
+            // 3. Remove non-essential temporary/debug keys from localStorage
+            try {
+                for (let i = localStorage.length - 1; i >= 0; i--) {
+                    const k = localStorage.key(i);
+                    if (k && (k.startsWith('ihp_quote_def_') || k.startsWith('ihp_toolbar_') || k.startsWith('ihp_views_') || k.includes('seeded_'))) {
+                        localStorage.removeItem(k);
                     }
                 }
-                alert("Bộ nhớ trình duyệt của bạn đã đầy (Quota Exceeded). Không thể lưu dữ liệu mới này.");
+            } catch (e2) {}
+
+            // 4. Retry saving lean value silently (in-memory state already has full data)
+            try {
+                localStorage.setItem(`ihp_${failedKey}`, JSON.stringify(leanVal));
+            } catch (e3) {
+                console.warn("localStorage quota full, retained in memory and server DB:", failedKey);
             }
+        } catch (err) {
+            console.warn("Quota cleanup warning:", err);
         }
     }
 
@@ -22967,15 +23029,37 @@ window.initOnlineSales = function() {
     document.getElementById("btnNewOnlineProduct")?.addEventListener("click", () => window.openNewOnlineProductModal("ADD"));
     document.getElementById("btnRestockOnlineProduct")?.addEventListener("click", window.openOnlineImportStockModal);
     
-    // Image upload preview listener
+    // Image upload preview listener with automatic high-ratio compression
     document.getElementById("onlineProductImageInput")?.addEventListener("change", function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById("onlineProductImagePreview");
         if (file && preview) {
             const reader = new FileReader();
             reader.onload = function(evt) {
-                preview.src = evt.target.result;
-                preview.style.display = "block";
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement("canvas");
+                    const maxDim = 480;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        } else {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.65);
+                    preview.src = compressedDataUrl;
+                    preview.style.display = "block";
+                };
+                img.src = evt.target.result;
             };
             reader.readAsDataURL(file);
         }

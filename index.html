@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_sku_name_v16">
+    <link rel="stylesheet" href="/style.css?v=20261020_storage_fix_v17">
 
     <script>
 
@@ -190,11 +190,13 @@
                     <button type="button" class="btn-icon" onclick="document.getElementById('orderChoiceModal').classList.remove('active')" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
                 </div>
                 <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
-                    <button class="btn btn-primary" id="btnChoiceOnlineOrder" style="padding: 14px; font-size: 1rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        <i data-lucide="shopping-bag"></i> Tạo Đơn Hàng Online
+                    <button class="btn btn-primary" id="btnChoiceOnlineOrder" style="padding: 18px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 12px; background: linear-gradient(135deg, #108f53 0%, #0b7a46 100%); color: #ffffff; border: none; box-shadow: 0 6px 16px rgba(16, 143, 83, 0.4); cursor: pointer; letter-spacing: 0.3px;">
+                        <i data-lucide="shopping-bag" style="width: 24px; height: 24px; stroke-width: 2.5;"></i>
+                        <span>TẠO ĐƠN HÀNG ONLINE (POS)</span>
                     </button>
-                    <button class="btn btn-secondary" id="btnChoiceProdOrder" style="padding: 14px; font-size: 1rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid var(--border-color);">
-                        <i data-lucide="wrench"></i> Tạo Đơn Hàng Sản Xuất
+                    <button class="btn btn-secondary" id="btnChoiceProdOrder" style="padding: 18px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 12px; border: 2px solid #108f53; color: #108f53; background: var(--bg-card); box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer; letter-spacing: 0.3px;">
+                        <i data-lucide="wrench" style="width: 24px; height: 24px; stroke-width: 2.5;"></i>
+                        <span>TẠO ĐƠN HÀNG SẢN XUẤT</span>
                     </button>
                 </div>
             </div>
@@ -238,12 +240,22 @@
                             <span>Bán hàng Online</span>
                         </span>
                         <span style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
-                            <span onclick="event.stopPropagation(); window.openNewOnlineOrderModal();" title="Tạo đơn hàng online mới" style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: white; border: none; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" onmouseover="this.style.transform='scale(1.2)';" onmouseout="this.style.transform='scale(1)';">+</span>
+                            <span onclick="event.stopPropagation(); window.openNewOnlineOrderModal();" title="Tạo đơn hàng online mới" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; background: #108f53; color: white; border: none; font-size: 0.76rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(16,143,83,0.35); text-transform: uppercase;" onmouseover="this.style.transform='scale(1.08)';" onmouseout="this.style.transform='scale(1)';">
+                                <i data-lucide="plus" style="width: 12px; height: 12px; stroke-width: 3;"></i>
+                                <span>Tạo đơn</span>
+                            </span>
                             <i data-lucide="chevron-down" class="menu-arrow" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
                         </span>
                     </button>
 
                     <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 8px; margin-top: 4px;">
+                        <!-- Menu Tạo Đơn Nổi Bật -->
+                        <div style="padding: 4px 0 2px 0;">
+                            <button type="button" onclick="event.stopPropagation(); window.openNewOnlineOrderModal();" style="width: 100%; padding: 10px 14px; background: linear-gradient(135deg, #108f53 0%, #059669 100%); color: #ffffff; border: none; border-radius: 8px; font-weight: 800; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 3px 10px rgba(16, 143, 83, 0.35); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                                <i data-lucide="plus-circle" style="width: 18px; height: 18px; stroke-width: 2.5;"></i>
+                                <span>+ TẠO ĐƠN MỚI (POS)</span>
+                            </button>
+                        </div>
                         <!-- Đơn hàng collapsible group inside -->
                         <div class="menu-group" style="width: 100%;">
                             <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('ban-hang-online');" style="padding: 8px 12px; font-size: 0.9rem;">
@@ -1662,10 +1674,10 @@
                          </div>
                          <div class="online-actions-bar">
                             
-                            <!-- 1/ Tạo đơn (icon giỏ hàng) -->
-                            <button class="btn btn-primary" id="btnNewOnlineOrder" onclick="event.stopPropagation(); window.openNewOnlineOrderModal();" style="padding: 8px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; flex-shrink: 0; border-radius: 8px;" title="Tạo đơn hàng mới">
-                                <i data-lucide="shopping-cart"></i>
-                                <span class="desktop-only">Tạo đơn</span>
+                            <!-- 1/ Tạo đơn (To dày nổi bật) -->
+                            <button class="btn btn-primary" id="btnNewOnlineOrder" onclick="event.stopPropagation(); window.openNewOnlineOrderModal();" style="padding: 10px 18px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; flex-shrink: 0; border-radius: 10px; font-weight: 800; font-size: 0.95rem; background: linear-gradient(135deg, #108f53 0%, #0b7a46 100%); color: #ffffff; border: none; box-shadow: 0 4px 14px rgba(16, 143, 83, 0.4); cursor: pointer; letter-spacing: 0.3px;" title="Tạo đơn hàng mới (POS)">
+                                <i data-lucide="plus-circle" style="width: 20px; height: 20px; stroke-width: 2.5;"></i>
+                                <span style="font-weight: 800; display: inline-block;">+ TẠO ĐƠN</span>
                             </button>
 
                             <!-- 2/ Công cụ (droplist/detailed toolbar container) -->
@@ -10870,7 +10882,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_sku_name_v16"></script>
+    <script src="/app.js?v=20261020_storage_fix_v17"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -10884,8 +10896,9 @@
             <span>Sản xuất</span>
         </button>
         <div class="bottom-nav-center-wrapper">
-            <button class="bottom-nav-item bottom-nav-sales-highlight" data-slug="kinh-doanh" data-tab="sales-hub" onclick="window.navigateTo('kinh-doanh')" title="Quản lý Bán hàng">
-                <i data-lucide="shopping-cart"></i>
+            <button class="bottom-nav-item bottom-nav-sales-highlight" id="btnBottomNavCreateOrder" onclick="document.getElementById('orderChoiceModal').classList.add('active');" title="Tạo đơn hàng nhanh">
+                <i data-lucide="plus" style="width: 26px; height: 26px; stroke-width: 3;"></i>
+                <span style="font-size: 0.62rem; font-weight: 800; color: #ffffff; margin-top: -2px; letter-spacing: 0.2px;">TẠO ĐƠN</span>
             </button>
         </div>
         <button class="bottom-nav-item" data-slug="tai-chinh" data-tab="finance-hub" onclick="window.navigateTo('tai-chinh')">
@@ -10900,8 +10913,9 @@
 
 
     <!-- Floating Action Button (FAB) for Creating Orders -->
-    <div id="floatingCreateOrderBtn" onclick="document.getElementById('orderChoiceModal').classList.add('active');" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: 99998; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(16, 143, 83, 0.45); cursor: pointer; transition: all 0.2s ease-in-out;" onmouseover="this.style.transform='translateY(-50%) scale(1.15)';" onmouseout="this.style.transform='translateY(-50%) scale(1)';" title="Tạo đơn hàng nhanh">
-        <i data-lucide="shopping-cart" style="width: 24px; height: 24px;"></i>
+    <div id="floatingCreateOrderBtn" onclick="document.getElementById('orderChoiceModal').classList.add('active');" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: 99998; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #108f53 0%, #059669 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(16, 143, 83, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.25); cursor: pointer; transition: all 0.2s ease-in-out; border: 2.5px solid #ffffff;" onmouseover="this.style.transform='translateY(-50%) scale(1.15)';" onmouseout="this.style.transform='translateY(-50%) scale(1)';" title="Tạo đơn hàng nhanh">
+        <i data-lucide="plus" style="width: 24px; height: 24px; stroke-width: 3;"></i>
+        <span style="font-size: 0.52rem; font-weight: 800; line-height: 1; margin-top: 1px;">TẠO ĐƠN</span>
     </div>
 <script>
 
