@@ -15,9 +15,16 @@
             }
         })();
 
-        // Immediately set theme before document rendering
+        // Immediately set theme before document rendering (Default is Light)
         (function() {
-            const savedTheme = localStorage.getItem("ihp_app_theme") || "light";
+            if (!localStorage.getItem("ihp_theme_default_light_v1")) {
+                if (!localStorage.getItem("ihp_user_explicit_theme")) {
+                    localStorage.setItem("ihp_app_theme", "light");
+                    localStorage.setItem("ihp_theme", "light");
+                }
+                localStorage.setItem("ihp_theme_default_light_v1", "true");
+            }
+            const savedTheme = localStorage.getItem("ihp_app_theme") || localStorage.getItem("ihp_theme") || "light";
             document.documentElement.setAttribute("data-theme", savedTheme);
         })();
     </script>
@@ -51,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_box_types_v9">
+    <link rel="stylesheet" href="/style.css?v=20261020_theme_v10">
 
     <script>
 
@@ -431,14 +438,10 @@
 
             <div class="sidebar-footer">
 
-                <div class="theme-toggle" id="themeToggleBtn">
-
-                    <i data-lucide="sun" class="sun-icon"></i>
-
-                    <i data-lucide="moon" class="moon-icon"></i>
-
-                    <span>Chế độ sáng/tối</span>
-
+                <div class="theme-toggle" id="themeToggleBtn" onclick="window.toggleAppTheme()" style="cursor: pointer;" title="Chuyển đổi Giao diện Sáng (mặc định) / Tối">
+                    <i data-lucide="sun" class="sun-icon" style="color: #f59e0b;"></i>
+                    <i data-lucide="moon" class="moon-icon" style="color: #6366f1;"></i>
+                    <span id="themeToggleLabel">Giao diện Sáng / Tối</span>
                 </div>
 
                 <div class="user-profile" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
@@ -502,6 +505,12 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Theme Toggle Button (Light/Dark) -->
+                        <button type="button" id="headerThemeToggleBtn" onclick="window.toggleAppTheme()" class="theme-toggle-header-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-primary); flex-shrink: 0;" title="Chuyển chế độ Giao diện Sáng (mặc định) / Tối">
+                            <i data-lucide="sun" class="sun-icon" style="width: 18px; height: 18px; color: #f59e0b;"></i>
+                            <i data-lucide="moon" class="moon-icon" style="width: 18px; height: 18px; color: #6366f1;"></i>
+                        </button>
 
                         <!-- Hidden helper button to not break references -->
                         <button class="btn btn-primary" id="btnQuickQuote" style="display: none;">
@@ -10837,7 +10846,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_box_types_v9"></script>
+    <script src="/app.js?v=20261020_theme_v10"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

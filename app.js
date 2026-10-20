@@ -14147,19 +14147,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Theme Switcher
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    themeToggleBtn.addEventListener("click", () => {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute("data-theme");
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        html.setAttribute("data-theme", newTheme);
-        localStorage.setItem("ihp_theme", newTheme);
-    });
-
-    // Set initial theme
-    const savedTheme = localStorage.getItem("ihp_theme") || "dark";
+    // Set initial theme (Default is light)
+    const savedTheme = localStorage.getItem("ihp_app_theme") || localStorage.getItem("ihp_theme") || "light";
     document.documentElement.setAttribute("data-theme", savedTheme);
+    if (typeof window.syncThemeToggleIcons === "function") {
+        window.syncThemeToggleIcons();
+    }
 
     // Init UI elements with data
     initDataInForms();
@@ -26281,25 +26274,36 @@ window.shareToZalo = function() {
     }
 };
 
+window.setAppTheme = function(theme) {
+    const validTheme = theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", validTheme);
+    localStorage.setItem("ihp_app_theme", validTheme);
+    localStorage.setItem("ihp_theme", validTheme);
+    localStorage.setItem("ihp_user_explicit_theme", "true");
+    if (typeof window.syncThemeToggleIcons === "function") {
+        window.syncThemeToggleIcons();
+    }
+    if (typeof showToast === "function") {
+        showToast(`Đã chuyển sang giao diện ${validTheme === "dark" ? "Tối" : "Sáng (mặc định)"}`, "info");
+    }
+};
+
 window.toggleAppTheme = function() {
     const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("ihp_app_theme", newTheme);
-    window.syncThemeToggleIcons();
+    window.setAppTheme(newTheme);
 };
 
 window.syncThemeToggleIcons = function() {
     const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
-    const lightIcons = document.querySelectorAll(".theme-icon-light");
-    const darkIcons = document.querySelectorAll(".theme-icon-dark");
+    const headerBtn = document.getElementById("headerThemeToggleBtn");
+    const sidebarLabel = document.getElementById("themeToggleLabel");
     
-    if (currentTheme === "dark") {
-        lightIcons.forEach(i => i.style.display = "none");
-        darkIcons.forEach(i => i.style.display = "block");
-    } else {
-        lightIcons.forEach(i => i.style.display = "block");
-        darkIcons.forEach(i => i.style.display = "none");
+    if (headerBtn) {
+        headerBtn.setAttribute("title", currentTheme === "dark" ? "Chuyển sang giao diện Sáng (mặc định)" : "Chuyển sang giao diện Tối");
+    }
+    if (sidebarLabel) {
+        sidebarLabel.textContent = currentTheme === "dark" ? "Giao diện Tối" : "Giao diện Sáng (chuẩn)";
     }
 };
 

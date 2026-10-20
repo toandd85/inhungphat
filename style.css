@@ -7542,3 +7542,17 @@ select.form-select, .form-select {
     background: #1e293b !important;
     color: #f1f5f9 !important;
 }
+
+/* Theme Toggle Button in Header */
+.theme-toggle-header-btn {
+    transition: all 0.2s ease;
+}
+.theme-toggle-header-btn:hover {
+    background: var(--bg-card-hover) !important;
+    border-color: var(--accent) !important;
+    transform: scale(1.05);
+}
+.theme-toggle-header-btn:active {
+    transform: scale(0.95);
+}
+
