@@ -20604,6 +20604,7 @@ async function sendTelegramOrderAlert(order) {
                 { name: 'Mã SKU', type: 'text', getValue: (p) => p.sku },
                 { name: 'Ảnh', type: 'image', getValue: (p) => p.image || '' },
                 { name: 'Tên hàng hóa', type: 'text', getValue: (p) => p.name },
+                { name: 'Loại hộp', type: 'text', getValue: (p) => p.category || '' },
                 { name: 'Đơn vị', type: 'text', getValue: (p) => p.unit },
                 { name: 'Nhà cung cấp', type: 'text', getValue: (p) => p.supplier || p.brand || '' },
                 { name: 'Giá nhập', type: 'number', getValue: (p) => p.cost_price || p.import_price || 0 },
@@ -26999,6 +27000,13 @@ window.renderOnlineProducts = function() {
         return matchQuery && matchSupplier && matchBoxType;
     });
     
+    if (filteredProducts.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding:24px;">Không tìm thấy hàng hóa nào phù hợp.</td></tr>`;
+        return;
+    }
+
+    const boxTypes = (state.master_categories?.sales_box_type?.items || DEFAULT_MASTER_CATEGORIES.sales_box_type.items || []).filter(b => b.status === "ACTIVE");
+
     filteredProducts.forEach(prod => {
         const row = document.createElement("tr");
         const isLow = prod.stock_qty < prod.min_stock_qty;
@@ -27020,14 +27028,24 @@ window.renderOnlineProducts = function() {
             ? `<span style="font-weight:600; color:#64748b;">${formatMoney(costPrice)}</span>` 
             : `<span style="color:var(--text-secondary);">0đ</span>`;
         
-        const catBadge = prod.category 
-            ? `<br><span class="badge" style="font-size:0.68rem; font-weight:700; background:rgba(16,143,83,0.1); color:#059669; border:1px solid rgba(16,143,83,0.25); padding:1px 6px; border-radius:10px; display:inline-block; margin-top:3px;">📦 ${prod.category}</span>` 
-            : '';
+        let boxTypeOptions = `<option value="">-- Chưa chọn --</option>`;
+        boxTypes.forEach(b => {
+            const isSel = (prod.category === b.name) ? "selected" : "";
+            boxTypeOptions += `<option value="${b.name}" ${isSel}>📦 ${b.name}</option>`;
+        });
+        if (prod.category && !boxTypes.some(b => b.name === prod.category)) {
+            boxTypeOptions += `<option value="${prod.category}" selected>📦 ${prod.category}</option>`;
+        }
         
         row.innerHTML = `
             <td><strong>${prod.sku}</strong></td>
             <td>${imgHtml}</td>
-            <td><strong>${prod.name}</strong>${catBadge}</td>
+            <td><strong>${prod.name}</strong></td>
+            <td>
+                <select class="form-select form-select-sm pos-inline-box-type" onchange="window.updateProductBoxType('${prod.sku}', this.value)" style="font-size: 0.8rem; font-weight: 700; height: 32px; padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(16,143,83,0.4); color: #0b7a46; background: #f0fdf4; cursor: pointer; min-width: 135px;" title="Bấm để chọn và cập nhật nhanh loại hộp">
+                    ${boxTypeOptions}
+                </select>
+            </td>
             <td>${prod.unit || 'Cái'}</td>
             <td>${supplierHtml}</td>
             <td>${costHtml}</td>
@@ -27045,6 +27063,16 @@ window.renderOnlineProducts = function() {
         tableBody.appendChild(row);
     });
     lucide.createIcons();
+};
+
+window.updateProductBoxType = function(sku, newCategory) {
+    const prod = (state.online_products || []).find(p => p.sku === sku);
+    if (!prod) return;
+    prod.category = newCategory;
+    state.updateState("online_products", state.online_products);
+    if (typeof showToast === 'function') {
+        showToast(`Đã cập nhật loại hộp cho ${sku}: ${newCategory || 'Chưa chọn'}`);
+    }
 };
 
 window.viewFullOnlineProductImage = function(sku) {
@@ -36863,7 +36891,7 @@ window.confirmExcelImportGoods = function() {
                 wholesale_price: itemWholesale || (itemCost * 1.15),
                 stock_qty: itemQty,
                 min_stock_qty: 100,
-                category: "BOX"
+                category: "Hộp cao cấp"
             };
             state.online_products.push(prod);
         }

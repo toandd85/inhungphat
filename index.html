@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_clear_orders_v8">
+    <link rel="stylesheet" href="/style.css?v=20261020_box_types_v9">
 
     <script>
 
@@ -1834,6 +1834,10 @@
                                 <select class="form-select" id="onlineProductCategoryFilter" style="width:190px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineProducts && window.renderOnlineProducts()">
                                     <option value="">-- Tất cả Loại hộp --</option>
                                 </select>
+                                <button type="button" class="btn btn-secondary" onclick="window.openNewCategoryItemModal && window.openNewCategoryItemModal('sales_box_type')" style="height:36px; padding:0 10px; font-size:0.82rem; display:inline-flex; align-items:center; gap:5px; border-radius:6px; font-weight:600; white-space:nowrap;" title="Cấu hình & Thêm loại hộp mới vào danh mục dùng chung">
+                                    <i data-lucide="folder-plus" style="width:14px; height:14px; color:var(--accent);"></i>
+                                    <span>+ Cấu hình loại hộp</span>
+                                </button>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                                 <button class="btn btn-secondary" onclick="window.downloadProductCatalogTemplate()" style="display:flex; align-items:center; gap:6px; font-weight:500;" title="Tải file mẫu Excel danh mục hàng hóa">
@@ -1869,6 +1873,8 @@
                                         <th>Ảnh</th>
 
                                         <th>Tên hàng hóa</th>
+
+                                        <th style="min-width: 140px;">Loại hộp</th>
 
                                         <th>Đơn vị</th>
 
@@ -7010,15 +7016,13 @@
                         <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
 
                             <div class="form-group">
-
-                                <label for="onlineProductCategory">Loại hộp *</label>
-
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <label for="onlineProductCategory" style="margin: 0;">Loại hộp *</label>
+                                    <button type="button" onclick="window.openNewCategoryItemModal && window.openNewCategoryItemModal('sales_box_type')" style="padding: 0; font-size: 0.74rem; color: var(--accent); background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: 600;" title="Cấu hình & Thêm loại hộp mới vào danh mục">+ Cấu hình loại hộp</button>
+                                </div>
                                 <select class="form-select" id="onlineProductCategory" required>
-
                                     <option value="">-- Chọn Loại hộp --</option>
-
                                 </select>
-
                             </div>
 
                             <div class="form-group">
@@ -10833,7 +10837,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_clear_orders_v8"></script>
+    <script src="/app.js?v=20261020_box_types_v9"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
