@@ -24615,9 +24615,31 @@ window.togglePosProductCatalog = function() {
     }
 };
 
-// Backwards-compatible alias
+// Backwards-compatible alias & modern floating cart dock click handler
 window.switchPosMobileView = function(view = "CATALOG") {
     window.setPosDisplayMode(view === "CART" ? "BILLING" : "CATALOG");
+};
+
+window.handlePosFloatingCartClick = function(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const isMobile = window.innerWidth <= 1024;
+    if (isMobile) {
+        window.setPosDisplayMode("BILLING");
+    } else {
+        // Desktop: focus checkout & smooth scroll cart in left panel
+        const submitBtn = document.querySelector(".pos-checkout-btn");
+        const cartList = document.getElementById("posCartItemsList");
+        if (cartList) {
+            cartList.scrollTop = cartList.scrollHeight;
+        }
+        if (submitBtn) {
+            submitBtn.classList.add("pos-btn-pulse");
+            setTimeout(() => submitBtn.classList.remove("pos-btn-pulse"), 1000);
+            submitBtn.focus();
+        }
+    }
 };
 
 // Render Product Catalog Cards Grid (Right column)

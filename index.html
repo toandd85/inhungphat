@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_pos_payment_segmented_v2">
+    <link rel="stylesheet" href="/style.css?v=20261020_pos_floating_cart_v3">
 
     <script>
 
@@ -6639,22 +6639,24 @@
                         <!-- Dynamic Product Cards -->
                     </div>
 
-                    <!-- Mobile Sticky Bottom Floating Cart Bar (Visible on mobile when items in cart) -->
-                    <div class="pos-mobile-floating-cart-bar" id="posMobileFloatingCartBar" onclick="window.switchPosMobileView('CART')" style="display:none;">
+                    <!-- Modern POS Floating Cart Dock (Smart Floating Island) -->
+                    <div class="pos-mobile-floating-cart-bar" id="posMobileFloatingCartBar" onclick="window.handlePosFloatingCartClick(event)" style="display:none;" title="Xem chi tiết giỏ hàng và thanh toán">
                         <div class="pos-mobile-float-left">
                             <div class="pos-mobile-float-icon">
-                                <i data-lucide="shopping-cart" style="width:20px; height:20px;"></i>
+                                <i data-lucide="shopping-cart" style="width:19px; height:19px;"></i>
                                 <span class="pos-floating-badge" id="posFloatingCartCount">0</span>
                             </div>
                             <div class="pos-mobile-float-text">
-                                <div id="posFloatingCartQtyText" style="font-size:0.75rem; opacity:0.9;">0 mặt hàng</div>
-                                <strong id="posFloatingCartTotal" style="font-size:1.02rem; font-weight:800;">0đ</strong>
+                                <div id="posFloatingCartQtyText" class="pos-floating-qty-label">0 MẶT HÀNG</div>
+                                <strong id="posFloatingCartTotal" class="pos-floating-total-amount">0đ</strong>
                             </div>
                         </div>
-                        <button type="button" class="pos-mobile-float-btn">
-                            <span>Xem giỏ & Thanh toán</span>
-                            <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
-                        </button>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <button type="button" class="pos-mobile-float-btn" tabindex="-1">
+                                <span>Xem giỏ & Thanh toán</span>
+                                <i data-lucide="arrow-right" style="width:15px; height:15px;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -10793,7 +10795,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_pos_payment_segmented_v2"></script>
+    <script src="/app.js?v=20261020_pos_floating_cart_v3"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

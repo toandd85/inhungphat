@@ -5880,7 +5880,6 @@ select.form-select, .form-select {
 .pos-mobile-nav-tabs,
 .pos-screen-toggle-bar,
 .pos-mobile-quick-cust-bar,
-.pos-mobile-floating-cart-bar,
 .pos-mobile-back-to-catalog-btn,
 .pos-quick-add-prod-banner,
 .pos-catalog-top-banner {
@@ -7142,34 +7141,48 @@ select.form-select, .form-select {
         padding: 6px 8px !important;
     }
 
-    /* Mobile Floating Cart Bar */
+    /* Modern Floating Cart Dock (Mobile View) */
     .pos-mobile-floating-cart-bar {
         position: fixed !important;
-        bottom: max(12px, env(safe-area-inset-bottom)) !important;
-        left: 10px !important;
-        right: 10px !important;
-        height: 52px !important;
-        background: linear-gradient(135deg, #108f53 0%, #0b7a46 100%) !important;
-        border-radius: 26px !important;
+        bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
+        left: 14px !important;
+        right: 14px !important;
+        max-width: 480px !important;
+        margin: 0 auto !important;
+        height: 56px !important;
+        background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%) !important;
+        border: 1px solid rgba(52, 211, 153, 0.45) !important;
+        border-radius: 28px !important;
         color: #ffffff !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
-        padding: 0 14px 0 16px !important;
-        box-shadow: 0 8px 24px rgba(16, 143, 83, 0.45) !important;
+        padding: 0 10px 0 16px !important;
+        box-shadow: 0 14px 35px -4px rgba(0, 0, 0, 0.45), 0 0 20px rgba(16, 185, 129, 0.3) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
         z-index: 99999 !important;
         cursor: pointer !important;
-        transition: transform 0.15s ease !important;
+        user-select: none !important;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        animation: posFloatingDockSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
     .pos-mobile-floating-cart-bar:active {
         transform: scale(0.98) !important;
     }
 
+    /* CRITICAL: HIDE COMPLETELY ON MOBILE WHEN IN BILLING/CHECKOUT VIEW */
+    .pos-container.pos-mode-billing .pos-mobile-floating-cart-bar,
+    .pos-container.pos-mobile-view-cart .pos-mobile-floating-cart-bar {
+        display: none !important;
+    }
+
     .pos-mobile-float-left {
         display: flex !important;
         align-items: center !important;
-        gap: 10px !important;
+        gap: 12px !important;
+        min-width: 0 !important;
     }
 
     .pos-mobile-float-icon {
@@ -7177,44 +7190,232 @@ select.form-select, .form-select {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, 0.18) !important;
+        flex-shrink: 0 !important;
+        color: #ffffff !important;
     }
 
     .pos-floating-badge {
         position: absolute !important;
-        top: -6px !important;
-        right: -8px !important;
+        top: -5px !important;
+        right: -7px !important;
         background: #ef4444 !important;
         color: #ffffff !important;
-        font-size: 0.65rem !important;
+        font-size: 0.68rem !important;
         font-weight: 800 !important;
-        padding: 1px 5px !important;
+        padding: 1px 6px !important;
         border-radius: 10px !important;
-        line-height: 1 !important;
-        min-width: 14px !important;
+        line-height: 1.2 !important;
+        min-width: 16px !important;
         text-align: center !important;
-        border: 2px solid #108f53 !important;
+        border: 2px solid #064e3b !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) !important;
     }
 
     .pos-mobile-float-text {
         display: flex !important;
         flex-direction: column !important;
+        justify-content: center !important;
+        min-width: 0 !important;
         line-height: 1.15 !important;
+    }
+
+    .pos-floating-qty-label {
+        font-size: 0.72rem !important;
+        color: #a7f3d0 !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+    }
+
+    .pos-floating-total-amount {
+        font-size: 1.12rem !important;
+        font-weight: 900 !important;
+        color: #ffffff !important;
+        white-space: nowrap !important;
+        letter-spacing: -0.3px !important;
     }
 
     .pos-mobile-float-btn {
         background: #ffffff !important;
-        color: #108f53 !important;
+        color: #047857 !important;
         border: none !important;
         border-radius: 20px !important;
         font-weight: 800 !important;
-        font-size: 0.78rem !important;
-        padding: 6px 12px !important;
+        font-size: 0.82rem !important;
+        padding: 8px 16px !important;
         display: flex !important;
         align-items: center !important;
-        gap: 4px !important;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+        gap: 6px !important;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18) !important;
         cursor: pointer !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
+
+    .pos-mobile-float-btn:hover {
+        background: #ecfdf5 !important;
+        transform: scale(1.04) !important;
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22) !important;
+    }
+}
+
+/* ==========================================================================
+   DESKTOP FLOATING CART PILL (SCREEN > 1024px)
+   Pinned at bottom-right of catalog with smooth hover and click to focus
+   ========================================================================== */
+@media (min-width: 1025px) {
+    .pos-mobile-floating-cart-bar {
+        position: fixed !important;
+        bottom: 24px !important;
+        right: 28px !important;
+        left: auto !important;
+        transform: none !important;
+        min-width: 350px !important;
+        max-width: 430px !important;
+        height: 56px !important;
+        background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%) !important;
+        border: 1px solid rgba(52, 211, 153, 0.45) !important;
+        border-radius: 28px !important;
+        color: #ffffff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 10px 0 16px !important;
+        box-shadow: 0 14px 35px -4px rgba(0, 0, 0, 0.45), 0 0 20px rgba(16, 185, 129, 0.28) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        z-index: 99999 !important;
+        cursor: pointer !important;
+        user-select: none !important;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        animation: posFloatingDockSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .pos-mobile-floating-cart-bar:hover {
+        transform: translateY(-2px) scale(1.01) !important;
+        box-shadow: 0 18px 40px -4px rgba(0, 0, 0, 0.55), 0 0 25px rgba(16, 185, 129, 0.38) !important;
+    }
+
+    .pos-mobile-float-left {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        min-width: 0 !important;
+    }
+
+    .pos-mobile-float-icon {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, 0.18) !important;
+        flex-shrink: 0 !important;
+        color: #ffffff !important;
+    }
+
+    .pos-floating-badge {
+        position: absolute !important;
+        top: -5px !important;
+        right: -7px !important;
+        background: #ef4444 !important;
+        color: #ffffff !important;
+        font-size: 0.68rem !important;
+        font-weight: 800 !important;
+        padding: 1px 6px !important;
+        border-radius: 10px !important;
+        line-height: 1.2 !important;
+        min-width: 16px !important;
+        text-align: center !important;
+        border: 2px solid #064e3b !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .pos-mobile-float-text {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        min-width: 0 !important;
+        line-height: 1.15 !important;
+    }
+
+    .pos-floating-qty-label {
+        font-size: 0.72rem !important;
+        color: #a7f3d0 !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+    }
+
+    .pos-floating-total-amount {
+        font-size: 1.12rem !important;
+        font-weight: 900 !important;
+        color: #ffffff !important;
+        white-space: nowrap !important;
+        letter-spacing: -0.3px !important;
+    }
+
+    .pos-mobile-float-btn {
+        background: #ffffff !important;
+        color: #047857 !important;
+        border: none !important;
+        border-radius: 20px !important;
+        font-weight: 800 !important;
+        font-size: 0.82rem !important;
+        padding: 8px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18) !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .pos-mobile-float-btn:hover {
+        background: #ecfdf5 !important;
+        transform: scale(1.04) !important;
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22) !important;
+    }
+
+    .pos-product-grid {
+        padding-bottom: 85px !important;
+    }
+}
+
+@keyframes posFloatingDockSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes posBtnPulseGlow {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 143, 83, 0.7); }
+    50% { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(16, 143, 83, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 143, 83, 0); }
+}
+
+.pos-btn-pulse {
+    animation: posBtnPulseGlow 0.8s ease-in-out !important;
 }
 
 
