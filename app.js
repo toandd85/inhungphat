@@ -24961,26 +24961,55 @@ window.calculateServiceItemPricing = function(sku, qty) {
 
 window.renderPosQuickServicesBar = function() {
     const bar = document.getElementById("posQuickServicesBar");
-    if (!bar) return;
-    const services = window.getProcessingServicesList();
-    let html = `
-        <span style="font-size: 0.74rem; font-weight: 700; color: #9a3412; display: inline-flex; align-items: center; gap: 4px;">
-            <i data-lucide="wrench" style="width: 12px; height: 12px;"></i> Thêm nhanh gia công:
-        </span>
-    `;
-    services.forEach(s => {
-        const minFeeText = s.min_fee > 0 ? ` (min ${formatMoney(s.min_fee)})` : '';
-        const shortName = (s.name || '').replace(" - 1 màu 1 mặt (Hộp + Túi)", "");
-        html += `
-            <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('${s.sku || s.id}')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="${s.name}${minFeeText}">
-                + ${shortName}
-            </button>
-        `;
-    });
-    bar.innerHTML = html;
-    if (window.lucide && typeof lucide.createIcons === 'function') {
-        lucide.createIcons();
+    if (bar) {
+        bar.style.display = "none";
+        bar.innerHTML = "";
     }
+};
+
+window.removeVietnameseTones = function(str) {
+    if (!str) return '';
+    try {
+        str = String(str).toLowerCase().trim();
+        str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        str = str.replace(/đ/g, "d").replace(/Đ/g, "d");
+        return str;
+    } catch (e) {
+        return String(str).toLowerCase().trim();
+    }
+};
+
+window.checkProductMatchesSearch = function(p, query) {
+    if (!p) return false;
+    if (!query) return true;
+    const cleanQuery = query.toLowerCase().trim();
+    const noToneQuery = window.removeVietnameseTones(cleanQuery);
+
+    const sku = (p.sku || '').toLowerCase();
+    const name = (p.name || '').toLowerCase();
+    const barcode = (p.barcode || '').toLowerCase();
+    const supplier = (p.supplier || p.brand || '').toLowerCase();
+    const category = (p.category || '').toLowerCase();
+    const desc = (p.description || '').toLowerCase();
+
+    // 1. So khớp trực tiếp (chuẩn xác có dấu hoặc không dấu)
+    if (sku.includes(cleanQuery) || name.includes(cleanQuery) || barcode.includes(cleanQuery) ||
+        supplier.includes(cleanQuery) || category.includes(cleanQuery) || desc.includes(cleanQuery)) {
+        return true;
+    }
+
+    // 2. So khớp tiếng Việt bỏ dấu (gõ không dấu vẫn tìm được sản phẩm có dấu)
+    const noToneSku = window.removeVietnameseTones(sku);
+    const noToneName = window.removeVietnameseTones(name);
+    const noToneSupplier = window.removeVietnameseTones(supplier);
+    const noToneCategory = window.removeVietnameseTones(category);
+    const noToneDesc = window.removeVietnameseTones(desc);
+
+    return noToneSku.includes(noToneQuery) || 
+           noToneName.includes(noToneQuery) || 
+           noToneSupplier.includes(noToneQuery) || 
+           noToneCategory.includes(noToneQuery) ||
+           noToneDesc.includes(noToneQuery);
 };
 
 window.switchPosCatalogTab = function(tab) {
@@ -25122,14 +25151,9 @@ window.renderPosCatalog = function() {
             const cat = window.posCurrentCategory.toLowerCase();
             if (!prodName.includes(cat) && !prodCat.includes(cat)) return false;
         }
-        // Search text filter
+        // Search text filter: Tìm kiếm theo Tên, Mã SKU, Nhà cung cấp (hỗ trợ có dấu và không dấu)
         if (query) {
-            const sku = (p.sku || "").toLowerCase();
-            const name = (p.name || "").toLowerCase();
-            const barcode = (p.barcode || "").toLowerCase();
-            if (!sku.includes(query) && !name.includes(query) && !barcode.includes(query)) {
-                return false;
-            }
+            return window.checkProductMatchesSearch(p, query);
         }
         return true;
     });
@@ -25137,7 +25161,7 @@ window.renderPosCatalog = function() {
     if (filtered.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px 10px; color:#94a3b8; font-size:0.9rem;">
             <i data-lucide="package-search" style="width:36px; height:36px; margin: 0 auto 8px auto; opacity:0.6; display:block;"></i>
-            Không tìm thấy hàng hóa nào phù hợp.
+            Không tìm thấy hàng hóa nào phù hợp theo từ khóa.
         </div>`;
         if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
         return;
@@ -25169,6 +25193,8 @@ window.renderPosCatalog = function() {
             imgHtml = `<i data-lucide="box" style="width:28px; height:28px; color:#cbd5e1;"></i>`;
         }
 
+        const supplierText = p.supplier || p.brand || "";
+
         card.innerHTML = `
             <div>
                 <div class="pos-prod-img-wrap" style="position:relative;">
@@ -25182,6 +25208,7 @@ window.renderPosCatalog = function() {
                     <span>${p.sku}</span>
                     <span style="color: ${stockBadgeColor}; font-weight: 600;">Tồn: ${formatNumber(stockQty)}</span>
                 </div>
+                ${supplierText ? `<div style="font-size:0.68rem; color:#64748b; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Nhà cung cấp: ${supplierText}">NCC: <strong style="color:var(--text-primary); font-weight:600;">${supplierText}</strong></div>` : ''}
                 <div class="pos-prod-price">
                     ${typeof formatMoney === 'function' ? formatMoney(currentPrice) : currentPrice}
                     ${wholesaleBadge}
@@ -25210,7 +25237,7 @@ window.handlePosSearchInput = function(val) {
     if (!dropdown) return;
     const query = (val || "").toLowerCase().trim();
 
-    // Also update catalog grid in real-time
+    // Cập nhật lưới sản phẩm theo thời gian thực
     window.renderPosCatalog();
 
     if (!query) {
@@ -25220,11 +25247,8 @@ window.handlePosSearchInput = function(val) {
     }
 
     const matches = (state.online_products || []).filter(p => {
-        const sku = (p.sku || "").toLowerCase();
-        const name = (p.name || "").toLowerCase();
-        const barcode = (p.barcode || "").toLowerCase();
-        return sku.includes(query) || name.includes(query) || barcode.includes(query);
-    }).slice(0, 6);
+        return window.checkProductMatchesSearch(p, query);
+    }).slice(0, 8);
 
     if (matches.length === 0) {
         dropdown.style.display = "none";
@@ -25236,10 +25260,11 @@ window.handlePosSearchInput = function(val) {
         const item = document.createElement("div");
         item.className = "pos-search-item";
         const price = window.getPosProductPrice(p, window.posSelectedPriceBook, 1);
+        const supplierInfo = (p.supplier || p.brand) ? ` &bull; NCC: <strong style="color:#0f766e;">${p.supplier || p.brand}</strong>` : '';
         item.innerHTML = `
             <div>
                 <strong>${p.sku}</strong> - ${p.name}
-                <div style="font-size:0.75rem; color:#64748b;">Tồn kho: ${p.stock_qty || 0} ${p.unit || ''}</div>
+                <div style="font-size:0.75rem; color:#64748b;">Tồn: ${p.stock_qty || 0} ${p.unit || ''}${supplierInfo}</div>
             </div>
             <div style="font-weight:700; color:#108f53;">
                 ${typeof formatMoney === 'function' ? formatMoney(price) : price}

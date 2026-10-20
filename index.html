@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_pos_thick_btn_v18">
+    <link rel="stylesheet" href="/style.css?v=20261020_pos_search_ncc_v19">
 
     <script>
 
@@ -6380,7 +6380,7 @@
                     <!-- Search product bar with barcode scanner icon (F3) -->
                     <div class="pos-search-wrapper">
                         <i data-lucide="search" class="pos-search-icon"></i>
-                        <input type="text" id="posProductSearchInput" class="pos-search-input" placeholder="Tìm tên hàng hóa, mã SKU, barcode (F3)..." autocomplete="off" oninput="window.handlePosSearchInput(this.value)">
+                        <input type="text" id="posProductSearchInput" class="pos-search-input" placeholder="Tìm theo tên, mã SKU, nhà cung cấp (F3)..." autocomplete="off" oninput="window.handlePosSearchInput(this.value)">
                         <i data-lucide="scan" class="pos-barcode-icon" title="Quét mã vạch"></i>
                         <div id="posProductSearchDropdown" class="pos-search-dropdown" style="display:none;"></div>
                     </div>
@@ -6683,27 +6683,7 @@
                         <button type="button" class="pos-cat-pill" data-cat="Khay" onclick="window.filterPosProducts('Khay')">Khay</button>
                     </div>
 
-                    <!-- Quick add services toolbar -->
-                    <div id="posQuickServicesBar" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; background: #fffdf5; border-bottom: 1px solid #fed7aa; flex-wrap: wrap;">
-                        <span style="font-size: 0.74rem; font-weight: 700; color: #9a3412; display: inline-flex; align-items: center; gap: 4px; white-space:nowrap; flex-shrink:0;">
-                            <i data-lucide="wrench" style="width: 12px; height: 12px;"></i> Thêm nhanh:
-                        </span>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-EPNHU')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Ép nhũ (Tối thiểu 1.8tr nếu dưới 100 bộ)">
-                            + Ép nhũ (min 1.8tr)
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-CC')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Khay định hình Hộp cao cấp (10k-15k/bộ)">
-                            + Khay Cao cấp
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-PT')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Khay định hình Hộp phổ thông (8k-12k/bộ)">
-                            + Khay Phổ thông
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-INDOCQUYEN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="In độc quyền (<1000b: 8 triệu tối thiểu, >=1000b: 8k/bộ)">
-                            + In độc quyền
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-VACHNGAN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Thêm vách ngăn 5.000đ/bộ">
-                            + Vách ngăn
-                        </button>
-                    </div>
+
 
                     <!-- Product Cards Grid -->
                     <div class="pos-product-grid" id="posProductCatalogGrid">
@@ -10882,7 +10862,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_pos_thick_btn_v18"></script>
+    <script src="/app.js?v=20261020_pos_search_ncc_v19"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

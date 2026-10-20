@@ -7512,17 +7512,11 @@ select.form-select, .form-select {
         font-size: 0.85rem !important;
     }
 
-    /* Horizontal scroll for quick services & categories */
+    /* Quick services bar removed as requested */
     #posQuickServicesBar {
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 6px 8px !important;
-        gap: 6px !important;
-        scrollbar-width: none !important;
+        display: none !important;
     }
 
-    #posQuickServicesBar::-webkit-scrollbar,
     .pos-category-bar::-webkit-scrollbar {
         display: none !important;
     }
