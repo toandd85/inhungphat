@@ -26116,9 +26116,30 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
             
             if (order.items && order.items.length > 0) {
                 order.items.forEach((item, idx) => {
-                    const prod = state.online_products.find(p => p.sku === item.sku);
-                    const prodName = item.name || (prod ? prod.name : item.sku);
-                    const brandStr = item.brand ? ` [TH: ${item.brand}]` : '';
+                    const prod = (state.online_products || []).find(p => p.sku === item.sku);
+                    const sku = (item.sku || '').trim();
+
+                    // Lấy Tên Hàng hoá sạch, loại bỏ hoàn toàn thông tin nhà cung cấp / thương hiệu
+                    let prodName = (item.name || (prod ? prod.name : '') || sku || '').trim();
+                    prodName = prodName.replace(/\[\s*(TH|NCC|Nhà cung cấp|Thương hiệu|Brand|Supplier)\s*:[^\]]*\]/gi, '').trim();
+                    prodName = prodName.replace(/\(\s*(TH|NCC|Nhà cung cấp|Thương hiệu|Brand|Supplier)\s*:[^)]*\)/gi, '').trim();
+
+                    // Loại bỏ tiền tố SKU nếu tên hàng hóa đã bắt đầu bằng SKU để tránh trùng lặp
+                    if (sku) {
+                        const skuPrefixRegex = new RegExp(`^${sku}\\s*[-–—:]\\s*`, 'i');
+                        prodName = prodName.replace(skuPrefixRegex, '').trim();
+                    }
+
+                    // Cột Sản phẩm: Chỉ lấy Mã SKU + Tên Hàng hoá (Không lấy nhà cung cấp)
+                    let productDisplay = '';
+                    if (sku && prodName && prodName.toLowerCase() !== sku.toLowerCase()) {
+                        productDisplay = `<strong>${sku}</strong> - ${prodName}`;
+                    } else if (sku) {
+                        productDisplay = `<strong>${sku}</strong>`;
+                    } else {
+                        productDisplay = prodName || '---';
+                    }
+
                     const noteStr = item.item_note ? `<br><small style="color:#666;">Ghi chú: ${item.item_note}</small>` : '';
                     const unitStr = item.unit || (prod ? prod.unit : 'Chiếc');
                     const qty = item.qty || item.quantity || 1;
@@ -26128,7 +26149,7 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td style="padding:8px 4px; border:1px solid #ddd; text-align:center;">${idx + 1}</td>
-                        <td style="padding:8px; border:1px solid #ddd;"><strong>${item.sku}</strong> - ${prodName}${brandStr}${noteStr}</td>
+                        <td style="padding:8px; border:1px solid #ddd;">${productDisplay}${noteStr}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:center;">${unitStr}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:center;">${formatNumber(qty)}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:right;">${typeof formatMoney === 'function' ? formatMoney(price) : price}</td>
