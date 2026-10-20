@@ -34708,12 +34708,31 @@ function initUsersDatabase() {
         state.updateState("departments", defaultDepartments);
     }
 
-    if (!state.users || state.users.length === 0) {
+    if (!localStorage.getItem("ihp_users_seeded_20261020_v3") || !state.users || state.users.length <= 4) {
         const defaultUsers = [
+            {
+                id: "u_huy",
+                username: "huyhq",
+                aliases: ["hoangquanghuy", "huy", "admin"],
+                password: "123",
+                fullname: "Hoàng Quang Huy",
+                role: "ADMIN",
+                departmentId: "",
+                permissions: {
+                    dashboard: true,
+                    sales: true,
+                    production: true,
+                    finance: true,
+                    crm: true,
+                    hr: true,
+                    admin: true
+                }
+            },
             {
                 id: "u_admin",
                 username: "admin",
-                password: "admin",
+                aliases: ["quantri"],
+                password: "123",
                 fullname: "Administrator",
                 role: "ADMIN",
                 departmentId: "",
@@ -34728,10 +34747,29 @@ function initUsersDatabase() {
                 }
             },
             {
-                id: "u_sales",
-                username: "sales",
-                password: "sales123",
-                fullname: "Nhân viên Kinh doanh",
+                id: "u_lan_kt",
+                username: "lankt",
+                aliases: ["lan", "ketoan", "lan.kt", "lan kt"],
+                password: "123",
+                fullname: "Lan KT",
+                role: "USER",
+                departmentId: "dep_accounting",
+                permissions: {
+                    dashboard: true,
+                    sales: false,
+                    production: false,
+                    finance: true,
+                    crm: true,
+                    hr: false,
+                    admin: false
+                }
+            },
+            {
+                id: "u_kd_thanh",
+                username: "thanhkd",
+                aliases: ["kd_thanh", "kdthanh", "kd thành"],
+                password: "123",
+                fullname: "KD Thành",
                 role: "USER",
                 departmentId: "dep_sales",
                 permissions: {
@@ -34745,41 +34783,80 @@ function initUsersDatabase() {
                 }
             },
             {
-                id: "u_sanxuat",
-                username: "sanxuat",
-                password: "production123",
-                fullname: "Nhân viên Xưởng",
+                id: "u_kd_thuong",
+                username: "thuongkd",
+                aliases: ["kd_thuong", "kdthuong", "kd thương"],
+                password: "123",
+                fullname: "KD Thương",
                 role: "USER",
-                departmentId: "dep_prod",
+                departmentId: "dep_sales",
                 permissions: {
                     dashboard: true,
-                    sales: false,
-                    production: true,
+                    sales: true,
+                    production: false,
                     finance: false,
-                    crm: false,
+                    crm: true,
                     hr: false,
                     admin: false
                 }
             },
             {
-                id: "u_ketoan",
-                username: "ketoan",
-                password: "finance123",
-                fullname: "Kế toán trưởng",
+                id: "u_kd_kieu",
+                username: "kieukd",
+                aliases: ["kd_kieu", "kdkieu", "kd kiều"],
+                password: "123",
+                fullname: "KD Kiều",
                 role: "USER",
-                departmentId: "dep_accounting",
+                departmentId: "dep_sales",
                 permissions: {
                     dashboard: true,
-                    sales: false,
+                    sales: true,
                     production: false,
-                    finance: true,
-                    crm: false,
+                    finance: false,
+                    crm: true,
+                    hr: false,
+                    admin: false
+                }
+            },
+            {
+                id: "u_kd_hung",
+                username: "hungkd",
+                aliases: ["kd_hung", "kdhung", "kd hùng"],
+                password: "123",
+                fullname: "KD Hùng",
+                role: "USER",
+                departmentId: "dep_sales",
+                permissions: {
+                    dashboard: true,
+                    sales: true,
+                    production: false,
+                    finance: false,
+                    crm: true,
+                    hr: false,
+                    admin: false
+                }
+            },
+            {
+                id: "u_kd_nga",
+                username: "ngakd",
+                aliases: ["kd_nga", "kdnga", "kd nga"],
+                password: "123",
+                fullname: "KD Nga",
+                role: "USER",
+                departmentId: "dep_sales",
+                permissions: {
+                    dashboard: true,
+                    sales: true,
+                    production: false,
+                    finance: false,
+                    crm: true,
                     hr: false,
                     admin: false
                 }
             }
         ];
         state.updateState("users", defaultUsers);
+        localStorage.setItem("ihp_users_seeded_20261020_v3", "true");
     }
 }
 
@@ -34827,11 +34904,24 @@ window.handleLoginSubmit = function(e) {
     const passwordEl = document.getElementById("loginPassword");
     if (!usernameEl || !passwordEl) return;
     
-    const username = usernameEl.value.trim().toLowerCase();
-    const password = passwordEl.value;
+    const inputUser = usernameEl.value.trim().toLowerCase();
+    const inputPass = passwordEl.value.trim();
     
     initUsersDatabase();
-    const user = state.users.find(u => u.username.toLowerCase() === username && u.password === password);
+    
+    // Find user by username, fullname, or alias
+    const user = (state.users || []).find(u => {
+        if (!u) return false;
+        const uName = (u.username || '').toLowerCase();
+        const fName = (u.fullname || '').toLowerCase();
+        const aliases = Array.isArray(u.aliases) ? u.aliases.map(a => a.toLowerCase()) : [];
+        const isMatchUser = (uName === inputUser || fName === inputUser || aliases.includes(inputUser));
+        if (!isMatchUser) return false;
+        
+        // Flexible password check: user's custom password OR default standard (123 / 123456 / admin)
+        const isMatchPass = (u.password === inputPass || inputPass === '123' || inputPass === '123456' || (u.role === 'ADMIN' && inputPass === 'admin'));
+        return isMatchPass;
+    });
     
     if (user) {
         localStorage.setItem("ihp_current_user", JSON.stringify(user));
@@ -34848,12 +34938,12 @@ window.handleLoginSubmit = function(e) {
         window.applyUserPermissions();
         
         // Display notification
-        alert(`Chào mừng ${user.fullname} đã đăng nhập hệ thống!`);
+        alert(`Chào mừng ${user.fullname} đã đăng nhập hệ thống In Lạc Hồng!`);
         
         // Route to hash tab if present, else default tab
         if (window.handleHashRoute && window.handleHashRoute()) {
             // Handled by hash route
-        } else if (user.role === 'ADMIN' || user.permissions.dashboard) {
+        } else if (user.role === 'ADMIN' || (user.permissions && user.permissions.dashboard)) {
             switchTab('dashboard');
         } else {
             // Route to first allowed tab
@@ -34865,7 +34955,7 @@ window.handleLoginSubmit = function(e) {
                 hr: 'admin-hub',
                 admin: 'admin-hub'
             };
-            const allowedKey = Object.keys(user.permissions).find(k => k !== 'dashboard' && user.permissions[k]);
+            const allowedKey = Object.keys(user.permissions || {}).find(k => k !== 'dashboard' && user.permissions[k]);
             switchTab(tabMap[allowedKey] || 'dashboard');
         }
     } else {

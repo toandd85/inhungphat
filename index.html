@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_admin_finance_v14">
+    <link rel="stylesheet" href="/style.css?v=20261020_logo_users_v15">
 
     <script>
 
@@ -119,7 +119,9 @@
     <!-- Beautiful Login Page Overlay -->
     <div id="loginScreen" class="login-screen-overlay" style="display: flex;">
         <div class="login-card">
-            <img src="/logo.png" alt="In Lạc Hồng Logo" class="login-logo" onerror="this.src='https://img.icons8.com/color/96/print.png'">
+            <div style="background: #ffffff; padding: 10px 18px; border-radius: 12px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng Logo" class="login-logo" style="margin-bottom: 0; display: block; max-height: 50px;">
+            </div>
             <h2>IN LẠC HỒNG</h2>
             <p>Hệ thống Quản trị Sản xuất & Bán hàng<br><small style="color: #94a3b8; font-size: 0.8rem;">Chuyên nghiệp - Đột phá - Đồng bộ</small></p>
             
@@ -141,6 +143,22 @@
                 </div>
                 
                 <button type="submit" class="login-btn">Đăng nhập hệ thống</button>
+
+                <!-- Danh sách tài khoản chọn nhanh -->
+                <div style="margin-top: 20px; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,0.15); font-size: 0.78rem; text-align: left;">
+                    <div style="font-weight: 700; color: #cbd5e1; margin-bottom: 8px;">
+                        Tài khoản đăng nhập (MK: 123):
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                        <button type="button" class="btn btn-sm" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='huyhq'; document.getElementById('loginPassword').value='123';">👑 Huy (Admin)</button>
+                        <button type="button" class="btn btn-sm" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='lankt'; document.getElementById('loginPassword').value='123';">💰 Lan KT</button>
+                        <button type="button" class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='thanhkd'; document.getElementById('loginPassword').value='123';">💼 KD Thành</button>
+                        <button type="button" class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='thuongkd'; document.getElementById('loginPassword').value='123';">💼 KD Thương</button>
+                        <button type="button" class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='kieukd'; document.getElementById('loginPassword').value='123';">💼 KD Kiều</button>
+                        <button type="button" class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='hungkd'; document.getElementById('loginPassword').value='123';">💼 KD Hùng</button>
+                        <button type="button" class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('loginUsername').value='ngakd'; document.getElementById('loginPassword').value='123';">💼 KD Nga</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -152,8 +170,11 @@
             <span></span>
             <span></span>
         </button>
-        <div class="mobile-brand">
-            <h1>In Lạc Hồng</h1>
+        <div class="mobile-brand" style="display: flex; align-items: center; gap: 8px;">
+            <div style="background: #ffffff; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center;">
+                <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng" style="height: 22px; width: auto; object-fit: contain;">
+            </div>
+            <h1 style="margin: 0; font-size: 1.05rem;">In Lạc Hồng</h1>
         </div>
         <button class="mobile-quote-btn" id="mobileQuickQuoteBtn" title="Đặt hàng">
             <i data-lucide="shopping-cart"></i>
@@ -186,19 +207,17 @@
 
         <aside class="sidebar">
 
-            <div class="sidebar-brand">
+            <div class="sidebar-brand" style="display: flex; align-items: center; gap: 10px; padding: 14px 18px;">
 
-                <div class="brand-icon">
-
-                    <i data-lucide="printer" class="accent-color"></i>
-
+                <div style="background: #ffffff; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                    <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng" style="height: 30px; max-width: 100px; object-fit: contain;">
                 </div>
 
                 <div class="brand-text">
 
-                    <h1>In Lạc Hồng</h1>
+                    <h1 style="font-size: 1.05rem; font-weight: 800; margin: 0; line-height: 1.2;">In Lạc Hồng</h1>
 
-                    <span>Xưởng In & Gia Công</span>
+                    <span style="font-size: 0.72rem; color: var(--text-secondary);">Xưởng In & Gia Công</span>
 
                 </div>
 
@@ -470,11 +489,8 @@
                 
                 <!-- Center Company Logo (Xuất hiện ở mọi trang con, trên cả lịch/thời tiết) -->
                 <div class="header-logo-row" style="display: flex; justify-content: center; align-items: center; width: 100%; padding: 4px 0;">
-                    <div onclick="switchTab('dashboard')" style="cursor: pointer; display: flex; justify-content: center; align-items: center;" title="Quay về trang chủ">
-                        <!-- Logo for Dark Theme (Nền tối: hp11.png) -->
-                        <img src="/hp11.png" alt="In Lạc Hồng" class="logo-theme-dark" style="max-height: 48px; max-width: 100%; object-fit: contain; display: block;">
-                        <!-- Logo for Light Theme (Nền sáng: hp22.png) -->
-                        <img src="/hp22.png" alt="In Lạc Hồng" class="logo-theme-light" style="max-height: 48px; max-width: 100%; object-fit: contain; display: none;">
+                    <div onclick="switchTab('dashboard')" style="cursor: pointer; display: flex; justify-content: center; align-items: center; background: #ffffff; padding: 4px 16px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);" title="Quay về trang chủ">
+                        <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng" style="max-height: 44px; max-width: 180px; object-fit: contain; display: block;">
                     </div>
                 </div>
 
@@ -10854,7 +10870,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_admin_finance_v14"></script>
+    <script src="/app.js?v=20261020_logo_users_v15"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
