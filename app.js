@@ -32,6 +32,32 @@ console.error = function(...args) {
     const msg = args.map(a => a && a.message ? a.message : String(a)).join(' ');
     showFloatingErrorBanner("Console Error: " + msg);
 };
+
+// Global Number & Currency Formatting Helpers
+// Hỗ trợ số thập phân tối đa 3 chữ số, phân cách hàng nghìn bằng dấu phẩy (en-US locale)
+function formatMoney(amount) {
+    if (amount === null || amount === undefined || amount === "") return "0đ";
+    const clean = typeof amount === 'string' ? amount.replace(/[đ₫\s]/g, '').replace(/,/g, '') : amount;
+    const num = Number(clean);
+    if (isNaN(num)) return "0đ";
+    const sign = num < 0 ? "-" : "";
+    const abs = Math.abs(num);
+    const formatted = abs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 3 });
+    return sign + formatted + "đ";
+}
+window.formatMoney = formatMoney;
+
+function formatNumber(amount) {
+    if (amount === null || amount === undefined || amount === "") return "0";
+    const clean = typeof amount === 'string' ? amount.replace(/,/g, '') : amount;
+    const num = Number(clean);
+    if (isNaN(num)) return "0";
+    const sign = num < 0 ? "-" : "";
+    const abs = Math.abs(num);
+    return sign + abs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 3 });
+}
+window.formatNumber = formatNumber;
+
 window.makeSearchableSelect = function(selectEl, placeholderText) {
     if (!selectEl || (selectEl.dataset && selectEl.dataset.searchable)) return;
     if (selectEl.dataset) selectEl.dataset.searchable = "true";
@@ -13833,7 +13859,7 @@ async function updateRealtimeTicker() {
         if (rateRes && rateRes.rates) {
             const usdVnd = rateRes.rates.VND;
             if (usdVnd) {
-                usd = Math.round(usdVnd).toLocaleString("vi-VN");
+                usd = formatNumber(usdVnd);
                 usdDiff = (usdVnd % 2 === 0 ? "▲" : "▼") + "0.0" + (Math.round(usdVnd) % 9 + 1) + "%";
 
                 const xauRate = rateRes.rates.XAU;
@@ -14626,10 +14652,7 @@ function renderAll() {
     if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
 }
 
-function formatMoney(amount) {
-    const val = Math.round(Number(amount) || 0);
-    return val.toLocaleString('vi-VN') + "đ";
-}
+// formatMoney and formatNumber are defined globally at the top of app.js
 
 function renderKPIs() {
     // 1. Revenue this month
@@ -15395,7 +15418,7 @@ function renderQuotes() {
                 <div>${order.print_spec}</div>
                 <small class="text-secondary">Khổ: ${order.width_mm}x${order.length_mm} mm | Giấy: ${order.paper_type}</small>
             </td>
-            <td>${order.quantity.toLocaleString('vi-VN')}</td>
+            <td>${formatNumber(order.quantity)}</td>
             <td><strong>${formatMoney(unitPriceVal)}</strong></td>
             <td><strong>${formatMoney(order.total_amount)}</strong></td>
             <td>
@@ -15504,7 +15527,7 @@ function renderProdOrders() {
                 <div>${order.print_spec}</div>
                 <small class="text-secondary">Khổ: ${order.width_mm}x${order.length_mm} mm | Giấy: ${order.paper_type}</small>
             </td>
-            <td>${order.quantity.toLocaleString('vi-VN')}</td>
+            <td>${formatNumber(order.quantity)}</td>
             <td><strong>${formatMoney(unitPriceVal)}</strong></td>
             <td><strong>${formatMoney(order.total_amount)}</strong></td>
             <td>${prodBadge}</td>
@@ -15673,7 +15696,7 @@ function renderKanban() {
             <div class="card-spec">${specText}</div>
             ${window.generateWorkflowHTML(job.status)}
             <div class="card-meta">
-                <span>SL đạt: <strong>${job.target_qty.toLocaleString('vi-VN')}</strong> / Nhập: ${job.input_qty.toLocaleString('vi-VN')}</span>
+                <span>SL đạt: <strong>${formatNumber(job.target_qty)}</strong> / Nhập: ${formatNumber(job.input_qty)}</span>
                 <span>Khách hàng: ${customer ? customer.name.split(" ")[0] : 'Vãng lai'}</span>
                 <span>Giao: ${new Date(job.due_date).toLocaleDateString('vi-VN')}</span>
             </div>
@@ -15791,8 +15814,8 @@ window.renderProductionTable = function() {
                         </div>
                     </td>
                     <td>
-                        <div>SL đạt: <strong>${job.target_qty.toLocaleString('vi-VN')}</strong></div>
-                        <small class="text-muted">Nhập: ${job.input_qty.toLocaleString('vi-VN')} (${lossPercent}%)</small>
+                        <div>SL đạt: <strong>${formatNumber(job.target_qty)}</strong></div>
+                        <small class="text-muted">Nhập: ${formatNumber(job.input_qty)} (${lossPercent}%)</small>
                     </td>
                     <td>
                         <select class="form-select status-select" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; font-weight: 600; width: 140px; display: inline-block; cursor: pointer; color: white; border: none; background-color: ${
@@ -15837,8 +15860,8 @@ function renderInventory() {
             <td><strong class="text-secondary">${mat.sku}</strong></td>
             <td>${mat.name}</td>
             <td><span class="badge badge-info">${mat.category}</span></td>
-            <td><strong class="${isLow ? 'text-danger' : ''}">${mat.stock_qty.toLocaleString('vi-VN')}</strong></td>
-            <td>${mat.min_stock_qty.toLocaleString('vi-VN')}</td>
+            <td><strong class="${isLow ? 'text-danger' : ''}">${formatNumber(mat.stock_qty)}</strong></td>
+            <td>${formatNumber(mat.min_stock_qty)}</td>
             <td>${mat.unit}</td>
             <td>${formatMoney(mat.avg_cost)}</td>
             <td>${statusBadge}</td>
@@ -17925,7 +17948,7 @@ function calculateRealtimeQuote(updateUI = true) {
             if (discountEl) discountEl.style.display = "flex";
             const totalBeforeDiscount = Math.round(totalCostReal * markup);
             const discountAmt = Math.round(totalBeforeDiscount * (discountPct / 100));
-            if (discountValEl) discountValEl.textContent = "-" + formatMoney(discountAmt) + "đ";
+            if (discountValEl) discountValEl.textContent = "-" + formatMoney(discountAmt);
             if (discountPctEl) discountPctEl.textContent = discountPct;
         } else {
             if (discountEl) discountEl.style.display = "none";
@@ -18033,7 +18056,7 @@ window.renderProdFormQuantityBrackets = function() {
 
         const savingsHtml = isCurrent
             ? `<span style="background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.72rem;">Đơn chọn</span>`
-            : (savingsPerPc > 0 ? `<strong style="color: var(--success); font-weight:700;">-${formatMoney(Math.round(savingsPerPc))}đ</strong>` : "-");
+            : (savingsPerPc > 0 ? `<strong style="color: var(--success); font-weight:700;">-${formatMoney(Math.round(savingsPerPc))}</strong>` : "-");
 
         const actionHtml = isCurrent
             ? `<span style="font-size: 0.75rem; color: var(--accent); font-weight:700;">✓ Đang chọn</span>`
@@ -18041,11 +18064,11 @@ window.renderProdFormQuantityBrackets = function() {
                ${tier.isCustom ? `<button type="button" onclick="window.removeProdBracketRow(${tier.qty})" style="background:none; border:none; color:var(--danger); font-size:0.85rem; cursor:pointer; margin-left:4px;" title="Xóa mức này">✕</button>` : ''}`;
 
         tr.innerHTML = `
-            <td style="padding: 7px 10px;"><strong>${tier.qty.toLocaleString('vi-VN')} SP</strong></td>
-            <td style="padding: 7px 10px; text-align: right;">${formatMoney(rawUnitPrice)}đ</td>
+            <td style="padding: 7px 10px;"><strong>${formatNumber(tier.qty)} SP</strong></td>
+            <td style="padding: 7px 10px; text-align: right;">${formatMoney(rawUnitPrice)}</td>
             <td style="padding: 7px 10px; text-align: right;">${discountInputHtml}</td>
-            <td style="padding: 7px 10px; text-align: right; color: var(--accent); font-weight: 700;">${formatMoney(finalUnitPrice)}đ</td>
-            <td style="padding: 7px 10px; text-align: right;">${formatMoney(totalRevenue)}đ</td>
+            <td style="padding: 7px 10px; text-align: right; color: var(--accent); font-weight: 700;">${formatMoney(finalUnitPrice)}</td>
+            <td style="padding: 7px 10px; text-align: right;">${formatMoney(totalRevenue)}</td>
             <td style="padding: 7px 10px; text-align: right;">${savingsHtml}</td>
             <td style="padding: 7px 10px; text-align: center;">${actionHtml}</td>
         `;
@@ -20322,7 +20345,7 @@ async function sendTelegramOrderAlert(order) {
 👤 *Khách hàng:* ${clientName}
 📝 *Quy cách:* ${order.print_spec || 'N/A'}
 📐 *Kích thước:* ${order.width_mm || 0}x${order.length_mm || 0} mm
-🔢 *Số lượng:* ${(order.quantity || 0).toLocaleString('vi-VN')}
+🔢 *Số lượng:* ${formatNumber(order.quantity || 0)}
 📄 *Loại giấy:* ${order.paper_type || 'Thành phẩm kho sẵn'}
 ⚙️ *Gia công:* ${postProcessingStr}${notesLine}
 --------------------------------
@@ -23182,7 +23205,15 @@ window.openNewOnlineOrderModal = function(mode = "ADD", orderId = "") {
             if (paymentMethodEl) paymentMethodEl.value = order.payment_method || "CASH";
             
             const paymentStatusEl = document.getElementById("onlineOrderPaymentStatus");
-            if (paymentStatusEl) paymentStatusEl.value = order.payment_status || "UNPAID";
+            let pStatus = order.payment_status || "UNPAID";
+            if (pStatus === "PARTIALLY_PAID") pStatus = "PARTIAL";
+            if (paymentStatusEl) paymentStatusEl.value = pStatus;
+            
+            const depInput = document.getElementById("onlineOrderDepositAmount");
+            if (depInput) depInput.value = order.deposit_amount || order.deposit || order.paid_amount || 0;
+            if (typeof window.handleOnlineOrderPaymentStatusChange === 'function') {
+                window.handleOnlineOrderPaymentStatusChange(pStatus);
+            }
             
             const notesEl = document.getElementById("onlineOrderNotes");
             if (notesEl) notesEl.value = order.notes || "";
@@ -23246,6 +23277,11 @@ window.openNewOnlineOrderModal = function(mode = "ADD", orderId = "") {
             
             const paymentStatusEl = document.getElementById("onlineOrderPaymentStatus");
             if (paymentStatusEl) paymentStatusEl.value = "UNPAID";
+            const depInput = document.getElementById("onlineOrderDepositAmount");
+            if (depInput) depInput.value = 0;
+            if (typeof window.handleOnlineOrderPaymentStatusChange === 'function') {
+                window.handleOnlineOrderPaymentStatusChange("UNPAID");
+            }
             
             const shipMethodEl = document.getElementById("onlineOrderShipMethod");
             const shipFeeEl = document.getElementById("onlineOrderShipFee");
@@ -23666,7 +23702,7 @@ window.recalcOnlineOrderTotal = function() {
         const infoEl = row.querySelector(".line-discount-info");
         if (infoEl && infoEl.style) {
             if (dPct > 0) {
-                infoEl.textContent = `✓ Đạt tổng số lượng sỉ: Chiết khấu thêm ${dPct}% (Giảm -${formatMoney(lineDiscount)}đ)`;
+                infoEl.textContent = `✓ Đạt tổng số lượng sỉ: Chiết khấu thêm ${dPct}% (Giảm -${formatMoney(lineDiscount)})`;
                 infoEl.style.display = "block";
                 infoEl.style.marginBottom = "8px";
             } else {
@@ -23707,7 +23743,7 @@ window.recalcOnlineOrderTotal = function() {
     const discountInfoEl = document.getElementById("lblOnlineOrderExtraDiscountInfo");
     if (discountInfoEl) {
         if (totalExtraDiscount > 0) {
-            discountInfoEl.textContent = `(Bao gồm ${formatMoney(totalExtraDiscount)}đ CK sỉ)`;
+            discountInfoEl.textContent = `(Bao gồm ${formatMoney(totalExtraDiscount)} CK sỉ)`;
             discountInfoEl.style.display = "inline-block";
         } else {
             discountInfoEl.style.display = "none";
@@ -23749,7 +23785,7 @@ async function handleOnlineOrderSubmit(e) {
         const discount = parseFloat(document.getElementById("onlineOrderDiscount").value) || 0;
         const vatRate = parseFloat(document.getElementById("onlineOrderVat").value) || 0;
         const paymentMethod = document.getElementById("onlineOrderPaymentMethod").value;
-        const paymentStatus = window.isDraftSubmit ? "DRAFT" : document.getElementById("onlineOrderPaymentStatus").value;
+        const rawPaymentStatus = window.isDraftSubmit ? "DRAFT" : document.getElementById("onlineOrderPaymentStatus").value;
         const hasProduction = document.getElementById("onlineOrderHasProduction").checked;
         
         const rows = document.querySelectorAll("#onlineOrderRowsContainer .online-order-row");
@@ -23876,6 +23912,28 @@ async function handleOnlineOrderSubmit(e) {
         const saveAddrToProfile = document.getElementById("onlineOrderSaveAddrToProfile")?.checked || false;
         const fullCustomerAddr = [customerStreet, customerHamlet, customerWard, customerRegion].filter(Boolean).join(", ");
 
+        let actualPaid = 0;
+        let depositAmt = 0;
+        let paymentStatus = rawPaymentStatus;
+
+        if (window.isDraftSubmit) {
+            paymentStatus = "DRAFT";
+            actualPaid = 0;
+            depositAmt = 0;
+        } else if (rawPaymentStatus === "PAID") {
+            actualPaid = totalAmount;
+            depositAmt = totalAmount;
+            paymentStatus = "PAID";
+        } else if (rawPaymentStatus === "PARTIAL") {
+            depositAmt = parseFloat(document.getElementById("onlineOrderDepositAmount")?.value) || 0;
+            actualPaid = depositAmt;
+            paymentStatus = depositAmt >= totalAmount ? "PAID" : (depositAmt > 0 ? "PARTIALLY_PAID" : "UNPAID");
+        } else {
+            actualPaid = 0;
+            depositAmt = 0;
+            paymentStatus = "UNPAID";
+        }
+        const remainingDebt = Math.max(0, totalAmount - actualPaid);
         
         const newOrder = {
             id: orderId,
@@ -23896,7 +23954,7 @@ async function handleOnlineOrderSubmit(e) {
             created_at: existingOrder ? existingOrder.created_at : new Date().toISOString(),
             has_production: hasProduction,
             production_steps: prodSteps,
-                        kanban_status: existingOrder ? existingOrder.kanban_status : "ORDER",
+            kanban_status: existingOrder ? existingOrder.kanban_status : "ORDER",
             notes: onlineNotes,
             customer_region: customerRegion,
             customer_ward: customerWard,
@@ -23904,19 +23962,20 @@ async function handleOnlineOrderSubmit(e) {
             customer_street: customerStreet,
             customer_address: fullCustomerAddr,
             // Workflow Tracking
-            deposit_status: existingOrder && existingOrder.deposit_status ? existingOrder.deposit_status : "NONE",
-            deposit_amount: existingOrder && existingOrder.deposit_amount ? existingOrder.deposit_amount : 0,
-            deposit_date: existingOrder && existingOrder.deposit_date ? existingOrder.deposit_date : "",
-            deposit_method: existingOrder && existingOrder.deposit_method ? existingOrder.deposit_method : "BANK_TRANSFER",
+            deposit_status: depositAmt > 0 ? "DEPOSITED" : (existingOrder && existingOrder.deposit_status ? existingOrder.deposit_status : "NONE"),
+            deposit_amount: depositAmt > 0 ? depositAmt : (existingOrder && existingOrder.deposit_amount ? existingOrder.deposit_amount : 0),
+            deposit_date: existingOrder && existingOrder.deposit_date ? existingOrder.deposit_date : (depositAmt > 0 ? new Date().toISOString().split('T')[0] : ""),
+            deposit_method: existingOrder && existingOrder.deposit_method ? existingOrder.deposit_method : paymentMethod,
             deposit_note: existingOrder && existingOrder.deposit_note ? existingOrder.deposit_note : "",
             delivery_status: existingOrder && existingOrder.delivery_status ? existingOrder.delivery_status : "PENDING",
             delivery_date: existingOrder && existingOrder.delivery_date ? existingOrder.delivery_date : "",
             delivery_carrier: existingOrder && existingOrder.delivery_carrier ? existingOrder.delivery_carrier : "Nội bộ (Xe công ty)",
             delivery_tracking_code: existingOrder && existingOrder.delivery_tracking_code ? existingOrder.delivery_tracking_code : "",
             delivery_note: existingOrder && existingOrder.delivery_note ? existingOrder.delivery_note : "",
-            collection_status: existingOrder && existingOrder.collection_status ? existingOrder.collection_status : (paymentStatus === "PAID" ? "COLLECTED_FULL" : "UNCOLLECTED"),
-            paid_amount: existingOrder && existingOrder.paid_amount !== undefined ? existingOrder.paid_amount : (paymentStatus === "PAID" ? totalAmount : 0),
-            remaining_debt: existingOrder && existingOrder.remaining_debt !== undefined ? existingOrder.remaining_debt : (paymentStatus === "PAID" ? 0 : totalAmount),
+            collection_status: actualPaid >= totalAmount && totalAmount > 0 ? "COLLECTED_FULL" : (actualPaid > 0 ? "PARTIAL" : "UNCOLLECTED"),
+            paid_amount: actualPaid,
+            remaining_debt: remainingDebt,
+            deposit: actualPaid,
             invoice_status: existingOrder && existingOrder.invoice_status ? existingOrder.invoice_status : "NOT_ISSUED",
             invoice_number: existingOrder && existingOrder.invoice_number ? existingOrder.invoice_number : "",
             invoice_serial: existingOrder && existingOrder.invoice_serial ? existingOrder.invoice_serial : "",
@@ -23988,7 +24047,7 @@ async function handleOnlineOrderSubmit(e) {
                 stdOrder.ship_method = shipMethod;
                 stdOrder.ship_fee = shipFee;
                 stdOrder.total_amount = totalAmount;
-                stdOrder.deposit = paymentStatus === "PAID" ? totalAmount : 0;
+                stdOrder.deposit = actualPaid;
                 stdOrder.payment_status = paymentStatus;
                 stdOrder.payment_method = paymentMethod;
                 stdOrder.salesperson = salesperson;
@@ -24014,7 +24073,7 @@ async function handleOnlineOrderSubmit(e) {
                     ship_method: shipMethod,
                     ship_fee: shipFee,
                     total_amount: totalAmount,
-                    deposit: paymentStatus === "PAID" ? totalAmount : 0,
+                    deposit: actualPaid,
                     payment_status: paymentStatus,
                     payment_method: paymentMethod,
                     salesperson: salesperson,
@@ -24027,6 +24086,36 @@ async function handleOnlineOrderSubmit(e) {
                 state.orders = [newStdOrder, ...state.orders];
             }
             state.updateState("orders", state.orders);
+
+            // Record or update receipt transaction if actualPaid > 0
+            if (actualPaid > 0 && !window.isDraftSubmit) {
+                const isFinal = actualPaid >= totalAmount;
+                const existingTx = state.transactions.find(t => t.reference_id === orderId && t.type === "RECEIPT");
+                if (existingTx) {
+                    existingTx.amount = actualPaid;
+                    existingTx.payment_method = paymentMethod;
+                    existingTx.category = isFinal ? "CUSTOMER_FINAL" : "CUSTOMER_DEPOSIT";
+                    existingTx.account_source = paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH";
+                    existingTx.notes = isFinal ? `Thanh toán đơn hàng online ${orderNumber}` : `Đặt cọc đơn hàng online ${orderNumber}`;
+                } else {
+                    const txCodeSuffix = String(state.transactions.length + 1).padStart(4, '0');
+                    state.transactions = [{
+                        id: "t_" + Math.random().toString(36).substring(2, 9),
+                        tx_number: `PT-202606-${txCodeSuffix}`,
+                        created_at: new Date().toISOString(),
+                        type: "RECEIPT",
+                        category: isFinal ? "CUSTOMER_FINAL" : "CUSTOMER_DEPOSIT",
+                        amount: actualPaid,
+                        payment_method: paymentMethod,
+                        account_source: paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH",
+                        partner_id: customerId,
+                        reference_id: orderId,
+                        created_by: salesperson,
+                        notes: isFinal ? `Thanh toán đơn hàng online ${orderNumber}` : `Đặt cọc đơn hàng online ${orderNumber}`
+                    }, ...state.transactions];
+                }
+                state.updateState("transactions", state.transactions);
+            }
 
             // Send automated Telegram notification if enabled
             if (!isEdit && typeof sendTelegramOrderAlert === "function") {
@@ -24191,6 +24280,9 @@ window.syncCurrentTabState = function() {
     activeTab.vat = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
     activeTab.ship_fee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
     activeTab.notes = document.getElementById("posOrderNotes")?.value || "";
+    activeTab.payment_status = document.getElementById("posPaymentStatusSelect")?.value || "PAID";
+    activeTab.payment_method = document.getElementById("posPaymentMethodSelect")?.value || "BANK_TRANSFER";
+    activeTab.deposit_amount = parseFloat(document.getElementById("posDepositAmount")?.value) || 0;
     activeTab.price_book = window.posSelectedPriceBook || "RETAIL";
     activeTab.cart = (window.posCart || []).map(i => ({ ...i }));
 };
@@ -24258,6 +24350,9 @@ window.addNewPosOrderTab = function() {
         vat: 8,
         ship_fee: 0,
         notes: "",
+        payment_status: "PAID",
+        payment_method: "BANK_TRANSFER",
+        deposit_amount: 0,
         mode: "ADD",
         orderId: null
     };
@@ -24292,6 +24387,22 @@ window.switchPosOrderTab = function(tabId) {
 
     const notesEl = document.getElementById("posOrderNotes");
     if (notesEl) notesEl.value = target.notes || "";
+
+    const statusSel = document.getElementById("posPaymentStatusSelect");
+    if (statusSel) {
+        let pStatus = target.payment_status || "PAID";
+        if (pStatus === "PARTIALLY_PAID") pStatus = "PARTIAL";
+        statusSel.value = pStatus;
+    }
+    const methodSel = document.getElementById("posPaymentMethodSelect");
+    if (methodSel) methodSel.value = target.payment_method || "BANK_TRANSFER";
+
+    const depInput = document.getElementById("posDepositAmount");
+    if (depInput) depInput.value = target.deposit_amount || target.deposit || 0;
+
+    if (typeof window.handlePosPaymentStatusChange === 'function') {
+        window.handlePosPaymentStatusChange(statusSel ? statusSel.value : "PAID");
+    }
 
     window.posSelectedPriceBook = target.price_book || "RETAIL";
     window.posCart = (target.cart || []).map(i => ({ ...i }));
@@ -24388,6 +24499,9 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
                     vat: order.vat_rate !== undefined ? order.vat_rate : 8,
                     ship_fee: order.ship_fee || 0,
                     notes: order.notes || "",
+                    payment_status: order.payment_status || "PAID",
+                    payment_method: order.payment_method || "BANK_TRANSFER",
+                    deposit_amount: order.deposit_amount || order.deposit || order.paid_amount || 0,
                     mode: "EDIT",
                     orderId: orderId
                 };
@@ -24411,6 +24525,9 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
                     vat: 8,
                     ship_fee: 0,
                     notes: "",
+                    payment_status: "PAID",
+                    payment_method: "BANK_TRANSFER",
+                    deposit_amount: 0,
                     mode: "ADD",
                     orderId: null
                 };
@@ -24425,6 +24542,12 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
 
         // Show POS modal
         modal.classList.add("active");
+
+        // Display Mode Init (Billing if cart has items or editing, else Catalog)
+        const initialDisplayMode = (window.posCart && window.posCart.length > 0) || mode === "EDIT" ? "BILLING" : "CATALOG";
+        if (typeof window.setPosDisplayMode === 'function') {
+            window.setPosDisplayMode(initialDisplayMode);
+        }
 
         // Focus search input
         setTimeout(() => {
@@ -24444,6 +24567,57 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
 window.closePosModal = function() {
     const modal = document.getElementById("onlinePosModal");
     if (modal) modal.classList.remove("active");
+};
+
+// Switch between BILLING (Màn hình tính giá) and CATALOG (Chọn sản phẩm)
+window.setPosDisplayMode = function(mode = "BILLING") {
+    window.posCurrentDisplayMode = mode;
+    const container = document.querySelector(".pos-container");
+    if (!container) return;
+
+    const tabBilling = document.getElementById("posMobileTabBilling") || document.getElementById("posMobileTabCart");
+    const tabCatalog = document.getElementById("posMobileTabCatalog");
+    const toggleBtnText = document.getElementById("posToggleProductText");
+
+    if (mode === "BILLING" || mode === "CART") {
+        container.classList.add("pos-mode-billing", "pos-mobile-view-cart");
+        container.classList.remove("pos-mode-catalog", "pos-mobile-view-catalog");
+        if (tabBilling) tabBilling.classList.add("active");
+        if (tabCatalog) tabCatalog.classList.remove("active");
+        if (toggleBtnText) toggleBtnText.textContent = "Hiện sản phẩm";
+    } else {
+        container.classList.add("pos-mode-catalog", "pos-mobile-view-catalog");
+        container.classList.remove("pos-mode-billing", "pos-mobile-view-cart");
+        if (tabBilling) tabBilling.classList.remove("active");
+        if (tabCatalog) tabCatalog.classList.add("active");
+        if (toggleBtnText) toggleBtnText.textContent = "Ẩn sản phẩm";
+    }
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+// Toggle product catalog on desktop and mobile
+window.togglePosProductCatalog = function() {
+    const container = document.querySelector(".pos-container");
+    if (!container) return;
+    const isMobile = window.innerWidth <= 1024;
+    if (isMobile) {
+        const isCurrentlyBilling = container.classList.contains("pos-mode-billing") || container.classList.contains("pos-mobile-view-cart");
+        window.setPosDisplayMode(isCurrentlyBilling ? "CATALOG" : "BILLING");
+    } else {
+        const isHidden = container.classList.toggle("pos-desktop-hide-catalog");
+        const toggleBtnText = document.getElementById("posToggleProductText");
+        if (toggleBtnText) {
+            toggleBtnText.textContent = isHidden ? "Hiện sản phẩm" : "Ẩn sản phẩm";
+        }
+    }
+};
+
+// Backwards-compatible alias
+window.switchPosMobileView = function(view = "CATALOG") {
+    window.setPosDisplayMode(view === "CART" ? "BILLING" : "CATALOG");
 };
 
 // Render Product Catalog Cards Grid (Right column)
@@ -24506,8 +24680,8 @@ const DEFAULT_PROCESSING_SERVICES_LIST = [
         min_fee: 0,
         note: "Áp dụng theo phân loại Hộp phổ thông.",
         icon: "box",
-        color: "#0369a1",
-        bg: "#e0f2fe",
+        color: "#108f53",
+        bg: "#f0fdf4",
         badge: "8k - 12k/bộ",
         description: "1-100b: 12k | 101-200b: 11k | 201-300b: 10k | 301-400b: 9k | ≥401b: 8k",
         is_service: true,
@@ -24577,7 +24751,9 @@ Object.defineProperty(window, 'POS_SERVICES', {
 });
 
 window.calculateServiceItemPricing = function(sku, qty) {
-    qty = Math.max(1, parseInt(qty) || 1);
+    const cleanQty = typeof qty === 'string' ? qty.replace(/,/g, '.') : qty;
+    const numQty = parseFloat(cleanQty);
+    qty = isNaN(numQty) || numQty <= 0 ? 1 : Math.round(numQty * 1000) / 1000;
     const services = window.getProcessingServicesList();
     const service = services.find(s => s.sku === sku || s.id === sku);
     if (!service) return { price: 0, item_total: 0, price_note: "" };
@@ -24599,13 +24775,13 @@ window.calculateServiceItemPricing = function(sku, qty) {
     }
 
     const unitPrice = matchTier ? Number(matchTier.price) : (Number(service.price) || 0);
-    const rawTotal = qty * unitPrice;
+    const rawTotal = Math.round(qty * unitPrice);
     const minFee = Number(service.min_fee) || 0;
 
     // Nếu có chi phí tối thiểu và tổng tiền chưa đạt mức tối thiểu
     if (minFee > 0 && rawTotal < minFee) {
         return {
-            price: Math.round(minFee / qty),
+            price: Math.round((minFee / qty) * 1000) / 1000,
             item_total: minFee,
             price_note: `Tối thiểu ${formatMoney(minFee)}`
         };
@@ -24665,15 +24841,15 @@ window.addPosServiceItem = function(sku, qtyDelta = 0) {
     if (!service) return;
 
     // Lấy số lượng mặc định: bằng tổng số lượng hộp hiện có trong giỏ hàng (hoặc 100 nếu giỏ rỗng)
-    const totalBoxQty = window.posCart.filter(i => !i.is_service).reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
+    const totalBoxQty = window.posCart.filter(i => !i.is_service).reduce((sum, i) => sum + (parseFloat(i.qty) || 0), 0);
     const defaultQty = totalBoxQty > 0 ? totalBoxQty : (service.min_qty || 100);
 
     const existing = window.posCart.find(i => i.sku === sku);
     if (existing) {
         if (qtyDelta !== 0) {
-            existing.qty += qtyDelta;
+            existing.qty = Math.round((existing.qty + qtyDelta) * 1000) / 1000;
         } else {
-            existing.qty += 10;
+            existing.qty = Math.round((existing.qty + 10) * 1000) / 1000;
         }
         if (existing.qty <= 0) {
             window.removePosItem(sku);
@@ -24685,14 +24861,15 @@ window.addPosServiceItem = function(sku, qtyDelta = 0) {
         existing.price_note = pricing.price_note;
     } else {
         const initialQty = qtyDelta > 0 ? qtyDelta : defaultQty;
-        const pricing = window.calculateServiceItemPricing(sku, initialQty);
+        const roundedInitial = Math.round(initialQty * 1000) / 1000;
+        const pricing = window.calculateServiceItemPricing(sku, roundedInitial);
         window.posCart.push({
             sku: service.sku,
             name: service.name,
             unit: service.unit || 'Bộ',
             brand: 'Gia công',
             is_service: true,
-            qty: initialQty,
+            qty: roundedInitial,
             price: pricing.price,
             item_total: pricing.item_total,
             price_note: pricing.price_note,
@@ -24737,9 +24914,13 @@ window.renderPosCatalog = function() {
             card.setAttribute("title", `Click để thêm dịch vụ ${s.name}`);
             card.onclick = () => window.addPosServiceItem(s.sku || s.id);
 
+            const serviceInCart = (window.posCart || []).find(ci => ci.sku === (s.sku || s.id));
+            const inCartBadge = serviceInCart && serviceInCart.qty > 0 ? `<span class="pos-prod-incart-badge">${formatNumber(serviceInCart.qty)}</span>` : '';
+
             card.innerHTML = `
                 <div>
-                    <div class="pos-prod-img-wrap" style="background: ${s.bg}; display: flex; align-items: center; justify-content: center; height: 75px; border-radius: 6px;">
+                    <div class="pos-prod-img-wrap" style="position:relative; background: ${s.bg}; display: flex; align-items: center; justify-content: center; height: 75px; border-radius: 6px;">
+                        ${inCartBadge}
                         <i data-lucide="${s.icon}" style="width: 32px; height: 32px; color: ${s.color};"></i>
                     </div>
                     <div class="pos-prod-name" style="font-weight: 700; color: #1e293b; margin-top: 6px;">${s.name}</div>
@@ -24813,6 +24994,9 @@ window.renderPosCatalog = function() {
             wholesaleBadge = `<span class="pos-prod-badge-wholesale">Giá sỉ</span>`;
         }
 
+        const cartItem = (window.posCart || []).find(ci => ci.sku === p.sku);
+        const inCartBadge = cartItem && cartItem.qty > 0 ? `<span class="pos-prod-incart-badge">${formatNumber(cartItem.qty)}</span>` : '';
+
         let imgHtml = "";
         if (p.image) {
             imgHtml = `<img src="${p.image}" class="pos-prod-img" alt="${p.name}">`;
@@ -24822,13 +25006,16 @@ window.renderPosCatalog = function() {
 
         card.innerHTML = `
             <div>
-                <div class="pos-prod-img-wrap">${imgHtml}</div>
+                <div class="pos-prod-img-wrap" style="position:relative;">
+                    ${inCartBadge}
+                    ${imgHtml}
+                </div>
                 <div class="pos-prod-name">${p.name}</div>
             </div>
             <div>
                 <div class="pos-prod-meta">
                     <span>${p.sku}</span>
-                    <span style="color: ${stockBadgeColor}; font-weight: 600;">Tồn: ${stockQty}</span>
+                    <span style="color: ${stockBadgeColor}; font-weight: 600;">Tồn: ${formatNumber(stockQty)}</span>
                 </div>
                 <div class="pos-prod-price">
                     ${typeof formatMoney === 'function' ? formatMoney(currentPrice) : currentPrice}
@@ -24889,7 +25076,7 @@ window.handlePosSearchInput = function(val) {
                 <strong>${p.sku}</strong> - ${p.name}
                 <div style="font-size:0.75rem; color:#64748b;">Tồn kho: ${p.stock_qty || 0} ${p.unit || ''}</div>
             </div>
-            <div style="font-weight:700; color:#0284c7;">
+            <div style="font-weight:700; color:#108f53;">
                 ${typeof formatMoney === 'function' ? formatMoney(price) : price}
             </div>
         `;
@@ -24918,7 +25105,7 @@ window.addPosItem = function(sku, qtyDelta = 1) {
 
     const existing = window.posCart.find(i => i.sku === sku);
     if (existing) {
-        existing.qty += qtyDelta;
+        existing.qty = Math.round((existing.qty + qtyDelta) * 1000) / 1000;
         if (existing.qty <= 0) {
             window.removePosItem(sku);
             return;
@@ -24930,20 +25117,21 @@ window.addPosItem = function(sku, qtyDelta = 1) {
             existing.price_note = pricing.price_note;
         } else {
             existing.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, existing.qty);
-            existing.item_total = existing.qty * existing.price;
+            existing.item_total = Math.round(existing.qty * existing.price);
         }
     } else {
         const initialQty = qtyDelta > 0 ? qtyDelta : 1;
-        const price = window.getPosProductPrice(prod, window.posSelectedPriceBook, initialQty);
+        const roundedInitial = Math.round(initialQty * 1000) / 1000;
+        const price = window.getPosProductPrice(prod, window.posSelectedPriceBook, roundedInitial);
         window.posCart.push({
             sku: prod.sku,
             name: prod.name,
             unit: prod.unit || 'Chiếc',
             brand: prod.brand || '',
             is_service: false,
-            qty: initialQty,
+            qty: roundedInitial,
             price: price,
-            item_total: initialQty * price,
+            item_total: Math.round(roundedInitial * price),
             item_note: ""
         });
     }
@@ -24953,26 +25141,33 @@ window.addPosItem = function(sku, qtyDelta = 1) {
 
 // Update item quantity in Cart (Hỗ trợ cả Hàng hóa và Dịch vụ gia công)
 window.updatePosItemQty = function(sku, newQty) {
-    const qty = parseInt(newQty);
+    if (typeof newQty === 'string') {
+        newQty = newQty.trim();
+        if (newQty.includes(',') && !newQty.includes('.')) {
+            newQty = newQty.replace(',', '.');
+        }
+    }
+    const qty = parseFloat(newQty);
     if (isNaN(qty) || qty <= 0) {
         window.removePosItem(sku);
         return;
     }
 
+    const roundedQty = Math.round(qty * 1000) / 1000;
     const item = window.posCart.find(i => i.sku === sku);
     if (!item) return;
 
     if (item.is_service) {
-        item.qty = qty;
-        const pricing = window.calculateServiceItemPricing(sku, qty);
+        item.qty = roundedQty;
+        const pricing = window.calculateServiceItemPricing(sku, roundedQty);
         item.price = pricing.price;
         item.item_total = pricing.item_total;
         item.price_note = pricing.price_note;
     } else {
         const prod = (state.online_products || []).find(p => p.sku === sku);
-        item.qty = qty;
-        item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, qty);
-        item.item_total = item.qty * item.price;
+        item.qty = roundedQty;
+        item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, roundedQty);
+        item.item_total = Math.round(item.qty * item.price);
     }
 
     window.renderPosCart();
@@ -25021,6 +25216,14 @@ window.handlePosCustomerChange = function(forceAutoPriceBook = true) {
         badgeEl.textContent = isWholesale ? "🏢 Khách sỉ" : "👤 Khách lẻ";
         badgeEl.className = "pos-cust-type-pill " + (isWholesale ? "wholesale" : "retail");
         badgeEl.style.display = "inline-flex";
+    }
+
+    const quickCustName = document.getElementById("posMobileQuickCustName");
+    if (quickCustName) quickCustName.textContent = partner ? partner.name : "Khách lẻ";
+    const quickCustType = document.getElementById("posMobileQuickCustType");
+    if (quickCustType) {
+        quickCustType.textContent = isWholesale ? "Khách sỉ" : "Bán lẻ";
+        quickCustType.className = "pos-cust-type-pill " + (isWholesale ? "wholesale" : "retail");
     }
 
     const targetPriceBook = isWholesale ? "WHOLESALE" : "RETAIL";
@@ -25095,7 +25298,7 @@ window.renderPosCart = function() {
             <div style="text-align:center; padding: 60px 20px; color:#94a3b8;">
                 <i data-lucide="shopping-cart" style="width:48px; height:48px; margin: 0 auto 12px auto; opacity:0.35; display:block;"></i>
                 <p style="font-weight: 600; font-size: 0.95rem; margin-bottom: 4px;">Giỏ hàng chưa có sản phẩm nào</p>
-                <small style="font-size: 0.8rem;">Click vào sản phẩm từ danh mục bên phải hoặc tìm kiếm (F3) để thêm</small>
+                <small style="font-size: 0.8rem;">Click vào sản phẩm từ danh mục hoặc tìm kiếm để thêm</small>
             </div>
         `;
         window.recalcPosTotals();
@@ -25120,31 +25323,34 @@ window.renderPosCart = function() {
         const noteBadge = item.price_note ? `<small style="display:block; font-size:0.68rem; color:#b45309; font-weight:600;">${item.price_note}</small>` : '';
 
         row.innerHTML = `
-            <span style="width: 32px; text-align: center; color:#64748b; font-size:0.8rem;">${idx + 1}</span>
-            <div style="flex: 1; padding-left: 6px; overflow:hidden;">
-                <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.name}">${item.name}</div>
-                <div style="font-size:0.75rem; color:#64748b;">
-                    SKU: <strong>${item.sku}</strong> ${priceBadge}
+            <span class="pos-col-idx">${idx + 1}</span>
+            <div class="pos-col-name">
+                <div class="pos-item-title" title="${item.name}">${item.name}</div>
+                <div class="pos-item-sub">
+                    <span class="pos-item-sku">SKU: <strong>${item.sku}</strong></span> ${priceBadge}
+                    <span class="pos-item-unit-tag">${item.unit}</span>
                 </div>
             </div>
-            <span style="width: 55px; text-align: center; font-size:0.8rem; color:#475569;">${item.unit}</span>
-            <div style="width: 125px; text-align: center;">
+            <span class="pos-col-unit">${item.unit}</span>
+            <div class="pos-col-qty">
                 <div class="pos-qty-control">
                     <button type="button" class="pos-qty-btn" onclick="window.addPosItem('${item.sku}', -1)">-</button>
-                    <input type="number" class="pos-qty-input" value="${item.qty}" min="1" onchange="window.updatePosItemQty('${item.sku}', this.value)" onfocus="this.select()">
+                    <input type="number" class="pos-qty-input" value="${item.qty}" min="0.001" step="any" onchange="window.updatePosItemQty('${item.sku}', this.value)" onfocus="this.select()">
                     <button type="button" class="pos-qty-btn" onclick="window.addPosItem('${item.sku}', 1)">+</button>
                 </div>
             </div>
-            <div style="width: 110px; text-align: right; font-weight:600; color:#334155;">
-                ${typeof formatMoney === 'function' ? formatMoney(item.price) : item.price}
+            <div class="pos-col-price">
+                <span class="pos-mobile-price-label">Đơn giá:</span>
+                <span class="pos-price-val">${typeof formatMoney === 'function' ? formatMoney(item.price) : item.price}</span>
                 ${noteBadge}
             </div>
-            <div style="width: 120px; text-align: right; font-weight:700; color:#0284c7;">
-                ${typeof formatMoney === 'function' ? formatMoney(item.item_total) : item.item_total}
+            <div class="pos-col-total">
+                <span class="pos-mobile-total-label">Thành tiền:</span>
+                <span class="pos-total-val">${typeof formatMoney === 'function' ? formatMoney(item.item_total) : item.item_total}</span>
             </div>
-            <div style="width: 32px; text-align: center;">
+            <div class="pos-col-del">
                 <button type="button" class="pos-del-btn" onclick="window.removePosItem('${item.sku}')" title="Xóa mặt hàng này">
-                    <i data-lucide="trash-2" style="width:15px; height:15px;"></i>
+                    <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
                 </button>
             </div>
         `;
@@ -25179,12 +25385,12 @@ window.recalcPosTotals = function() {
     // YÊU CẦU: Thuế VAT tính sau tất cả hàng hoá, dịch vụ gia công và vận chuyển (sau khi trừ chiết khấu)
     const totalBeforeVat = Math.max(0, totalBeforeDiscount - discountVal);
     const vatVal = Math.round(totalBeforeVat * (vatPercent / 100));
-    const grandTotal = totalBeforeVat + vatVal;
+    const grandTotal = Math.round(totalBeforeVat + vatVal);
 
-    const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${Number(v || 0).toLocaleString('vi-VN')}đ`;
+    const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${formatNumber(v)}đ`;
 
     const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    setTxt("posTotalQtyCount", totalQty);
+    setTxt("posTotalQtyCount", formatNumber(totalQty));
     setTxt("posSubtotalAmount", fmt(subtotal));
 
     const procRow = document.getElementById("posProcessingSummaryRow");
@@ -25208,6 +25414,131 @@ window.recalcPosTotals = function() {
     setTxt("posVatAmount", vatVal > 0 ? `+${fmt(vatVal)}` : "+0đ");
 
     setTxt("posGrandTotalAmount", fmt(grandTotal));
+
+    // Update Mobile Floating Cart Bar & Badges
+    const totalItemsCount = window.posCart ? window.posCart.length : 0;
+    const badgeEl = document.getElementById("posMobileCartBadge");
+    if (badgeEl) badgeEl.textContent = totalItemsCount;
+    setTxt("posBillingItemCountBadge", totalItemsCount);
+    setTxt("posBannerTotal", fmt(grandTotal));
+    setTxt("posCatalogTopTotalBadge", `${totalItemsCount} SP - ${fmt(grandTotal)}`);
+
+    const floatBadgeEl = document.getElementById("posFloatingCartCount");
+    if (floatBadgeEl) floatBadgeEl.textContent = totalItemsCount;
+    const floatQtyText = document.getElementById("posFloatingCartQtyText");
+    if (floatQtyText) floatQtyText.textContent = `${totalItemsCount} mặt hàng`;
+    const floatTotalEl = document.getElementById("posFloatingCartTotal");
+    if (floatTotalEl) floatTotalEl.textContent = fmt(grandTotal);
+    const mobileCartTotalDisplay = document.getElementById("posMobileCartTotalDisplay");
+    if (mobileCartTotalDisplay) mobileCartTotalDisplay.textContent = fmt(grandTotal);
+
+    const floatBar = document.getElementById("posMobileFloatingCartBar");
+    if (floatBar) {
+        floatBar.style.display = totalItemsCount > 0 ? "flex" : "none";
+    }
+
+    window.posLastGrandTotal = grandTotal;
+    if (typeof window.updatePosDepositHint === 'function') {
+        window.updatePosDepositHint();
+    }
+};
+
+window.getPosGrandTotal = function() {
+    if (typeof window.posLastGrandTotal === 'number' && !isNaN(window.posLastGrandTotal)) {
+        return window.posLastGrandTotal;
+    }
+    const txt = document.getElementById("posGrandTotalAmount")?.textContent || "0";
+    return parseFloat(txt.replace(/[^0-9]/g, '')) || 0;
+};
+
+window.handlePosPaymentStatusChange = function(status) {
+    const box = document.getElementById("posDepositBox");
+    if (!box) return;
+    if (status === "PARTIAL") {
+        box.style.display = "block";
+        const total = window.getPosGrandTotal();
+        const depInput = document.getElementById("posDepositAmount");
+        if (depInput && (!depInput.value || parseFloat(depInput.value) <= 0)) {
+            depInput.value = Math.round(total * 0.5);
+        }
+        window.updatePosDepositHint();
+        setTimeout(() => {
+            if (depInput) {
+                depInput.focus();
+                depInput.select();
+            }
+        }, 50);
+    } else {
+        box.style.display = "none";
+    }
+};
+
+window.setPosQuickDeposit = function(percent) {
+    const total = window.getPosGrandTotal();
+    const amount = Math.round(total * (percent / 100));
+    const depInput = document.getElementById("posDepositAmount");
+    if (depInput) {
+        depInput.value = amount;
+        window.updatePosDepositHint();
+    }
+};
+
+window.updatePosDepositHint = function() {
+    const total = window.getPosGrandTotal();
+    const depInput = document.getElementById("posDepositAmount");
+    const deposit = parseFloat(depInput?.value) || 0;
+    const remain = Math.max(0, total - deposit);
+    
+    const amtText = document.getElementById("posDepositAmountText");
+    if (amtText) amtText.textContent = typeof formatMoney === 'function' ? formatMoney(deposit) : `${formatNumber(deposit)}đ`;
+
+    const remainEl = document.getElementById("posDepositRemainAmount");
+    if (remainEl) {
+        remainEl.textContent = typeof formatMoney === 'function' ? formatMoney(remain) : `${formatNumber(remain)}đ`;
+    }
+};
+
+window.handleOnlineOrderPaymentStatusChange = function(status) {
+    const group = document.getElementById("onlineOrderDepositGroup");
+    if (!group) return;
+    if (status === "PARTIAL") {
+        group.style.display = "block";
+        const rows = document.querySelectorAll("#onlineOrderRowsContainer .online-order-row");
+        let subtotal = 0;
+        rows.forEach(r => {
+            const q = parseFloat(r.querySelector(".item-qty")?.value) || 0;
+            const p = parseFloat(r.querySelector(".item-price")?.value) || 0;
+            subtotal += q * p;
+        });
+        const disc = parseFloat(document.getElementById("onlineOrderDiscount")?.value) || 0;
+        const vat = parseFloat(document.getElementById("onlineOrderVat")?.value) || 0;
+        const ship = parseFloat(document.getElementById("onlineOrderShipFee")?.value) || 0;
+        const total = Math.max(0, subtotal - disc) * (1 + vat / 100) + ship;
+        const depInput = document.getElementById("onlineOrderDepositAmount");
+        if (depInput && (!depInput.value || parseFloat(depInput.value) <= 0)) {
+            depInput.value = Math.round(total * 0.5);
+        }
+    } else {
+        group.style.display = "none";
+    }
+};
+
+window.setOnlineOrderQuickDeposit = function(percent) {
+    const rows = document.querySelectorAll("#onlineOrderRowsContainer .online-order-row");
+    let subtotal = 0;
+    rows.forEach(r => {
+        const q = parseFloat(r.querySelector(".item-qty")?.value) || 0;
+        const p = parseFloat(r.querySelector(".item-price")?.value) || 0;
+        subtotal += q * p;
+    });
+    const disc = parseFloat(document.getElementById("onlineOrderDiscount")?.value) || 0;
+    const vat = parseFloat(document.getElementById("onlineOrderVat")?.value) || 0;
+    const ship = parseFloat(document.getElementById("onlineOrderShipFee")?.value) || 0;
+    const total = Math.max(0, subtotal - disc) * (1 + vat / 100) + ship;
+    const depInput = document.getElementById("onlineOrderDepositAmount");
+    if (depInput) {
+        depInput.value = Math.round(total * (percent / 100));
+    }
 };
 
 // Submit POS Order (isDraft = true: Lưu nháp, isDraft = false: Xác nhận / Thanh toán)
@@ -25226,7 +25557,7 @@ window.submitPosOrder = function(isDraft = false) {
         const vatRate = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
         const shipFee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
         const paymentMethod = document.getElementById("posPaymentMethodSelect")?.value || "BANK_TRANSFER";
-        const paymentStatus = isDraft ? "DRAFT" : (document.getElementById("posPaymentStatusSelect")?.value || "PAID");
+        const rawPaymentStatus = isDraft ? "DRAFT" : (document.getElementById("posPaymentStatusSelect")?.value || "PAID");
         const notes = document.getElementById("posOrderNotes")?.value.trim() || "";
 
         const goodsItems = window.posCart.filter(i => !i.is_service);
@@ -25242,7 +25573,36 @@ window.submitPosOrder = function(isDraft = false) {
         // VAT tính sau tất cả hàng hoá, dịch vụ gia công và vận chuyển (sau khi trừ chiết khấu)
         const totalBeforeVat = Math.max(0, totalBeforeDiscount - discount);
         const vatAmount = Math.round(totalBeforeVat * (vatRate / 100));
-        const totalAmount = totalBeforeVat + vatAmount;
+        const totalAmount = Math.round(totalBeforeVat + vatAmount);
+
+        let depositAmount = 0;
+        let actualPaid = 0;
+        let paymentStatus = rawPaymentStatus;
+
+        if (isDraft) {
+            paymentStatus = "DRAFT";
+            actualPaid = 0;
+            depositAmount = 0;
+        } else if (rawPaymentStatus === "PAID") {
+            actualPaid = totalAmount;
+            depositAmount = totalAmount;
+            paymentStatus = "PAID";
+        } else if (rawPaymentStatus === "PARTIAL") {
+            depositAmount = parseFloat(document.getElementById("posDepositAmount")?.value) || 0;
+            if (depositAmount <= 0) {
+                alert("Vui lòng nhập số tiền khách đặt cọc (hoặc chọn 'Chưa thanh toán (Ghi nợ)').");
+                document.getElementById("posDepositAmount")?.focus();
+                return;
+            }
+            actualPaid = depositAmount;
+            paymentStatus = depositAmount >= totalAmount ? "PAID" : "PARTIALLY_PAID";
+        } else { // UNPAID
+            actualPaid = 0;
+            depositAmount = 0;
+            paymentStatus = "UNPAID";
+        }
+
+        const remainingDebt = Math.max(0, totalAmount - actualPaid);
 
         const isEdit = window.posActiveMode === "EDIT" && !!window.posActiveOrderId;
         let orderId = window.posActiveOrderId;
@@ -25299,8 +25659,14 @@ window.submitPosOrder = function(isDraft = false) {
             total_amount: totalAmount,
             payment_status: paymentStatus,
             payment_method: paymentMethod,
-            paid_amount: (!isDraft && paymentStatus === "PAID") ? totalAmount : 0,
-            remaining_debt: (!isDraft && paymentStatus === "PAID") ? 0 : totalAmount,
+            paid_amount: actualPaid,
+            remaining_debt: remainingDebt,
+            deposit: actualPaid,
+            deposit_amount: actualPaid,
+            deposit_status: actualPaid > 0 ? "DEPOSITED" : "NONE",
+            deposit_date: new Date().toISOString().split('T')[0],
+            deposit_method: paymentMethod,
+            collection_status: actualPaid >= totalAmount && totalAmount > 0 ? "COLLECTED_FULL" : (actualPaid > 0 ? "PARTIAL" : "UNCOLLECTED"),
             created_at: isEdit ? (state.online_orders.find(o => o.id === orderId)?.created_at || new Date().toISOString()) : new Date().toISOString(),
             has_production: false,
             production_steps: [],
@@ -25350,6 +25716,7 @@ window.submitPosOrder = function(isDraft = false) {
                     vat_rate: vatRate,
                     ship_fee: shipFee,
                     total_amount: totalAmount,
+                    deposit: actualPaid,
                     payment_status: paymentStatus,
                     payment_method: paymentMethod,
                     notes: notes
@@ -25369,7 +25736,7 @@ window.submitPosOrder = function(isDraft = false) {
                     vat_rate: vatRate,
                     ship_fee: shipFee,
                     total_amount: totalAmount,
-                    deposit: paymentStatus === "PAID" ? totalAmount : 0,
+                    deposit: actualPaid,
                     payment_status: paymentStatus,
                     payment_method: paymentMethod,
                     salesperson: salesperson,
@@ -25379,12 +25746,16 @@ window.submitPosOrder = function(isDraft = false) {
                 }, ...state.orders];
             }
 
-            // Generate Transaction if PAID
-            if (paymentStatus === "PAID") {
+            // Generate or update Transaction if customer paid any amount (full or deposit)
+            if (actualPaid > 0) {
+                const isFinal = actualPaid >= totalAmount;
                 const existingTx = state.transactions.find(t => t.reference_id === orderId && t.type === "RECEIPT");
                 if (existingTx) {
-                    existingTx.amount = totalAmount;
+                    existingTx.amount = actualPaid;
                     existingTx.payment_method = paymentMethod;
+                    existingTx.category = isFinal ? "CUSTOMER_FINAL" : "CUSTOMER_DEPOSIT";
+                    existingTx.account_source = paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH";
+                    existingTx.notes = isFinal ? `Thanh toán đơn hàng POS ${orderNumber}` : `Đặt cọc đơn hàng POS ${orderNumber}`;
                 } else {
                     const txCodeSuffix = String(state.transactions.length + 1).padStart(4, '0');
                     state.transactions = [{
@@ -25392,15 +25763,18 @@ window.submitPosOrder = function(isDraft = false) {
                         tx_number: `PT-202606-${txCodeSuffix}`,
                         created_at: new Date().toISOString(),
                         type: "RECEIPT",
-                        category: "CUSTOMER_FINAL",
-                        amount: totalAmount,
+                        category: isFinal ? "CUSTOMER_FINAL" : "CUSTOMER_DEPOSIT",
+                        amount: actualPaid,
                         payment_method: paymentMethod,
                         account_source: paymentMethod === "BANK_TRANSFER" ? "VCB" : "CASH",
                         partner_id: customerId,
                         reference_id: orderId,
-                        created_by: salesperson
+                        created_by: salesperson,
+                        notes: isFinal ? `Thanh toán đơn hàng POS ${orderNumber}` : `Đặt cọc đơn hàng POS ${orderNumber}`
                     }, ...state.transactions];
                 }
+            } else {
+                state.transactions = state.transactions.filter(t => t.reference_id !== orderId);
             }
         }
 
@@ -25591,9 +25965,9 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
         
         let statusText = "";
         if (totalPaid === 0) {
-            statusText = "Chưa thanh toán";
+            statusText = "Chưa thanh toán (Ghi nợ)";
         } else if (remainingDebt > 0) {
-            statusText = `Thanh toán một phần (Còn nợ: ${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt})`;
+            statusText = `Đã đặt cọc: ${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid} (Còn nợ: ${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt})`;
         } else {
             statusText = "Đã thanh toán đủ";
         }
@@ -25631,7 +26005,7 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
                         <td style="padding:8px 4px; border:1px solid #ddd; text-align:center;">${idx + 1}</td>
                         <td style="padding:8px; border:1px solid #ddd;"><strong>${item.sku}</strong> - ${prodName}${brandStr}${noteStr}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:center;">${unitStr}</td>
-                        <td style="padding:8px; border:1px solid #ddd; text-align:center;">${qty}</td>
+                        <td style="padding:8px; border:1px solid #ddd; text-align:center;">${formatNumber(qty)}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:right;">${typeof formatMoney === 'function' ? formatMoney(price) : price}</td>
                         <td style="padding:8px; border:1px solid #ddd; text-align:right;"><strong>${typeof formatMoney === 'function' ? formatMoney(itemTotal) : itemTotal}</strong></td>
                     `;
@@ -25652,7 +26026,7 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
         }
 
         // Total Summaries & Helper Formatting
-        const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${Number(v || 0).toLocaleString('vi-VN')}đ`;
+        const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${formatNumber(v)}đ`;
         const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
         // Real IDs in index.html:
@@ -25675,6 +26049,11 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
         setEl("pdfGrandTotal", fmt(grandTotal));
         setEl("pdfPaidAmount", fmt(totalPaid));
         setEl("pdfRemainingDebt", fmt(remainingDebt));
+
+        const paidRow = document.getElementById("pdfPaidRow");
+        const debtRow = document.getElementById("pdfDebtRow");
+        if (paidRow) paidRow.style.display = totalPaid > 0 ? "flex" : "none";
+        if (debtRow) debtRow.style.display = (totalPaid > 0 && remainingDebt > 0) ? "flex" : "none";
 
         // Order Notes Banner
         const orderNotes = (order.notes || order.note || "").trim();
@@ -26486,7 +26865,7 @@ window.renderOnlineProducts = function() {
             <td>${costHtml}</td>
             <td style="font-weight:600; color:var(--primary);">${formatMoney(prod.price)}</td>
             <td style="font-weight:600; color:var(--success);">${formatMoney(prod.wholesale_price)}</td>
-            <td><strong class="${isLow ? 'text-danger' : 'text-success'}">${Number(prod.stock_qty || 0).toLocaleString('vi-VN')}</strong> <span style="font-size:0.75rem; color:#94a3b8;" title="Mức tồn tối thiểu cảnh báo: ${prod.min_stock_qty}">/ ${prod.min_stock_qty}</span></td>
+            <td><strong class="${isLow ? 'text-danger' : 'text-success'}">${formatNumber(prod.stock_qty || 0)}</strong> <span style="font-size:0.75rem; color:#94a3b8;" title="Mức tồn tối thiểu cảnh báo: ${formatNumber(prod.min_stock_qty)}">/ ${formatNumber(prod.min_stock_qty)}</span></td>
             <td>
                 <div class="card-actions-row">
                     <button class="btn-icon" onclick="editOnlineProduct('${prod.sku}')" title="Sửa thông tin"><i data-lucide="edit-3"></i></button>
@@ -26593,9 +26972,9 @@ window.renderOnlineStock = function() {
                 <strong>${p.name}</strong>
             </td>
             <td>${supplierHtml}</td>
-            <td style="text-align:center; color:var(--success); font-weight:600;">+${totalImport.toLocaleString('vi-VN')}</td>
-            <td style="text-align:center; color:var(--danger); font-weight:600;">-${totalExport.toLocaleString('vi-VN')}</td>
-            <td style="text-align:center; font-weight:700; font-size:1.05rem;">${Number(p.stock_qty).toLocaleString('vi-VN')} ${p.unit || 'cái'}</td>
+            <td style="text-align:center; color:var(--success); font-weight:600;">+${formatNumber(totalImport)}</td>
+            <td style="text-align:center; color:var(--danger); font-weight:600;">-${formatNumber(totalExport)}</td>
+            <td style="text-align:center; font-weight:700; font-size:1.05rem;">${formatNumber(p.stock_qty)} ${p.unit || 'cái'}</td>
             <td style="text-align:center;">
                 <button class="btn btn-secondary" onclick="window.viewProductStockHistory('${p.sku}')" style="padding:4px 8px; font-size:0.78rem; display:inline-flex; align-items:center; gap:4px;" title="Xem lịch sử xuất/nhập">
                     <i data-lucide="history" style="width:13px; height:13px;"></i>
@@ -26938,11 +27317,11 @@ window.addBulkPriceTierRow = function(min = '', max = '', price = '') {
     row.style.gap = "8px";
     row.innerHTML = `
         <span style="font-size:0.85rem; color:var(--text-secondary); min-width:20px;">Từ</span>
-        <input type="number" class="form-input tier-min" value="${min}" placeholder="Từ SL" style="width:75px; height:34px; padding:4px 8px;" min="1" required>
+        <input type="number" class="form-input tier-min" value="${min}" placeholder="Từ SL" style="width:75px; height:34px; padding:4px 8px;" min="0" step="any" required>
         <span style="font-size:0.85rem; color:var(--text-secondary);">đến</span>
-        <input type="number" class="form-input tier-max" value="${max !== null && max !== undefined ? max : ''}" placeholder="Vô hạn" style="width:85px; height:34px; padding:4px 8px;" min="1">
+        <input type="number" class="form-input tier-max" value="${max !== null && max !== undefined ? max : ''}" placeholder="Vô hạn" style="width:85px; height:34px; padding:4px 8px;" min="0" step="any">
         <span style="font-size:0.85rem; font-weight:600; white-space:nowrap;">-> Giá bán:</span>
-        <input type="number" class="form-input tier-price" value="${price !== undefined && price !== null ? price : ''}" placeholder="Nhập đơn giá..." style="width:130px; height:34px; padding:4px 8px; font-weight:600;" min="0" required>
+        <input type="number" class="form-input tier-price" value="${price !== undefined && price !== null ? price : ''}" placeholder="Nhập đơn giá..." style="width:130px; height:34px; padding:4px 8px; font-weight:600;" min="0" step="any" required>
         <span style="font-size:0.85rem; color:var(--text-secondary); font-weight:600;">đ</span>
         <button type="button" class="btn-icon" onclick="document.getElementById('${rowId}').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px; margin-left:auto;" title="Xóa khoảng giá"><i data-lucide="trash-2" style="width:16px; height:16px;"></i></button>
     `;
@@ -27031,11 +27410,15 @@ function handleOnlineBulkPriceSubmit(e) {
     // 2. Parse Tiers Inputs
     const tierRows = document.querySelectorAll("#bulkPriceTiersContainer > div");
     const parsedTiers = Array.from(tierRows).map(row => {
-        const min = parseInt(row.querySelector(".tier-min")?.value) || 1;
+        const min = parseFloat(row.querySelector(".tier-min")?.value) || 1;
         const maxVal = row.querySelector(".tier-max")?.value;
-        const max = maxVal ? parseInt(maxVal) : null;
+        const max = maxVal ? parseFloat(maxVal) : null;
         const price = parseFloat(row.querySelector(".tier-price")?.value) || 0;
-        return { min, max, price };
+        return { 
+            min: Math.round(min * 1000) / 1000, 
+            max: max !== null ? Math.round(max * 1000) / 1000 : null, 
+            price: Math.round(price * 1000) / 1000 
+        };
     });
 
     if (parsedTiers.length === 0) {
@@ -27139,11 +27522,11 @@ window.renderProcessingServicesConfig = function() {
             tiersHtml += `
                 <div class="service-tier-row" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                     <span style="font-size:0.82rem; color:var(--text-secondary); min-width:20px;">Từ</span>
-                    <input type="number" class="form-input tier-min" value="${t.min_qty}" min="1" style="width:80px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Từ SL" required>
+                    <input type="number" class="form-input tier-min" value="${t.min_qty}" min="0" step="any" style="width:80px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Từ SL" required>
                     <span style="font-size:0.82rem; color:var(--text-secondary);">đến</span>
-                    <input type="number" class="form-input tier-max" value="${t.max_qty !== null && t.max_qty !== undefined ? t.max_qty : ''}" min="1" style="width:90px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Vô hạn">
+                    <input type="number" class="form-input tier-max" value="${t.max_qty !== null && t.max_qty !== undefined ? t.max_qty : ''}" min="0" step="any" style="width:90px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Vô hạn">
                     <span style="font-size:0.82rem; font-weight:700; white-space:nowrap; color:var(--text-primary);">-> Đơn giá:</span>
-                    <input type="number" class="form-input tier-price" value="${t.price !== undefined && t.price !== null ? t.price : ''}" min="0" step="100" style="width:130px; height:32px; padding:4px 8px; font-weight:700; color:#0284c7;" placeholder="Nhập số tiền..." required>
+                    <input type="number" class="form-input tier-price" value="${t.price !== undefined && t.price !== null ? t.price : ''}" min="0" step="any" style="width:130px; height:32px; padding:4px 8px; font-weight:700; color:#108f53;" placeholder="Nhập số tiền..." required>
                     <span style="font-size:0.82rem; color:var(--text-secondary); font-weight:600;">đ/${s.unit || 'bộ'}</span>
                     <button type="button" class="btn-icon" onclick="this.closest('.service-tier-row').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px; margin-left:auto;" title="Xóa khoảng giá này">
                         <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
@@ -27298,11 +27681,11 @@ window.addProcessingServiceTierRow = function(serviceId, minQty, maxQty, price) 
     row.style.cssText = "display:flex; align-items:center; gap:8px; flex-wrap:wrap;";
     row.innerHTML = `
         <span style="font-size:0.82rem; color:var(--text-secondary); min-width:20px;">Từ</span>
-        <input type="number" class="form-input tier-min" value="${minQty}" min="1" style="width:80px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Từ SL" required>
+        <input type="number" class="form-input tier-min" value="${minQty}" min="0" step="any" style="width:80px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Từ SL" required>
         <span style="font-size:0.82rem; color:var(--text-secondary);">đến</span>
-        <input type="number" class="form-input tier-max" value="${maxQty !== null && maxQty !== undefined ? maxQty : ''}" min="1" style="width:90px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Vô hạn">
+        <input type="number" class="form-input tier-max" value="${maxQty !== null && maxQty !== undefined ? maxQty : ''}" min="0" step="any" style="width:90px; height:32px; padding:4px 8px; font-weight:600;" placeholder="Vô hạn">
         <span style="font-size:0.82rem; font-weight:700; white-space:nowrap; color:var(--text-primary);">-> Đơn giá:</span>
-        <input type="number" class="form-input tier-price" value="${price !== undefined && price !== null ? price : ''}" min="0" step="100" style="width:130px; height:32px; padding:4px 8px; font-weight:700; color:#0284c7;" placeholder="Nhập số tiền..." required>
+        <input type="number" class="form-input tier-price" value="${price !== undefined && price !== null ? price : ''}" min="0" step="any" style="width:130px; height:32px; padding:4px 8px; font-weight:700; color:#108f53;" placeholder="Nhập số tiền..." required>
         <span style="font-size:0.82rem; color:var(--text-secondary); font-weight:600;">đ</span>
         <button type="button" class="btn-icon" onclick="this.closest('.service-tier-row').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px; margin-left:auto;" title="Xóa khoảng giá này">
             <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
@@ -27333,11 +27716,15 @@ window.saveProcessingServicesConfig = function() {
 
         const tierRows = card.querySelectorAll(".service-tier-row");
         const parsedTiers = Array.from(tierRows).map(row => {
-            const min_qty = parseInt(row.querySelector(".tier-min")?.value) || 1;
+            const min_qty = parseFloat(row.querySelector(".tier-min")?.value) || 1;
             const maxVal = row.querySelector(".tier-max")?.value;
-            const max_qty = maxVal ? parseInt(maxVal) : null;
+            const max_qty = maxVal ? parseFloat(maxVal) : null;
             const price = parseFloat(row.querySelector(".tier-price")?.value) || 0;
-            return { min_qty, max_qty, price };
+            return { 
+                min_qty: Math.round(min_qty * 1000) / 1000, 
+                max_qty: max_qty !== null ? Math.round(max_qty * 1000) / 1000 : null, 
+                price: Math.round(price * 1000) / 1000 
+            };
         });
 
         parsedTiers.sort((a, b) => a.min_qty - b.min_qty);
@@ -27345,16 +27732,16 @@ window.saveProcessingServicesConfig = function() {
         // Find existing metadata like icon, color, bg
         const existing = currentList.find(x => x.id === id || x.sku === id) || {};
 
-        let badge = `${formatMoney(parsedTiers[0]?.price || 0)}đ/${unit}`;
+        let badge = `${formatMoney(parsedTiers[0]?.price || 0)}/${unit}`;
         if (min_fee > 0) {
-            badge = `Tối thiểu ${formatMoney(min_fee)}đ`;
+            badge = `Tối thiểu ${formatMoney(min_fee)}`;
         } else if (parsedTiers.length > 1) {
             const minP = Math.min(...parsedTiers.map(t => t.price));
             const maxP = Math.max(...parsedTiers.map(t => t.price));
-            badge = `${formatMoney(minP)} - ${formatMoney(maxP)}đ`;
+            badge = `${formatMoney(minP)} - ${formatMoney(maxP)}`;
         }
 
-        const tierDesc = parsedTiers.map(t => `${t.min_qty}-${t.max_qty || '∞'}: ${formatMoney(t.price)}đ`).join(' | ');
+        const tierDesc = parsedTiers.map(t => `${formatNumber(t.min_qty)}-${t.max_qty ? formatNumber(t.max_qty) : '∞'}: ${formatMoney(t.price)}`).join(' | ');
 
         updatedList.push({
             ...existing,
@@ -27558,7 +27945,7 @@ window.renderOnlinePrices = function() {
         const tiers = p.retail_qty_prices || p.wholesale_qty_prices || [];
         let tierPreviewText = "Chưa thiết lập bậc thang";
         if (tiers.length > 0) {
-            tierPreviewText = tiers.map(t => `${t.min_qty} - ${t.max_qty || '∞'}: ${(typeof formatMoney === 'function' ? formatMoney(t.price) : t.price)}đ`).join('&#10;');
+            tierPreviewText = tiers.map(t => `${formatNumber(t.min_qty)} - ${t.max_qty ? formatNumber(t.max_qty) : '∞'}: ${formatMoney(t.price)}`).join('&#10;');
         }
         
         const tierBadgeHtml = tiers.length > 0
@@ -27570,8 +27957,8 @@ window.renderOnlinePrices = function() {
             <td>${imgHtml}</td>
             <td><strong>${p.name}</strong></td>
             <td>${p.unit || 'Chiếc'}</td>
-            <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price || 0}" min="0" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;"></td>
-            <td><input type="number" class="form-input price-wholesale" data-sku="${p.sku}" value="${p.wholesale_price || 0}" min="0" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;" placeholder="Nhập giá sỉ..."></td>
+            <td><input type="number" class="form-input price-retail" data-sku="${p.sku}" value="${p.price || 0}" min="0" step="any" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;"></td>
+            <td><input type="number" class="form-input price-wholesale" data-sku="${p.sku}" value="${p.wholesale_price || 0}" min="0" step="any" style="width:150px; padding:6px 10px; font-size:0.88rem; font-weight:600;" placeholder="Nhập giá sỉ..."></td>
             <td>
                 <div style="display:flex; align-items:center; gap:8px;">
                     ${tierBadgeHtml}
@@ -27607,8 +27994,8 @@ window.saveOnlinePrices = function() {
         
         const p = state.online_products.find(prod => String(prod.sku).trim().toUpperCase() === String(sku).trim().toUpperCase());
         if (p) {
-            p.price = retailVal;
-            p.wholesale_price = wholesaleVal;
+            p.price = Math.round(retailVal * 1000) / 1000;
+            p.wholesale_price = Math.round(wholesaleVal * 1000) / 1000;
             updatedCount++;
         }
     });
@@ -27628,8 +28015,8 @@ window.saveSingleProductPrice = function(sku, buttonEl) {
     
     const p = state.online_products.find(prod => String(prod.sku).trim().toUpperCase() === String(sku).trim().toUpperCase());
     if (p) {
-        p.price = retailVal;
-        p.wholesale_price = wholesaleVal;
+        p.price = Math.round(retailVal * 1000) / 1000;
+        p.wholesale_price = Math.round(wholesaleVal * 1000) / 1000;
         state.updateState("online_products", state.online_products);
         alert(`Đã lưu cập nhật giá cho sản phẩm ${p.name} (Lẻ: ${formatMoney(retailVal)}, Sỉ: ${formatMoney(wholesaleVal)}) thành công!`);
         renderOnlineProducts();
@@ -27670,9 +28057,9 @@ window.addAdvPriceRow = function(minQty = "", maxQty = "", price = "") {
     
     const row = document.createElement("tr");
     row.innerHTML = `
-        <td><input type="number" class="form-input row-min-qty" value="${minQty}" min="0" required style="padding:4px 8px;"></td>
-        <td><input type="number" class="form-input row-max-qty" value="${maxQty}" min="0" placeholder="K.hạn" style="padding:4px 8px;"></td>
-        <td><input type="number" class="form-input row-price" value="${price}" min="0" required style="padding:4px 8px;"></td>
+        <td><input type="number" class="form-input row-min-qty" value="${minQty}" min="0" step="any" required style="padding:4px 8px;"></td>
+        <td><input type="number" class="form-input row-max-qty" value="${maxQty}" min="0" step="any" placeholder="K.hạn" style="padding:4px 8px;"></td>
+        <td><input type="number" class="form-input row-price" value="${price}" min="0" step="any" required style="padding:4px 8px;"></td>
         <td class="text-center"><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()" style="padding:4px 8px;"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button></td>
     `;
     tableBody.appendChild(row);
@@ -27699,9 +28086,9 @@ window.saveAdvancedPricingSettings = function() {
         const price = parseFloat(row.querySelector(".row-price").value);
         if (!isNaN(minQty) && !isNaN(price)) {
             qtyPrices.push({
-                min_qty: minQty,
-                max_qty: isNaN(maxQty) ? "" : maxQty,
-                price: price
+                min_qty: Math.round(minQty * 1000) / 1000,
+                max_qty: isNaN(maxQty) ? "" : Math.round(maxQty * 1000) / 1000,
+                price: Math.round(price * 1000) / 1000
             });
         }
     });
@@ -30397,23 +30784,67 @@ window.liquidateContract = function(contractId) {
 // ORDER DEBT PAYMENT MODAL
 // ==========================================================================
 window.openOrderPaymentModal = function(orderId, prefilledValue = "") {
-    const order = state.orders.find(o => o.id === orderId);
-    if (!order) return;
+    const order = (state.orders && state.orders.find(o => o.id === orderId)) || 
+                  (state.online_orders && state.online_orders.find(o => o.id === orderId));
+    if (!order) {
+        alert("Không tìm thấy đơn hàng cần thu nợ.");
+        return;
+    }
     
-    const oPaid = state.transactions
-        .filter(t => t.reference_id === order.id && t.type === "RECEIPT")
-        .reduce((sum, t) => sum + t.amount, 0);
-    const remaining = Math.max(0, order.total_amount - oPaid);
+    const receipts = (state.transactions || []).filter(t => 
+        (t.reference_id === order.id || (order.order_number && t.reference_id === order.order_number)) && 
+        t.type === "RECEIPT"
+    );
+    const txPaid = receipts.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+    const totalAmount = Number(order.total_amount || 0);
+    
+    let alreadyPaid = txPaid;
+    if (order.paid_amount !== undefined && Number(order.paid_amount) > alreadyPaid) {
+        alreadyPaid = Number(order.paid_amount);
+    } else if (order.deposit !== undefined && Number(order.deposit) > alreadyPaid) {
+        alreadyPaid = Number(order.deposit);
+    }
+    if (order.payment_status === "UNPAID" && txPaid === 0) {
+        alreadyPaid = 0;
+    }
+    
+    const initialDebt = Math.max(0, totalAmount - alreadyPaid);
+    
+    const modal = document.getElementById("orderPaymentModal");
+    if (modal) {
+        modal.dataset.orderId = order.id;
+        modal.dataset.initialDebt = initialDebt;
+        modal.dataset.totalAmount = totalAmount;
+        modal.dataset.alreadyPaid = alreadyPaid;
+    }
     
     document.getElementById("paymentOrderId").value = order.id;
-    document.getElementById("paymentOrderNumber").value = order.order_number;
-    document.getElementById("paymentOrderTotal").value = formatMoney(order.total_amount);
-    document.getElementById("paymentOrderRemaining").value = formatMoney(remaining);
+    document.getElementById("paymentOrderNumber").value = order.order_number || order.id;
+    document.getElementById("paymentOrderTotal").value = formatMoney(totalAmount);
+    
+    const paidBeforeEl = document.getElementById("paymentOrderPaidBefore");
+    if (paidBeforeEl) paidBeforeEl.value = formatMoney(alreadyPaid);
+    
+    const debtNoteEl = document.getElementById("paymentOrderInitialDebtNote");
+    if (debtNoteEl) debtNoteEl.textContent = `(Nợ trước thu: ${formatMoney(initialDebt)})`;
+    
+    const alreadyPaidAlert = document.getElementById("paymentAlreadyPaidAlert");
+    if (alreadyPaidAlert) {
+        alreadyPaidAlert.style.display = (initialDebt <= 0 && totalAmount > 0) ? "block" : "none";
+    }
     
     const inputAmount = document.getElementById("paymentInputAmount");
-    inputAmount.value = prefilledValue ? prefilledValue : remaining.toLocaleString('vi-VN');
+    if (inputAmount) {
+        if (prefilledValue) {
+            inputAmount.value = prefilledValue;
+        } else if (initialDebt > 0) {
+            inputAmount.value = formatNumber(initialDebt);
+        } else {
+            inputAmount.value = "0";
+        }
+    }
     
-    updatePaymentCalcHint(order.total_amount, remaining);
+    window.updatePaymentCalcHintAndRemaining();
     
     const fileInput = document.getElementById("paymentBillInput");
     if (fileInput) fileInput.value = "";
@@ -30424,6 +30855,9 @@ window.openOrderPaymentModal = function(orderId, prefilledValue = "") {
     }
     
     openModal("orderPaymentModal");
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+    }
 };
 
 window.viewPaymentBill = function(txId) {
@@ -30436,23 +30870,69 @@ window.viewPaymentBill = function(txId) {
     }
 };
 
-function updatePaymentCalcHint(totalAmount, remaining) {
+window.setQuickPaymentAmount = function(pct) {
+    const modal = document.getElementById("orderPaymentModal");
+    const initialDebt = parseFloat(modal?.dataset.initialDebt || "0");
+    const totalAmount = parseFloat(modal?.dataset.totalAmount || "0");
+    const input = document.getElementById("paymentInputAmount");
+    if (!input) return;
+    
+    const base = initialDebt > 0 ? initialDebt : totalAmount;
+    if (pct === '100%') {
+        input.value = formatNumber(base);
+    } else if (pct === '50%') {
+        input.value = formatNumber(Math.round(base * 0.5));
+    } else if (pct === '30%') {
+        input.value = formatNumber(Math.round(base * 0.3));
+    }
+    window.updatePaymentCalcHintAndRemaining();
+};
+
+window.updatePaymentCalcHintAndRemaining = function() {
+    const modal = document.getElementById("orderPaymentModal");
     const inputAmount = document.getElementById("paymentInputAmount");
+    const remainingEl = document.getElementById("paymentOrderRemaining");
     const hintEl = document.getElementById("paymentAmountCalcHint");
-    if (!inputAmount || !hintEl) return;
+    if (!inputAmount || !remainingEl || !hintEl) return;
+    
+    const initialDebt = parseFloat(modal?.dataset.initialDebt || "0");
+    const totalAmount = parseFloat(modal?.dataset.totalAmount || "0");
     
     const rawVal = inputAmount.value.trim();
     let calculated = 0;
     
     if (rawVal.endsWith('%')) {
         const percent = parseFloat(rawVal.replace('%', '')) || 0;
-        calculated = Math.round(totalAmount * percent / 100);
+        const base = initialDebt > 0 ? initialDebt : totalAmount;
+        calculated = Math.ceil(base * (percent / 100));
     } else {
         calculated = parseFloat(rawVal.replace(/[^0-9]/g, '')) || 0;
     }
     
-    hintEl.textContent = `Số tiền thu nợ thực tế: ${formatMoney(calculated)} (Cần thu nợ: ${formatMoney(remaining)})`;
-}
+    // Tự động trừ số nợ: CÒN NỢ = Số nợ trước thu - Số tiền thu đợt này
+    const newRemainingDebt = Math.max(0, initialDebt - calculated);
+    remainingEl.value = formatMoney(newRemainingDebt);
+    
+    if (newRemainingDebt === 0) {
+        remainingEl.style.color = "#10b981"; // Màu xanh lá khi sạch nợ
+    } else {
+        remainingEl.style.color = "var(--danger-color, #ef4444)";
+    }
+    
+    // Cập nhật dòng hint bên dưới ô nhập
+    if (initialDebt <= 0 && totalAmount > 0) {
+        hintEl.innerHTML = `<span style="color:#d97706;">Thu thêm: <strong>${formatMoney(calculated)}</strong> (Đơn hàng này vốn đã hết nợ 100%)</span>`;
+    } else if (calculated <= 0) {
+        hintEl.innerHTML = `<span>Số tiền thu nợ: <strong>0đ</strong> (Cần thu nợ: <strong style="color:var(--danger-color);">${formatMoney(initialDebt)}</strong>)</span>`;
+    } else if (calculated > initialDebt && initialDebt > 0) {
+        const overAmt = calculated - initialDebt;
+        hintEl.innerHTML = `<span style="color:#d97706;">Thu: <strong>${formatMoney(calculated)}</strong> | Còn nợ: <strong style="color:#10b981;">0đ</strong> (Khách trả thừa: <strong>${formatMoney(overAmt)}</strong>)</span>`;
+    } else if (newRemainingDebt === 0) {
+        hintEl.innerHTML = `<span style="color:#10b981;">Thu: <strong>${formatMoney(calculated)}</strong> | <strong>✓ Khách thanh toán hết 100% (Còn nợ: 0đ)</strong></span>`;
+    } else {
+        hintEl.innerHTML = `<span>Thu đợt này: <strong>${formatMoney(calculated)}</strong> | Còn nợ lại: <strong style="color:var(--danger-color);">${formatMoney(newRemainingDebt)}</strong></span>`;
+    }
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnCloseOrderPaymentModal")?.addEventListener("click", () => closeModal("orderPaymentModal"));
@@ -30460,16 +30940,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const paymentInputAmount = document.getElementById("paymentInputAmount");
     paymentInputAmount?.addEventListener("input", () => {
-        const orderId = document.getElementById("paymentOrderId").value;
-        const order = state.orders.find(o => o.id === orderId);
-        if (!order) return;
-        
-        const oPaid = state.transactions
-            .filter(t => t.reference_id === order.id && t.type === "RECEIPT")
-            .reduce((sum, t) => sum + t.amount, 0);
-        const remaining = Math.max(0, order.total_amount - oPaid);
-        
-        updatePaymentCalcHint(order.total_amount, remaining);
+        window.updatePaymentCalcHintAndRemaining();
     });
 
     // Image upload preview listener for debt collection bill
@@ -30488,23 +30959,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("orderPaymentForm")?.addEventListener("submit", function(e) {
         e.preventDefault();
+        const modal = document.getElementById("orderPaymentModal");
         const orderId = document.getElementById("paymentOrderId").value;
-        const order = state.orders.find(o => o.id === orderId);
-        if (!order) return;
+        const order = (state.orders && state.orders.find(o => o.id === orderId)) || 
+                      (state.online_orders && state.online_orders.find(o => o.id === orderId));
+        if (!order) {
+            alert("Không tìm thấy đơn hàng cần thu nợ.");
+            return;
+        }
         
-        const oPaid = state.transactions
-            .filter(t => t.reference_id === order.id && t.type === "RECEIPT")
-            .reduce((sum, t) => sum + t.amount, 0);
-        const remaining = Math.max(0, order.total_amount - oPaid);
+        const receipts = (state.transactions || []).filter(t => 
+            (t.reference_id === order.id || (order.order_number && t.reference_id === order.order_number)) && 
+            t.type === "RECEIPT"
+        );
+        const txPaid = receipts.reduce((sum, t) => sum + Number(t.amount || 0), 0);
+        const totalAmount = Number(order.total_amount || 0);
         
-        const rawVal = paymentInputAmount.value.trim();
+        let alreadyPaid = txPaid;
+        if (order.paid_amount !== undefined && Number(order.paid_amount) > alreadyPaid) {
+            alreadyPaid = Number(order.paid_amount);
+        } else if (order.deposit !== undefined && Number(order.deposit) > alreadyPaid) {
+            alreadyPaid = Number(order.deposit);
+        }
+        if (order.payment_status === "UNPAID" && txPaid === 0) {
+            alreadyPaid = 0;
+        }
+        
+        const remaining = Math.max(0, totalAmount - alreadyPaid);
+        const rawVal = document.getElementById("paymentInputAmount").value.trim();
         let payAmount = 0;
         
         if (!rawVal) {
             payAmount = remaining;
         } else if (rawVal.endsWith('%')) {
             const percent = parseFloat(rawVal.replace('%', '')) || 0;
-            payAmount = Math.round(order.total_amount * percent / 100);
+            const base = remaining > 0 ? remaining : totalAmount;
+            payAmount = Math.ceil(base * (percent / 100));
         } else {
             payAmount = parseFloat(rawVal.replace(/[^0-9]/g, '')) || 0;
         }
@@ -30514,8 +31004,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         
-        if (payAmount > remaining) {
-            if (!confirm(`Số tiền thu nợ (${formatMoney(payAmount)}) lớn hơn số nợ còn lại (${formatMoney(remaining)}). Tiếp tục?`)) {
+        if (remaining > 0 && payAmount > remaining) {
+            if (!confirm(`Số tiền thu nợ (${formatMoney(payAmount)}) lớn hơn số nợ còn lại (${formatMoney(remaining)}). Tiếp tục ghi nhận?`)) {
                 return;
             }
         }
@@ -30528,37 +31018,52 @@ document.addEventListener("DOMContentLoaded", () => {
         const txNumber = `PT-202606-${txCodeSuffix}`;
         const txId = "t_" + Math.random().toString(36).substring(2, 9);
         
+        const isFinal = (alreadyPaid + payAmount) >= totalAmount;
         const receiptTx = {
             id: txId,
             tx_number: txNumber,
             created_at: new Date().toISOString(),
             type: "RECEIPT",
-            category: "CUSTOMER_DEPOSIT",
+            category: isFinal ? "CUSTOMER_FINAL" : "CUSTOMER_DEPOSIT",
             amount: payAmount,
             payment_method: method,
             account_source: method === "CASH" ? "CASH" : "VCB",
             partner_id: order.customer_id,
             reference_id: order.id,
             bill_image: billImage,
-            created_by: "Kế toán Hùng"
+            created_by: "Kế toán Hùng",
+            notes: isFinal ? `Thu nợ hoàn tất đơn hàng ${order.order_number || order.id}` : `Thu nợ đợt tiếp theo đơn hàng ${order.order_number || order.id}`
         };
         
         state.transactions = [receiptTx, ...state.transactions];
         state.updateState("transactions", state.transactions);
+        
+        // Cập nhật trường paid_amount / deposit / remaining_debt trên order
+        const newTotalPaid = alreadyPaid + payAmount;
+        const newRemainingDebt = Math.max(0, totalAmount - newTotalPaid);
+        if (order) {
+            order.paid_amount = newTotalPaid;
+            order.deposit = newTotalPaid;
+            order.remaining_debt = newRemainingDebt;
+            order.payment_status = newRemainingDebt <= 0 ? "PAID" : "PARTIALLY_PAID";
+        }
+        
         // Automatically synchronize payment status and state for both tables
         window.syncOrderPaymentStatus(order.id);
         
         closeModal("orderPaymentModal");
-        alert(`Đã ghi nhận thu nợ ${formatMoney(payAmount)} cho đơn hàng ${order.order_number}`);
+        alert(`Đã ghi nhận thu nợ ${formatMoney(payAmount)} cho đơn hàng ${order.order_number || order.id}`);
         
         // Refresh views
-        renderOnlineSales();
-        renderProdOrders();
-        renderCRM();
-        renderFinance();
+        if (typeof renderOnlineSales === "function") renderOnlineSales();
+        if (typeof renderProdOrders === "function") renderProdOrders();
+        if (typeof renderCRM === "function") renderCRM();
+        if (typeof renderFinance === "function") renderFinance();
+        if (typeof renderCustomerDebts === "function") renderCustomerDebts();
+        if (typeof renderAll === "function") renderAll();
         
         // If CRM Details modal is open, refresh its data too
-        if (selectedCrmPartnerId) {
+        if (typeof selectedCrmPartnerId !== "undefined" && selectedCrmPartnerId && typeof renderCrmDetailSubtabs === "function") {
             renderCrmDetailSubtabs(selectedCrmPartnerId);
         }
     });
@@ -31064,7 +31569,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const orderNum = order ? order.order_number : "N/A";
             const spec = order ? order.print_spec : "Không rõ";
             const importedLabel = job.imported_to_sales ? " (Đã nhập kho)" : "";
-            jobSelect.innerHTML += `<option value="${job.id}" data-qty="${job.target_qty}" data-spec="${spec}" ${job.id === jobId ? 'selected' : ''}>${job.production_number} - ĐH: ${orderNum} - ${spec} (${job.target_qty.toLocaleString()} cái)${importedLabel}</option>`;
+            jobSelect.innerHTML += `<option value="${job.id}" data-qty="${job.target_qty}" data-spec="${spec}" ${job.id === jobId ? 'selected' : ''}>${job.production_number} - ĐH: ${orderNum} - ${spec} (${formatNumber(job.target_qty)} cái)${importedLabel}</option>`;
         });
 
         // Fill online products
@@ -31170,7 +31675,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (window.renderProductionTable) renderProductionTable();
         renderProdOrders();
 
-        alert(`Đã nhập bổ sung thành công ${qty.toLocaleString()} sản phẩm vào kho hàng bán cho SKU: ${prod.sku}!`);
+        alert(`Đã nhập bổ sung thành công ${formatNumber(qty)} sản phẩm vào kho hàng bán cho SKU: ${prod.sku}!`);
     });
 });
 
@@ -31252,7 +31757,7 @@ window.renderWarehouseImports = function() {
             <td><span class="badge ${t.source === 'PRODUCTION' ? 'badge-info' : 'badge-primary'}">${sourceLabel}</span></td>
             <td>${detailLabel}</td>
             <td>${itemCount}</td>
-            <td><strong>${totalQty.toLocaleString('vi-VN')}</strong></td>
+            <td><strong>${formatNumber(totalQty)}</strong></td>
             <td>${t.created_by || "Đại Hùng"}</td>
             <td><small class="text-muted">${t.note || ""}</small></td>
         `;
@@ -31400,7 +31905,7 @@ window.renderWarehouseExports = function() {
             <td><small>${date}</small></td>
             <td><span class="badge ${t.source === 'SALE' ? 'badge-success' : 'badge-danger'}">${reasonLabel}</span></td>
             <td>${itemCount}</td>
-            <td><strong>${totalQty.toLocaleString('vi-VN')}</strong></td>
+            <td><strong>${formatNumber(totalQty)}</strong></td>
             <td>${t.created_by || "Đại Hùng"}</td>
             <td><small class="text-muted">${t.note || ""}</small></td>
         `;
@@ -32378,7 +32883,7 @@ window.showProductSalesDetailModal = function(sku) {
                         <td><strong>${sale.orderNumber}</strong></td>
                         <td>${formattedDate}</td>
                         <td>${customerName}</td>
-                        <td style="text-align:center;"><strong>${sale.qty.toLocaleString()}</strong></td>
+                        <td style="text-align:center;"><strong>${formatNumber(sale.qty)}</strong></td>
                         <td style="text-align:right;">${formatMoney(sale.price)}</td>
                         <td style="text-align:right; font-weight:700; color:var(--accent);">${formatMoney(sale.total)}</td>
                     </tr>
@@ -32469,7 +32974,7 @@ window.showLineChartPointDetail = function(rawInterval, productFilter, periodFil
                         <td><strong>${sale.orderNumber}</strong><br><small class="text-muted">${sale.sku}</small></td>
                         <td>${formattedDate}</td>
                         <td>${customerName}</td>
-                        <td style="text-align:center;"><strong>${sale.qty.toLocaleString()}</strong></td>
+                        <td style="text-align:center;"><strong>${formatNumber(sale.qty)}</strong></td>
                         <td style="text-align:right;">${formatMoney(sale.price)}</td>
                         <td style="text-align:right; font-weight:700; color:var(--accent);">${formatMoney(sale.total)}</td>
                     </tr>
@@ -35876,10 +36381,10 @@ window.renderOnlineImportGoods = function() {
     const kpiAmount = document.getElementById("kpiImportTotalAmount");
     const kpiSup = document.getElementById("kpiImportSupplierCount");
 
-    if (kpiCount) kpiCount.textContent = records.length.toLocaleString('vi-VN');
-    if (kpiQty) kpiQty.textContent = totalQty.toLocaleString('vi-VN');
+    if (kpiCount) kpiCount.textContent = formatNumber(records.length);
+    if (kpiQty) kpiQty.textContent = formatNumber(totalQty);
     if (kpiAmount) kpiAmount.textContent = formatMoney(totalCost);
-    if (kpiSup) kpiSup.textContent = supSet.size.toLocaleString('vi-VN');
+    if (kpiSup) kpiSup.textContent = formatNumber(supSet.size);
 
     // 4. Render Table Rows
     if (filtered.length === 0) {
@@ -35900,7 +36405,7 @@ window.renderOnlineImportGoods = function() {
             <td><strong>${rec.name || '---'}</strong></td>
             <td>${rec.unit || 'Cái'}</td>
             <td><span style="display:inline-block; padding:3px 8px; border-radius:4px; background:rgba(59,130,246,0.08); color:#2563eb; font-weight:600; font-size:0.82rem;">${rec.supplier || '---'}</span></td>
-            <td style="text-align:right;"><span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${Number(rec.qty || 0).toLocaleString('vi-VN')}</span></td>
+            <td style="text-align:right;"><span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${formatNumber(rec.qty || 0)}</span></td>
             <td style="text-align:right; font-weight:500;">${formatMoney(rec.cost_price || 0)}</td>
             <td style="text-align:right; font-weight:700; color:var(--text);">${formatMoney(lineTotal)}</td>
             <td><span style="display:inline-flex; align-items:center; gap:4px; font-weight:600; color:#334155; font-size:0.85rem;"><i data-lucide="user-check" style="width:14px; height:14px; color:#0284c7;"></i> ${rec.creator || 'Admin'}</span></td>
@@ -36040,8 +36545,8 @@ window.showExcelImportPreviewModal = function(items, fileName) {
         totalCost += (item.qty * (item.cost_price || 0));
     });
 
-    if (countEl) countEl.textContent = items.length.toLocaleString('vi-VN');
-    if (qtyEl) qtyEl.textContent = totalQty.toLocaleString('vi-VN');
+    if (countEl) countEl.textContent = formatNumber(items.length);
+    if (qtyEl) qtyEl.textContent = formatNumber(totalQty);
     if (costEl) costEl.textContent = formatMoney(totalCost);
 
     const tableBody = document.querySelector("#onlineExcelPreviewTable tbody");
@@ -36051,7 +36556,7 @@ window.showExcelImportPreviewModal = function(items, fileName) {
             const cleanSku = String(item.sku).trim().toUpperCase();
             const existing = (state.online_products || []).find(p => String(p.sku).trim().toUpperCase() === cleanSku);
             const statusHtml = existing 
-                ? `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.1); color:#059669; font-weight:600; font-size:0.78rem;">+ Tồn hiện có: ${existing.stock_qty}</span>`
+                ? `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.1); color:#059669; font-weight:600; font-size:0.78rem;">+ Tồn hiện có: ${formatNumber(existing.stock_qty)}</span>`
                 : `<span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(2,132,199,0.1); color:#0284c7; font-weight:600; font-size:0.78rem;">+ Hàng mới</span>`;
 
             const tr = document.createElement("tr");
@@ -36061,7 +36566,7 @@ window.showExcelImportPreviewModal = function(items, fileName) {
                 <td><strong>${item.name}</strong></td>
                 <td>${item.unit}</td>
                 <td>${item.supplier || '---'}</td>
-                <td style="text-align:right; font-weight:700; color:#10b981;">+${item.qty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:700; color:#10b981;">+${formatNumber(item.qty)}</td>
                 <td style="text-align:right;">${formatMoney(item.cost_price)}</td>
                 <td style="text-align:right; font-weight:600;">${formatMoney(item.qty * item.cost_price)}</td>
                 <td>${statusHtml}</td>
@@ -36071,7 +36576,7 @@ window.showExcelImportPreviewModal = function(items, fileName) {
     }
 
     const btnText = document.getElementById("btnConfirmExcelImportText");
-    if (btnText) btnText.textContent = `Xác nhận nhập kho (${items.length} mặt hàng)`;
+    if (btnText) btnText.textContent = `Xác nhận nhập kho (${formatNumber(items.length)} mặt hàng)`;
 
     modal.classList.add("active");
 };
@@ -36171,7 +36676,7 @@ window.confirmExcelImportGoods = function() {
     document.getElementById("onlineExcelImportPreviewModal")?.classList.remove("active");
     window._pendingExcelImportItems = null;
 
-    alert(`🎉 Nhập hàng loạt thành công!\nĐã cập nhật ${items.length} mặt hàng, tổng số lượng bổ sung: ${totalQty.toLocaleString('vi-VN')} với giá trị: ${formatMoney(totalCost)}.`);
+    alert(`🎉 Nhập hàng loạt thành công!\nĐã cập nhật ${formatNumber(items.length)} mặt hàng, tổng số lượng bổ sung: ${formatNumber(totalQty)} với giá trị: ${formatMoney(totalCost)}.`);
 
     if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
     if (window.renderOnlineProducts) window.renderOnlineProducts();
@@ -36452,7 +36957,7 @@ window.showCatalogImportPreviewModal = function(items, fileName) {
                 <td style="text-align:right; font-weight:500;">${formatMoney(item.cost_price)}</td>
                 <td style="text-align:right; font-weight:600; color:var(--primary);">${formatMoney(item.price)}</td>
                 <td style="text-align:right; font-weight:600; color:var(--success);">${formatMoney(item.wholesale_price)}</td>
-                <td style="text-align:right;">${item.stock_qty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right;">${formatNumber(item.stock_qty)}</td>
                 <td style="text-align:center;">${statusHtml}</td>
             `;
             tableBody.appendChild(tr);
@@ -36463,12 +36968,12 @@ window.showCatalogImportPreviewModal = function(items, fileName) {
     const newEl = document.getElementById("catalogPreviewNewCount");
     const updateEl = document.getElementById("catalogPreviewUpdateCount");
 
-    if (countEl) countEl.textContent = items.length.toLocaleString('vi-VN');
-    if (newEl) newEl.textContent = newCount.toLocaleString('vi-VN');
-    if (updateEl) updateEl.textContent = updateCount.toLocaleString('vi-VN');
+    if (countEl) countEl.textContent = formatNumber(items.length);
+    if (newEl) newEl.textContent = formatNumber(newCount);
+    if (updateEl) updateEl.textContent = formatNumber(updateCount);
 
     const btnText = document.getElementById("btnConfirmCatalogImportText");
-    if (btnText) btnText.textContent = `Xác nhận nạp (${items.length} mặt hàng) vào Danh mục`;
+    if (btnText) btnText.textContent = `Xác nhận nạp (${formatNumber(items.length)} mặt hàng) vào Danh mục`;
 
     modal.classList.add("active");
 };
@@ -36523,7 +37028,7 @@ window.confirmExcelImportCatalog = function() {
     document.getElementById("onlineCatalogImportPreviewModal")?.classList.remove("active");
     window._pendingCatalogImportItems = null;
 
-    alert(`🎉 Đã nạp thành công ${items.length} mặt hàng vào Danh mục Hàng hóa!\n- Thêm mới: ${addedCount} sản phẩm.\n- Cập nhật thông tin: ${updatedCount} sản phẩm.`);
+    alert(`🎉 Đã nạp thành công ${formatNumber(items.length)} mặt hàng vào Danh mục Hàng hóa!\n- Thêm mới: ${formatNumber(addedCount)} sản phẩm.\n- Cập nhật thông tin: ${formatNumber(updatedCount)} sản phẩm.`);
 
     if (window.renderOnlineProducts) window.renderOnlineProducts();
 };
@@ -36568,9 +37073,9 @@ window.viewProductStockHistory = function(sku) {
     const expEl = document.getElementById("prodHistTotalExport");
     const stockEl = document.getElementById("prodHistCurrentStock");
 
-    if (impEl) impEl.textContent = `+${totalImport.toLocaleString('vi-VN')} ${prod.unit || 'cái'}`;
-    if (expEl) expEl.textContent = `-${totalExport.toLocaleString('vi-VN')} ${prod.unit || 'cái'}`;
-    if (stockEl) stockEl.textContent = `${Number(prod.stock_qty || 0).toLocaleString('vi-VN')} ${prod.unit || 'cái'}`;
+    if (impEl) impEl.textContent = `+${formatNumber(totalImport)} ${prod.unit || 'cái'}`;
+    if (expEl) expEl.textContent = `-${formatNumber(totalExport)} ${prod.unit || 'cái'}`;
+    if (stockEl) stockEl.textContent = `${formatNumber(prod.stock_qty || 0)} ${prod.unit || 'cái'}`;
 
     // Reset filter
     const filterEl = document.getElementById("prodHistTypeFilter");
@@ -36600,7 +37105,7 @@ window.filterProductStockHistory = function() {
 
     if (filtered.length === 0) {
         const unitStr = prod ? prod.unit || 'cái' : '';
-        const currentQty = prod ? Number(prod.stock_qty || 0).toLocaleString('vi-VN') : 0;
+        const currentQty = prod ? formatNumber(prod.stock_qty || 0) : '0';
         tableBody.innerHTML = `
             <tr>
                 <td colspan="5" style="text-align:center; padding:32px 16px; color:var(--text-secondary); font-style:italic;">
@@ -36623,8 +37128,8 @@ window.filterProductStockHistory = function() {
             : `<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:4px; background:rgba(239,68,68,0.1); color:#dc2626; font-weight:700; font-size:0.8rem;">📤 Xuất kho</span>`;
 
         const qtyDisplay = isImport
-            ? `<span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${Math.abs(log.qty || 0).toLocaleString('vi-VN')}</span>`
-            : `<span style="font-weight:700; color:#ef4444; font-size:0.95rem;">-${Math.abs(log.qty || 0).toLocaleString('vi-VN')}</span>`;
+            ? `<span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${formatNumber(Math.abs(log.qty || 0))}</span>`
+            : `<span style="font-weight:700; color:#ef4444; font-size:0.95rem;">-${formatNumber(Math.abs(log.qty || 0))}</span>`;
 
         tr.innerHTML = `
             <td style="white-space:nowrap; font-size:0.83rem;">

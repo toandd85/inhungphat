@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_pos_ui_percent_vat">
+    <link rel="stylesheet" href="/style.css?v=20261020_debt_calc_auto_deduct">
 
     <script>
 
@@ -6308,10 +6308,13 @@
 
     <!-- POS FULLSCREEN MODAL (KIOTVIET STYLE) -->
     <div class="modal pos-screen-modal" id="onlinePosModal">
-        <div class="pos-container">
+        <div class="pos-container pos-mobile-view-catalog">
             <!-- POS TOPBAR -->
             <div class="pos-topbar">
                 <div class="pos-topbar-left">
+                    <button type="button" class="pos-mobile-exit-btn" onclick="window.closePosModal()" title="Thoát POS">
+                        <i data-lucide="arrow-left" style="width:18px; height:18px;"></i>
+                    </button>
                     <div class="pos-brand">
                         <span class="pos-logo-icon"><i data-lucide="shopping-cart"></i></span>
                         <div class="pos-brand-text">
@@ -6335,6 +6338,10 @@
                 </div>
 
                 <div class="pos-topbar-right">
+                    <button type="button" class="pos-btn-action" id="posBtnToggleProductCatalog" onclick="window.togglePosProductCatalog()" title="Ẩn hoặc hiện danh mục chọn sản phẩm" style="font-weight:700; background:rgba(255,255,255,0.22); border-radius:6px; padding:0 12px; display:inline-flex; align-items:center; gap:6px;">
+                        <i data-lucide="layout-grid" style="width:15px; height:15px;"></i>
+                        <span id="posToggleProductText">Ẩn sản phẩm</span>
+                    </button>
                     <div class="pos-user-badge">
                         <i data-lucide="user" style="width:15px; height:15px;"></i>
                         <span id="posCurrentCashier">Thu ngân</span>
@@ -6349,19 +6356,71 @@
                 </div>
             </div>
 
-            <!-- POS BODY (2 COLUMNS) -->
+            <!-- Mobile Segmented Navigation Tabs (Hidden on Desktop) -->
+            <div class="pos-mobile-nav-tabs pos-screen-toggle-bar">
+                <button type="button" class="pos-mobile-tab-btn pos-toggle-btn" id="posMobileTabBilling" onclick="window.setPosDisplayMode('BILLING')">
+                    <div class="pos-mobile-tab-cart-icon pos-toggle-cart-icon">
+                        <i data-lucide="receipt" style="width:16px; height:16px;"></i>
+                        <span class="pos-mobile-cart-badge pos-toggle-badge" id="posBillingItemCountBadge">0</span>
+                    </div>
+                    <span>MÀN HÌNH TÍNH GIÁ (<strong id="posBannerTotal">0đ</strong>)</span>
+                </button>
+                <button type="button" class="pos-mobile-tab-btn pos-toggle-btn active" id="posMobileTabCatalog" onclick="window.setPosDisplayMode('CATALOG')">
+                    <i data-lucide="package-plus" style="width:16px; height:16px;"></i>
+                    <span>CHỌN SẢN PHẨM</span>
+                </button>
+            </div>
+
+            <!-- POS BODY (2 COLUMNS ON DESKTOP / VIEW-SWITCHED ON MOBILE) -->
             <div class="pos-body">
-                <!-- LEFT COLUMN: CART & BILL SUMMARY -->
+                <!-- LEFT COLUMN: CUSTOMER, CART & CHECKOUT -->
                 <div class="pos-left-panel">
-                    <!-- Line Items Table Header -->
+                    <!-- Banner to switch to product selection on mobile/compact view -->
+                    <div class="pos-quick-add-prod-banner" onclick="window.setPosDisplayMode('CATALOG')" title="Mở danh mục chọn sản phẩm hoặc dịch vụ gia công">
+                        <i data-lucide="plus-circle" style="width:18px; height:18px;"></i>
+                        <span>+ CHỌN THÊM SẢN PHẨM / GIA CÔNG</span>
+                    </div>
+
+                    <!-- Top Controls: Customer + PRICE BOOK (BẢNG GIÁ) -->
+                    <div class="pos-controls-bar">
+                        <!-- Mobile Back to Catalog Button -->
+                        <button type="button" class="pos-mobile-back-to-catalog-btn" onclick="window.setPosDisplayMode('CATALOG')" title="Tiếp tục chọn thêm hàng hóa">
+                            <i data-lucide="arrow-left" style="width:16px; height:16px;"></i>
+                            <span>Chọn thêm</span>
+                        </button>
+
+                        <!-- Customer search & select -->
+                        <div class="pos-customer-box">
+                            <i data-lucide="user-check" class="pos-control-icon"></i>
+                            <select id="posCustomerSelect" class="pos-control-select" onchange="window.handlePosCustomerChange(true)">
+                                <!-- Loaded dynamically from state.partners (CUSTOMER) -->
+                            </select>
+                            <span id="posCustomerTypeBadge" class="pos-cust-type-pill retail" style="display:inline-flex;">👤 Khách lẻ</span>
+                            <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal()" title="Thêm khách hàng nhanh">+</button>
+                        </div>
+
+                        <!-- Price Book selector (TỰ ĐỘNG THEO LOẠI KHÁCH - CHỈ HIỂN THỊ THÔNG TIN) -->
+                        <div class="pos-pricebook-box">
+                            <i data-lucide="badge-percent" class="pos-control-icon" style="color:#d97706;"></i>
+                            <div class="pos-pricebook-badge" title="Bảng giá tự động áp dụng theo phân loại Khách hàng (Chỉ hiển thị, không thể sửa)">
+                                <span id="posPriceBookDisplay">🏷️ Bảng giá bán lẻ</span>
+                                <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; display: inline-flex; align-items: center; gap: 3px;">
+                                    <i data-lucide="lock" style="width: 11px; height: 11px;"></i> Tự động
+                                </span>
+                            </div>
+                            <input type="hidden" id="posPriceBookSelect" value="RETAIL">
+                        </div>
+                    </div>
+
+                    <!-- Line Items Table Header (Desktop only) -->
                     <div class="pos-cart-header">
-                        <span style="width: 32px; text-align: center;">STT</span>
-                        <span style="flex: 1; padding-left: 6px;">Tên hàng hóa / Mã SKU</span>
-                        <span style="width: 55px; text-align: center;">ĐVT</span>
-                        <span style="width: 125px; text-align: center;">Số lượng</span>
-                        <span style="width: 110px; text-align: right;">Đơn giá</span>
-                        <span style="width: 120px; text-align: right;">Thành tiền</span>
-                        <span style="width: 32px; text-align: center;"></span>
+                        <span class="pos-col-idx">STT</span>
+                        <span class="pos-col-name">Tên hàng hóa / Mã SKU</span>
+                        <span class="pos-col-unit">ĐVT</span>
+                        <span class="pos-col-qty">Số lượng</span>
+                        <span class="pos-col-price">Đơn giá</span>
+                        <span class="pos-col-total">Thành tiền</span>
+                        <span class="pos-col-del"></span>
                     </div>
 
                     <!-- Line Items Scrollable List -->
@@ -6375,21 +6434,21 @@
                             <div class="pos-extra-item">
                                 <label><i data-lucide="tag" style="width:13px; height:13px;"></i> Giảm giá (%):</label>
                                 <div style="display:inline-flex; align-items:center; position:relative;">
-                                    <input type="number" id="posOrderDiscount" class="pos-mini-input" value="0" min="0" max="100" step="0.5" placeholder="0" style="width:75px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
+                                    <input type="number" id="posOrderDiscount" class="pos-mini-input" value="0" min="0" max="100" step="any" placeholder="0" style="width:75px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
                                     <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--text-secondary); pointer-events:none; font-weight:700;">%</span>
                                 </div>
                             </div>
                             <div class="pos-extra-item">
                                 <label><i data-lucide="percent" style="width:13px; height:13px;"></i> Thuế VAT (%):</label>
                                 <div style="display:inline-flex; align-items:center; position:relative;">
-                                    <input type="number" id="posOrderVat" class="pos-mini-input" value="8" min="0" max="100" style="width:70px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
+                                    <input type="number" id="posOrderVat" class="pos-mini-input" value="8" min="0" max="100" step="any" style="width:70px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
                                     <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--text-secondary); pointer-events:none; font-weight:700;">%</span>
                                 </div>
                             </div>
                             <div class="pos-extra-item">
                                 <label><i data-lucide="truck" style="width:13px; height:13px;"></i> Phí ship:</label>
                                 <div style="display:inline-flex; align-items:center; position:relative;">
-                                    <input type="number" id="posOrderShipFee" class="pos-mini-input" value="0" min="0" step="5000" placeholder="0" style="width:110px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
+                                    <input type="number" id="posOrderShipFee" class="pos-mini-input" value="0" min="0" step="any" placeholder="0" style="width:110px; padding-right:20px; font-weight:700;" oninput="window.recalcPosTotals()">
                                     <span style="position:absolute; right:6px; font-size:0.75rem; color:var(--text-secondary); pointer-events:none; font-weight:700;">đ</span>
                                 </div>
                             </div>
@@ -6407,7 +6466,7 @@
                             <span>Tổng tiền hàng (<strong id="posTotalQtyCount">0</strong> SP):</span>
                             <strong id="posSubtotalAmount">0đ</strong>
                         </div>
-                        <div class="pos-summary-row" id="posProcessingSummaryRow" style="display:none; color: #0284c7;">
+                        <div class="pos-summary-row" id="posProcessingSummaryRow" style="display:none; color: #108f53;">
                             <span>Phí gia công thêm:</span>
                             <strong id="posProcessingFeeAmount">+0đ</strong>
                         </div>
@@ -6428,84 +6487,8 @@
                             <span id="posGrandTotalAmount">0đ</span>
                         </div>
                     </div>
-                </div>
 
-                <!-- RIGHT COLUMN: CUSTOMER, PRICE BOOK & PRODUCT CATALOG -->
-                <div class="pos-right-panel">
-                    <!-- Top Controls: Customer + PRICE BOOK (BẢNG GIÁ) -->
-                    <div class="pos-controls-bar">
-                        <!-- Customer search & select -->
-                        <div class="pos-customer-box">
-                            <i data-lucide="user-check" class="pos-control-icon"></i>
-                            <select id="posCustomerSelect" class="pos-control-select" onchange="window.handlePosCustomerChange(true)">
-                                <!-- Loaded dynamically from state.partners (CUSTOMER) -->
-                            </select>
-                            <span id="posCustomerTypeBadge" class="pos-cust-type-pill retail" style="display:inline-flex;">👤 Khách lẻ</span>
-                            <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal()" title="Thêm khách hàng nhanh">+</button>
-                        </div>
-
-                        <!-- Price Book selector (TỰ ĐỘNG THEO LOẠI KHÁCH - CHỈ HIỂN THỊ THÔNG TIN) -->
-                        <div class="pos-pricebook-box">
-                            <i data-lucide="badge-percent" class="pos-control-icon" style="color:#d97706;"></i>
-                            <div class="pos-pricebook-badge" style="width: 100%; height: 34px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; padding: 0 10px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; background: var(--bg-hover); cursor: default; user-select: none;" title="Bảng giá tự động áp dụng theo phân loại Khách hàng (Chỉ hiển thị, không thể sửa)">
-                                <span id="posPriceBookDisplay">🏷️ Bảng giá bán lẻ</span>
-                                <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500; display: inline-flex; align-items: center; gap: 3px;">
-                                    <i data-lucide="lock" style="width: 11px; height: 11px;"></i> Tự động
-                                </span>
-                            </div>
-                            <input type="hidden" id="posPriceBookSelect" value="RETAIL">
-                        </div>
-                    </div>
-
-                    <!-- Mode switch: Hàng hóa vs Dịch vụ Gia công -->
-                    <div class="pos-catalog-nav" style="display:flex; justify-content:space-between; align-items:center; padding: 8px 12px 6px 12px; background: #ffffff; border-bottom: 1px solid var(--border-color);">
-                        <div style="display:flex; gap:8px;">
-                            <button type="button" id="posTabBtnProducts" class="pos-cat-pill active" onclick="window.switchPosCatalogTab('PRODUCTS')" style="font-weight: 700; padding: 6px 14px; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px;">
-                                <i data-lucide="package" style="width: 14px; height: 14px;"></i>
-                                <span>Hàng hóa / Hộp Tết (11)</span>
-                            </button>
-                            <button type="button" id="posTabBtnServices" class="pos-cat-pill" onclick="window.switchPosCatalogTab('SERVICES')" style="font-weight: 700; padding: 6px 14px; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px; border-color: #f59e0b; color: #b45309; background: #fffbeb;">
-                                <i data-lucide="wrench" style="width: 14px; height: 14px;"></i>
-                                <span>Dịch vụ Gia công (5)</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Category filter tags for products -->
-                    <div class="pos-category-bar" id="posCategoryFilterBar">
-                        <button type="button" class="pos-cat-pill active" data-cat="ALL" onclick="window.filterPosProducts('ALL')">Tất cả</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Hộp cao cấp" onclick="window.filterPosProducts('Hộp cao cấp')">Hộp cao cấp (8)</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Hộp phổ thông" onclick="window.filterPosProducts('Hộp phổ thông')">Hộp phổ thông (3)</button>
-                    </div>
-
-                    <!-- Quick add services toolbar -->
-                    <div id="posQuickServicesBar" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; background: #fffdf5; border-bottom: 1px solid #fed7aa; flex-wrap: wrap;">
-                        <span style="font-size: 0.74rem; font-weight: 700; color: #9a3412; display: inline-flex; align-items: center; gap: 4px;">
-                            <i data-lucide="wrench" style="width: 12px; height: 12px;"></i> Thêm nhanh gia công:
-                        </span>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-EPNHU')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Ép nhũ (Tối thiểu 1.8tr nếu dưới 100 bộ)">
-                            + Ép nhũ (min 1.8tr)
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-CC')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Khay định hình Hộp cao cấp (10k-15k/bộ)">
-                            + Khay Cao cấp
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-PT')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Khay định hình Hộp phổ thông (8k-12k/bộ)">
-                            + Khay Phổ thông
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-INDOCQUYEN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="In độc quyền (<1000b: 8 triệu tối thiểu, >=1000b: 8k/bộ)">
-                            + In độc quyền
-                        </button>
-                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-VACHNGAN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Thêm vách ngăn 5.000đ/bộ">
-                            + Vách ngăn
-                        </button>
-                    </div>
-
-                    <!-- Product Cards Grid (Like KiotViet in image) -->
-                    <div class="pos-product-grid" id="posProductCatalogGrid">
-                        <!-- Dynamic Product Cards -->
-                    </div>
-
-                    <!-- Payment Execution Box -->
+                    <!-- Payment Execution Box (Directly below Totals for seamless flow) -->
                     <div class="pos-checkout-bar">
                         <div class="pos-payment-meta">
                             <div class="pos-meta-field">
@@ -6517,10 +6500,32 @@
                             </div>
                             <div class="pos-meta-field">
                                 <label>Trạng thái:</label>
-                                <select id="posPaymentStatusSelect" class="pos-control-select" style="height:32px;">
+                                <select id="posPaymentStatusSelect" class="pos-control-select" style="height:32px;" onchange="window.handlePosPaymentStatusChange(this.value)">
                                     <option value="PAID">Đã thanh toán đủ</option>
+                                    <option value="PARTIAL">Đặt cọc (Tạm ứng)</option>
                                     <option value="UNPAID">Chưa thanh toán (Ghi nợ)</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- POS Deposit Input Box (shown when 'Đặt cọc' is selected) -->
+                        <div class="pos-deposit-box" id="posDepositBox" style="display: none; margin-top: 2px; margin-bottom: 2px; padding: 6px 10px; background: rgba(16, 143, 83, 0.08); border: 1px dashed #108f53; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label for="posDepositAmount" style="font-size: 0.74rem; font-weight: 700; color: #108f53; margin: 0;">
+                                    Tiền khách cọc (đ):
+                                </label>
+                                <div style="display: flex; gap: 4px;">
+                                    <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(30)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">30%</button>
+                                    <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(50)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">50%</button>
+                                    <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(70)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">70%</button>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <input type="number" id="posDepositAmount" class="form-input" style="height: 30px; font-size: 0.9rem; font-weight: 700; color: #108f53; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 8px;" min="0" step="any" placeholder="Nhập số tiền khách cọc..." oninput="window.updatePosDepositHint()">
+                            </div>
+                            <div id="posDepositHint" style="font-size: 0.73rem; color: #64748b; margin-top: 3px; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Khách cọc: <strong id="posDepositAmountText" style="color: #108f53;">0đ</strong></span>
+                                <span>Còn nợ: <strong id="posDepositRemainAmount" style="color: #dc2626;">0đ</strong></span>
                             </div>
                         </div>
 
@@ -6538,6 +6543,96 @@
                                 <span>THANH TOÁN (F9)</span>
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: PRODUCT CATALOG -->
+                <div class="pos-right-panel">
+                    <!-- Top banner: Ẩn sản phẩm để xem màn hình tính giá -->
+                    <div class="pos-catalog-top-banner">
+                        <button type="button" class="pos-btn-hide-catalog" onclick="window.setPosDisplayMode('BILLING')" title="Ẩn danh mục sản phẩm và chuyển sang màn hình tính giá">
+                            <i data-lucide="eye-off" style="width:18px; height:18px;"></i>
+                            <span>ẨN SẢN PHẨM ➔ XEM TÍNH GIÁ (<span id="posCatalogTopTotalBadge">0 SP - 0đ</span>)</span>
+                        </button>
+                    </div>
+
+                    <!-- Mobile Quick Customer Bar (shows who order is for with 1-tap change) -->
+                    <div class="pos-mobile-quick-cust-bar" onclick="window.setPosDisplayMode('BILLING')" title="Chạm để đổi khách hàng">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="user" style="width:14px; height:14px; color:#108f53;"></i>
+                            <span style="font-size:0.78rem; color:var(--text-secondary);">Khách:</span>
+                            <strong id="posMobileQuickCustName" style="font-size:0.83rem;">Khách lẻ</strong>
+                            <span id="posMobileQuickCustType" class="pos-cust-type-pill retail" style="font-size:0.65rem; padding:1px 6px;">Bán lẻ</span>
+                        </div>
+                        <span style="font-size:0.74rem; color:#108f53; font-weight:600; display:inline-flex; align-items:center; gap:2px;">
+                            Đổi khách <i data-lucide="chevron-right" style="width:13px; height:13px;"></i>
+                        </span>
+                    </div>
+
+                    <!-- Mode switch: Hàng hóa vs Dịch vụ Gia công -->
+                    <div class="pos-catalog-nav">
+                        <div style="display:flex; gap:8px; width:100%;">
+                            <button type="button" id="posTabBtnProducts" class="pos-cat-pill active" onclick="window.switchPosCatalogTab('PRODUCTS')" style="font-weight: 700; padding: 6px 14px; font-size: 0.82rem; display: inline-flex; align-items: center; justify-content:center; gap: 6px; flex:1;">
+                                <i data-lucide="package" style="width: 14px; height: 14px;"></i>
+                                <span>Hàng hóa / Hộp Tết (11)</span>
+                            </button>
+                            <button type="button" id="posTabBtnServices" class="pos-cat-pill" onclick="window.switchPosCatalogTab('SERVICES')" style="font-weight: 700; padding: 6px 14px; font-size: 0.82rem; display: inline-flex; align-items: center; justify-content:center; gap: 6px; border-color: #f59e0b; color: #b45309; background: #fffbeb; flex:1;">
+                                <i data-lucide="wrench" style="width: 14px; height: 14px;"></i>
+                                <span>Dịch vụ Gia công (5)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Category filter tags for products -->
+                    <div class="pos-category-bar" id="posCategoryFilterBar">
+                        <button type="button" class="pos-cat-pill active" data-cat="ALL" onclick="window.filterPosProducts('ALL')">Tất cả</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp cao cấp" onclick="window.filterPosProducts('Hộp cao cấp')">Hộp cao cấp (8)</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp phổ thông" onclick="window.filterPosProducts('Hộp phổ thông')">Hộp phổ thông (3)</button>
+                    </div>
+
+                    <!-- Quick add services toolbar -->
+                    <div id="posQuickServicesBar" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; background: #fffdf5; border-bottom: 1px solid #fed7aa; flex-wrap: wrap;">
+                        <span style="font-size: 0.74rem; font-weight: 700; color: #9a3412; display: inline-flex; align-items: center; gap: 4px; white-space:nowrap; flex-shrink:0;">
+                            <i data-lucide="wrench" style="width: 12px; height: 12px;"></i> Thêm nhanh:
+                        </span>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-EPNHU')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Ép nhũ (Tối thiểu 1.8tr nếu dưới 100 bộ)">
+                            + Ép nhũ (min 1.8tr)
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-CC')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Khay định hình Hộp cao cấp (10k-15k/bộ)">
+                            + Khay Cao cấp
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-PT')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Khay định hình Hộp phổ thông (8k-12k/bộ)">
+                            + Khay Phổ thông
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-INDOCQUYEN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="In độc quyền (<1000b: 8 triệu tối thiểu, >=1000b: 8k/bộ)">
+                            + In độc quyền
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-VACHNGAN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600; white-space:nowrap; flex-shrink:0;" title="Thêm vách ngăn 5.000đ/bộ">
+                            + Vách ngăn
+                        </button>
+                    </div>
+
+                    <!-- Product Cards Grid -->
+                    <div class="pos-product-grid" id="posProductCatalogGrid">
+                        <!-- Dynamic Product Cards -->
+                    </div>
+
+                    <!-- Mobile Sticky Bottom Floating Cart Bar (Visible on mobile when items in cart) -->
+                    <div class="pos-mobile-floating-cart-bar" id="posMobileFloatingCartBar" onclick="window.switchPosMobileView('CART')" style="display:none;">
+                        <div class="pos-mobile-float-left">
+                            <div class="pos-mobile-float-icon">
+                                <i data-lucide="shopping-cart" style="width:20px; height:20px;"></i>
+                                <span class="pos-floating-badge" id="posFloatingCartCount">0</span>
+                            </div>
+                            <div class="pos-mobile-float-text">
+                                <div id="posFloatingCartQtyText" style="font-size:0.75rem; opacity:0.9;">0 mặt hàng</div>
+                                <strong id="posFloatingCartTotal" style="font-size:1.02rem; font-weight:800;">0đ</strong>
+                            </div>
+                        </div>
+                        <button type="button" class="pos-mobile-float-btn">
+                            <span>Xem giỏ & Thanh toán</span>
+                            <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -6737,10 +6832,18 @@
                             </div>
                             <div class="form-group">
                                 <label for="onlineOrderPaymentStatus">Trạng thái</label>
-                                <select class="form-select" id="onlineOrderPaymentStatus" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;">
+                                <select class="form-select" id="onlineOrderPaymentStatus" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px;" onchange="window.handleOnlineOrderPaymentStatusChange(this.value)">
                                     <option value="UNPAID" selected>Chưa thanh toán (Ghi nợ)</option>
+                                    <option value="PARTIAL">Đặt cọc (Tạm ứng)</option>
                                     <option value="PAID">Đã thanh toán đủ</option>
                                 </select>
+                            </div>
+                            <div class="form-group" id="onlineOrderDepositGroup" style="display: none;">
+                                <label for="onlineOrderDepositAmount">Số tiền khách cọc (đ)</label>
+                                <div style="display: flex; gap: 6px;">
+                                    <input type="number" class="form-input" id="onlineOrderDepositAmount" value="0" min="0" step="any" placeholder="0" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px; font-weight: 700; color: #108f53;">
+                                    <button type="button" class="btn btn-outline" onclick="window.setOnlineOrderQuickDeposit(50)" style="white-space: nowrap; padding: 0 12px; height: 42px; font-weight: 700;">50%</button>
+                                </div>
                             </div>
                             <div class="form-group" style="grid-column: span 2; margin-top: 4px;">
                                 <label for="onlineOrderNotes">Ghi chú đơn hàng (Giao nhanh, giao gấp, lưu ý giao hàng...)</label>
@@ -6884,7 +6987,7 @@
 
                                 <label for="onlineProductCostPrice">Giá nhập (đ)</label>
 
-                                <input type="number" class="form-input" id="onlineProductCostPrice" value="0" min="0" placeholder="0">
+                                <input type="number" class="form-input" id="onlineProductCostPrice" value="0" min="0" step="any" placeholder="0">
 
                             </div>
 
@@ -6892,7 +6995,7 @@
 
                                 <label for="onlineProductPrice">Giá bán lẻ (đ) *</label>
 
-                                <input type="number" class="form-input" id="onlineProductPrice" value="0" min="0" required>
+                                <input type="number" class="form-input" id="onlineProductPrice" value="0" min="0" step="any" required>
 
                             </div>
 
@@ -6900,7 +7003,7 @@
 
                                 <label for="onlineProductWholesalePrice">Giá bán sỉ (đ) *</label>
 
-                                <input type="number" class="form-input" id="onlineProductWholesalePrice" value="0" min="0" required>
+                                <input type="number" class="form-input" id="onlineProductWholesalePrice" value="0" min="0" step="any" required>
 
                             </div>
 
@@ -6912,7 +7015,7 @@
 
                                 <label for="onlineProductStockQty">Tồn kho khởi tạo *</label>
 
-                                <input type="number" class="form-input" id="onlineProductStockQty" value="0" min="0">
+                                <input type="number" class="form-input" id="onlineProductStockQty" value="0" min="0" step="any">
 
                             </div>
 
@@ -6920,7 +7023,7 @@
 
                                 <label for="onlineProductMinStock">Mức tồn tối thiểu *</label>
 
-                                <input type="number" class="form-input" id="onlineProductMinStock" value="10" min="0" required>
+                                <input type="number" class="form-input" id="onlineProductMinStock" value="10" min="0" step="any" required>
 
                             </div>
 
@@ -7061,7 +7164,7 @@
                         </div>
                         <div class="form-group">
                             <label for="onlineExportQty">Số lượng xuất kho *</label>
-                            <input type="number" class="form-input" id="onlineExportQty" value="10" min="1" required>
+                            <input type="number" class="form-input" id="onlineExportQty" value="10" min="0" step="any" required>
                         </div>
                         <div class="form-group">
                             <label for="onlineExportNote">Ghi chú *</label>
@@ -7180,7 +7283,7 @@
 
                             <label for="onlineImportQty">Số lượng nhập kho *</label>
 
-                            <input type="number" class="form-input" id="onlineImportQty" value="100" min="1" required>
+                            <input type="number" class="form-input" id="onlineImportQty" value="100" min="0" step="any" required>
 
                         </div>
 
@@ -9078,29 +9181,69 @@
 
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 12px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
 
-                            <label>Tổng giá trị đơn</label>
+                            <div class="form-group" style="margin-bottom: 0;">
 
-                            <input type="text" class="form-input" id="paymentOrderTotal" readonly style="background: var(--bg-card);">
+                                <label>Tổng giá trị đơn</label>
+
+                                <input type="text" class="form-input" id="paymentOrderTotal" readonly style="background: var(--bg-card); font-weight: 600;">
+
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+
+                                <label>Đã thanh toán / Cọc</label>
+
+                                <input type="text" class="form-input" id="paymentOrderPaidBefore" readonly style="background: var(--bg-card); color: var(--success); font-weight: 600;">
+
+                            </div>
 
                         </div>
 
                         <div class="form-group" style="margin-bottom: 12px;">
 
-                            <label>Còn nợ</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
 
-                            <input type="text" class="form-input" id="paymentOrderRemaining" readonly style="background: var(--bg-card); color: var(--danger-color); font-weight: bold;">
+                                <label style="margin-bottom: 0; font-weight: 600;" id="lblPaymentOrderRemaining">Còn nợ (sau thu)</label>
+
+                                <small id="paymentOrderInitialDebtNote" class="text-muted" style="font-size: 0.78rem;">(Nợ trước thu: 0đ)</small>
+
+                            </div>
+
+                            <input type="text" class="form-input" id="paymentOrderRemaining" readonly style="background: var(--bg-card); color: var(--danger-color); font-weight: 700; font-size: 1.05rem;">
+
+                        </div>
+
+                        <div id="paymentAlreadyPaidAlert" style="display: none; padding: 8px 12px; margin-bottom: 12px; border-radius: 6px; background: rgba(16, 185, 129, 0.12); color: #059669; font-size: 0.85rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+
+                            <i data-lucide="check-circle" style="width: 14px; height: 14px; vertical-align: middle; display: inline-block; margin-right: 4px;"></i>
+
+                            <span>Đơn hàng đã thanh toán đủ 100% (Hiện không còn nợ).</span>
 
                         </div>
 
                         <div class="form-group" style="margin-bottom: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
 
-                            <label for="paymentInputAmount">Số tiền hoặc % thu nợ</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+
+                                <label for="paymentInputAmount" style="margin-bottom: 0; font-weight: 600;">Số tiền hoặc % thu nợ</label>
+
+                                <div style="display: flex; gap: 4px;">
+
+                                    <button type="button" class="btn btn-outline-secondary btn-xs" style="padding: 2px 7px; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); cursor: pointer;" onclick="window.setQuickPaymentAmount('100%')">Thu hết</button>
+
+                                    <button type="button" class="btn btn-outline-secondary btn-xs" style="padding: 2px 7px; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); cursor: pointer;" onclick="window.setQuickPaymentAmount('50%')">50%</button>
+
+                                    <button type="button" class="btn btn-outline-secondary btn-xs" style="padding: 2px 7px; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-card); cursor: pointer;" onclick="window.setQuickPaymentAmount('30%')">30%</button>
+
+                                </div>
+
+                            </div>
 
                             <input type="text" class="form-input" id="paymentInputAmount" placeholder="Ví dụ: 50% hoặc 500.000" required>
 
-                            <small id="paymentAmountCalcHint" class="text-muted" style="display:block; margin-top:2px;">Số tiền thu nợ: 0đ</small>
+                            <small id="paymentAmountCalcHint" class="text-muted" style="display:block; margin-top:5px; font-size: 0.82rem; line-height: 1.4;">Số tiền thu nợ: 0đ</small>
 
                         </div>
 
@@ -10331,6 +10474,16 @@
 
                                 </div>
 
+                                <div id="pdfPaidRow" style="display:none; justify-content:space-between; font-size:0.92rem; color:#108f53; font-weight:700; margin-top:4px;">
+                                    <span>Đã thanh toán / Cọc:</span>
+                                    <strong id="pdfPaidAmount">0đ</strong>
+                                </div>
+
+                                <div id="pdfDebtRow" style="display:none; justify-content:space-between; font-size:0.92rem; color:#dc2626; font-weight:700;">
+                                    <span>Còn lại phải thu:</span>
+                                    <strong id="pdfRemainingDebt">0đ</strong>
+                                </div>
+
                             </div>
 
                         </div>
@@ -10604,7 +10757,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_pos_ui_percent_vat"></script>
+    <script src="/app.js?v=20261020_debt_calc_auto_deduct"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
