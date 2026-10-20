@@ -5638,6 +5638,9 @@ select.form-select, .form-select {
     display: flex;
     align-items: center;
     gap: 6px;
+    overflow-x: auto;
+    max-width: 480px;
+    padding: 2px 0;
 }
 
 .pos-tab {
@@ -5645,20 +5648,82 @@ select.form-select, .form-select {
     align-items: center;
     gap: 6px;
     height: 32px;
-    padding: 0 12px;
-    background: rgba(255, 255, 255, 0.15);
-    border: none;
+    padding: 0 10px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 6px;
     color: #ffffff;
     font-size: 0.82rem;
     font-weight: 600;
     cursor: pointer;
+    white-space: nowrap;
+    max-width: 170px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.pos-tab:hover {
+    background: rgba(255, 255, 255, 0.28);
 }
 
 .pos-tab.active {
     background: #ffffff;
+    border-color: #ffffff;
     color: #0284c7;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.pos-tab-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 115px;
+}
+
+.pos-tab-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-left: 2px;
+    font-size: 0.8rem;
+    line-height: 1;
+    opacity: 0.65;
+    transition: all 0.15s;
+}
+
+.pos-tab-close:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.15);
+    color: #ef4444;
+}
+
+.pos-tab.active .pos-tab-close:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.pos-tab-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.pos-tab-add:hover {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: #ffffff;
+    transform: scale(1.05);
 }
 
 .pos-topbar-right {

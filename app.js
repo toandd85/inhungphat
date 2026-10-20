@@ -24167,6 +24167,167 @@ window.getPosProductPrice = function(prod, priceBook = window.posSelectedPriceBo
     return Number(prod.price || 0);
 };
 
+
+// ==========================================================================
+// QUẢN LÝ NHIỀU ĐƠN HÀNG CÙNG LÚC TẠI POS (MULTI-ORDER TABS)
+// ==========================================================================
+
+window.posOrderTabs = window.posOrderTabs || [];
+window.posActiveTabId = window.posActiveTabId || null;
+
+window.getCurrentActiveTab = function() {
+    return (window.posOrderTabs || []).find(t => t.id === window.posActiveTabId);
+};
+
+window.syncCurrentTabState = function() {
+    const activeTab = window.getCurrentActiveTab();
+    if (!activeTab) return;
+
+    activeTab.customer_id = document.getElementById("posCustomerSelect")?.value || "";
+    const partner = (state.partners || []).find(p => p.id === activeTab.customer_id);
+    activeTab.customer_name = partner ? partner.name : (activeTab.customer_name && !activeTab.customer_name.startsWith("Khách lẻ") ? activeTab.customer_name : "Khách lẻ");
+    activeTab.discount = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
+    activeTab.vat = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
+    activeTab.ship_fee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
+    activeTab.notes = document.getElementById("posOrderNotes")?.value || "";
+    activeTab.price_book = window.posSelectedPriceBook || "RETAIL";
+    activeTab.cart = (window.posCart || []).map(i => ({ ...i }));
+};
+
+window.renderPosOrderTabs = function() {
+    const container = document.getElementById("posOrderTabsContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!window.posOrderTabs || window.posOrderTabs.length === 0) {
+        return;
+    }
+
+    window.posOrderTabs.forEach((tab, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pos-tab" + (tab.id === window.posActiveTabId ? " active" : "");
+        btn.onclick = () => window.switchPosOrderTab(tab.id);
+        
+        const displayName = tab.customer_name || `Hóa đơn ${idx + 1}`;
+        btn.setAttribute("title", `${displayName} (${tab.orderNumber})`);
+
+        let closeBtnHtml = "";
+        if (window.posOrderTabs.length > 1) {
+            closeBtnHtml = `<span class="pos-tab-close" onclick="window.closePosOrderTab('${tab.id}', event)" title="Đóng đơn này">&times;</span>`;
+        }
+
+        btn.innerHTML = `
+            <i data-lucide="file-text" style="width:13px; height:13px; flex-shrink:0;"></i>
+            <span class="pos-tab-name">${displayName}</span>
+            ${closeBtnHtml}
+        `;
+        container.appendChild(btn);
+    });
+
+    // Plus button to add new order
+    const addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.className = "pos-tab-add";
+    addBtn.setAttribute("title", "Tạo thêm đơn hàng mới (+)");
+    addBtn.onclick = () => window.addNewPosOrderTab();
+    addBtn.innerHTML = `<i data-lucide="plus" style="width:15px; height:15px;"></i>`;
+    container.appendChild(addBtn);
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.addNewPosOrderTab = function() {
+    window.syncCurrentTabState();
+    const tabCount = (window.posOrderTabs || []).length + 1;
+    const suffix = String(state.online_orders.length + tabCount).padStart(4, '0');
+    const newOrderNo = `SO-ON-202606-${suffix}`;
+    const newId = "pos_tab_" + Date.now() + "_" + Math.random().toString(36).substring(2, 5);
+
+    const newTab = {
+        id: newId,
+        orderNumber: newOrderNo,
+        customer_id: "",
+        customer_name: `Khách lẻ (${tabCount})`,
+        price_book: "RETAIL",
+        cart: [],
+        discount: 0,
+        vat: 8,
+        ship_fee: 0,
+        notes: "",
+        mode: "ADD",
+        orderId: null
+    };
+
+    window.posOrderTabs.push(newTab);
+    window.switchPosOrderTab(newId);
+};
+
+window.switchPosOrderTab = function(tabId) {
+    window.syncCurrentTabState();
+    window.posActiveTabId = tabId;
+    const target = (window.posOrderTabs || []).find(t => t.id === tabId);
+    if (!target) return;
+
+    window.posActiveMode = target.mode || "ADD";
+    window.posActiveOrderId = target.orderId || null;
+
+    const noDisplay = document.getElementById("posOrderNumberDisplay");
+    if (noDisplay) noDisplay.textContent = target.orderNumber + (target.mode === "EDIT" ? "" : " (Mới)");
+
+    const custSel = document.getElementById("posCustomerSelect");
+    if (custSel) custSel.value = target.customer_id || "";
+
+    const discEl = document.getElementById("posOrderDiscount");
+    if (discEl) discEl.value = target.discount || 0;
+
+    const vatEl = document.getElementById("posOrderVat");
+    if (vatEl) vatEl.value = target.vat !== undefined ? target.vat : 8;
+
+    const shipEl = document.getElementById("posOrderShipFee");
+    if (shipEl) shipEl.value = target.ship_fee || 0;
+
+    const notesEl = document.getElementById("posOrderNotes");
+    if (notesEl) notesEl.value = target.notes || "";
+
+    window.posSelectedPriceBook = target.price_book || "RETAIL";
+    window.posCart = (target.cart || []).map(i => ({ ...i }));
+
+    if (typeof window.handlePosCustomerChange === 'function') {
+        window.handlePosCustomerChange(false);
+    }
+
+    window.renderPosOrderTabs();
+    window.renderPosCart();
+    window.renderPosCatalog();
+};
+
+window.closePosOrderTab = function(tabId, event) {
+    if (event) event.stopPropagation();
+    const tab = (window.posOrderTabs || []).find(t => t.id === tabId);
+    if (!tab) return;
+
+    if (tab.cart && tab.cart.length > 0) {
+        if (!confirm(`Bạn có chắc chắn muốn đóng đơn của "${tab.customer_name}"? Các sản phẩm trong giỏ của đơn này sẽ bị hủy.`)) {
+            return;
+        }
+    }
+
+    window.posOrderTabs = window.posOrderTabs.filter(t => t.id !== tabId);
+    if (window.posOrderTabs.length === 0) {
+        window.addNewPosOrderTab();
+    } else {
+        if (window.posActiveTabId === tabId) {
+            window.switchPosOrderTab(window.posOrderTabs[window.posOrderTabs.length - 1].id);
+        } else {
+            window.renderPosOrderTabs();
+        }
+    }
+};
+
+
 window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
     try {
         const modal = document.getElementById("onlinePosModal");
@@ -24175,53 +24336,28 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
             return;
         }
 
-        window.posActiveMode = mode;
-        window.posActiveOrderId = mode === "EDIT" ? orderId : null;
-
         // Current Cashier
         const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
         const cashierEl = document.getElementById("posCurrentCashier");
         if (cashierEl) cashierEl.textContent = currentUser.name || "Admin / Bán hàng";
 
-        // Populate Customers
+        // Load customer options
         const customerSelect = document.getElementById("posCustomerSelect");
         if (customerSelect) {
-            customerSelect.innerHTML = "";
-            const customers = (state.partners || []).filter(p => p.role === "CUSTOMER" || !p.role || p.role === "ALL");
-            if (customers.length === 0) {
-                const opt = document.createElement("option");
-                opt.value = "";
-                opt.textContent = "[Lẻ] Khách lẻ (Khách vãng lai)";
-                customerSelect.appendChild(opt);
-            } else {
-                customers.forEach(c => {
-                    const opt = document.createElement("option");
-                    opt.value = c.id;
-                    const isWholesale = (c.customer_type === "WHOLESALE" || c.customer_type === "Khách sỉ" || c.customer_type === "SI");
-                    const tag = isWholesale ? "[Sỉ]" : "[Lẻ]";
-                    opt.textContent = `${tag} ${c.name} ${c.phone ? `(${c.phone})` : ''}`;
-                    customerSelect.appendChild(opt);
-                });
-            }
+            customerSelect.innerHTML = '<option value="">-- Khách lẻ / Vãng lai --</option>';
+            const customers = (state.partners || []).filter(p => p && (p.role === "CUSTOMER" || p.role === "BOTH" || !p.role));
+            customers.sort((a, b) => (a.name || "").localeCompare(b.name || "", 'vi'));
+            customers.forEach(c => {
+                const codePrefix = c.code ? `[${c.code}] ` : "";
+                const phoneSuffix = c.phone ? ` - ${c.phone}` : "";
+                const typePrefix = (c.customer_type === "WHOLESALE" || c.customer_type === "Khách sỉ" || c.customer_type === "SI") ? "🏢 [SỈ] " : "";
+                customerSelect.innerHTML += `<option value="${c.id}">${typePrefix}${codePrefix}${c.name}${phoneSuffix}</option>`;
+            });
         }
 
-        // Reset inputs
-        const discountEl = document.getElementById("posOrderDiscount");
-        const vatEl = document.getElementById("posOrderVat");
-        const shipFeeEl = document.getElementById("posOrderShipFee");
-        const notesEl = document.getElementById("posOrderNotes");
-        const priceBookSelect = document.getElementById("posPriceBookSelect");
+        window.posCatalogTab = "PRODUCTS";
 
-        if (priceBookSelect) {
-            priceBookSelect.value = window.posSelectedPriceBook || "RETAIL";
-        }
-        const displayEl = document.getElementById("posPriceBookDisplay");
-        if (displayEl) {
-            displayEl.innerHTML = (window.posSelectedPriceBook === "WHOLESALE") 
-                ? `<span style="color:#d97706; font-weight:700;">🏢 Bảng giá bán sỉ</span>` 
-                : `<span style="color:var(--text-primary); font-weight:700;">🏷️ Bảng giá bán lẻ</span>`;
-        }
-
+        // Handle EDIT mode
         if (mode === "EDIT" && orderId) {
             const order = state.online_orders.find(o => o.id === orderId) || state.orders.find(o => o.id === orderId);
             if (!order) {
@@ -24229,73 +24365,59 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
                 return;
             }
 
-            document.getElementById("posOrderNumberDisplay").textContent = order.order_number || order.id;
-            if (customerSelect && order.customer_id) customerSelect.value = order.customer_id;
-            if (discountEl) discountEl.value = order.discount || 0;
-            if (vatEl) vatEl.value = order.vat_rate !== undefined ? order.vat_rate : 8;
-            if (shipFeeEl) shipFeeEl.value = order.ship_fee || 0;
-            if (notesEl) notesEl.value = order.notes || "";
-
-            if (order.price_book && priceBookSelect) {
-                priceBookSelect.value = order.price_book;
-                window.posSelectedPriceBook = order.price_book;
-            }
-            if (typeof window.handlePosCustomerChange === 'function') {
-                window.handlePosCustomerChange(false);
-            }
-
-            // Load items into cart
-            window.posCart = (order.items || []).map(i => {
-                const prod = (state.online_products || []).find(p => p.sku === i.sku);
-                const qty = Number(i.qty || i.quantity || 1);
-                const price = Number(i.price || (prod ? prod.price : 0));
-                return {
-                    sku: i.sku,
-                    name: i.name || (prod ? prod.name : i.sku),
-                    unit: i.unit || (prod ? prod.unit : 'Chiếc'),
-                    brand: i.brand || (prod ? prod.brand : ''),
-                    qty: qty,
-                    price: price,
-                    item_total: i.item_total !== undefined ? Number(i.item_total) : (qty * price),
-                    item_note: i.item_note || ""
+            // Check if already open in tabs
+            let existingTab = (window.posOrderTabs || []).find(t => t.orderId === orderId);
+            if (!existingTab) {
+                existingTab = {
+                    id: "tab_" + Date.now() + "_" + Math.random().toString(36).substring(2, 5),
+                    orderNumber: order.order_number || order.id,
+                    customer_id: order.customer_id || "",
+                    customer_name: order.customer_name || "Khách lẻ",
+                    price_book: order.price_book || "RETAIL",
+                    cart: (order.items || []).map(i => ({ ...i })),
+                    discount: order.discount || 0,
+                    vat: order.vat_rate !== undefined ? order.vat_rate : 8,
+                    ship_fee: order.ship_fee || 0,
+                    notes: order.notes || "",
+                    mode: "EDIT",
+                    orderId: orderId
                 };
-            });
+                window.posOrderTabs = window.posOrderTabs || [];
+                window.posOrderTabs.push(existingTab);
+            }
+            window.switchPosOrderTab(existingTab.id);
         } else {
-            const suffix = String(state.online_orders.length + 1).padStart(4, '0');
-            const newOrderNo = `SO-ON-202606-${suffix}`;
-            document.getElementById("posOrderNumberDisplay").textContent = `${newOrderNo} (Mới)`;
-            if (discountEl) discountEl.value = 0;
-            if (vatEl) vatEl.value = 8;
-            if (shipFeeEl) shipFeeEl.value = 0;
-            if (notesEl) notesEl.value = "";
-            window.posCart = [];
-
-            // Reset processing add-ons
-            const epNhuCb = document.getElementById("posAddonEpNhu");
-            const khayCb = document.getElementById("posAddonKhay");
-            const khayTypeSel = document.getElementById("posAddonKhayType");
-            const inDqCb = document.getElementById("posAddonInDocQuyen");
-            const vnCb = document.getElementById("posAddonVachNgan");
-            if (epNhuCb) epNhuCb.checked = false;
-            if (khayCb) khayCb.checked = false;
-            if (khayTypeSel) khayTypeSel.value = "AUTO";
-            if (inDqCb) inDqCb.checked = false;
-            if (vnCb) vnCb.checked = false;
-            
-            if (typeof window.handlePosCustomerChange === 'function') {
-                window.handlePosCustomerChange(true);
+            // Mode ADD: If no tabs exist, create initial Tab 1
+            if (!window.posOrderTabs || window.posOrderTabs.length === 0) {
+                const suffix = String(state.online_orders.length + 1).padStart(4, '0');
+                const newOrderNo = `SO-ON-202606-${suffix}`;
+                const initialTab = {
+                    id: "pos_tab_" + Date.now(),
+                    orderNumber: newOrderNo,
+                    customer_id: "",
+                    customer_name: "Khách lẻ",
+                    price_book: "RETAIL",
+                    cart: [],
+                    discount: 0,
+                    vat: 8,
+                    ship_fee: 0,
+                    notes: "",
+                    mode: "ADD",
+                    orderId: null
+                };
+                window.posOrderTabs = [initialTab];
+                window.switchPosOrderTab(initialTab.id);
+            } else {
+                // Switch to active tab or first tab
+                const activeId = window.posActiveTabId || window.posOrderTabs[0].id;
+                window.switchPosOrderTab(activeId);
             }
         }
-
-        // Render catalog & cart
-        window.posCatalogTab = "PRODUCTS";
-        window.renderPosCatalog();
-        window.renderPosCart();
 
         // Show POS modal
         modal.classList.add("active");
 
-        // Focus search
+        // Focus search input
         setTimeout(() => {
             const searchInput = document.getElementById("posProductSearchInput");
             if (searchInput) searchInput.focus();
@@ -24849,6 +24971,16 @@ window.handlePosCustomerChange = function(forceAutoPriceBook = true) {
     const partner = (state.partners || []).find(p => p.id === customerId);
     const isWholesale = partner && (partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI");
 
+    // TỰ ĐỘNG CẬP NHẬT TÊN KHÁCH HÀNG VÀO TAB ĐƠN HÀNG ĐANG CHỌN
+    const activeTab = typeof window.getCurrentActiveTab === "function" ? window.getCurrentActiveTab() : null;
+    if (activeTab) {
+        activeTab.customer_id = customerId;
+        activeTab.customer_name = partner ? partner.name : "Khách lẻ";
+        if (typeof window.renderPosOrderTabs === "function") {
+            window.renderPosOrderTabs();
+        }
+    }
+
     const badgeEl = document.getElementById("posCustomerTypeBadge");
     if (badgeEl) {
         badgeEl.textContent = isWholesale ? "🏢 Khách sỉ" : "👤 Khách lẻ";
@@ -25217,8 +25349,16 @@ window.submitPosOrder = function(isDraft = false) {
         state.updateState("online_stock_logs", state.online_stock_logs);
         state.updateState("transactions", state.transactions);
 
-        // Close POS modal
-        window.closePosModal();
+        // Remove completed tab from posOrderTabs
+        if (window.posOrderTabs && window.posOrderTabs.length > 0) {
+            window.posOrderTabs = window.posOrderTabs.filter(t => t.id !== window.posActiveTabId);
+        }
+
+        if (window.posOrderTabs && window.posOrderTabs.length > 0) {
+            window.switchPosOrderTab(window.posOrderTabs[0].id);
+        } else {
+            window.closePosModal();
+        }
 
         // Refresh UI
         if (typeof renderOnlineSales === 'function') renderOnlineSales();

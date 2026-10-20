@@ -6461,12 +6461,9 @@
                         <div id="posProductSearchDropdown" class="pos-search-dropdown" style="display:none;"></div>
                     </div>
 
-                    <!-- Order tabs like KiotViet -->
-                    <div class="pos-order-tabs">
-                        <button type="button" class="pos-tab active" id="posTab1">
-                            <i data-lucide="file-text" style="width:14px; height:14px;"></i>
-                            <span>Hóa đơn 1</span>
-                        </button>
+                    <!-- Order tabs with Customer Name & Multi-Order (+) -->
+                    <div class="pos-order-tabs" id="posOrderTabsContainer">
+                        <!-- Rendered dynamically by window.renderPosOrderTabs() -->
                     </div>
                 </div>
 
@@ -10731,7 +10728,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_pos_services_tiered_vat"></script>
+    <script src="/app.js?v=20261020_multi_order_tabs_customer_name"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
