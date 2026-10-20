@@ -1909,7 +1909,7 @@
                             </button>
                             <button type="button" id="btnPriceTabServices" class="pos-cat-pill" onclick="window.switchPriceSettingTab('services')" style="font-size: 0.88rem; padding: 8px 16px; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
                                 <i data-lucide="wrench" style="width: 16px; height: 16px;"></i>
-                                <span>🛠️ Bảng giá Dịch vụ Gia công 2027 (Ảnh 5)</span>
+                                <span>🛠️ Bảng giá Dịch vụ Gia công 2027</span>
                             </button>
                         </div>
 
@@ -1949,7 +1949,7 @@
                             </div>
                         </div>
 
-                        <!-- Tab 2: Bảng giá dịch vụ gia công 2027 (Ảnh 5) -->
+                        <!-- Tab 2: Bảng giá dịch vụ gia công 2027 -->
                         <div id="priceTabContentServices" style="display:none;">
                             <div class="processing-pricing-container" style="display:flex; flex-direction:column; gap:20px;">
                                 <!-- Info banner -->
@@ -6505,65 +6505,6 @@
                         <!-- Dynamic Cart Rows -->
                     </div>
 
-                    <!-- Dịch vụ Gia công thêm 2027 (Ảnh 5) -->
-                    <div class="pos-processing-box" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:10px 12px; margin:8px 0;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="window.togglePosProcessingCollapse()">
-                            <span style="font-weight:700; font-size:0.84rem; color:#1e293b; display:flex; align-items:center; gap:6px;">
-                                <i data-lucide="wrench" style="width:14px; height:14px; color:#d97706;"></i>
-                                <span>Dịch vụ Gia công thêm 2027 (Ảnh 5)</span>
-                            </span>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <span id="posProcessingTotalBadge" style="font-weight:700; font-size:0.82rem; color:#059669;">+0đ</span>
-                                <i data-lucide="chevron-down" id="posProcessingChevron" style="width:14px; height:14px; color:#64748b; transition:transform 0.2s;"></i>
-                            </div>
-                        </div>
-                        
-                        <div id="posProcessingContent" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px 12px; margin-top:10px; padding-top:8px; border-top:1px dashed #e2e8f0; font-size:0.8rem;">
-                            <!-- 1. Ép nhũ -->
-                            <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer;">
-                                <input type="checkbox" id="posAddonEpNhu" onchange="window.recalcPosTotals()" style="margin-top:2px;">
-                                <div>
-                                    <strong style="color:#0f172a;">Ép nhũ 1 màu 1 mặt</strong>
-                                    <div style="font-size:0.72rem; color:#64748b;">(Tự theo SL, min 1.8tr)</div>
-                                </div>
-                            </label>
-                            
-                            <!-- 2. Khay định hình -->
-                            <div>
-                                <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer;">
-                                    <input type="checkbox" id="posAddonKhay" onchange="window.recalcPosTotals()" style="margin-top:2px;">
-                                    <div>
-                                        <strong style="color:#0f172a;">Khay định hình theo YC</strong>
-                                        <div style="font-size:0.72rem; color:#64748b;">(Hộp CC: 10-15k, PT: 8-12k)</div>
-                                    </div>
-                                </label>
-                                <select id="posAddonKhayType" class="form-input" onchange="window.recalcPosTotals()" style="margin-top:4px; padding:2px 6px; font-size:0.74rem; height:26px; width:100%;">
-                                    <option value="AUTO">Theo loại hộp trong giỏ</option>
-                                    <option value="CAOCAP">Áp mức Hộp cao cấp</option>
-                                    <option value="PHOTHONG">Áp mức Hộp phổ thông</option>
-                                </select>
-                            </div>
-
-                            <!-- 3. In mẫu độc quyền -->
-                            <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer;">
-                                <input type="checkbox" id="posAddonInDocQuyen" onchange="window.recalcPosTotals()" style="margin-top:2px;">
-                                <div>
-                                    <strong style="color:#0f172a;">In mẫu độc quyền</strong>
-                                    <div style="font-size:0.72rem; color:#64748b;">(&lt;1000b: 8tr, &ge;1000b: 8k/bộ)</div>
-                                </div>
-                            </label>
-
-                            <!-- 4. Vách ngăn -->
-                            <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer;">
-                                <input type="checkbox" id="posAddonVachNgan" onchange="window.recalcPosTotals()" style="margin-top:2px;">
-                                <div>
-                                    <strong style="color:#0f172a;">Thêm vách ngăn</strong>
-                                    <div style="font-size:0.72rem; color:#64748b;">(+5.000đ / bộ)</div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
                     <!-- Promotions & Order Adjustments Banner -->
                     <div class="pos-cart-extras">
                         <div class="pos-extra-row">
@@ -6643,12 +6584,47 @@
                         </div>
                     </div>
 
-                    <!-- Category filter tags -->
+                    <!-- Mode switch: Hàng hóa vs Dịch vụ Gia công -->
+                    <div class="pos-catalog-nav" style="display:flex; justify-content:space-between; align-items:center; padding: 8px 12px 6px 12px; background: #ffffff; border-bottom: 1px solid var(--border-color);">
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" id="posTabBtnProducts" class="pos-cat-pill active" onclick="window.switchPosCatalogTab('PRODUCTS')" style="font-weight: 700; padding: 6px 14px; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px;">
+                                <i data-lucide="package" style="width: 14px; height: 14px;"></i>
+                                <span>Hàng hóa / Hộp Tết (11)</span>
+                            </button>
+                            <button type="button" id="posTabBtnServices" class="pos-cat-pill" onclick="window.switchPosCatalogTab('SERVICES')" style="font-weight: 700; padding: 6px 14px; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px; border-color: #f59e0b; color: #b45309; background: #fffbeb;">
+                                <i data-lucide="wrench" style="width: 14px; height: 14px;"></i>
+                                <span>Dịch vụ Gia công (5)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Category filter tags for products -->
                     <div class="pos-category-bar" id="posCategoryFilterBar">
-                        <button type="button" class="pos-cat-pill active" data-cat="ALL" onclick="window.filterPosProducts('ALL')">Tất cả (11 SP)</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Hộp cao cấp" onclick="window.filterPosProducts('Hộp cao cấp')">Hộp cao cấp (8 SP)</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Hộp phổ thông" onclick="window.filterPosProducts('Hộp phổ thông')">Hộp phổ thông (3 SP)</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Phụ kiện" onclick="window.filterPosProducts('Phụ kiện')">Khác</button>
+                        <button type="button" class="pos-cat-pill active" data-cat="ALL" onclick="window.filterPosProducts('ALL')">Tất cả</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp cao cấp" onclick="window.filterPosProducts('Hộp cao cấp')">Hộp cao cấp (8)</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp phổ thông" onclick="window.filterPosProducts('Hộp phổ thông')">Hộp phổ thông (3)</button>
+                    </div>
+
+                    <!-- Quick add services toolbar -->
+                    <div id="posQuickServicesBar" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; background: #fffdf5; border-bottom: 1px solid #fed7aa; flex-wrap: wrap;">
+                        <span style="font-size: 0.74rem; font-weight: 700; color: #9a3412; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="wrench" style="width: 12px; height: 12px;"></i> Thêm nhanh gia công:
+                        </span>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-EPNHU')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Ép nhũ (Tối thiểu 1.8tr nếu dưới 100 bộ)">
+                            + Ép nhũ (min 1.8tr)
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-CC')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Khay định hình Hộp cao cấp (10k-15k/bộ)">
+                            + Khay Cao cấp
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-KHAY-PT')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Khay định hình Hộp phổ thông (8k-12k/bộ)">
+                            + Khay Phổ thông
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-INDOCQUYEN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="In độc quyền (<1000b: 8 triệu tối thiểu, >=1000b: 8k/bộ)">
+                            + In độc quyền
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="window.addPosServiceItem('DV-VACHNGAN')" style="padding: 2px 8px; font-size: 0.72rem; background: #ffffff; border: 1px solid #f97316; color: #c2410c; border-radius: 4px; font-weight: 600;" title="Thêm vách ngăn 5.000đ/bộ">
+                            + Vách ngăn
+                        </button>
                     </div>
 
                     <!-- Product Cards Grid (Like KiotViet in image) -->
@@ -10755,7 +10731,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261019_tet2027_pricing_processing"></script>
+    <script src="/app.js?v=20261020_pos_services_tiered_vat"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

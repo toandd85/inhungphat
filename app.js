@@ -24288,6 +24288,7 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
         }
 
         // Render catalog & cart
+        window.posCatalogTab = "PRODUCTS";
         window.renderPosCatalog();
         window.renderPosCart();
 
@@ -24315,6 +24316,236 @@ window.closePosModal = function() {
 };
 
 // Render Product Catalog Cards Grid (Right column)
+
+// ==========================================================================
+// DANH MỤC DỊCH VỤ GIA CÔNG POS (5 DỊCH VỤ)
+// ==========================================================================
+
+window.POS_SERVICES = [
+    {
+        sku: "DV-EPNHU",
+        name: "Ép nhũ - 1 màu 1 mặt (Hộp + Túi)",
+        unit: "Bộ",
+        is_service: true,
+        category: "Dịch vụ gia công",
+        description: "1-100b: 18k | 101-200b: 15k | 201-300b: 12k | 301-400b: 10k | ≥401b: 8k",
+        badge: "Tối thiểu 1.800.000đ",
+        min_fee: 1800000,
+        min_qty: 100,
+        icon: "sparkles",
+        color: "#b45309",
+        bg: "#fef3c7"
+    },
+    {
+        sku: "DV-KHAY-CC",
+        name: "Khay định hình Hộp cao cấp",
+        unit: "Bộ",
+        is_service: true,
+        category: "Dịch vụ gia công",
+        description: "1-100b: 15k | 101-200b: 14k | 201-300b: 13k | 301-400b: 12k | ≥401b: 10k",
+        badge: "10k - 15k/bộ",
+        icon: "layers",
+        color: "#991b1b",
+        bg: "#fee2e2"
+    },
+    {
+        sku: "DV-KHAY-PT",
+        name: "Khay định hình Hộp phổ thông",
+        unit: "Bộ",
+        is_service: true,
+        category: "Dịch vụ gia công",
+        description: "1-100b: 12k | 101-200b: 11k | 201-300b: 10k | 301-400b: 9k | ≥401b: 8k",
+        badge: "8k - 12k/bộ",
+        icon: "box",
+        color: "#0369a1",
+        bg: "#e0f2fe"
+    },
+    {
+        sku: "DV-INDOCQUYEN",
+        name: "In mẫu độc quyền",
+        unit: "Bộ",
+        is_service: true,
+        category: "Dịch vụ gia công",
+        description: "<1000 bộ: 8 triệu trọn gói | ≥1000 bộ: 8.000đ/bộ",
+        badge: "Tối thiểu 8.000.000đ",
+        min_fee: 8000000,
+        min_qty: 1000,
+        icon: "printer",
+        color: "#4338ca",
+        bg: "#ede9fe"
+    },
+    {
+        sku: "DV-VACHNGAN",
+        name: "Thêm vách ngăn",
+        unit: "Bộ",
+        is_service: true,
+        category: "Dịch vụ gia công",
+        description: "Phụ kiện vách ngăn hộp quà Tết",
+        badge: "5.000đ/bộ",
+        icon: "grid",
+        color: "#047857",
+        bg: "#d1fae5"
+    }
+];
+
+window.calculateServiceItemPricing = function(sku, qty) {
+    qty = Math.max(1, parseInt(qty) || 1);
+    const ps = state.processing_services || DEFAULT_PROCESSING_SERVICES;
+
+    if (sku === "DV-EPNHU") {
+        const cfg = ps.ep_nhu || DEFAULT_PROCESSING_SERVICES.ep_nhu;
+        const tiers = cfg.tiers || [];
+        const matchTier = tiers.find(t => {
+            const min = Number(t.min_qty) || 0;
+            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+            return qty >= min && qty <= max;
+        });
+        const unitPrice = matchTier ? Number(matchTier.price) : 8000;
+        const minFee = Number(cfg.min_fee) || 1800000;
+        let rawTotal = qty * unitPrice;
+        // Nếu chưa đạt số lượng tối thiểu (100 bộ) hoặc chưa đạt chi phí tối thiểu
+        if (qty < 100 || rawTotal < minFee) {
+            return {
+                price: Math.round(minFee / qty),
+                item_total: minFee,
+                price_note: `Tối thiểu ${formatMoney(minFee)}`
+            };
+        } else {
+            return {
+                price: unitPrice,
+                item_total: rawTotal,
+                price_note: `${formatMoney(unitPrice)}/bộ`
+            };
+        }
+    }
+
+    if (sku === "DV-INDOCQUYEN") {
+        const cfg = ps.in_doc_quyen || DEFAULT_PROCESSING_SERVICES.in_doc_quyen;
+        const threshold = Number(cfg.threshold_qty) || 1000;
+        const minFee = Number(cfg.fixed_under_fee) || 8000000;
+        const unitPrice = Number(cfg.price_per_box) || 8000;
+        // Nếu chưa đạt số lượng tối thiểu (1.000 bộ)
+        if (qty < threshold) {
+            return {
+                price: Math.round(minFee / qty),
+                item_total: minFee,
+                price_note: `<1000b: Tối thiểu ${formatMoney(minFee)}`
+            };
+        } else {
+            return {
+                price: unitPrice,
+                item_total: qty * unitPrice,
+                price_note: `≥1000b: ${formatMoney(unitPrice)}/bộ`
+            };
+        }
+    }
+
+    if (sku === "DV-KHAY-CC") {
+        const cfg = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
+        const tiers = cfg.tiers_caocap || [];
+        const matchTier = tiers.find(t => {
+            const min = Number(t.min_qty) || 0;
+            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+            return qty >= min && qty <= max;
+        });
+        const unitPrice = matchTier ? Number(matchTier.price) : 10000;
+        return {
+            price: unitPrice,
+            item_total: qty * unitPrice,
+            price_note: `Cao cấp: ${formatMoney(unitPrice)}/bộ`
+        };
+    }
+
+    if (sku === "DV-KHAY-PT") {
+        const cfg = ps.khay_dinh_hinh || DEFAULT_PROCESSING_SERVICES.khay_dinh_hinh;
+        const tiers = cfg.tiers_phothong || [];
+        const matchTier = tiers.find(t => {
+            const min = Number(t.min_qty) || 0;
+            const max = (t.max_qty !== undefined && t.max_qty !== null && t.max_qty !== "") ? Number(t.max_qty) : Infinity;
+            return qty >= min && qty <= max;
+        });
+        const unitPrice = matchTier ? Number(matchTier.price) : 8000;
+        return {
+            price: unitPrice,
+            item_total: qty * unitPrice,
+            price_note: `Phổ thông: ${formatMoney(unitPrice)}/bộ`
+        };
+    }
+
+    if (sku === "DV-VACHNGAN") {
+        const cfg = ps.vach_ngan || DEFAULT_PROCESSING_SERVICES.vach_ngan;
+        const unitPrice = Number(cfg.price_per_box) || 5000;
+        return {
+            price: unitPrice,
+            item_total: qty * unitPrice,
+            price_note: `${formatMoney(unitPrice)}/bộ`
+        };
+    }
+
+    return { price: 0, item_total: 0, price_note: "" };
+};
+
+window.switchPosCatalogTab = function(tab) {
+    window.posCatalogTab = tab || "PRODUCTS";
+    const btnProd = document.getElementById("posTabBtnProducts");
+    const btnServ = document.getElementById("posTabBtnServices");
+    const catBar = document.getElementById("posCategoryFilterBar");
+
+    if (tab === "SERVICES") {
+        if (btnProd) btnProd.classList.remove("active");
+        if (btnServ) btnServ.classList.add("active");
+        if (catBar) catBar.style.display = "none";
+    } else {
+        if (btnServ) btnServ.classList.remove("active");
+        if (btnProd) btnProd.classList.add("active");
+        if (catBar) catBar.style.display = "flex";
+    }
+    window.renderPosCatalog();
+};
+
+window.addPosServiceItem = function(sku, qtyDelta = 0) {
+    const service = (window.POS_SERVICES || []).find(s => s.sku === sku);
+    if (!service) return;
+
+    // Lấy số lượng mặc định: bằng tổng số lượng hộp hiện có trong giỏ hàng (hoặc 100 nếu giỏ rỗng)
+    const totalBoxQty = window.posCart.filter(i => !i.is_service).reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
+    const defaultQty = totalBoxQty > 0 ? totalBoxQty : (service.min_qty || 100);
+
+    const existing = window.posCart.find(i => i.sku === sku);
+    if (existing) {
+        if (qtyDelta !== 0) {
+            existing.qty += qtyDelta;
+        } else {
+            existing.qty += 10;
+        }
+        if (existing.qty <= 0) {
+            window.removePosItem(sku);
+            return;
+        }
+        const pricing = window.calculateServiceItemPricing(sku, existing.qty);
+        existing.price = pricing.price;
+        existing.item_total = pricing.item_total;
+        existing.price_note = pricing.price_note;
+    } else {
+        const initialQty = qtyDelta > 0 ? qtyDelta : defaultQty;
+        const pricing = window.calculateServiceItemPricing(sku, initialQty);
+        window.posCart.push({
+            sku: service.sku,
+            name: service.name,
+            unit: service.unit || 'Bộ',
+            brand: 'Gia công',
+            is_service: true,
+            qty: initialQty,
+            price: pricing.price,
+            item_total: pricing.item_total,
+            price_note: pricing.price_note,
+            item_note: ""
+        });
+    }
+
+    window.renderPosCart();
+};
+
 window.renderPosCatalog = function() {
     const grid = document.getElementById("posProductCatalogGrid");
     if (!grid) return;
@@ -24324,13 +24555,69 @@ window.renderPosCatalog = function() {
     const query = (searchInput?.value || "").toLowerCase().trim();
     const currentPriceBook = window.posSelectedPriceBook || "RETAIL";
 
+    // NẾU ĐANG CHỌN TAB DỊCH VỤ GIA CÔNG
+    if (window.posCatalogTab === "SERVICES") {
+        const services = (window.POS_SERVICES || []).filter(s => {
+            if (!query) return true;
+            return s.sku.toLowerCase().includes(query) || s.name.toLowerCase().includes(query) || s.description.toLowerCase().includes(query);
+        });
+
+        if (services.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px 10px; color:#94a3b8; font-size:0.9rem;">
+                <i data-lucide="wrench" style="width:36px; height:36px; margin: 0 auto 8px auto; opacity:0.6; display:block;"></i>
+                Không tìm thấy dịch vụ gia công nào phù hợp.
+            </div>`;
+            if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+            return;
+        }
+
+        services.forEach(s => {
+            const card = document.createElement("div");
+            card.className = "pos-prod-card";
+            card.style.border = "1px solid #fcd34d";
+            card.style.background = "#fffdf5";
+            card.style.cursor = "pointer";
+            card.setAttribute("title", `Click để thêm dịch vụ ${s.name}`);
+            card.onclick = () => window.addPosServiceItem(s.sku);
+
+            card.innerHTML = `
+                <div>
+                    <div class="pos-prod-img-wrap" style="background: ${s.bg}; display: flex; align-items: center; justify-content: center; height: 75px; border-radius: 6px;">
+                        <i data-lucide="${s.icon}" style="width: 32px; height: 32px; color: ${s.color};"></i>
+                    </div>
+                    <div class="pos-prod-name" style="font-weight: 700; color: #1e293b; margin-top: 6px;">${s.name}</div>
+                    <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">${s.description}</div>
+                </div>
+                <div style="margin-top: 8px;">
+                    <div class="pos-prod-meta" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size: 0.72rem; color: #64748b;">${s.sku}</span>
+                        <span style="font-size: 0.7rem; font-weight: 700; background: #fef3c7; color: #b45309; padding: 1px 6px; border-radius: 4px;">${s.badge}</span>
+                    </div>
+                    <div style="margin-top: 6px; display: flex; justify-content: flex-end;">
+                        <button type="button" class="btn btn-sm btn-primary" style="padding: 2px 10px; font-size: 0.75rem; background: #d97706; border: none; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="plus" style="width: 12px; height: 12px;"></i> Thêm dịch vụ
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+        return;
+    }
+
+    // NẾU ĐANG CHỌN TAB HÀNG HÓA SẢN PHẨM
     const filtered = (state.online_products || []).filter(p => {
         if (!p) return false;
         // Category filter
         if (window.posCurrentCategory && window.posCurrentCategory !== "ALL") {
             const prodName = (p.name || "").toLowerCase();
+            const prodCat = (p.category || "").toLowerCase();
             const cat = window.posCurrentCategory.toLowerCase();
-            if (!prodName.includes(cat)) return false;
+            if (!prodName.includes(cat) && !prodCat.includes(cat)) return false;
         }
         // Search text filter
         if (query) {
@@ -24463,6 +24750,12 @@ window.handlePosSearchInput = function(val) {
 
 // Add product to Cart
 window.addPosItem = function(sku, qtyDelta = 1) {
+    // Nếu là dịch vụ gia công
+    if ((window.POS_SERVICES || []).some(s => s.sku === sku)) {
+        window.addPosServiceItem(sku, qtyDelta);
+        return;
+    }
+
     const prod = (state.online_products || []).find(p => p.sku === sku);
     if (!prod) return;
 
@@ -24473,8 +24766,15 @@ window.addPosItem = function(sku, qtyDelta = 1) {
             window.removePosItem(sku);
             return;
         }
-        existing.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, existing.qty);
-        existing.item_total = existing.qty * existing.price;
+        if (existing.is_service) {
+            const pricing = window.calculateServiceItemPricing(sku, existing.qty);
+            existing.price = pricing.price;
+            existing.item_total = pricing.item_total;
+            existing.price_note = pricing.price_note;
+        } else {
+            existing.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, existing.qty);
+            existing.item_total = existing.qty * existing.price;
+        }
     } else {
         const initialQty = qtyDelta > 0 ? qtyDelta : 1;
         const price = window.getPosProductPrice(prod, window.posSelectedPriceBook, initialQty);
@@ -24483,6 +24783,7 @@ window.addPosItem = function(sku, qtyDelta = 1) {
             name: prod.name,
             unit: prod.unit || 'Chiếc',
             brand: prod.brand || '',
+            is_service: false,
             qty: initialQty,
             price: price,
             item_total: initialQty * price,
@@ -24493,7 +24794,7 @@ window.addPosItem = function(sku, qtyDelta = 1) {
     window.renderPosCart();
 };
 
-// Update item quantity in Cart
+// Update item quantity in Cart (Hỗ trợ cả Hàng hóa và Dịch vụ gia công)
 window.updatePosItemQty = function(sku, newQty) {
     const qty = parseInt(newQty);
     if (isNaN(qty) || qty <= 0) {
@@ -24504,10 +24805,18 @@ window.updatePosItemQty = function(sku, newQty) {
     const item = window.posCart.find(i => i.sku === sku);
     if (!item) return;
 
-    const prod = (state.online_products || []).find(p => p.sku === sku);
-    item.qty = qty;
-    item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, qty);
-    item.item_total = item.qty * item.price;
+    if (item.is_service) {
+        item.qty = qty;
+        const pricing = window.calculateServiceItemPricing(sku, qty);
+        item.price = pricing.price;
+        item.item_total = pricing.item_total;
+        item.price_note = pricing.price_note;
+    } else {
+        const prod = (state.online_products || []).find(p => p.sku === sku);
+        item.qty = qty;
+        item.price = window.getPosProductPrice(prod, window.posSelectedPriceBook, qty);
+        item.item_total = item.qty * item.price;
+    }
 
     window.renderPosCart();
 };
@@ -24632,16 +24941,24 @@ window.renderPosCart = function() {
         row.className = "pos-cart-row";
 
         let priceBadge = "";
-        const prod = (state.online_products || []).find(p => p.sku === item.sku);
-        if (window.posSelectedPriceBook === "WHOLESALE" && prod && prod.wholesale_price > 0) {
-            priceBadge = `<span style="font-size:0.65rem; padding:1px 3px; background:#fef3c7; color:#b45309; border-radius:3px; font-weight:700; margin-left:4px;">Sỉ</span>`;
+        if (item.is_service) {
+            priceBadge = `<span style="font-size:0.65rem; padding:1px 5px; background:#fef3c7; color:#b45309; border-radius:3px; font-weight:700; margin-left:4px;">Gia công</span>`;
+        } else {
+            const prod = (state.online_products || []).find(p => p.sku === item.sku);
+            if (window.posSelectedPriceBook === "WHOLESALE" && prod && prod.wholesale_price > 0) {
+                priceBadge = `<span style="font-size:0.65rem; padding:1px 3px; background:#fef3c7; color:#b45309; border-radius:3px; font-weight:700; margin-left:4px;">Sỉ</span>`;
+            }
         }
+
+        const noteBadge = item.price_note ? `<small style="display:block; font-size:0.68rem; color:#b45309; font-weight:600;">${item.price_note}</small>` : '';
 
         row.innerHTML = `
             <span style="width: 36px; text-align: center; color:#64748b; font-size:0.8rem;">${idx + 1}</span>
             <div style="flex: 1; padding-left: 6px; overflow:hidden;">
                 <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.name}">${item.name}</div>
-                <div style="font-size:0.75rem; color:#64748b;">SKU: <strong>${item.sku}</strong></div>
+                <div style="font-size:0.75rem; color:#64748b;">
+                    SKU: <strong>${item.sku}</strong> ${priceBadge}
+                </div>
             </div>
             <span style="width: 65px; text-align: center; font-size:0.8rem; color:#475569;">${item.unit}</span>
             <div style="width: 105px; text-align: center;">
@@ -24653,7 +24970,7 @@ window.renderPosCart = function() {
             </div>
             <div style="width: 110px; text-align: right; font-weight:600; color:#334155;">
                 ${typeof formatMoney === 'function' ? formatMoney(item.price) : item.price}
-                ${priceBadge}
+                ${noteBadge}
             </div>
             <div style="width: 115px; text-align: right; font-weight:700; color:#0284c7;">
                 ${typeof formatMoney === 'function' ? formatMoney(item.item_total) : item.item_total}
@@ -24676,29 +24993,23 @@ window.renderPosCart = function() {
 
 // Recalculate Totals
 window.recalcPosTotals = function() {
-    const subtotal = window.posCart.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
-    const totalQty = window.posCart.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
+    // Tách riêng tiền hàng và dịch vụ gia công trong giỏ hàng
+    const goodsItems = window.posCart.filter(i => !i.is_service);
+    const serviceItems = window.posCart.filter(i => i.is_service);
+
+    const subtotal = goodsItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
+    const totalQty = goodsItems.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
+    const processingFee = serviceItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
 
     const discountVal = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
-    const vatPercent = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
     const shipFeeVal = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
+    const vatPercent = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
 
-    // Calculate Processing Add-ons (Ảnh 5)
-    const procResult = typeof window.calculatePosProcessingTotals === "function" ? window.calculatePosProcessingTotals() : { totalFee: 0 };
-    const processingFee = procResult.totalFee || 0;
-
-    const procBadge = document.getElementById("posProcessingTotalBadge");
-    if (procBadge) procBadge.textContent = processingFee > 0 ? `+${typeof formatMoney === 'function' ? formatMoney(processingFee) : processingFee + 'đ'}` : "+0đ";
-
-    const procRow = document.getElementById("posProcessingSummaryRow");
-    if (procRow) procRow.style.display = processingFee > 0 ? "flex" : "none";
-
-    const procFeeEl = document.getElementById("posProcessingFeeAmount");
-    if (procFeeEl) procFeeEl.textContent = `+${typeof formatMoney === 'function' ? formatMoney(processingFee) : processingFee + 'đ'}`;
-
-    const taxable = Math.max(0, subtotal + processingFee - discountVal);
-    const vatVal = Math.round(taxable * (vatPercent / 100));
-    const grandTotal = Math.max(0, taxable + vatVal + shipFeeVal);
+    // YÊU CẦU 5: Phí VAT tính sau tất cả dịch vụ kể cả gia công và vận chuyển
+    // Tổng trước thuế = Tiền hàng + Phí gia công + Phí vận chuyển - Chiết khấu
+    const totalBeforeVat = Math.max(0, subtotal + processingFee + shipFeeVal - discountVal);
+    const vatVal = Math.round(totalBeforeVat * (vatPercent / 100));
+    const grandTotal = totalBeforeVat + vatVal;
 
     const fmt = (v) => typeof formatMoney === 'function' ? formatMoney(v) : `${Number(v || 0).toLocaleString('vi-VN')}đ`;
 
@@ -24706,9 +25017,15 @@ window.recalcPosTotals = function() {
     setTxt("posTotalQtyCount", totalQty);
     setTxt("posSubtotalAmount", fmt(subtotal));
     setTxt("posDiscountAmount", discountVal > 0 ? `-${fmt(discountVal)}` : "-0đ");
-    setTxt("posVatAmount", fmt(vatVal));
     setTxt("posShipFeeAmount", fmt(shipFeeVal));
+    setTxt("posVatAmount", fmt(vatVal));
     setTxt("posGrandTotalAmount", fmt(grandTotal));
+
+    const procRow = document.getElementById("posProcessingSummaryRow");
+    if (procRow) {
+        procRow.style.display = processingFee > 0 ? "flex" : "none";
+        setTxt("posProcessingFeeAmount", `+${fmt(processingFee)}`);
+    }
 };
 
 // Submit POS Order (isDraft = true: Lưu nháp, isDraft = false: Xác nhận / Thanh toán)
@@ -24730,12 +25047,16 @@ window.submitPosOrder = function(isDraft = false) {
         const paymentStatus = isDraft ? "DRAFT" : (document.getElementById("posPaymentStatusSelect")?.value || "PAID");
         const notes = document.getElementById("posOrderNotes")?.value.trim() || "";
 
-        const subtotal = window.posCart.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
-        const procResult = typeof window.calculatePosProcessingTotals === "function" ? window.calculatePosProcessingTotals() : { totalFee: 0 };
-        const processingFee = procResult.totalFee || 0;
-        const taxable = Math.max(0, subtotal + processingFee - discount);
-        const vatAmount = Math.round(taxable * (vatRate / 100));
-        const totalAmount = Math.max(0, taxable + vatAmount + shipFee);
+        const goodsItems = window.posCart.filter(i => !i.is_service);
+        const serviceItems = window.posCart.filter(i => i.is_service);
+
+        const subtotal = goodsItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
+        const processingFee = serviceItems.reduce((sum, i) => sum + (Number(i.item_total) || 0), 0);
+
+        // VAT tính sau tất cả dịch vụ kể cả gia công và vận chuyển
+        const totalBeforeVat = Math.max(0, subtotal + processingFee + shipFee - discount);
+        const vatAmount = Math.round(totalBeforeVat * (vatRate / 100));
+        const totalAmount = totalBeforeVat + vatAmount;
 
         const isEdit = window.posActiveMode === "EDIT" && !!window.posActiveOrderId;
         let orderId = window.posActiveOrderId;
@@ -24794,10 +25115,10 @@ window.submitPosOrder = function(isDraft = false) {
             notes: notes
         };
 
-        // Deduct stock only when confirming order (not draft)
+        // Deduct stock only when confirming order (not draft) and ONLY for goods (not services)
         if (!isDraft) {
             state.online_products.forEach(p => {
-                const item = window.posCart.find(i => i.sku === p.sku);
+                const item = window.posCart.find(i => !i.is_service && i.sku === p.sku);
                 if (item) {
                     p.stock_qty -= item.qty;
                     const logId = "log_" + Math.random().toString(36).substring(2, 9);
@@ -26563,7 +26884,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // ==========================================================================
-// THIẾT LẬP BẢNG GIÁ DỊCH VỤ GIA CÔNG 2027 (ẢNH 5)
+// THIẾT LẬP BẢNG GIÁ DỊCH VỤ GIA CÔNG 2027 
 // ==========================================================================
 
 window.switchPriceSettingTab = function(tabName) {
