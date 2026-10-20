@@ -26856,7 +26856,7 @@ document.getElementById("productionQuoteForm")?.addEventListener("submit", funct
 // --------------------------------------------------------------------------
 // RICH BULK PRICE SETUP MODAL HANDLERS
 // --------------------------------------------------------------------------
-window.addBulkPriceTierRow = function(min = '', max = '', ratio = 100) {
+window.addBulkPriceTierRow = function(min = '', max = '', price = '') {
     const container = document.getElementById("bulkPriceTiersContainer");
     if (!container) return;
     
@@ -26876,49 +26876,23 @@ window.addBulkPriceTierRow = function(min = '', max = '', ratio = 100) {
     row.style.alignItems = "center";
     row.style.gap = "8px";
     row.innerHTML = `
-        <input type="number" class="form-input tier-min" value="${min}" placeholder="Min" style="width:70px; height:32px; padding:4px;" required>
-        <span>đến</span>
-        <input type="number" class="form-input tier-max" value="${max}" placeholder="Vô hạn" style="width:80px; height:32px; padding:4px;">
-        <span>-> Giảm còn</span>
-        <input type="number" step="0.01" class="form-input tier-ratio" value="${ratio}" style="width:70px; height:32px; padding:4px;" required>
-        <span>% Giá lẻ</span>
-        <button type="button" class="btn-icon" onclick="document.getElementById('${rowId}').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px;"><i data-lucide="trash-2" style="width:16px; height:16px;"></i></button>
+        <span style="font-size:0.85rem; color:var(--text-secondary); min-width:20px;">Từ</span>
+        <input type="number" class="form-input tier-min" value="${min}" placeholder="Từ SL" style="width:75px; height:34px; padding:4px 8px;" min="1" required>
+        <span style="font-size:0.85rem; color:var(--text-secondary);">đến</span>
+        <input type="number" class="form-input tier-max" value="${max !== null && max !== undefined ? max : ''}" placeholder="Vô hạn" style="width:85px; height:34px; padding:4px 8px;" min="1">
+        <span style="font-size:0.85rem; font-weight:600; white-space:nowrap;">-> Giá bán:</span>
+        <input type="number" class="form-input tier-price" value="${price !== undefined && price !== null ? price : ''}" placeholder="Nhập đơn giá..." style="width:130px; height:34px; padding:4px 8px; font-weight:600;" min="0" required>
+        <span style="font-size:0.85rem; color:var(--text-secondary); font-weight:600;">đ</span>
+        <button type="button" class="btn-icon" onclick="document.getElementById('${rowId}').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px; margin-left:auto;" title="Xóa khoảng giá"><i data-lucide="trash-2" style="width:16px; height:16px;"></i></button>
     `;
     container.appendChild(row);
-    lucide.createIcons();
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
 };
 
 window.addBulkPriceDiscountRow = function(min = '', max = '', percent = 0) {
-    const container = document.getElementById("bulkPriceDiscountsContainer");
-    if (!container) return;
-    
-    if (min === '') {
-        const lastMaxInput = container.querySelector("div:last-child .disc-max");
-        if (lastMaxInput && lastMaxInput.value) {
-            min = parseInt(lastMaxInput.value) + 1;
-        } else {
-            min = 1000;
-        }
-    }
-    
-    const rowId = "disc_row_" + Math.random().toString(36).substring(2, 9);
-    const row = document.createElement("div");
-    row.id = rowId;
-    row.style.display = "flex";
-    row.style.alignItems = "center";
-    row.style.gap = "8px";
-    row.innerHTML = `
-        <span>Từ SL</span>
-        <input type="number" class="form-input disc-min" value="${min}" style="width:80px; height:32px; padding:4px;" required>
-        <span>đến</span>
-        <input type="number" class="form-input disc-max" value="${max}" style="width:80px; height:32px; padding:4px;" placeholder="Vô hạn">
-        <span>-> Giảm</span>
-        <input type="number" class="form-input disc-percent" value="${percent}" style="width:60px; height:32px; padding:4px;" required>
-        <span>%</span>
-        <button type="button" class="btn-icon" onclick="document.getElementById('${rowId}').remove()" style="color:var(--danger); border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:4px;"><i data-lucide="trash-2" style="width:16px; height:16px;"></i></button>
-    `;
-    container.appendChild(row);
-    lucide.createIcons();
+    // Deprecated stub
 };
 
 window.openOnlineBulkPriceModal = function() {
@@ -26947,21 +26921,30 @@ window.openOnlineBulkPriceModal = function() {
     const selectAllChk = document.getElementById("chkBulkPriceSelectAll");
     if (selectAllChk) selectAllChk.checked = true;
 
-    // Clear and Populate default 6 Tiers Inputs (Based on Lạc Hồng values)
+    // Clear and Populate default Tiers Inputs
     const tiersContainer = document.getElementById("bulkPriceTiersContainer");
     if (tiersContainer) {
         tiersContainer.innerHTML = "";
-        const defaultTiers = [
-            { min: 1, max: 100, ratio: 100 },
-            { min: 101, max: 300, ratio: 93.75 },
-            { min: 301, max: 500, ratio: 91 },
-            { min: 501, max: 700, ratio: 87.5 },
-            { min: 701, max: 900, ratio: 86.25 },
-            { min: 901, max: 1000, ratio: 85 }
-        ];
-        defaultTiers.forEach(tier => {
-            window.addBulkPriceTierRow(tier.min, tier.max, tier.ratio);
-        });
+        
+        // Find if any product already has retail_qty_prices configured
+        const firstProdWithTiers = (state.online_products || []).find(p => p.retail_qty_prices && p.retail_qty_prices.length > 0);
+        if (firstProdWithTiers && firstProdWithTiers.retail_qty_prices.length > 0) {
+            firstProdWithTiers.retail_qty_prices.forEach(tier => {
+                window.addBulkPriceTierRow(tier.min_qty, tier.max_qty || '', tier.price);
+            });
+        } else {
+            const defaultTiers = [
+                { min: 1, max: 100, price: '' },
+                { min: 101, max: 300, price: '' },
+                { min: 301, max: 500, price: '' },
+                { min: 501, max: 700, price: '' },
+                { min: 701, max: 900, price: '' },
+                { min: 901, max: '', price: '' }
+            ];
+            defaultTiers.forEach(tier => {
+                window.addBulkPriceTierRow(tier.min, tier.max, tier.price);
+            });
+        }
     }
 
     openModal("onlineBulkPriceModal");
@@ -26987,33 +26970,46 @@ function handleOnlineBulkPriceSubmit(e) {
     // 2. Parse Tiers Inputs
     const tierRows = document.querySelectorAll("#bulkPriceTiersContainer > div");
     const parsedTiers = Array.from(tierRows).map(row => {
-        const min = parseInt(row.querySelector(".tier-min").value) || 1;
-        const maxVal = row.querySelector(".tier-max").value;
+        const min = parseInt(row.querySelector(".tier-min")?.value) || 1;
+        const maxVal = row.querySelector(".tier-max")?.value;
         const max = maxVal ? parseInt(maxVal) : null;
-        const ratio = parseFloat(row.querySelector(".tier-ratio").value) || 100;
-        return { min, max, ratio };
+        const price = parseFloat(row.querySelector(".tier-price")?.value) || 0;
+        return { min, max, price };
     });
+
+    if (parsedTiers.length === 0) {
+        alert("Vui lòng thêm ít nhất 1 khoảng giá!");
+        return;
+    }
+
+    // Sort tiers by min quantity
+    parsedTiers.sort((a, b) => a.min - b.min);
 
     // 3. Update the products in state
     state.online_products.forEach(p => {
         if (checkedSkus.includes(p.sku)) {
-            const basePrice = p.price || 0;
-            // Map ratios to actual prices
             const mappedTiers = parsedTiers.map(t => ({
                 min_qty: t.min,
                 max_qty: t.max,
-                price: Math.round(basePrice * (t.ratio / 100))
+                price: t.price
             }));
             p.retail_qty_prices = mappedTiers;
             p.wholesale_qty_prices = mappedTiers;
             p.wholesale_qty_discounts = [];
+            
+            // Sync base retail price p.price to tier 1 (qty 1) if available
+            const tierOne = mappedTiers.find(t => t.min_qty === 1) || mappedTiers[0];
+            if (tierOne && tierOne.price > 0) {
+                p.price = tierOne.price;
+            }
         }
     });
 
     state.updateState("online_products", state.online_products);
     closeModal("onlineBulkPriceModal");
     if (typeof renderOnlinePrices === "function") renderOnlinePrices();
-    alert(`Đã áp dụng thiết lập bậc thang giá bán lẻ hàng loạt thành công cho ${checkedSkus.length} sản phẩm!`);
+    if (typeof renderOnlineProducts === "function") renderOnlineProducts();
+    alert(`Đã áp dụng bảng giá bán lẻ theo số lượng hàng loạt thành công cho ${checkedSkus.length} sản phẩm!`);
 }
 
 // Bind submit event for bulk price form on DOMContentLoaded
