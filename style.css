@@ -948,6 +948,58 @@ body {
 }
 
 /* ==========================================================================
+   ADMIN MODULE TABLES (CÂN ĐỐI PHÂN BỔ ĐỀU TOÀN MÀN HÌNH & 1 DÒNG)
+   ========================================================================== */
+#crmTable,
+#contractsTable,
+#employeesTable,
+#collaboratorsTable,
+#laborContractsTable,
+#categoryItemsTable,
+#userListTable,
+#departmentListTable,
+#crmOrdersLogTable,
+#crmFinanceLogTable,
+#crmDebtOrdersTable,
+#crmInstallmentHistoryTable,
+#crmContractsLogTable {
+    width: 100% !important;
+    min-width: 100% !important;
+    table-layout: auto !important;
+}
+
+#crmTable th, #crmTable td,
+#contractsTable th, #contractsTable td,
+#employeesTable th, #employeesTable td,
+#collaboratorsTable th, #collaboratorsTable td,
+#laborContractsTable th, #laborContractsTable td,
+#categoryItemsTable th, #categoryItemsTable td,
+#userListTable th, #userListTable td,
+#departmentListTable th, #departmentListTable td,
+#crmOrdersLogTable th, #crmOrdersLogTable td,
+#crmFinanceLogTable th, #crmFinanceLogTable td,
+#crmDebtOrdersTable th, #crmDebtOrdersTable td,
+#crmInstallmentHistoryTable th, #crmInstallmentHistoryTable td,
+#crmContractsLogTable th, #crmContractsLogTable td {
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+    padding: 11px 16px !important;
+    line-height: 1.4 !important;
+}
+
+#crmTable .card-actions-row,
+#contractsTable .card-actions-row,
+#employeesTable .card-actions-row,
+#collaboratorsTable .card-actions-row,
+#laborContractsTable .card-actions-row {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+}
+
+/* ==========================================================================
    ACTIONS BAR & FILTER CONTROLS
    ========================================================================== */
 .actions-bar {

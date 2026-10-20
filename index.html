@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_layout_v13">
+    <link rel="stylesheet" href="/style.css?v=20261020_admin_finance_v14">
 
     <script>
 
@@ -3121,7 +3121,7 @@
 
                                 <span class="kpi-label">Tổng quỹ (Tiền mặt + Ngân hàng)</span>
 
-                                <h3 class="kpi-value" id="finTotalBalance">151,300,000đ</h3>
+                                <h3 class="kpi-value" id="finTotalBalance">0đ</h3>
 
                                 <span class="kpi-trend text-secondary">Tất cả tài khoản liên kết</span>
 
@@ -3141,7 +3141,7 @@
 
                                 <span class="kpi-label">Công nợ phải thu (Khách hàng nợ)</span>
 
-                                <h3 class="kpi-value" id="finReceivable">35,460,000đ</h3>
+                                <h3 class="kpi-value" id="finReceivable">0đ</h3>
 
                                 <span class="kpi-trend text-warning">Chưa thanh toán hoàn tất</span>
 
@@ -3161,7 +3161,7 @@
 
                                 <span class="kpi-label">Công nợ phải trả (Nợ nhà cung cấp)</span>
 
-                                <h3 class="kpi-value" id="finPayable">18,500,000đ</h3>
+                                <h3 class="kpi-value" id="finPayable">0đ</h3>
 
                                 <span class="kpi-trend text-secondary">Đến hạn trong tuần này</span>
 
@@ -3226,6 +3226,14 @@
                                             <i data-lucide="minus-circle"></i>
 
                                             <span>Lập phiếu Chi</span>
+
+                                        </button>
+
+                                        <button class="btn btn-secondary" onclick="window.clearFinanceData()" style="color:#ef4444; border-color:#fca5a5; display:inline-flex; align-items:center; gap:6px;" title="Xóa toàn bộ dữ liệu sổ quỹ và phiếu thu chi">
+
+                                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+
+                                            <span>Xóa dữ liệu tài chính</span>
 
                                         </button>
 
@@ -10846,7 +10854,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_layout_v13"></script>
+    <script src="/app.js?v=20261020_admin_finance_v14"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

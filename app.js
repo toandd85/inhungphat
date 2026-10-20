@@ -13543,6 +13543,13 @@ class AppState {
         this.online_inventory_checks = this.load("online_inventory_checks", []);
         this.online_internal_exits = this.load("online_internal_exits", []);
         this.transactions = this.load("transactions", []);
+        // Wipe finance transactions permanently on user request
+        if (!localStorage.getItem("ihp_clean_finance_v20261020_v1")) {
+            this.transactions = [];
+            this.save("transactions", []);
+            localStorage.setItem("ihp_transactions", "[]");
+            localStorage.setItem("ihp_clean_finance_v20261020_v1", "true");
+        }
         this.crm_notes = this.load("crm_notes", DEFAULT_CRM_NOTES);
         this.conversations = this.load("conversations", DEFAULT_CONVERSATIONS);
         this.messages = this.load("messages", DEFAULT_MESSAGES);
@@ -15940,10 +15947,10 @@ function renderSubcontracting() {
 }
 
 function renderFinance() {
-    // Calc total balance
+    // Calc total balance from actual transactions
     const receipts = state.transactions.filter(t => t.type === "RECEIPT").reduce((sum, t) => sum + t.amount, 0);
     const payments = state.transactions.filter(t => t.type === "PAYMENT").reduce((sum, t) => sum + t.amount, 0);
-    const balance = 150000000 + receipts - payments; // Start base budget + receipts - payments
+    const balance = receipts - payments;
     document.getElementById("finTotalBalance").textContent = formatMoney(balance);
 
     // Calc receivables (Unpaid amount of orders)
@@ -16022,6 +16029,16 @@ function renderFinance() {
     }
     updateFinanceBadges();
 }
+
+window.clearFinanceData = function() {
+    if (confirm("Cảnh báo: Bạn có chắc chắn muốn xóa toàn bộ dữ liệu sổ quỹ, phiếu Thu - Chi và các giao dịch trong module Tài chính không? Hành động này không thể hoàn tác.")) {
+        state.transactions = [];
+        state.save("transactions", []);
+        localStorage.setItem("ihp_transactions", "[]");
+        if (typeof renderFinance === 'function') renderFinance();
+        alert("Đã xóa toàn bộ dữ liệu trong module Tài chính thành công.");
+    }
+};
 
 function updateFinanceBadges() {
     // 1. Customer Debt Count
@@ -19174,24 +19191,26 @@ function renderCRM() {
         row.innerHTML = `
             <td><a href="javascript:void(0)" onclick="window.openEditPartner('${p.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${p.code || 'N/A'}</strong></a></td>
             <td>
-                <strong>${p.name || ''}</strong>
-                ${p.company_name && p.company_name !== p.name ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;" title="Tên công ty"><i data-lucide="building" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${p.company_name}</div>` : ''}
-                ${p.contact_person && p.contact_person !== p.name && p.contact_person !== 'Đại diện công ty' ? `<div style="font-size:0.75rem; color:var(--accent); margin-top:1px;" title="Người liên hệ"><i data-lucide="user" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${p.contact_person}</div>` : ''}
+                <div style="display:inline-flex; align-items:center; gap:4px; flex-wrap:nowrap; white-space:nowrap;">
+                    <strong>${p.name || ''}</strong>
+                    ${p.company_name && p.company_name !== p.name ? `<small class="text-muted" title="Tên công ty">(${p.company_name})</small>` : ''}
+                    ${p.contact_person && p.contact_person !== p.name && p.contact_person !== 'Đại diện công ty' ? `<small style="color:var(--accent);" title="Người liên hệ">• ${p.contact_person}</small>` : ''}
+                </div>
             </td>
-            <td>${custTypeBadge}</td>
-            <td>${p.phone || 'N/A'}</td>
-            <td>${p.address || '<span class="text-muted">-</span>'}</td>
-            <td>${p.region ? `<span class="badge badge-info" style="font-size:0.75rem;">${p.region}</span>` : '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:center;">${custTypeBadge}</td>
+            <td>${p.phone || '<span class="text-muted">-</span>'}</td>
+            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.address || ''}">${p.address || '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:center;">${p.region ? `<span class="badge badge-info" style="font-size:0.75rem;">${p.region}</span>` : '<span class="text-muted">-</span>'}</td>
             <td>${p.ward || '<span class="text-muted">-</span>'}</td>
-            <td>${p.sales_staff ? `<span class="badge badge-primary" style="font-size:0.75rem; font-weight:600;">${p.sales_staff}</span>` : '<span class="text-muted">-</span>'}</td>
-            <td>${p.sales_channel ? `<span class="badge badge-secondary" style="font-size:0.75rem;">${p.sales_channel}</span>` : '<span class="text-muted">-</span>'}</td>
-            <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.note || ''}">${p.note || '<span class="text-muted">-</span>'}</td>
-            <td><strong>${typeof formatMoney === 'function' ? formatMoney(spendVal) : spendVal}</strong></td>
-            <td class="${debtVal > 0 ? 'text-warning font-bold' : ''}">${typeof formatMoney === 'function' ? formatMoney(debtVal) : debtVal}</td>
-            <td>${statusBadge}</td>
+            <td>${p.sales_staff ? `<span class="badge badge-primary" style="font-size:0.75rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px; margin-right:2px;"></i>${p.sales_staff}</span>` : '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:center;">${p.sales_channel ? `<span class="badge badge-secondary" style="font-size:0.75rem;">${p.sales_channel}</span>` : '<span class="text-muted">-</span>'}</td>
+            <td style="max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.note || ''}">${p.note || '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:right;"><strong>${typeof formatMoney === 'function' ? formatMoney(spendVal) : spendVal}</strong></td>
+            <td style="text-align:right;" class="${debtVal > 0 ? 'text-warning font-bold' : ''}">${typeof formatMoney === 'function' ? formatMoney(debtVal) : debtVal}</td>
+            <td style="text-align:center;">${statusBadge}</td>
             <td>
-                <div class="card-actions-row">
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="window.openCrmDetail('${p.id}')">Xem CRM</button>
+                <div class="card-actions-row" style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="window.openCrmDetail('${p.id}')">Xem CRM</button>
                     <button class="btn-icon" onclick="window.viewPartnerBillingDetails('${p.id}')" title="Xem Hóa đơn VAT / Trụ sở"><i data-lucide="receipt"></i></button>
                     <button class="btn-icon" onclick="window.openEditPartner('${p.id}')" title="Sửa"><i data-lucide="edit-2"></i></button>
                     <button class="btn-icon" style="color:var(--danger)" onclick="window.deletePartner('${p.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
@@ -29713,60 +29732,43 @@ window.renderEmployees = function() {
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${s.code}</strong></td>
+            <td><a href="javascript:void(0)" onclick="openEditEmployee('${s.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${s.code}</strong></a></td>
             <td>
-                <div style="display:flex; flex-direction:column; gap:2px;">
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <strong style="color:var(--text-primary); font-size:0.92rem;">${s.name}</strong>
-                        ${s.gender ? `<span class="badge" style="background:var(--bg-secondary); color:var(--text-secondary); font-size:0.7rem; padding:1px 5px;">${s.gender}</span>` : ''}
-                        ${roleTag}
-                    </div>
-                    <span style="font-size:0.78rem; color:var(--accent); font-weight:600; display:inline-flex; align-items:center; gap:3px;">
-                        <i data-lucide="briefcase" style="width:11px; height:11px;"></i> ${s.title || 'Nhân viên'}
-                    </span>
+                <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap;">
+                    <strong style="color:var(--text-primary); font-size:0.92rem;">${s.name}</strong>
+                    <span class="badge" style="background:var(--bg-hover); color:var(--accent); font-size:0.72rem; font-weight:600; padding:1px 6px; border:1px solid var(--border-color);">${s.title || 'Nhân viên'}</span>
+                    ${s.gender ? `<span class="badge" style="background:var(--bg-secondary); color:var(--text-secondary); font-size:0.7rem; padding:1px 5px;">${s.gender}</span>` : ''}
+                    ${roleTag}
                 </div>
             </td>
             <td>
-                <div style="font-size:0.83rem; font-weight:500; display:flex; align-items:center; gap:4px;">
-                    <i data-lucide="map-pin" style="width:12px; height:12px; color:#ef4444; flex-shrink:0;"></i>
-                    <span>${s.branch || 'Hà Nội'}</span>
-                </div>
-            </td>
-            <td>
-                <span class="badge" style="background:#e0e7ff; color:#3730a3; font-size:0.75rem; font-weight:600; padding:4px 8px; border-radius:6px; display:inline-block;">
-                    ${s.department || 'Kinh doanh'}
+                <span class="badge badge-secondary" style="font-size:0.75rem; white-space:nowrap;">
+                    <i data-lucide="map-pin" style="width:10px; height:10px; color:#ef4444; margin-right:2px;"></i>${s.branch || 'Hà Nội'}
                 </span>
             </td>
             <td>
-                <div style="display:flex; flex-direction:column; gap:2px; font-size:0.82rem;">
-                    <div style="display:flex; align-items:center; gap:4px;">
-                        <i data-lucide="phone" style="width:11px; height:11px; color:#10b981;"></i>
-                        <span>${s.phone || '---'}</span>
-                    </div>
-                    ${s.email ? `<div style="display:flex; align-items:center; gap:4px; color:var(--text-secondary); font-size:0.75rem;"><i data-lucide="mail" style="width:11px; height:11px; color:#3b82f6;"></i><span>${s.email}</span></div>` : ''}
-                </div>
+                <span class="badge" style="background:#e0e7ff; color:#3730a3; font-size:0.75rem; font-weight:600; padding:3px 8px; border-radius:6px; white-space:nowrap;">
+                    ${s.department || 'Kinh doanh'}
+                </span>
             </td>
-            <td>
-                <div style="display:flex; flex-direction:column; gap:2px; font-size:0.8rem;">
-                    <div><span style="color:var(--text-secondary);">Quê:</span> <strong>${s.hometown || 'Chưa rõ'}</strong></div>
-                    <div style="color:var(--text-secondary); font-size:0.75rem; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.address || s.permanent_address || ''}">${s.address || s.permanent_address || '---'}</div>
-                </div>
+            <td style="white-space:nowrap;">
+                <span><i data-lucide="phone" style="width:11px; height:11px; color:#10b981; margin-right:3px;"></i>${s.phone || '---'}</span>
+                ${s.email ? `<small class="text-muted" style="margin-left:6px;"><i data-lucide="mail" style="width:11px; height:11px; color:#3b82f6; margin-right:2px;"></i>${s.email}</small>` : ''}
             </td>
-            <td>
-                <div style="display:flex; flex-direction:column; gap:2px;">
-                    <span class="badge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:600; padding:2px 6px; border-radius:4px; display:inline-block; width:fit-content;">
-                        ${s.education || 'Đại học'}
-                    </span>
-                    ${s.major ? `<span style="font-size:0.73rem; color:var(--text-secondary); max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.major}">${s.major}</span>` : ''}
-                </div>
+            <td style="white-space:nowrap;">
+                <span>${s.hometown ? `<strong>${s.hometown}</strong>` : ''}${s.address || s.permanent_address ? ` • <small class="text-muted">${s.address || s.permanent_address}</small>` : ''}</span>
             </td>
-            <td>${statusBadge}</td>
-            <td><strong style="color:var(--accent); font-size:0.88rem;">${s.commission_rate || 0}%</strong></td>
+            <td style="white-space:nowrap;">
+                <span class="badge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:600; padding:2px 6px; border-radius:4px;">${s.education || 'Đại học'}</span>
+                ${s.major ? `<small class="text-muted" style="margin-left:4px;">${s.major}</small>` : ''}
+            </td>
+            <td style="text-align:center;">${statusBadge}</td>
+            <td style="text-align:center;"><strong style="color:var(--accent); font-size:0.88rem;">${s.commission_rate || 0}%</strong></td>
             <td>
-                <div class="card-actions-row" style="display:flex; gap:4px; align-items:center;">
-                    <button class="btn btn-info" style="padding: 4px 8px; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 4px;" onclick="window.showEmployeeWorkHistoryModal('${s.id}')" title="Xem lịch sử công tác & điều chuyển"><i data-lucide="history" style="width:12px; height:12px;"></i> LS</button>
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.72rem;" onclick="openEditEmployee('${s.id}')">Sửa</button>
-                    <button class="btn-icon" style="color:var(--danger); padding:4px;" onclick="deleteEmployee('${s.id}')" title="Xóa"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button>
+                <div class="card-actions-row" style="display:inline-flex; gap:4px; align-items:center; white-space:nowrap;">
+                    <button class="btn btn-info" style="padding: 3px 8px; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 4px;" onclick="window.showEmployeeWorkHistoryModal('${s.id}')" title="Xem lịch sử công tác & điều chuyển"><i data-lucide="history" style="width:12px; height:12px;"></i> LS</button>
+                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="openEditEmployee('${s.id}')">Sửa</button>
+                    <button class="btn-icon" style="color:var(--danger); padding:3px;" onclick="deleteEmployee('${s.id}')" title="Xóa"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button>
                 </div>
             </td>
         `;
@@ -29881,18 +29883,18 @@ window.renderCollaborators = function() {
     filtered.forEach(s => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${s.code}</strong></td>
+            <td><a href="javascript:void(0)" onclick="openEditCollaborator('${s.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${s.code}</strong></a></td>
             <td><strong>${s.name}</strong></td>
             <td>${s.phone}</td>
-            <td>${s.email || 'N/A'}</td>
-            <td><strong>${s.commission_rate}%</strong></td>
-            <td><code>${s.referral_code}</code></td>
-            <td><a href="${s.referral_link}" target="_blank" style="font-size:0.8rem; text-decoration:underline;">${s.referral_link}</a></td>
+            <td>${s.email || '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:center;"><strong style="color:var(--accent);">${s.commission_rate}%</strong></td>
+            <td style="text-align:center;"><code>${s.referral_code}</code></td>
+            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><a href="${s.referral_link}" target="_blank" style="font-size:0.8rem; text-decoration:underline;">${s.referral_link}</a></td>
             <td>
-                <div class="card-actions-row">
-                    <button class="btn btn-info" style="padding: 4px 8px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;" onclick="window.showEmployeeWorkHistoryModal('${s.id}')"><i data-lucide="history" style="width:12px; height:12px;"></i> Lịch sử</button>
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openEditCollaborator('${s.id}')">Sửa</button>
-                    <button class="btn-icon" style="color:var(--danger)" onclick="deleteCollaborator('${s.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
+                <div class="card-actions-row" style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                    <button class="btn btn-info" style="padding: 3px 8px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;" onclick="window.showEmployeeWorkHistoryModal('${s.id}')"><i data-lucide="history" style="width:12px; height:12px;"></i> Lịch sử</button>
+                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="openEditCollaborator('${s.id}')">Sửa</button>
+                    <button class="btn-icon" style="color:var(--danger); padding:3px;" onclick="deleteCollaborator('${s.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
                 </div>
             </td>
         `;
@@ -30158,42 +30160,45 @@ window.renderLaborContracts = function() {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>
-                <div style="font-weight:700; color:var(--accent); font-family:monospace; font-size:0.95rem;">${escapeHtml(c.contract_number)}</div>
-                ${totalAttachments > 0 ? `<div style="margin-top:2px; font-size:0.72rem; color:var(--text-secondary); display:inline-flex; align-items:center; gap:3px;"><i data-lucide="paperclip" style="width:12px; height:12px;"></i> ${totalAttachments} tệp</div>` : ''}
+                <div style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+                    <span style="font-weight:700; color:var(--accent); font-family:monospace; font-size:0.92rem;">${escapeHtml(c.contract_number)}</span>
+                    ${totalAttachments > 0 ? `<small class="badge badge-secondary" style="font-size:0.68rem; padding:1px 5px;"><i data-lucide="paperclip" style="width:10px; height:10px; margin-right:2px;"></i>${totalAttachments}</small>` : ''}
+                </div>
             </td>
             <td>
-                <div style="font-weight:600; color:var(--text-primary);">${emp ? escapeHtml(emp.name) : 'Chưa gán'}</div>
-                <div style="font-size:0.78rem; color:var(--text-secondary);">${escapeHtml(jobTitle)}</div>
+                <div style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">${emp ? escapeHtml(emp.name) : 'Chưa gán'}</strong>
+                    <span class="badge" style="background:var(--bg-hover); color:var(--text-secondary); font-size:0.72rem; padding:1px 5px;">${escapeHtml(jobTitle)}</span>
+                </div>
             </td>
             <td>
-                <span class="badge" style="${deptStyle} padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:600; white-space:nowrap;">
+                <span class="badge" style="${deptStyle} padding:3px 7px; border-radius:6px; font-size:0.75rem; font-weight:600; white-space:nowrap;">
                     ${escapeHtml(dept)}
                 </span>
             </td>
-            <td>
-                <div style="font-size:0.85rem;">Ký: <strong>${signDateStr}</strong></div>
-                <div style="font-size:0.75rem; color:var(--text-secondary);">Bắt đầu: ${startDateStr}</div>
+            <td style="white-space:nowrap;">
+                <span>Ký: <strong>${signDateStr}</strong> • Bắt đầu: ${startDateStr}</span>
             </td>
-            <td>
-                <div style="font-size:0.85rem;">${endDateStr}</div>
+            <td style="white-space:nowrap;">
+                <span>${endDateStr}</span>
             </td>
-            <td>
+            <td style="text-align:right;">
                 <strong style="color:var(--success); font-size:0.92rem;">${formatMoney(c.base_salary)}</strong>
             </td>
             <td>
-                <span class="badge badge-secondary" style="font-size:0.75rem;">${escapeHtml(c.contract_type || 'Xác định thời hạn')}</span>
+                <span class="badge badge-secondary" style="font-size:0.75rem; white-space:nowrap;">${escapeHtml(c.contract_type || 'Xác định thời hạn')}</span>
             </td>
-            <td>
-                <button type="button" class="btn btn-secondary" onclick="window.openLaborContractHistoryModal('${c.id}')" style="padding:4px 9px; font-size:0.75rem; display:inline-flex; align-items:center; gap:5px; border-radius:6px;" title="Xem lịch sử ký, phụ lục & đính kèm">
-                    <i data-lucide="history" style="width:13px; height:13px; color:var(--accent);"></i>
-                    <span>${historyCount} lần ký / PL</span>
+            <td style="text-align:center;">
+                <button type="button" class="btn btn-secondary" onclick="window.openLaborContractHistoryModal('${c.id}')" style="padding:2px 8px; font-size:0.72rem; display:inline-flex; align-items:center; gap:4px; border-radius:6px; white-space:nowrap;" title="Xem lịch sử ký, phụ lục & đính kèm">
+                    <i data-lucide="history" style="width:12px; height:12px; color:var(--accent);"></i>
+                    <span>${historyCount} lần ký/PL</span>
                 </button>
             </td>
-            <td>${statusBadges[c.status] || c.status}</td>
+            <td style="text-align:center;">${statusBadges[c.status] || c.status}</td>
             <td>
-                <div class="card-actions-row" style="display:flex; gap:6px; align-items:center;">
-                    <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="window.openEditLaborContract('${c.id}')" title="Chỉnh sửa thông tin HĐ">Sửa</button>
-                    <button class="btn-icon" style="color:var(--danger);" onclick="window.deleteLaborContract('${c.id}')" title="Xóa hợp đồng"><i data-lucide="trash-2" style="width:15px; height:15px;"></i></button>
+                <div class="card-actions-row" style="display:inline-flex; gap:4px; align-items:center; white-space:nowrap;">
+                    <button class="btn btn-secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="window.openEditLaborContract('${c.id}')" title="Chỉnh sửa thông tin HĐ">Sửa</button>
+                    <button class="btn-icon" style="color:var(--danger); padding:3px;" onclick="window.deleteLaborContract('${c.id}')" title="Xóa hợp đồng"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button>
                 </div>
             </td>
         `;
@@ -30756,16 +30761,16 @@ window.renderContracts = function() {
         row.innerHTML = `
             <td><strong>${c.contract_number}</strong></td>
             <td><strong>${partner ? partner.name : 'N/A'}</strong></td>
-            <td>${new Date(c.signing_date).toLocaleDateString('vi-VN')}</td>
-            <td><strong>${formatMoney(c.value)}</strong></td>
-            <td><span class="badge badge-secondary">${typeLabels[c.order_type] || c.order_type}</span></td>
-            <td><strong>${linkedOrderNum}</strong></td>
-            <td>${statusBadges[c.status] || c.status}</td>
+            <td style="text-align:center;">${new Date(c.signing_date).toLocaleDateString('vi-VN')}</td>
+            <td style="text-align:right;"><strong>${formatMoney(c.value)}</strong></td>
+            <td style="text-align:center;"><span class="badge badge-secondary">${typeLabels[c.order_type] || c.order_type}</span></td>
+            <td style="text-align:center;"><strong>${linkedOrderNum}</strong></td>
+            <td style="text-align:center;">${statusBadges[c.status] || c.status}</td>
             <td>
-                <div class="card-actions-row">
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openEditContract('${c.id}')">Sửa</button>
+                <div class="card-actions-row" style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="openEditContract('${c.id}')">Sửa</button>
                     ${c.status !== "LIQUIDATED" ? `
-                        <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="liquidateContract('${c.id}')">Thanh lý</button>
+                        <button class="btn btn-success" style="padding: 3px 8px; font-size: 0.75rem;" onclick="liquidateContract('${c.id}')">Thanh lý</button>
                     ` : ''}
                     <button class="btn-icon" style="color:var(--danger)" onclick="deleteContract('${c.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
                 </div>
@@ -35070,10 +35075,10 @@ window.renderUserList = function() {
         
         row.innerHTML = `
             <td><strong>${u.username}</strong></td>
-            <td>${u.fullname}</td>
+            <td><strong>${u.fullname}</strong></td>
             <td><span class="badge ${roleBadge}">${deptLabel}</span></td>
             <td><small>${permList.join(', ')}</small></td>
-            <td style="text-align: right;">
+            <td style="text-align: right; white-space: nowrap;">
                 <button type="button" class="btn btn-secondary btn-sm" onclick="window.openEditUserModal('${u.id}')" style="padding: 2px 8px; font-size: 0.8rem; margin-right:4px;"><i data-lucide="edit" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></button>
                 ${u.username !== 'admin' ? `<button type="button" class="btn btn-danger btn-sm" onclick="window.deleteUser('${u.id}')" style="padding: 2px 8px; font-size: 0.8rem; background-color:#ef4444;"><i data-lucide="trash-2" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></button>` : ''}
             </td>
@@ -35295,7 +35300,7 @@ window.renderDepartmentList = function() {
         row.innerHTML = `
             <td><strong>${d.name}</strong></td>
             <td><small>${permList.join(', ')}</small></td>
-            <td style="text-align: right;">
+            <td style="text-align: right; white-space: nowrap;">
                 <button type="button" class="btn btn-secondary btn-sm" onclick="window.openEditDepartmentModal('${d.id}')" style="padding: 2px 8px; font-size: 0.8rem; margin-right:4px;"><i data-lucide="edit" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></button>
                 <button type="button" class="btn btn-danger btn-sm" onclick="window.deleteDepartment('${d.id}')" style="padding: 2px 8px; font-size: 0.8rem; background-color:#ef4444;"><i data-lucide="trash-2" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></button>
             </td>
