@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_box_types_v5">
+    <link rel="stylesheet" href="/style.css?v=20261020_pos_mobile_v7">
 
     <script>
 
@@ -6415,6 +6415,18 @@
                         </div>
                     </div>
 
+                    <!-- Section Header for Cart Items in Billing Screen -->
+                    <div class="pos-cart-section-title" id="posCartSectionHeader" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:rgba(16,143,83,0.06); border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; font-size:0.82rem; font-weight:700; color:#108f53; margin:4px 0 0 0;">
+                        <span style="display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="shopping-bag" style="width:15px; height:15px; color:#108f53;"></i>
+                            <span>Sản phẩm đã chọn (<strong id="posCartCountInline" style="color:#108f53;">0</strong> SP)</span>
+                        </span>
+                        <button type="button" onclick="window.setPosDisplayMode('CATALOG')" class="btn btn-sm" style="background:#ffffff; border:1px solid #108f53; color:#108f53; border-radius:4px; padding:3px 10px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:4px; cursor:pointer;" title="Chuyển sang chọn thêm sản phẩm">
+                            <i data-lucide="plus" style="width:12px; height:12px;"></i>
+                            <span>+ Thêm SP / Dịch vụ</span>
+                        </button>
+                    </div>
+
                     <!-- Line Items Table Header (Desktop only) -->
                     <div class="pos-cart-header">
                         <span class="pos-col-idx">STT</span>
@@ -6504,16 +6516,16 @@
                             </div>
                         </div>
 
-                        <!-- 3 Nút chọn Trạng thái thanh toán (Rõ ràng & 1-chạm) -->
+                        <!-- 3 Nút chọn Trạng thái thanh toán (Mặc định: Ghi nợ) -->
                         <div class="pos-payment-status-block" style="margin-bottom: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                                 <label style="font-size: 0.76rem; font-weight: 700; color: var(--text-primary); margin: 0;">
                                     Trạng thái thanh toán:
                                 </label>
-                                <span id="posPaymentStatusNotice" style="font-size: 0.72rem; font-weight: 600; color: #059669;">Đã thanh toán 100%</span>
+                                <span id="posPaymentStatusNotice" style="font-size: 0.72rem; font-weight: 600; color: #dc2626;">Ghi nợ 100% (Chưa thu)</span>
                             </div>
                             <div class="pos-status-btn-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;">
-                                <button type="button" class="pos-status-pill-btn active" id="posStatusBtn_PAID" onclick="window.selectPosPaymentStatus('PAID')">
+                                <button type="button" class="pos-status-pill-btn" id="posStatusBtn_PAID" onclick="window.selectPosPaymentStatus('PAID')">
                                     <i data-lucide="check-circle" style="width:13px; height:13px;"></i>
                                     <span>Thanh toán đủ</span>
                                 </button>
@@ -6521,32 +6533,34 @@
                                     <i data-lucide="wallet" style="width:13px; height:13px;"></i>
                                     <span>Đặt cọc</span>
                                 </button>
-                                <button type="button" class="pos-status-pill-btn" id="posStatusBtn_UNPAID" onclick="window.selectPosPaymentStatus('UNPAID')">
+                                <button type="button" class="pos-status-pill-btn active" id="posStatusBtn_UNPAID" onclick="window.selectPosPaymentStatus('UNPAID')">
                                     <i data-lucide="clock" style="width:13px; height:13px;"></i>
                                     <span>Ghi nợ</span>
                                 </button>
                             </div>
                             <select id="posPaymentStatusSelect" style="display:none;" onchange="window.handlePosPaymentStatusChange(this.value)">
-                                <option value="PAID">Đã thanh toán đủ</option>
-                                <option value="PARTIAL">Đặt cọc (Tạm ứng)</option>
                                 <option value="UNPAID">Chưa thanh toán (Ghi nợ)</option>
+                                <option value="PARTIAL">Đặt cọc (Tạm ứng)</option>
+                                <option value="PAID">Đã thanh toán đủ</option>
                             </select>
                         </div>
 
                         <!-- POS Deposit Input Box (shown when 'Đặt cọc' is selected) -->
                         <div class="pos-deposit-box" id="posDepositBox" style="display: none; margin-top: 2px; margin-bottom: 6px; padding: 6px 10px; background: rgba(16, 143, 83, 0.08); border: 1px dashed #108f53; border-radius: 6px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 4px;">
                                 <label for="posDepositAmount" style="font-size: 0.74rem; font-weight: 700; color: #108f53; margin: 0;">
                                     Tiền khách cọc (đ):
                                 </label>
-                                <div style="display: flex; gap: 4px;">
+                                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                    <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(20)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">20%</button>
                                     <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(30)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">30%</button>
                                     <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(50)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">50%</button>
                                     <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(70)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">70%</button>
+                                    <button type="button" class="btn btn-sm" onclick="window.setPosQuickDeposit(100)" style="padding: 1px 6px; font-size: 0.7rem; background: #fff; border: 1px solid #108f53; color: #108f53; border-radius: 3px; font-weight: 600; cursor: pointer;">100%</button>
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 6px;">
-                                <input type="number" id="posDepositAmount" class="form-input" style="height: 30px; font-size: 0.9rem; font-weight: 700; color: #108f53; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 8px;" min="0" step="any" placeholder="Nhập số tiền khách cọc..." oninput="window.updatePosDepositHint()">
+                                <input type="number" id="posDepositAmount" class="form-input" style="height: 32px; font-size: 0.95rem; font-weight: 700; color: #108f53; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 8px;" min="0" step="any" value="0" placeholder="0" oninput="window.updatePosDepositHint()">
                             </div>
                             <div id="posDepositHint" style="font-size: 0.73rem; color: #64748b; margin-top: 3px; display: flex; justify-content: space-between; align-items: center;">
                                 <span>Khách cọc: <strong id="posDepositAmountText" style="color: #108f53;">0đ</strong></span>
@@ -6555,18 +6569,20 @@
                         </div>
 
                         <div class="pos-actions-row">
-                            <button type="button" class="pos-action-btn pos-btn-cancel" onclick="window.closePosModal()" title="Hủy thao tác và đóng POS">
-                                <i data-lucide="x-circle" style="width:18px; height:18px;"></i>
-                                <span>HỦY</span>
-                            </button>
-                            <button type="button" class="pos-action-btn pos-btn-draft" onclick="window.submitPosOrder(true)" title="Lưu nháp đơn hàng (không trừ tồn kho)">
-                                <i data-lucide="file-text" style="width:18px; height:18px;"></i>
-                                <span>LƯU NHÁP</span>
-                            </button>
                             <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn hàng (F9)">
                                 <i data-lucide="check-circle" style="width:20px; height:20px;"></i>
                                 <span id="posSubmitBtnText">TẠO ĐƠN (F9)</span>
                             </button>
+                            <div class="pos-sub-actions" style="display: flex; width: 100%; gap: 8px;">
+                                <button type="button" class="pos-action-btn pos-btn-cancel" onclick="window.closePosModal()" title="Hủy thao tác và đóng POS" style="flex: 1;">
+                                    <i data-lucide="x-circle" style="width:16px; height:16px;"></i>
+                                    <span>HỦY</span>
+                                </button>
+                                <button type="button" class="pos-action-btn pos-btn-draft" onclick="window.submitPosOrder(true)" title="Lưu nháp đơn hàng (không trừ tồn kho)" style="flex: 1;">
+                                    <i data-lucide="file-text" style="width:16px; height:16px;"></i>
+                                    <span>LƯU NHÁP</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -6867,11 +6883,17 @@
                                 </select>
                             </div>
                             <div class="form-group" id="onlineOrderDepositGroup" style="display: none;">
-                                <label for="onlineOrderDepositAmount">Số tiền khách cọc (đ)</label>
-                                <div style="display: flex; gap: 6px;">
-                                    <input type="number" class="form-input" id="onlineOrderDepositAmount" value="0" min="0" step="any" placeholder="0" style="width: 100%; height: 42px; padding: 8px 12px; border-radius: 6px; font-weight: 700; color: #108f53;">
-                                    <button type="button" class="btn btn-outline" onclick="window.setOnlineOrderQuickDeposit(50)" style="white-space: nowrap; padding: 0 12px; height: 42px; font-weight: 700;">50%</button>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 4px;">
+                                    <label for="onlineOrderDepositAmount" style="margin: 0; font-size: 0.8rem; font-weight: 700;">Số tiền khách cọc (đ)</label>
+                                    <div style="display: flex; gap: 4px;">
+                                        <button type="button" class="btn btn-sm" onclick="window.setOnlineOrderQuickDeposit(20)" style="padding: 1px 6px; font-size: 0.72rem; border: 1px solid #108f53; color: #108f53; background: #fff; border-radius: 4px; font-weight: 600; cursor: pointer;">20%</button>
+                                        <button type="button" class="btn btn-sm" onclick="window.setOnlineOrderQuickDeposit(30)" style="padding: 1px 6px; font-size: 0.72rem; border: 1px solid #108f53; color: #108f53; background: #fff; border-radius: 4px; font-weight: 600; cursor: pointer;">30%</button>
+                                        <button type="button" class="btn btn-sm" onclick="window.setOnlineOrderQuickDeposit(50)" style="padding: 1px 6px; font-size: 0.72rem; border: 1px solid #108f53; color: #108f53; background: #fff; border-radius: 4px; font-weight: 600; cursor: pointer;">50%</button>
+                                        <button type="button" class="btn btn-sm" onclick="window.setOnlineOrderQuickDeposit(70)" style="padding: 1px 6px; font-size: 0.72rem; border: 1px solid #108f53; color: #108f53; background: #fff; border-radius: 4px; font-weight: 600; cursor: pointer;">70%</button>
+                                        <button type="button" class="btn btn-sm" onclick="window.setOnlineOrderQuickDeposit(100)" style="padding: 1px 6px; font-size: 0.72rem; border: 1px solid #108f53; color: #108f53; background: #fff; border-radius: 4px; font-weight: 600; cursor: pointer;">100%</button>
+                                    </div>
                                 </div>
+                                <input type="number" class="form-input" id="onlineOrderDepositAmount" value="0" min="0" step="any" placeholder="0" style="width: 100%; height: 38px; padding: 6px 12px; border-radius: 6px; font-weight: 700; color: #108f53;">
                             </div>
                             <div class="form-group" style="grid-column: span 2; margin-top: 4px;">
                                 <label for="onlineOrderNotes">Ghi chú đơn hàng (Giao nhanh, giao gấp, lưu ý giao hàng...)</label>
@@ -10811,7 +10833,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_box_types_v5"></script>
+    <script src="/app.js?v=20261020_pos_mobile_v7"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

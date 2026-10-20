@@ -24381,7 +24381,7 @@ window.addNewPosOrderTab = function() {
         vat: 8,
         ship_fee: 0,
         notes: "",
-        payment_status: "PAID",
+        payment_status: "UNPAID",
         payment_method: "BANK_TRANSFER",
         deposit_amount: 0,
         mode: "ADD",
@@ -24421,7 +24421,7 @@ window.switchPosOrderTab = function(tabId) {
 
     const statusSel = document.getElementById("posPaymentStatusSelect");
     if (statusSel) {
-        let pStatus = target.payment_status || "PAID";
+        let pStatus = target.payment_status || "UNPAID";
         if (pStatus === "PARTIALLY_PAID") pStatus = "PARTIAL";
         statusSel.value = pStatus;
     }
@@ -24432,7 +24432,7 @@ window.switchPosOrderTab = function(tabId) {
     if (depInput) depInput.value = target.deposit_amount || target.deposit || 0;
 
     if (typeof window.handlePosPaymentStatusChange === 'function') {
-        window.handlePosPaymentStatusChange(statusSel ? statusSel.value : "PAID");
+        window.handlePosPaymentStatusChange(statusSel ? statusSel.value : "UNPAID");
     }
 
     window.posSelectedPriceBook = target.price_book || "RETAIL";
@@ -24556,7 +24556,7 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
                     vat: 8,
                     ship_fee: 0,
                     notes: "",
-                    payment_status: "PAID",
+                    payment_status: "UNPAID",
                     payment_method: "BANK_TRANSFER",
                     deposit_amount: 0,
                     mode: "ADD",
@@ -24616,6 +24616,9 @@ window.setPosDisplayMode = function(mode = "BILLING") {
         if (tabBilling) tabBilling.classList.add("active");
         if (tabCatalog) tabCatalog.classList.remove("active");
         if (toggleBtnText) toggleBtnText.textContent = "Hiện sản phẩm";
+        if (typeof window.renderPosCart === 'function') {
+            window.renderPosCart();
+        }
     } else {
         container.classList.add("pos-mode-catalog", "pos-mobile-view-catalog");
         container.classList.remove("pos-mode-billing", "pos-mobile-view-cart");
@@ -25346,12 +25349,19 @@ window.renderPosCart = function() {
     if (!container) return;
     container.innerHTML = "";
 
+    const inlineCountEl = document.getElementById("posCartCountInline");
+    if (inlineCountEl) inlineCountEl.textContent = formatNumber(window.posCart.length);
+
     if (window.posCart.length === 0) {
         container.innerHTML = `
-            <div style="text-align:center; padding: 60px 20px; color:#94a3b8;">
-                <i data-lucide="shopping-cart" style="width:48px; height:48px; margin: 0 auto 12px auto; opacity:0.35; display:block;"></i>
-                <p style="font-weight: 600; font-size: 0.95rem; margin-bottom: 4px;">Giỏ hàng chưa có sản phẩm nào</p>
-                <small style="font-size: 0.8rem;">Click vào sản phẩm từ danh mục hoặc tìm kiếm để thêm</small>
+            <div style="text-align:center; padding: 22px 14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; margin:8px;">
+                <i data-lucide="shopping-cart" style="width:36px; height:36px; margin: 0 auto 8px auto; opacity:0.35; display:block; color:#108f53;"></i>
+                <div style="font-weight: 700; font-size: 0.9rem; color:#334155; margin-bottom: 2px;">Giỏ hàng chưa có sản phẩm nào</div>
+                <div style="font-size: 0.76rem; color:#64748b; margin-bottom: 10px;">Bấm chọn thêm hộp hoặc dịch vụ gia công</div>
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.setPosDisplayMode('CATALOG')" style="padding:6px 16px; font-size:0.82rem; font-weight:700; background:#108f53; border:none; border-radius:6px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+                    <i data-lucide="package-plus" style="width:14px; height:14px;"></i>
+                    <span>+ Chọn sản phẩm ngay ➔</span>
+                </button>
             </div>
         `;
         window.recalcPosTotals();
@@ -25373,12 +25383,12 @@ window.renderPosCart = function() {
             }
         }
 
-        const noteBadge = item.price_note ? `<small style="display:block; font-size:0.68rem; color:#b45309; font-weight:600;">${item.price_note}</small>` : '';
+        const noteBadge = item.price_note ? `<small style="display:block; font-size:0.68rem; color:#b45309; font-weight:600; margin-top:2px;">${item.price_note}</small>` : '';
 
         row.innerHTML = `
             <span class="pos-col-idx">${idx + 1}</span>
             <div class="pos-col-name">
-                <div class="pos-item-title" title="${item.name}">${item.name}</div>
+                <div class="pos-item-title" title="${item.name}">${idx + 1}. ${item.name}</div>
                 <div class="pos-item-sub">
                     <span class="pos-item-sku">SKU: <strong>${item.sku}</strong></span> ${priceBadge}
                     <span class="pos-item-unit-tag">${item.unit}</span>
@@ -25386,6 +25396,7 @@ window.renderPosCart = function() {
             </div>
             <span class="pos-col-unit">${item.unit}</span>
             <div class="pos-col-qty">
+                <span class="pos-mobile-qty-label">Số lượng:</span>
                 <div class="pos-qty-control">
                     <button type="button" class="pos-qty-btn" onclick="window.addPosItem('${item.sku}', -1)">-</button>
                     <input type="number" class="pos-qty-input" value="${item.qty}" min="0.001" step="any" onchange="window.updatePosItemQty('${item.sku}', this.value)" onfocus="this.select()">
@@ -25537,7 +25548,7 @@ window.selectPosPaymentStatus = function(status) {
         const total = window.getPosGrandTotal();
         const depInput = document.getElementById("posDepositAmount");
         if (depInput && (!depInput.value || parseFloat(depInput.value) <= 0)) {
-            depInput.value = Math.round(total * 0.5);
+            depInput.value = 0;
         }
         window.updatePosDepositHint();
         setTimeout(() => {
@@ -25605,7 +25616,7 @@ window.handleOnlineOrderPaymentStatusChange = function(status) {
         const total = Math.max(0, subtotal - disc) * (1 + vat / 100) + ship;
         const depInput = document.getElementById("onlineOrderDepositAmount");
         if (depInput && (!depInput.value || parseFloat(depInput.value) <= 0)) {
-            depInput.value = Math.round(total * 0.5);
+            depInput.value = 0;
         }
     } else {
         group.style.display = "none";
