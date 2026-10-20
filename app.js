@@ -25451,11 +25451,36 @@ window.getPosGrandTotal = function() {
     return parseFloat(txt.replace(/[^0-9]/g, '')) || 0;
 };
 
-window.handlePosPaymentStatusChange = function(status) {
+window.selectPosPaymentStatus = function(status) {
+    const select = document.getElementById("posPaymentStatusSelect");
+    if (select) select.value = status;
+    
+    // Toggle active classes on 3 pill buttons
+    const btnPaid = document.getElementById("posStatusBtn_PAID");
+    const btnPartial = document.getElementById("posStatusBtn_PARTIAL");
+    const btnUnpaid = document.getElementById("posStatusBtn_UNPAID");
+    const noticeEl = document.getElementById("posPaymentStatusNotice");
+    
+    if (btnPaid) btnPaid.classList.toggle("active", status === "PAID");
+    if (btnPartial) btnPartial.classList.toggle("active", status === "PARTIAL");
+    if (btnUnpaid) btnUnpaid.classList.toggle("active", status === "UNPAID");
+    
+    if (noticeEl) {
+        if (status === "PAID") {
+            noticeEl.textContent = "Đã thanh toán 100%";
+            noticeEl.style.color = "#059669";
+        } else if (status === "PARTIAL") {
+            noticeEl.textContent = "Khách đặt cọc 1 phần";
+            noticeEl.style.color = "#b45309";
+        } else {
+            noticeEl.textContent = "Ghi nợ 100% (Chưa thu)";
+            noticeEl.style.color = "#dc2626";
+        }
+    }
+    
     const box = document.getElementById("posDepositBox");
-    if (!box) return;
     if (status === "PARTIAL") {
-        box.style.display = "block";
+        if (box) box.style.display = "block";
         const total = window.getPosGrandTotal();
         const depInput = document.getElementById("posDepositAmount");
         if (depInput && (!depInput.value || parseFloat(depInput.value) <= 0)) {
@@ -25469,8 +25494,19 @@ window.handlePosPaymentStatusChange = function(status) {
             }
         }, 50);
     } else {
-        box.style.display = "none";
+        if (box) box.style.display = "none";
     }
+    
+    if (typeof window.syncCurrentTabState === 'function') {
+        window.syncCurrentTabState();
+    }
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+    }
+};
+
+window.handlePosPaymentStatusChange = function(status) {
+    window.selectPosPaymentStatus(status);
 };
 
 window.setPosQuickDeposit = function(percent) {
@@ -30888,6 +30924,52 @@ window.setQuickPaymentAmount = function(pct) {
     window.updatePaymentCalcHintAndRemaining();
 };
 
+window.resetOrderToUnpaidInDebtModal = function() {
+    const modal = document.getElementById("orderPaymentModal");
+    const orderId = document.getElementById("paymentOrderId")?.value;
+    const order = (state.orders && state.orders.find(o => o.id === orderId)) || 
+                  (state.online_orders && state.online_orders.find(o => o.id === orderId));
+    if (!order) return;
+    
+    // Clear receipt transactions for this order if any
+    state.transactions = (state.transactions || []).filter(t => 
+        t.reference_id !== order.id && t.reference_id !== order.order_number
+    );
+    state.updateState("transactions", state.transactions);
+    
+    const totalAmount = Number(order.total_amount || 0);
+    order.paid_amount = 0;
+    order.deposit = 0;
+    order.remaining_debt = totalAmount;
+    order.payment_status = "UNPAID";
+    
+    if (modal) {
+        modal.dataset.initialDebt = totalAmount;
+        modal.dataset.alreadyPaid = 0;
+    }
+    
+    const paidBeforeEl = document.getElementById("paymentOrderPaidBefore");
+    if (paidBeforeEl) paidBeforeEl.value = "0đ";
+    
+    const debtNoteEl = document.getElementById("paymentOrderInitialDebtNote");
+    if (debtNoteEl) debtNoteEl.textContent = `(Nợ trước thu: ${formatMoney(totalAmount)})`;
+    
+    const alreadyPaidAlert = document.getElementById("paymentAlreadyPaidAlert");
+    if (alreadyPaidAlert) alreadyPaidAlert.style.display = "none";
+    
+    const input = document.getElementById("paymentInputAmount");
+    if (input && (!input.value || input.value === "0")) {
+        input.value = formatNumber(totalAmount);
+    }
+    
+    window.updatePaymentCalcHintAndRemaining();
+    alert(`Đã đặt lại đơn hàng ${order.order_number || order.id} về trạng thái Chưa thanh toán (Ghi nợ: ${formatMoney(totalAmount)}).`);
+    
+    window.syncOrderPaymentStatus(order.id);
+    if (typeof renderOnlineSales === 'function') renderOnlineSales();
+    if (typeof renderProdOrders === 'function') renderProdOrders();
+};
+
 window.updatePaymentCalcHintAndRemaining = function() {
     const modal = document.getElementById("orderPaymentModal");
     const inputAmount = document.getElementById("paymentInputAmount");
@@ -30895,42 +30977,48 @@ window.updatePaymentCalcHintAndRemaining = function() {
     const hintEl = document.getElementById("paymentAmountCalcHint");
     if (!inputAmount || !remainingEl || !hintEl) return;
     
-    const initialDebt = parseFloat(modal?.dataset.initialDebt || "0");
+    let initialDebt = parseFloat(modal?.dataset.initialDebt || "0");
     const totalAmount = parseFloat(modal?.dataset.totalAmount || "0");
+    const alreadyPaid = parseFloat(modal?.dataset.alreadyPaid || "0");
     
     const rawVal = inputAmount.value.trim();
     let calculated = 0;
     
     if (rawVal.endsWith('%')) {
         const percent = parseFloat(rawVal.replace('%', '')) || 0;
-        const base = initialDebt > 0 ? initialDebt : totalAmount;
+        const base = initialDebt > 0 ? initialDebt : (totalAmount > 0 ? totalAmount : 0);
         calculated = Math.ceil(base * (percent / 100));
     } else {
         calculated = parseFloat(rawVal.replace(/[^0-9]/g, '')) || 0;
     }
     
-    // Tự động trừ số nợ: CÒN NỢ = Số nợ trước thu - Số tiền thu đợt này
-    const newRemainingDebt = Math.max(0, initialDebt - calculated);
+    // Tự động trừ số nợ (đảm bảo luôn nhảy và cập nhật chính xác theo số tiền nhập):
+    let newRemainingDebt = 0;
+    if (initialDebt > 0) {
+        newRemainingDebt = Math.max(0, initialDebt - calculated);
+    } else {
+        // Nếu ban đầu nợ là 0đ (do đơn bị gán PAID), tính trực tiếp theo Tổng đơn - Số tiền nhập
+        newRemainingDebt = Math.max(0, totalAmount - calculated);
+    }
+    
     remainingEl.value = formatMoney(newRemainingDebt);
     
-    if (newRemainingDebt === 0) {
-        remainingEl.style.color = "#10b981"; // Màu xanh lá khi sạch nợ
+    if (newRemainingDebt === 0 && calculated > 0) {
+        remainingEl.style.color = "#10b981"; // Màu xanh lá khi hết nợ
     } else {
         remainingEl.style.color = "var(--danger-color, #ef4444)";
     }
     
     // Cập nhật dòng hint bên dưới ô nhập
-    if (initialDebt <= 0 && totalAmount > 0) {
-        hintEl.innerHTML = `<span style="color:#d97706;">Thu thêm: <strong>${formatMoney(calculated)}</strong> (Đơn hàng này vốn đã hết nợ 100%)</span>`;
-    } else if (calculated <= 0) {
-        hintEl.innerHTML = `<span>Số tiền thu nợ: <strong>0đ</strong> (Cần thu nợ: <strong style="color:var(--danger-color);">${formatMoney(initialDebt)}</strong>)</span>`;
-    } else if (calculated > initialDebt && initialDebt > 0) {
+    if (calculated <= 0) {
+        hintEl.innerHTML = `<span>Số tiền thu nợ: <strong>0đ</strong> (Cần thu nợ: <strong style="color:var(--danger-color);">${formatMoney(initialDebt > 0 ? initialDebt : totalAmount)}</strong>)</span>`;
+    } else if (initialDebt > 0 && calculated > initialDebt) {
         const overAmt = calculated - initialDebt;
         hintEl.innerHTML = `<span style="color:#d97706;">Thu: <strong>${formatMoney(calculated)}</strong> | Còn nợ: <strong style="color:#10b981;">0đ</strong> (Khách trả thừa: <strong>${formatMoney(overAmt)}</strong>)</span>`;
     } else if (newRemainingDebt === 0) {
         hintEl.innerHTML = `<span style="color:#10b981;">Thu: <strong>${formatMoney(calculated)}</strong> | <strong>✓ Khách thanh toán hết 100% (Còn nợ: 0đ)</strong></span>`;
     } else {
-        hintEl.innerHTML = `<span>Thu đợt này: <strong>${formatMoney(calculated)}</strong> | Còn nợ lại: <strong style="color:var(--danger-color);">${formatMoney(newRemainingDebt)}</strong></span>`;
+        hintEl.innerHTML = `<span>Thu đợt này: <strong>${formatMoney(calculated)}</strong> | Còn nợ lại: <strong style="color:var(--danger-color); font-weight:700;">${formatMoney(newRemainingDebt)}</strong></span>`;
     }
 };
 
@@ -31039,8 +31127,17 @@ document.addEventListener("DOMContentLoaded", () => {
         state.updateState("transactions", state.transactions);
         
         // Cập nhật trường paid_amount / deposit / remaining_debt trên order
-        const newTotalPaid = alreadyPaid + payAmount;
-        const newRemainingDebt = Math.max(0, totalAmount - newTotalPaid);
+        let newTotalPaid = 0;
+        let newRemainingDebt = 0;
+        if (remaining > 0) {
+            newTotalPaid = alreadyPaid + payAmount;
+            newRemainingDebt = Math.max(0, totalAmount - newTotalPaid);
+        } else {
+            // Đơn trước đó bị gán nhầm nợ 0, cập nhật lại số tiền đã trả và nợ còn lại chính xác
+            newTotalPaid = payAmount;
+            newRemainingDebt = Math.max(0, totalAmount - payAmount);
+        }
+        
         if (order) {
             order.paid_amount = newTotalPaid;
             order.deposit = newTotalPaid;

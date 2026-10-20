@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_debt_calc_auto_deduct">
+    <link rel="stylesheet" href="/style.css?v=20261020_pos_payment_segmented_v2">
 
     <script>
 
@@ -6490,26 +6490,48 @@
 
                     <!-- Payment Execution Box (Directly below Totals for seamless flow) -->
                     <div class="pos-checkout-bar">
-                        <div class="pos-payment-meta">
-                            <div class="pos-meta-field">
-                                <label>Hình thức:</label>
-                                <select id="posPaymentMethodSelect" class="pos-control-select" style="height:32px;">
+                        <!-- Hình thức thanh toán -->
+                        <div class="pos-payment-meta" style="margin-bottom: 6px;">
+                            <div class="pos-meta-field" style="width: 100%;">
+                                <label style="font-size: 0.76rem; font-weight: 700;">Hình thức thanh toán:</label>
+                                <select id="posPaymentMethodSelect" class="pos-control-select" style="height:32px; width: 100%;">
                                     <option value="BANK_TRANSFER">Chuyển khoản (VietQR)</option>
                                     <option value="CASH">Tiền mặt (Két tiền)</option>
                                 </select>
                             </div>
-                            <div class="pos-meta-field">
-                                <label>Trạng thái:</label>
-                                <select id="posPaymentStatusSelect" class="pos-control-select" style="height:32px;" onchange="window.handlePosPaymentStatusChange(this.value)">
-                                    <option value="PAID">Đã thanh toán đủ</option>
-                                    <option value="PARTIAL">Đặt cọc (Tạm ứng)</option>
-                                    <option value="UNPAID">Chưa thanh toán (Ghi nợ)</option>
-                                </select>
+                        </div>
+
+                        <!-- 3 Nút chọn Trạng thái thanh toán (Rõ ràng & 1-chạm) -->
+                        <div class="pos-payment-status-block" style="margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <label style="font-size: 0.76rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                    Trạng thái thanh toán:
+                                </label>
+                                <span id="posPaymentStatusNotice" style="font-size: 0.72rem; font-weight: 600; color: #059669;">Đã thanh toán 100%</span>
                             </div>
+                            <div class="pos-status-btn-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;">
+                                <button type="button" class="pos-status-pill-btn active" id="posStatusBtn_PAID" onclick="window.selectPosPaymentStatus('PAID')">
+                                    <i data-lucide="check-circle" style="width:13px; height:13px;"></i>
+                                    <span>Thanh toán đủ</span>
+                                </button>
+                                <button type="button" class="pos-status-pill-btn" id="posStatusBtn_PARTIAL" onclick="window.selectPosPaymentStatus('PARTIAL')">
+                                    <i data-lucide="wallet" style="width:13px; height:13px;"></i>
+                                    <span>Đặt cọc</span>
+                                </button>
+                                <button type="button" class="pos-status-pill-btn" id="posStatusBtn_UNPAID" onclick="window.selectPosPaymentStatus('UNPAID')">
+                                    <i data-lucide="clock" style="width:13px; height:13px;"></i>
+                                    <span>Ghi nợ</span>
+                                </button>
+                            </div>
+                            <select id="posPaymentStatusSelect" style="display:none;" onchange="window.handlePosPaymentStatusChange(this.value)">
+                                <option value="PAID">Đã thanh toán đủ</option>
+                                <option value="PARTIAL">Đặt cọc (Tạm ứng)</option>
+                                <option value="UNPAID">Chưa thanh toán (Ghi nợ)</option>
+                            </select>
                         </div>
 
                         <!-- POS Deposit Input Box (shown when 'Đặt cọc' is selected) -->
-                        <div class="pos-deposit-box" id="posDepositBox" style="display: none; margin-top: 2px; margin-bottom: 2px; padding: 6px 10px; background: rgba(16, 143, 83, 0.08); border: 1px dashed #108f53; border-radius: 6px;">
+                        <div class="pos-deposit-box" id="posDepositBox" style="display: none; margin-top: 2px; margin-bottom: 6px; padding: 6px 10px; background: rgba(16, 143, 83, 0.08); border: 1px dashed #108f53; border-radius: 6px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                                 <label for="posDepositAmount" style="font-size: 0.74rem; font-weight: 700; color: #108f53; margin: 0;">
                                     Tiền khách cọc (đ):
@@ -6538,9 +6560,9 @@
                                 <i data-lucide="file-text" style="width:18px; height:18px;"></i>
                                 <span>LƯU NHÁP</span>
                             </button>
-                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn và thanh toán (F9)">
+                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn hàng (F9)">
                                 <i data-lucide="check-circle" style="width:20px; height:20px;"></i>
-                                <span>THANH TOÁN (F9)</span>
+                                <span id="posSubmitBtnText">TẠO ĐƠN (F9)</span>
                             </button>
                         </div>
                     </div>
@@ -9215,11 +9237,25 @@
 
                         </div>
 
-                        <div id="paymentAlreadyPaidAlert" style="display: none; padding: 8px 12px; margin-bottom: 12px; border-radius: 6px; background: rgba(16, 185, 129, 0.12); color: #059669; font-size: 0.85rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <div id="paymentAlreadyPaidAlert" style="display: none; padding: 8px 12px; margin-bottom: 12px; border-radius: 6px; background: rgba(245, 158, 11, 0.12); color: #b45309; font-size: 0.85rem; border: 1px solid rgba(245, 158, 11, 0.35);">
 
-                            <i data-lucide="check-circle" style="width: 14px; height: 14px; vertical-align: middle; display: inline-block; margin-right: 4px;"></i>
+                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
 
-                            <span>Đơn hàng đã thanh toán đủ 100% (Hiện không còn nợ).</span>
+                                <div>
+
+                                    <i data-lucide="info" style="width: 14px; height: 14px; vertical-align: middle; display: inline-block; margin-right: 4px;"></i>
+
+                                    <span>Đơn hàng đang ghi nhận <strong>Đã thanh toán đủ (Nợ: 0đ)</strong>.</span>
+
+                                </div>
+
+                                <button type="button" class="btn btn-sm" onclick="window.resetOrderToUnpaidInDebtModal()" style="padding: 2px 8px; font-size: 0.74rem; background: #fff; border: 1px solid #b45309; color: #b45309; border-radius: 4px; font-weight: 700; cursor: pointer; white-space: nowrap;">
+
+                                    Đặt lại Chưa thanh toán
+
+                                </button>
+
+                            </div>
 
                         </div>
 
@@ -9241,7 +9277,7 @@
 
                             </div>
 
-                            <input type="text" class="form-input" id="paymentInputAmount" placeholder="Ví dụ: 50% hoặc 500.000" required>
+                            <input type="text" class="form-input" id="paymentInputAmount" placeholder="Ví dụ: 50% hoặc 500.000" required oninput="window.updatePaymentCalcHintAndRemaining()" onkeyup="window.updatePaymentCalcHintAndRemaining()" onchange="window.updatePaymentCalcHintAndRemaining()">
 
                             <small id="paymentAmountCalcHint" class="text-muted" style="display:block; margin-top:5px; font-size: 0.82rem; line-height: 1.4;">Số tiền thu nợ: 0đ</small>
 
@@ -10757,7 +10793,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_debt_calc_auto_deduct"></script>
+    <script src="/app.js?v=20261020_pos_payment_segmented_v2"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
