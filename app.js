@@ -12930,6 +12930,19 @@ const DEFAULT_MASTER_CATEGORIES = {
             { id: "rr_6", code: "CUSTOMER_CANCEL", name: "Khách đổi ý, từ chối nhận hàng", desc: "Khách bom hàng COD hoặc ngưng kế hoạch kinh doanh", order: 6, status: "ACTIVE" }
         ]
     },
+    sales_box_type: {
+        key: "sales_box_type",
+        module: "sales",
+        moduleName: "Bán hàng & Vận chuyển",
+        name: "Danh mục Loại hộp / Phân loại hàng",
+        desc: "Phân loại các dòng hộp quà, hộp cao cấp, hộp phổ thông và khay định hình",
+        icon: "package",
+        items: [
+            { id: "box_1", code: "HOP-CAOCAP", name: "Hộp cao cấp", desc: "Các dòng hộp quà cao cấp, nắp nam châm, nắp mở cánh bướm, bồi carton cứng", order: 1, status: "ACTIVE" },
+            { id: "box_2", code: "HOP-PHOTONG", name: "Hộp phổ thông", desc: "Các dòng hộp nắp gài, hộp carton sóng, hộp phổ thông tiêu chuẩn", order: 2, status: "ACTIVE" },
+            { id: "box_3", code: "KHAY", name: "Khay", desc: "Khay định hình, khay chia ngăn, khay nhung, phụ kiện khay", order: 3, status: "ACTIVE" }
+        ]
+    },
 
     // 4. TÀI CHÍNH & SỔ QUỸ (FINANCE & CASHFLOW)
     fin_income_category: {
@@ -23344,6 +23357,16 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
             }
         });
     }
+
+    // Populate Box Type dropdown from Master Categories
+    const catSelect = document.getElementById("onlineProductCategory");
+    if (catSelect) {
+        catSelect.innerHTML = '<option value="">-- Chọn Loại hộp --</option>';
+        const boxTypes = (state.master_categories?.sales_box_type?.items || DEFAULT_MASTER_CATEGORIES.sales_box_type.items || []);
+        boxTypes.filter(b => b.status === "ACTIVE").forEach(b => {
+            catSelect.innerHTML += `<option value="${b.name}">${b.name}</option>`;
+        });
+    }
     
     const titleEl = document.getElementById("onlineProductModalTitle");
     const skuInput = document.getElementById("onlineProductSku");
@@ -23354,6 +23377,7 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         skuInput.readOnly = false;
         if (stockGroup) stockGroup.style.display = "block";
         document.getElementById("onlineProductAction").value = "ADD";
+        if (document.getElementById("onlineProductCategory")) document.getElementById("onlineProductCategory").value = "";
         if (document.getElementById("onlineProductSupplier")) document.getElementById("onlineProductSupplier").value = "";
         if (document.getElementById("onlineProductCostPrice")) document.getElementById("onlineProductCostPrice").value = 0;
     } else {
@@ -23367,6 +23391,13 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         const prod = state.online_products.find(p => String(p.sku).trim().toUpperCase() === cleanSku);
         if (prod) {
             document.getElementById("onlineProductName").value = prod.name;
+            if (document.getElementById("onlineProductCategory")) {
+                const curCat = prod.category || "";
+                if (curCat && catSelect && !Array.from(catSelect.options).some(o => o.value === curCat)) {
+                    catSelect.innerHTML += `<option value="${curCat}">${curCat}</option>`;
+                }
+                document.getElementById("onlineProductCategory").value = curCat;
+            }
             document.getElementById("onlineProductUnit").value = prod.unit;
             if (document.getElementById("onlineProductSupplier")) {
                 const curSup = prod.supplier || prod.brand || "";
@@ -26487,6 +26518,7 @@ function handleOnlineProductSubmit(e) {
     const action = document.getElementById("onlineProductAction").value;
     const sku = document.getElementById("onlineProductSku").value.trim().toUpperCase();
     const name = document.getElementById("onlineProductName").value.trim();
+    const category = document.getElementById("onlineProductCategory")?.value.trim() || "";
     const unit = document.getElementById("onlineProductUnit").value.trim();
     const supplier = document.getElementById("onlineProductSupplier")?.value.trim() || "";
     const costPrice = parseFloat(document.getElementById("onlineProductCostPrice")?.value) || 0;
@@ -26507,6 +26539,7 @@ function handleOnlineProductSubmit(e) {
             sku,
             image,
             name,
+            category,
             unit,
             supplier,
             brand: supplier,
@@ -26535,6 +26568,7 @@ function handleOnlineProductSubmit(e) {
         const prod = state.online_products.find(p => p.sku === sku);
         if (prod) {
             prod.name = name;
+            prod.category = category;
             prod.unit = unit;
             prod.supplier = supplier;
             prod.brand = supplier;
@@ -26913,17 +26947,34 @@ window.renderOnlineProducts = function() {
         }
     }
 
+    // Update box type filter options
+    const catFilterSelect = document.getElementById("onlineProductCategoryFilter");
+    if (catFilterSelect) {
+        const curCatVal = catFilterSelect.value;
+        const boxTypes = (state.master_categories?.sales_box_type?.items || DEFAULT_MASTER_CATEGORIES.sales_box_type.items || []).filter(b => b.status === "ACTIVE");
+        if (catFilterSelect.options.length <= 1) {
+            catFilterSelect.innerHTML = '<option value="">-- Tất cả Loại hộp --</option>';
+            boxTypes.forEach(b => {
+                catFilterSelect.innerHTML += `<option value="${b.name}">${b.name}</option>`;
+            });
+            catFilterSelect.value = curCatVal;
+        }
+    }
+
     const query = document.getElementById("onlineProductSearchInput")?.value.toLowerCase().trim() || "";
     const filterSup = document.getElementById("onlineProductSupplierFilter")?.value || "";
+    const filterBoxType = document.getElementById("onlineProductCategoryFilter")?.value || "";
     
     const filteredProducts = (state.online_products || []).filter(p => {
         if (!p) return false;
         const sku = String(p.sku || "").toLowerCase();
         const name = String(p.name || "").toLowerCase();
         const supplier = String(p.supplier || p.brand || "");
-        const matchQuery = sku.includes(query) || name.includes(query) || supplier.toLowerCase().includes(query);
+        const category = String(p.category || "");
+        const matchQuery = sku.includes(query) || name.includes(query) || supplier.toLowerCase().includes(query) || category.toLowerCase().includes(query);
         const matchSupplier = !filterSup || supplier === filterSup;
-        return matchQuery && matchSupplier;
+        const matchBoxType = !filterBoxType || category === filterBoxType;
+        return matchQuery && matchSupplier && matchBoxType;
     });
     
     filteredProducts.forEach(prod => {
@@ -26947,10 +26998,14 @@ window.renderOnlineProducts = function() {
             ? `<span style="font-weight:600; color:#64748b;">${formatMoney(costPrice)}</span>` 
             : `<span style="color:var(--text-secondary);">0đ</span>`;
         
+        const catBadge = prod.category 
+            ? `<br><span class="badge" style="font-size:0.68rem; font-weight:700; background:rgba(16,143,83,0.1); color:#059669; border:1px solid rgba(16,143,83,0.25); padding:1px 6px; border-radius:10px; display:inline-block; margin-top:3px;">📦 ${prod.category}</span>` 
+            : '';
+        
         row.innerHTML = `
             <td><strong>${prod.sku}</strong></td>
             <td>${imgHtml}</td>
-            <td><strong>${prod.name}</strong></td>
+            <td><strong>${prod.name}</strong>${catBadge}</td>
             <td>${prod.unit || 'Cái'}</td>
             <td>${supplierHtml}</td>
             <td>${costHtml}</td>
@@ -36393,7 +36448,12 @@ window.syncMasterCategoriesToDropdowns = function() {
     const uoms = state.master_categories.prod_uom?.items || [];
     populateSelect("materialUom", uoms);
 
-    // 7. Categories select in Modal
+    // 7. Box Types (Danh mục Loại hộp: Hộp cao cấp, Hộp phổ thông, Khay)
+    const boxTypes = (state.master_categories.sales_box_type?.items || DEFAULT_MASTER_CATEGORIES.sales_box_type.items || []);
+    populateSelect("onlineProductCategoryFilter", boxTypes, "-- Tất cả Loại hộp --");
+    populateSelect("onlineProductCategory", boxTypes, "-- Chọn Loại hộp --");
+
+    // 8. Categories select in Modal
     const keySelect = document.getElementById("categoryItemKeySelect");
     if (keySelect && state.master_categories) {
         const currentKey = keySelect.value;
@@ -36975,12 +37035,12 @@ window.downloadProductCatalogTemplate = function() {
         return;
     }
     const aoa = [
-        ["STT", "Mã SKU (*)", "Tên hàng hóa (*)", "Đơn vị tính", "Nhà cung cấp (*)", "Giá nhập (đ)", "Giá bán lẻ (đ)", "Giá sỉ (đ)", "Số lượng tồn kho ban đầu", "Mức tồn tối thiểu"],
-        [1, "SP000007", "Thuyền", "Chiếc", "Decal Nguyễn Xiển", 8700, 11000, 9900, 2500, 100],
-        [2, "TD04C", "Hộp TD04C", "Chiếc", "Tuấn Dung", 44000, 55555, 50000, 2500, 100],
-        [3, "TD08C", "Hộp TD08C", "Chiếc", "Tuấn Dung", 49900, 62963, 56667, 2500, 100],
-        [4, "TD02B", "Hộp TD02B", "Chiếc", "Tuấn Dung", 40000, 50000, 45000, 2500, 100],
-        [5, "SP-MOI-01", "Hộp carton nắp gài 25x20x6", "Hộp", "Bao Bì Lạc Hồng", 4500, 8000, 6500, 1000, 100]
+        ["STT", "Mã SKU (*)", "Tên hàng hóa (*)", "Loại hộp (*)", "Đơn vị tính", "Nhà cung cấp (*)", "Giá nhập (đ)", "Giá bán lẻ (đ)", "Giá sỉ (đ)", "Số lượng tồn kho ban đầu", "Mức tồn tối thiểu"],
+        [1, "SP000007", "Thuyền", "Khay", "Chiếc", "Decal Nguyễn Xiển", 8700, 11000, 9900, 2500, 100],
+        [2, "TD04C", "Hộp TD04C", "Hộp cao cấp", "Chiếc", "Tuấn Dung", 44000, 55555, 50000, 2500, 100],
+        [3, "TD08C", "Hộp TD08C", "Hộp cao cấp", "Chiếc", "Tuấn Dung", 49900, 62963, 56667, 2500, 100],
+        [4, "TD02B", "Hộp TD02B", "Hộp cao cấp", "Chiếc", "Tuấn Dung", 40000, 50000, 45000, 2500, 100],
+        [5, "SP-MOI-01", "Hộp carton nắp gài 25x20x6", "Hộp phổ thông", "Hộp", "Bao Bì Lạc Hồng", 4500, 8000, 6500, 1000, 100]
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(aoa);
@@ -36988,6 +37048,7 @@ window.downloadProductCatalogTemplate = function() {
         { wch: 6 },  // STT
         { wch: 15 }, // Mã SKU
         { wch: 32 }, // Tên hàng hóa
+        { wch: 16 }, // Loại hộp
         { wch: 12 }, // ĐVT
         { wch: 25 }, // Nhà cung cấp
         { wch: 14 }, // Giá nhập
@@ -37032,6 +37093,7 @@ window.handleExcelImportCatalogFile = function(e) {
                 const name = String(r['Tên hàng hóa (*)'] || r['Tên hàng hóa'] || r['Tên hàng'] || r['Tên sản phẩm'] || r['name'] || '').trim();
                 if (!sku && !name) return;
 
+                const boxType = String(r['Loại hộp (*)'] || r['Loại hộp'] || r['Phân loại'] || r['Nhóm hộp'] || r['category'] || '').trim();
                 const unit = String(r['Đơn vị tính'] || r['Đơn vị'] || r['ĐVT'] || r['unit'] || 'Cái').trim();
                 const supplier = String(r['Nhà cung cấp (*)'] || r['Nhà cung cấp'] || r['NCC'] || r['supplier'] || '').trim();
                 const costPrice = parseFloat(r['Giá nhập (đ)'] || r['Giá nhập'] || r['Đơn giá nhập'] || r['cost_price'] || 0) || 0;
@@ -37052,7 +37114,7 @@ window.handleExcelImportCatalogFile = function(e) {
                     wholesale_price: wholesalePrice,
                     stock_qty: stockQty,
                     min_stock_qty: minStock,
-                    category: "BOX"
+                    category: boxType || "Hộp cao cấp"
                 });
             });
 
@@ -37103,7 +37165,7 @@ window.showCatalogImportPreviewModal = function(items, fileName) {
             tr.innerHTML = `
                 <td>${idx + 1}</td>
                 <td><strong>${item.sku}</strong></td>
-                <td><strong>${item.name}</strong></td>
+                <td><strong>${item.name}</strong>${item.category ? `<br><small style="color:#059669; font-weight:600;">📦 ${item.category}</small>` : ''}</td>
                 <td>${item.unit}</td>
                 <td>${item.supplier || '---'}</td>
                 <td style="text-align:right; font-weight:500;">${formatMoney(item.cost_price)}</td>
@@ -37145,6 +37207,7 @@ window.confirmExcelImportCatalog = function() {
         if (prod) {
             updatedCount++;
             prod.name = item.name;
+            if (item.category) prod.category = item.category;
             prod.unit = item.unit;
             if (item.supplier) {
                 prod.supplier = item.supplier;

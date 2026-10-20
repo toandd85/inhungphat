@@ -51,7 +51,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_order_items_collapse_v4">
+    <link rel="stylesheet" href="/style.css?v=20261020_box_types_v5">
 
     <script>
 
@@ -1830,6 +1830,9 @@
                                 </div>
                                 <select class="form-select" id="onlineProductSupplierFilter" style="width:220px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineProducts && window.renderOnlineProducts()">
                                     <option value="">-- Tất cả Nhà cung cấp --</option>
+                                </select>
+                                <select class="form-select" id="onlineProductCategoryFilter" style="width:190px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineProducts && window.renderOnlineProducts()">
+                                    <option value="">-- Tất cả Loại hộp --</option>
                                 </select>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -6608,8 +6611,9 @@
                     <!-- Category filter tags for products -->
                     <div class="pos-category-bar" id="posCategoryFilterBar">
                         <button type="button" class="pos-cat-pill active" data-cat="ALL" onclick="window.filterPosProducts('ALL')">Tất cả</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Hộp cao cấp" onclick="window.filterPosProducts('Hộp cao cấp')">Hộp cao cấp (8)</button>
-                        <button type="button" class="pos-cat-pill" data-cat="Hộp phổ thông" onclick="window.filterPosProducts('Hộp phổ thông')">Hộp phổ thông (3)</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp cao cấp" onclick="window.filterPosProducts('Hộp cao cấp')">Hộp cao cấp</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Hộp phổ thông" onclick="window.filterPosProducts('Hộp phổ thông')">Hộp phổ thông</button>
+                        <button type="button" class="pos-cat-pill" data-cat="Khay" onclick="window.filterPosProducts('Khay')">Khay</button>
                     </div>
 
                     <!-- Quick add services toolbar -->
@@ -6981,7 +6985,19 @@
 
                         </div>
 
-                        <div class="form-grid">
+                        <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+
+                            <div class="form-group">
+
+                                <label for="onlineProductCategory">Loại hộp *</label>
+
+                                <select class="form-select" id="onlineProductCategory" required>
+
+                                    <option value="">-- Chọn Loại hộp --</option>
+
+                                </select>
+
+                            </div>
 
                             <div class="form-group">
 
@@ -10795,7 +10811,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_order_items_collapse_v4"></script>
+    <script src="/app.js?v=20261020_box_types_v5"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
