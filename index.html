@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261020_sales_online_nav_v21">
+    <link rel="stylesheet" href="/style.css?v=20261020_restore_images_v22">
 
     <script>
 
@@ -1889,6 +1889,10 @@
                                 <button class="btn btn-secondary" onclick="window.exportOnlineProductsToExcel()" style="display:flex; align-items:center; gap:6px;" title="Xuất danh sách hàng hóa ra file Excel">
                                     <i data-lucide="file-spreadsheet"></i>
                                     <span>Xuất Excel</span>
+                                </button>
+                                <button class="btn btn-outline" onclick="if(confirm('Khôi phục lại toàn bộ ảnh sản phẩm mẫu?')){ window.restoreAllProductImages(true); alert('Đã khôi phục toàn bộ ảnh sản phẩm thành công!'); }" style="display:flex; align-items:center; gap:6px; border-color:#108f53; color:#108f53; font-weight:600;" title="Lấy lại toàn bộ ảnh sản phẩm mẫu">
+                                    <i data-lucide="image"></i>
+                                    <span>Lấy lại ảnh mẫu</span>
                                 </button>
                                 <button class="btn btn-primary" id="btnNewOnlineProduct" onclick="window.openNewOnlineProductModal('ADD')" style="display:flex; align-items:center; gap:6px;">
                                     <i data-lucide="plus"></i>
@@ -10862,7 +10866,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261020_sales_online_nav_v21"></script>
+    <script src="/app.js?v=20261020_restore_images_v22"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

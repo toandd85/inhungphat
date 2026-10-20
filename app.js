@@ -13480,27 +13480,6 @@ const DEFAULT_ONLINE_ORDERS = [];
 // Initial State Store
 class AppState {
     constructor() {
-        // Auto-cleanup bloated base64 images from localStorage on startup to prevent QuotaExceededError
-        try {
-            const rawProds = localStorage.getItem("ihp_online_products");
-            if (rawProds && rawProds.length > 500000) {
-                const parsedProds = JSON.parse(rawProds);
-                if (Array.isArray(parsedProds)) {
-                    let cleaned = false;
-                    const leanProds = parsedProds.map(p => {
-                        if (p && p.image && String(p.image).length > 60000) {
-                            cleaned = true;
-                            return { ...p, image: "" };
-                        }
-                        return p;
-                    });
-                    if (cleaned) {
-                        localStorage.setItem("ihp_online_products", JSON.stringify(leanProds));
-                    }
-                }
-            }
-        } catch (eStorageClean) {}
-
         this.partners = this.load("partners", DEFAULT_PARTNERS);
         this.materials = this.load("materials", DEFAULT_MATERIALS);
         this.orders = this.load("orders", []);
@@ -13513,6 +13492,37 @@ class AppState {
             this.online_products = DEFAULT_ONLINE_PRODUCTS;
             this.save("online_products", DEFAULT_ONLINE_PRODUCTS);
             localStorage.setItem("ihp_tet_2027_seeded_v1", "true");
+        }
+
+        // Tự động khôi phục toàn bộ ảnh sản phẩm nếu bị rỗng hoặc mất do cơ chế dọn dẹp trước đây
+        if (Array.isArray(this.online_products)) {
+            const defImgMap = {};
+            (DEFAULT_ONLINE_PRODUCTS || []).forEach(dp => {
+                if (dp && dp.sku && dp.image) defImgMap[dp.sku] = dp.image;
+            });
+            let shouldSaveImages = false;
+            this.online_products.forEach(p => {
+                if (p && p.sku && defImgMap[p.sku]) {
+                    if (!p.image || String(p.image).trim() === "" || p.image === "null") {
+                        p.image = defImgMap[p.sku];
+                        shouldSaveImages = true;
+                    }
+                }
+            });
+            if (!localStorage.getItem("ihp_restore_images_v22")) {
+                this.online_products.forEach(p => {
+                    if (p && p.sku && defImgMap[p.sku]) {
+                        if (!p.image || String(p.image).trim() === "") {
+                            p.image = defImgMap[p.sku];
+                            shouldSaveImages = true;
+                        }
+                    }
+                });
+                localStorage.setItem("ihp_restore_images_v22", "true");
+            }
+            if (shouldSaveImages) {
+                this.save("online_products", this.online_products);
+            }
         }
 
         this.processing_services = this.load("processing_services", DEFAULT_PROCESSING_SERVICES);
@@ -13815,49 +13825,20 @@ class AppState {
 
     freeUpStorageQuota(failedKey, failedVal) {
         try {
-            // 1. Strip heavy base64 images from online_products in localStorage
-            const storedProds = localStorage.getItem('ihp_online_products');
-            if (storedProds) {
-                try {
-                    const parsed = JSON.parse(storedProds);
-                    if (Array.isArray(parsed)) {
-                        const lean = parsed.map(p => {
-                            if (p && p.image && String(p.image).startsWith('data:')) {
-                                return { ...p, image: '' };
-                            }
-                            return p;
-                        });
-                        localStorage.setItem('ihp_online_products', JSON.stringify(lean));
-                    }
-                } catch (e1) {}
-            }
-
-            // 2. Strip images from the item being saved if it is online_products
-            let leanVal = failedVal;
-            if (failedKey === 'online_products' && Array.isArray(failedVal)) {
-                leanVal = failedVal.map(p => {
-                    if (p && p.image && String(p.image).startsWith('data:')) {
-                        return { ...p, image: '' };
-                    }
-                    return p;
-                });
-            }
-
-            // 3. Remove non-essential temporary/debug keys from localStorage
-            try {
-                for (let i = localStorage.length - 1; i >= 0; i--) {
-                    const k = localStorage.key(i);
-                    if (k && (k.startsWith('ihp_quote_def_') || k.startsWith('ihp_toolbar_') || k.startsWith('ihp_views_') || k.includes('seeded_'))) {
-                        localStorage.removeItem(k);
-                    }
+            console.warn("Storage quota warning for key:", failedKey);
+            // 1. Remove non-essential temporary/debug keys from localStorage
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const k = localStorage.key(i);
+                if (k && (k.startsWith('ihp_quote_def_') || k.startsWith('ihp_toolbar_') || k.startsWith('ihp_views_') || k.startsWith('ihp_temp_') || k.includes('seeded_'))) {
+                    localStorage.removeItem(k);
                 }
-            } catch (e2) {}
+            }
 
-            // 4. Retry saving lean value silently (in-memory state already has full data)
+            // 2. Retry saving the original value
             try {
-                localStorage.setItem(`ihp_${failedKey}`, JSON.stringify(leanVal));
+                localStorage.setItem(`ihp_${failedKey}`, JSON.stringify(failedVal));
             } catch (e3) {
-                console.warn("localStorage quota full, retained in memory and server DB:", failedKey);
+                console.warn("localStorage quota full after clearing temp keys, retained in memory:", failedKey);
             }
         } catch (err) {
             console.warn("Quota cleanup warning:", err);
@@ -27254,6 +27235,28 @@ window.viewFullOnlineProductImage = function(sku) {
         img.style.boxShadow = "0 10px 30px rgba(0,0,0,0.5)";
         w.document.body.appendChild(img);
     }
+};
+
+window.restoreAllProductImages = function(forceAll = false) {
+    if (!state || !Array.isArray(state.online_products)) return 0;
+    const defImgMap = {};
+    (DEFAULT_ONLINE_PRODUCTS || []).forEach(dp => {
+        if (dp && dp.sku && dp.image) defImgMap[dp.sku] = dp.image;
+    });
+    let restored = 0;
+    state.online_products.forEach(p => {
+        if (p && p.sku && defImgMap[p.sku]) {
+            if (forceAll || !p.image || String(p.image).trim() === "" || p.image === "null") {
+                p.image = defImgMap[p.sku];
+                restored++;
+            }
+        }
+    });
+    state.save("online_products", state.online_products);
+    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
+    if (typeof window.renderOnlineProductsTable === 'function') window.renderOnlineProductsTable();
+    if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+    return restored;
 };
 
 
