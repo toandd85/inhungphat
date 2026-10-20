@@ -14244,7 +14244,8 @@ window.ROUTE_DEFINITIONS = [
     { slug: 'ban-hang-online', tabId: 'online-sales', subtab: 'online-dashboard', title: 'Báo cáo Bán hàng Online | In Lạc Hồng', aliases: ['online-sales', 'ban-hang'] },
     { slug: 'dat-hang', tabId: 'online-sales', subtab: 'online-orders', title: 'Quản lý Đơn hàng Online | In Lạc Hồng', aliases: ['don-hang-online', 'online-orders', 'don-hang'] },
     { slug: 'hoa-don', tabId: 'online-sales', subtab: 'online-invoices', title: 'Hóa đơn Bán hàng Online | In Lạc Hồng', aliases: ['online-invoices'] },
-    { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Trả hàng Online | In Lạc Hồng', aliases: ['online-returns'] },
+    { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Hoàn hàng Online | In Lạc Hồng', aliases: ['online-returns', 'hoan-hang'] },
+    { slug: 'hoan-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Hoàn hàng Online | In Lạc Hồng', aliases: ['online-returns', 'tra-hang'] },
     { slug: 'hang-hoa', tabId: 'online-sales', subtab: 'online-products', title: 'Danh mục Hàng hóa Sản phẩm | In Lạc Hồng', aliases: ['online-products', 'san-pham', 'danh-sach-hang-hoa'] },
     { slug: 'nhap-kho-hang-hoa', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập kho hàng hóa (Bổ sung số lượng) | In Lạc Hồng', aliases: ['nhap-kho', 'nhap-hang-hoa', 'online-import-goods', 'nhap-kho-hang-hoa'] },
     { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
@@ -22885,7 +22886,7 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         let label = "🛍️ Bán hàng online";
         if (subtab === "online-dashboard") label = "📊 Báo cáo bán hàng online";
         else if (subtab === "online-orders") label = "🛍️ Đơn hàng online";
-        else if (subtab === "online-returns") label = "🔄 Trả hàng";
+        else if (subtab === "online-returns") label = "🔄 Hoàn hàng";
         else if (subtab === "online-invoices") label = "📄 Xuất hoá đơn";
         else if (subtab === "online-products") label = "📦 Danh sách Hàng hóa";
         else if (subtab === "online-prices" || subtab === "online-pricing") label = "🏷️ Thiết lập Giá";
@@ -28761,7 +28762,7 @@ document.getElementById("onlineOrderReturnForm")?.addEventListener("submit", fun
     });
     
     if (returnItems.length === 0) {
-        alert("Vui lòng chọn ít nhất một sản phẩm cần trả.");
+        alert("Vui lòng chọn ít nhất một sản phẩm cần hoàn hàng.");
         return;
     }
     
