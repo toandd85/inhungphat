@@ -11,6 +11,16 @@
     --text-secondary: #9ca3af;
     --text-muted: #6b7280;
     
+    --primary: #108f53;
+    --text: #f3f4f6;
+    --text-color: #f3f4f6;
+    --bg-secondary: #1f2937;
+    --bg-hover: #1e293b;
+    --bg-light: #111827;
+    --bg-body: #0b0f19;
+    --accent-rgb: 16, 143, 83;
+    --bg-card-rgb: 17, 24, 39;
+    
     --accent: #108f53; /* Emerald Green */
     --accent-hover: #0b7a46;
     --accent-light: rgba(16, 143, 83, 0.15);
@@ -25,6 +35,9 @@
     --info-light: rgba(6, 182, 212, 0.12);
     
     --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     --glass-blur: blur(12px);
     --card-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
 }
@@ -38,6 +51,16 @@
     --text-primary: #0f172a; /* Slate-900 (ultra-sharp black) */
     --text-secondary: #334155; /* Slate-700 (sharp contrast secondary) */
     --text-muted: #64748b; /* Slate-500 (clear legible muted text) */
+    
+    --primary: #108f53;
+    --text: #0f172a;
+    --text-color: #0f172a;
+    --bg-secondary: #f8fafc;
+    --bg-hover: #f1f5f9;
+    --bg-light: #f8fafc;
+    --bg-body: #f1f5f9;
+    --accent-rgb: 16, 143, 83;
+    --bg-card-rgb: 255, 255, 255;
     
     --accent: #108f53; /* Emerald Green Accent */
     --accent-hover: #0b7a46;
@@ -53,6 +76,9 @@
     --info-light: rgba(2, 132, 199, 0.15);
     
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
     --glass-blur: none;
     --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
 }
@@ -415,7 +441,7 @@ body {
     letter-spacing: 0.3px;
     border-bottom: 2px solid #cbd5e1 !important;
     border-right: 1px solid #e2e8f0 !important;
-    padding: 11px 16px !important;
+    padding: 9px 12px !important;
     text-transform: uppercase;
     white-space: nowrap !important;
     vertical-align: middle !important;
@@ -430,11 +456,11 @@ body {
 :root[data-theme="light"] .table td,
 :root[data-theme="light"] table.table td {
     color: #0f172a !important;
-    font-size: 0.88rem !important;
+    font-size: 0.86rem !important;
     font-weight: 500 !important;
     border-bottom: 1px solid #e2e8f0 !important;
     border-right: 1px solid #e2e8f0 !important; /* Phân tách rõ ràng từng cột */
-    padding: 11px 16px !important;
+    padding: 9px 12px !important;
     background-color: #ffffff;
     white-space: nowrap !important;
     vertical-align: middle !important;
@@ -444,6 +470,13 @@ body {
 :root[data-theme="light"] table.table td:last-child {
     border-right: none !important;
 }
+
+/* Table helpers */
+.table th.text-center, .table td.text-center { text-align: center !important; }
+.table th.text-right, .table td.text-right { text-align: right !important; }
+.table th.text-left, .table td.text-left { text-align: left !important; }
+.table td.tabular-nums { font-variant-numeric: tabular-nums !important; }
+.table td.cell-truncate { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap !important; }
 
 /* Alternating Rows (Zebra striping for readability) */
 :root[data-theme="light"] .table tbody tr:nth-child(even) td,
@@ -525,6 +558,477 @@ body {
     background-color: #e2e8f0 !important;
     border-color: #94a3b8 !important;
     color: #0f172a !important;
+}
+
+/* ==========================================================================
+   ENHANCED LIGHT MODE CONTRAST & READABILITY ACROSS ALL MODULES
+   ========================================================================== */
+
+/* 1. Universal Table Contrast */
+:root[data-theme="light"] table,
+:root[data-theme="light"] .table,
+:root[data-theme="light"] table.table,
+:root[data-theme="light"] .table-brackets {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+:root[data-theme="light"] table th,
+:root[data-theme="light"] .table th,
+:root[data-theme="light"] table.table th,
+:root[data-theme="light"] .table-brackets th {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #cbd5e1 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    border-top: none !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase;
+    vertical-align: middle !important;
+}
+
+:root[data-theme="light"] table td,
+:root[data-theme="light"] .table td,
+:root[data-theme="light"] table.table td,
+:root[data-theme="light"] .table-brackets td {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    padding: 10px 14px !important;
+    vertical-align: middle !important;
+}
+
+:root[data-theme="light"] table tbody tr:nth-child(even) td,
+:root[data-theme="light"] .table tbody tr:nth-child(even) td {
+    background-color: #f8fafc !important;
+}
+
+:root[data-theme="light"] table tbody tr:hover td,
+:root[data-theme="light"] .table tbody tr:hover td {
+    background-color: #ecfdf5 !important;
+}
+
+:root[data-theme="light"] table td strong,
+:root[data-theme="light"] table td b {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+:root[data-theme="light"] table td small {
+    color: #475569 !important;
+    font-weight: 500 !important;
+}
+
+:root[data-theme="light"] table th:last-child,
+:root[data-theme="light"] table td:last-child {
+    border-right: none !important;
+}
+
+/* 2. High Contrast Badges in Light Mode */
+:root[data-theme="light"] .badge {
+    font-weight: 600 !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    line-height: 1.25 !important;
+}
+
+:root[data-theme="light"] .badge-secondary {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+:root[data-theme="light"] .badge-info {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+    border: 1px solid #bae6fd !important;
+}
+
+:root[data-theme="light"] .badge-success {
+    background-color: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+}
+
+:root[data-theme="light"] .badge-warning {
+    background-color: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+
+:root[data-theme="light"] .badge-danger {
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+}
+
+:root[data-theme="light"] .badge-primary {
+    background-color: #e6f4ea !important;
+    color: #0e7542 !important;
+    border: 1px solid #a7f3d0 !important;
+}
+
+:root[data-theme="light"] .workflow-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    border: 1px solid transparent !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    transition: all 0.15s ease !important;
+}
+
+:root[data-theme="light"] .workflow-badge-delivery-done {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border-color: #86efac !important;
+}
+
+:root[data-theme="light"] .workflow-badge-delivery-shipping {
+    background: #e0f2fe !important;
+    color: #0284c7 !important;
+    border-color: #7dd3fc !important;
+}
+
+:root[data-theme="light"] .workflow-badge-delivery-pending {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border-color: #cbd5e1 !important;
+}
+
+:root[data-theme="light"] .workflow-badge-inv-yes {
+    background: #e6f4ea !important;
+    color: #0e7542 !important;
+    border-color: #a7f3d0 !important;
+}
+
+:root[data-theme="light"] .workflow-badge-inv-no {
+    background: #f8fafc !important;
+    color: #64748b !important;
+    border-color: #e2e8f0 !important;
+}
+
+/* 3. Form Controls, Inputs & Selects */
+:root[data-theme="light"] input,
+:root[data-theme="light"] select,
+:root[data-theme="light"] textarea,
+:root[data-theme="light"] .form-input,
+:root[data-theme="light"] .form-select,
+:root[data-theme="light"] .form-control {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1 !important;
+}
+
+:root[data-theme="light"] input:focus,
+:root[data-theme="light"] select:focus,
+:root[data-theme="light"] textarea:focus,
+:root[data-theme="light"] .form-input:focus,
+:root[data-theme="light"] .form-select:focus,
+:root[data-theme="light"] .form-control:focus {
+    border-color: #108f53 !important;
+    box-shadow: 0 0 0 3px rgba(16, 143, 83, 0.18) !important;
+    outline: none !important;
+}
+
+/* 4. Action Buttons & Icons in Tables */
+:root[data-theme="light"] .btn-icon {
+    color: #334155;
+    background: transparent;
+    border-radius: 6px;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+:root[data-theme="light"] .btn-icon:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+:root[data-theme="light"] .date-time-widget,
+:root[data-theme="light"] .weather-widget,
+:root[data-theme="light"] .gold-widget {
+    background-color: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="light"] .weather-widget span,
+:root[data-theme="light"] .gold-widget span,
+:root[data-theme="light"] .date-time-widget span {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+/* ==========================================================================
+   COMMERCIAL DOCUMENTS SUITE (BỘ HỒ SƠ VĂN BẢN CHUẨN THƯƠNG MẠI & SẢN XUẤT)
+   ========================================================================== */
+.commercial-doc-preview-modal .modal-dialog {
+    max-width: 940px;
+    width: 95%;
+}
+
+.commercial-doc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+[data-theme="dark"] .commercial-doc-toolbar {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.commercial-doc-tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.commercial-doc-tab-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 0.825rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.commercial-doc-tab-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.commercial-doc-tab-btn.active {
+    background: #108f53;
+    border-color: #108f53;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(16, 143, 83, 0.3);
+}
+
+.commercial-doc-paper-wrapper {
+    background: #cbd5e1;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    max-height: 78vh;
+    overflow-y: auto;
+}
+
+[data-theme="dark"] .commercial-doc-paper-wrapper {
+    background: #0b1120;
+}
+
+.commercial-doc-paper {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    width: 100%;
+    max-width: 820px;
+    min-height: 1080px;
+    padding: 44px 52px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    font-family: 'Times New Roman', Times, serif, 'Be Vietnam Pro';
+    font-size: 13.5pt;
+    line-height: 1.55;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.commercial-doc-paper * {
+    color: #0f172a !important;
+}
+
+.doc-header-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 24px;
+}
+
+.doc-header-table td {
+    padding: 2px 4px !important;
+    border: none !important;
+    background: transparent !important;
+    vertical-align: top !important;
+}
+
+.doc-header-company {
+    font-size: 11pt;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.doc-header-company strong {
+    font-size: 12pt;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+    color: #0e7542 !important;
+}
+
+.doc-header-national {
+    text-align: center;
+    font-size: 11pt;
+    line-height: 1.35;
+}
+
+.doc-header-national strong {
+    font-size: 11.5pt;
+    text-transform: uppercase;
+    display: block;
+}
+
+.doc-header-national .underline {
+    display: inline-block;
+    width: 140px;
+    height: 1px;
+    background: #0f172a;
+    margin-top: 4px;
+}
+
+.doc-title-box {
+    text-align: center;
+    margin: 20px 0 24px 0;
+}
+
+.doc-main-title {
+    font-size: 16pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    color: #0e7542 !important;
+}
+
+.doc-sub-number {
+    font-size: 11.5pt;
+    font-style: italic;
+    color: #334155 !important;
+}
+
+.doc-parties-box {
+    margin-bottom: 20px;
+    font-size: 12pt;
+}
+
+.doc-party-block {
+    margin-bottom: 14px;
+}
+
+.doc-party-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12pt;
+    margin-bottom: 6px;
+    color: #0e7542 !important;
+}
+
+.doc-field-row {
+    margin-bottom: 4px;
+    display: flex;
+    line-height: 1.45;
+}
+
+.doc-field-label {
+    min-width: 145px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.doc-field-val {
+    flex-grow: 1;
+}
+
+.doc-clause-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12.5pt;
+    margin: 16px 0 8px 0;
+    color: #0e7542 !important;
+}
+
+.doc-clause-p {
+    margin-bottom: 6px;
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.doc-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 14px 0 16px 0 !important;
+    font-size: 11.5pt !important;
+}
+
+.doc-table th, .doc-table td {
+    border: 1px solid #334155 !important;
+    padding: 7px 10px !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    line-height: 1.35 !important;
+}
+
+.doc-table th {
+    background-color: #f1f5f9 !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    text-transform: uppercase !important;
+    font-size: 11pt !important;
+}
+
+.doc-sign-box {
+    width: 100%;
+    margin-top: 36px;
+    page-break-inside: avoid;
+}
+
+.doc-sign-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+.doc-sign-table td {
+    border: none !important;
+    background: transparent !important;
+    text-align: center !important;
+    vertical-align: top !important;
+    width: 50% !important;
+    padding: 0 16px !important;
+    font-size: 12pt !important;
+}
+
+.doc-sign-space {
+    height: 90px;
 }
 
 .user-profile {
@@ -907,7 +1411,7 @@ body {
 }
 
 .table th, .table td {
-    padding: 11px 16px !important;
+    padding: 9px 12px !important;
     font-size: 0.88rem;
     border-bottom: 1px solid var(--border-color);
     white-space: nowrap !important;
@@ -1539,9 +2043,21 @@ th[data-col="actions"], td[data-col="actions"] {
 }
 
 select option, .form-select option {
-    background-color: var(--bg-card, #1e293b) !important;
-    color: var(--text-color, #f8fafc) !important;
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
     padding: 8px 12px;
+}
+
+:root[data-theme="light"] select option,
+:root[data-theme="light"] .form-select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+:root[data-theme="dark"] select option,
+:root[data-theme="dark"] .form-select option {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
 }
 
 /* ==========================================================================
@@ -3007,12 +3523,12 @@ select option, .form-select option {
    THEME-SPECIFIC CONTRAST POPOVER STYLES
    ========================================================================== */
 
-/* Dark Theme: Background White, Text Green */
+/* Dark Theme Popover */
 :root[data-theme="dark"] .db-popover {
-    background: #ffffff !important;
-    color: #0e7542 !important;
-    border: 2px solid #108f53 !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
 :root[data-theme="dark"] .db-popover h4,
@@ -3020,30 +3536,30 @@ select option, .form-select option {
 :root[data-theme="dark"] .db-popover span,
 :root[data-theme="dark"] .db-popover label,
 :root[data-theme="dark"] .db-popover p {
-    color: #0e7542 !important;
+    color: #f8fafc !important;
 }
 
 :root[data-theme="dark"] .db-popover select,
 :root[data-theme="dark"] .db-popover input[type="text"],
 :root[data-theme="dark"] .db-popover input[type="number"],
 :root[data-theme="dark"] .db-popover input[type="date"] {
-    background: #f3f4f6 !important;
-    color: #0e7542 !important;
-    border: 1px solid #108f53 !important;
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #475569 !important;
 }
 
 :root[data-theme="dark"] .db-popover option {
-    background: #ffffff !important;
-    color: #0e7542 !important;
+    background: #0f172a !important;
+    color: #f8fafc !important;
 }
 
 :root[data-theme="dark"] .db-popover button:not(.btn-primary):not(.btn-remove-filter) {
-    color: #0e7542 !important;
+    color: #f8fafc !important;
 }
 
 :root[data-theme="dark"] .db-popover .ai-query-box {
-    background: #f3f4f6 !important;
-    border-color: #108f53 !important;
+    background: #0f172a !important;
+    border-color: #475569 !important;
 }
 
 :root[data-theme="dark"] .db-popover .ai-query-btn {
@@ -3051,13 +3567,12 @@ select option, .form-select option {
     color: #ffffff !important;
 }
 
-
-/* Light Theme: Background Green, Text White */
+/* Light Theme Popover */
 :root[data-theme="light"] .db-popover {
-    background: #0e7542 !important;
-    color: #ffffff !important;
-    border: 2px solid #ffffff !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
 }
 
 :root[data-theme="light"] .db-popover h4,
@@ -3065,120 +3580,35 @@ select option, .form-select option {
 :root[data-theme="light"] .db-popover span,
 :root[data-theme="light"] .db-popover label,
 :root[data-theme="light"] .db-popover p {
-    color: #ffffff !important;
+    color: #0f172a !important;
 }
 
 :root[data-theme="light"] .db-popover select,
 :root[data-theme="light"] .db-popover input[type="text"],
 :root[data-theme="light"] .db-popover input[type="number"],
 :root[data-theme="light"] .db-popover input[type="date"] {
-    background: rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1 !important;
 }
 
 :root[data-theme="light"] .db-popover option {
-    background: #0e7542 !important;
-    color: #ffffff !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
 }
 
 :root[data-theme="light"] .db-popover button:not(.btn-primary):not(.btn-remove-filter) {
-    color: #ffffff !important;
-}
-
-
-
-/* ==========================================================================
-   THEME-SPECIFIC CONTRAST POPOVER STYLES
-   ========================================================================== */
-
-/* Dark Theme: Background White, Text Green */
-:root[data-theme="dark"] .db-popover {
-    background: #ffffff !important;
-    color: #0e7542 !important;
-    border: 2px solid #108f53 !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
-}
-
-:root[data-theme="dark"] .db-popover h4,
-:root[data-theme="dark"] .db-popover h5,
-:root[data-theme="dark"] .db-popover span,
-:root[data-theme="dark"] .db-popover label,
-:root[data-theme="dark"] .db-popover p {
-    color: #0e7542 !important;
-}
-
-:root[data-theme="dark"] .db-popover select,
-:root[data-theme="dark"] .db-popover input[type="text"],
-:root[data-theme="dark"] .db-popover input[type="number"],
-:root[data-theme="dark"] .db-popover input[type="date"] {
-    background: #f3f4f6 !important;
-    color: #0e7542 !important;
-    border: 1px solid #108f53 !important;
-}
-
-:root[data-theme="dark"] .db-popover option {
-    background: #ffffff !important;
-    color: #0e7542 !important;
-}
-
-:root[data-theme="dark"] .db-popover button:not(.btn-primary):not(.btn-remove-filter) {
-    color: #0e7542 !important;
-}
-
-:root[data-theme="dark"] .db-popover .ai-query-box {
-    background: #f3f4f6 !important;
-    border-color: #108f53 !important;
-}
-
-:root[data-theme="dark"] .db-popover .ai-query-btn {
-    background: #108f53 !important;
-    color: #ffffff !important;
-}
-
-
-/* Light Theme: Background Green, Text White */
-:root[data-theme="light"] .db-popover {
-    background: #0e7542 !important;
-    color: #ffffff !important;
-    border: 2px solid #ffffff !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
-}
-
-:root[data-theme="light"] .db-popover h4,
-:root[data-theme="light"] .db-popover h5,
-:root[data-theme="light"] .db-popover span,
-:root[data-theme="light"] .db-popover label,
-:root[data-theme="light"] .db-popover p {
-    color: #ffffff !important;
-}
-
-:root[data-theme="light"] .db-popover select,
-:root[data-theme="light"] .db-popover input[type="text"],
-:root[data-theme="light"] .db-popover input[type="number"],
-:root[data-theme="light"] .db-popover input[type="date"] {
-    background: rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-}
-
-:root[data-theme="light"] .db-popover option {
-    background: #0e7542 !important;
-    color: #ffffff !important;
-}
-
-:root[data-theme="light"] .db-popover button:not(.btn-primary):not(.btn-remove-filter) {
-    color: #ffffff !important;
+    color: #1e293b !important;
 }
 
 :root[data-theme="light"] .db-popover .ai-query-box {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
 }
 
 :root[data-theme="light"] .db-popover .ai-query-btn {
-    background: #ffffff !important;
-    color: #0e7542 !important;
+    background: #108f53 !important;
+    color: #ffffff !important;
 }
 
 /* ==========================================================================
@@ -8325,4 +8755,266 @@ select.form-select, .form-select {
 .theme-toggle-header-btn:active {
     transform: scale(0.95);
 }
+
+/* ==========================================================================
+   POS NHẬP KHO & MẪU 02 - VT (XUẤT KHO) STYLING
+   ========================================================================== */
+
+/* POS Import Product Cards */
+.pos-import-prod-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.pos-import-prod-card:hover {
+    transform: translateY(-2px);
+    border-color: #0284c7;
+    box-shadow: 0 6px 14px rgba(2, 132, 199, 0.15);
+}
+.pos-import-prod-img-box {
+    width: 100%;
+    height: 110px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+.pos-import-prod-img-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.pos-import-cart-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    transition: background 0.15s;
+}
+.pos-import-cart-item:hover {
+    background: var(--bg-card-hover, rgba(2, 132, 199, 0.02));
+}
+
+/* Mẫu số 02 - VT Voucher Print & Preview Styles */
+.mau-02-vt-print-wrapper {
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+    background: #ffffff;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 20px 25px;
+    line-height: 1.4;
+    font-size: 13.5px;
+    box-sizing: border-box;
+}
+
+.mau-02-vt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+.mau-02-vt-header-left {
+    width: 55%;
+    font-size: 13px;
+    line-height: 1.4;
+}
+.mau-02-vt-header-right {
+    width: 42%;
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.4;
+}
+.mau-02-vt-header-right strong {
+    font-size: 14px;
+}
+
+.mau-02-vt-title {
+    text-align: center;
+    margin: 10px 0 16px 0;
+}
+.mau-02-vt-title h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000000;
+}
+.mau-02-vt-title .date-line {
+    font-style: italic;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+.mau-02-vt-title .voucher-no {
+    font-weight: bold;
+    font-size: 13.5px;
+}
+
+.mau-02-vt-meta-lines {
+    margin-bottom: 14px;
+    font-size: 13.5px;
+    line-height: 1.6;
+}
+.mau-02-vt-meta-row {
+    margin-bottom: 3px;
+}
+.mau-02-vt-bx-highlight {
+    font-weight: bold;
+    color: #000000;
+    display: inline-block;
+    padding: 0 4px;
+}
+
+.mau-02-vt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+.mau-02-vt-table th,
+.mau-02-vt-table td {
+    border: 1px solid #000000;
+    padding: 6px 6px;
+    vertical-align: middle;
+}
+.mau-02-vt-table thead th {
+    text-align: center;
+    font-weight: bold;
+    background: #fbfbfb;
+}
+.mau-02-vt-subcol-row td {
+    text-align: center;
+    font-size: 11.5px;
+    font-style: italic;
+    background: #fdfdfd;
+}
+
+.mau-02-vt-table tbody tr.summary-row td {
+    font-weight: bold;
+}
+
+.mau-02-vt-words-section {
+    margin: 12px 0 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+}
+
+.mau-02-vt-signatures-section {
+    margin-top: 14px;
+    page-break-inside: avoid;
+}
+.mau-02-vt-date-right {
+    text-align: right;
+    font-style: italic;
+    margin-bottom: 8px;
+    padding-right: 15px;
+}
+.mau-02-vt-sig-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+    gap: 6px;
+}
+.mau-02-vt-sig-col strong {
+    display: block;
+    font-size: 13px;
+    line-height: 1.3;
+}
+.mau-02-vt-sig-col em {
+    display: block;
+    font-size: 11.5px;
+    color: #333333;
+    margin-bottom: 50px;
+}
+.mau-02-vt-sig-col .signer-name {
+    font-weight: bold;
+    font-size: 12.5px;
+}
+
+/* Attached Photo in Mẫu 02 - VT */
+.mau-02-vt-attached-photo-box {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed #666666;
+    text-align: center;
+    page-break-inside: avoid;
+}
+.mau-02-vt-attached-photo-box img {
+    max-width: 90%;
+    max-height: 380px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Print CSS Media Query */
+@media print {
+    /* Hide everything outside of print modal */
+    body * {
+        visibility: hidden !important;
+    }
+    
+    #stockExportPrintModal,
+    #stockExportPrintModal * {
+        visibility: visible !important;
+    }
+
+    #stockExportPrintModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+    }
+
+    #stockExportPrintModal .modal-dialog,
+    #stockExportPrintModal .modal-content,
+    #stockExportPrintModal .modal-body {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+    }
+
+    .print-hide {
+        display: none !important;
+    }
+
+    .mau-02-vt-print-wrapper {
+        max-width: 100% !important;
+        padding: 10mm 12mm !important;
+        margin: 0 !important;
+        font-size: 13pt !important;
+    }
+
+    .mau-02-vt-table th,
+    .mau-02-vt-table td {
+        border-color: #000000 !important;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+}
+
 

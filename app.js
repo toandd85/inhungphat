@@ -10094,52 +10094,49 @@ const DEFAULT_PARTNERS = [
     "note": "Chuyển khoản tài khoản chị liên"
   },
   {
-    "id": "p_ncc_decal_nguyen_xien",
-    "code": "NCC-TH-001",
-    "name": "Decal Nguyễn Xiển",
-    "contact_person": "Phụ trách Decal Nguyễn Xiển",
-    "company_name": "Nhà cung cấp Thương hiệu Decal Nguyễn Xiển",
-    "tax_code": "0106889922",
-    "billing_address": "Nguyễn Xiển, Thanh Xuân, Hà Nội",
-    "billing_email": "decalnguyenxien@supplier.vn",
-    "address": "Nguyễn Xiển, Thanh Xuân, Hà Nội",
-    "region": "Thành phố Hà Nội",
-    "ward": "Phường Khương Đình",
-    "phone": "0912345678",
-    "email": "decalnguyenxien@supplier.vn",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 100000000,
-    "note": "Nhà cung cấp thương hiệu Decal"
-  },
-  {
     "id": "p_ncc_lac_hong",
-    "code": "NCC-TH-002",
-    "name": "Lạc Hồng",
-    "contact_person": "Đại Hùng",
+    "code": "NCC-LACHONG",
+    "name": "In Lạc Hồng",
     "company_name": "Công ty Cổ phần In Lạc Hồng",
+    "business_type": "ENTERPRISE",
+    "customer_type": "SUPPLIER",
+    "legal_representative": "Đại Hùng",
+    "representative_position": "Giám đốc",
     "tax_code": "0106123456",
+    "bank_name": "Vietcombank (Ngoại Thương Việt Nam)",
+    "bank_account_no": "0011004567899",
+    "bank_account_holder": "CÔNG TY CỔ PHẦN IN LẠC HỒNG",
+    "bank_branch": "Sở Giao Dịch Hà Nội",
     "billing_address": "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
     "billing_email": "xuongin@inlachong.vn",
+    "shipping_address": "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
     "address": "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
     "region": "Thành phố Hà Nội",
     "ward": "Xã Tân Triều",
     "phone": "0987654321",
     "email": "xuongin@inlachong.vn",
-    "role": "BOTH",
+    "role": "SUPPLIER",
     "status": true,
-    "credit_limit": 100000000,
-    "note": "Xưởng in và gia công Lạc Hồng"
+    "credit_limit": 500000000,
+    "note": "Xưởng in và gia công Lạc Hồng - NCC chính thức"
   },
   {
     "id": "p_ncc_tuan_dung",
-    "code": "NCC-TH-003",
+    "code": "NCC-TUANDUNG",
     "name": "Tuấn Dung",
-    "contact_person": "Anh Tuấn",
     "company_name": "Công ty Cổ phần In Tuấn Dung",
+    "business_type": "ENTERPRISE",
+    "customer_type": "SUPPLIER",
+    "legal_representative": "Anh Tuấn",
+    "representative_position": "Giám đốc điều hành",
     "tax_code": "0105432198",
+    "bank_name": "Techcombank (Kỹ Thương Việt Nam)",
+    "bank_account_no": "19033456789012",
+    "bank_account_holder": "CÔNG TY CỔ PHẦN IN TUẤN DUNG",
+    "bank_branch": "Đống Đa, Hà Nội",
     "billing_address": "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
     "billing_email": "tuandung@supplier.vn",
+    "shipping_address": "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
     "address": "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
     "region": "Thành phố Hà Nội",
     "ward": "Phường Trung Liệt",
@@ -10147,2345 +10144,8 @@ const DEFAULT_PARTNERS = [
     "email": "tuandung@supplier.vn",
     "role": "SUPPLIER",
     "status": true,
-    "credit_limit": 100000000,
+    "credit_limit": 200000000,
     "note": "Nhà cung cấp thương hiệu Hộp Tuấn Dung"
-  },
-  {
-    "id": "p_ncc_xls_2",
-    "code": "NCC-VT-001",
-    "name": "Tên Nhà Cung Cấp",
-    "contact_person": "Tên Nhà Cung Cấp",
-    "company_name": "Tên Nhà Cung Cấp",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "SĐT",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (GMAIL)"
-  },
-  {
-    "id": "p_ncc_xls_3",
-    "code": "NCC-VT-002",
-    "name": "A.Căn (in lưới lịch )",
-    "contact_person": "A.Căn (in lưới lịch )",
-    "company_name": "A.Căn (in lưới lịch )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0979.987.846",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_4",
-    "code": "NCC-VT-003",
-    "name": "In lịch ép nhũ  190 đê la thành",
-    "contact_person": "In lịch ép nhũ  190 đê la thành",
-    "company_name": "In lịch ép nhũ  190 đê la thành",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0915.118.556",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_5",
-    "code": "NCC-VT-004",
-    "name": "Mua lịch",
-    "contact_person": "Mua lịch",
-    "company_name": "Mua lịch",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0983.19.89.86-39.330.938",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_6",
-    "code": "NCC-VT-005",
-    "name": "Ngọc Diệp (Số 4 Chùa Bộc )",
-    "contact_person": "Ngọc Diệp (Số 4 Chùa Bộc )",
-    "company_name": "Ngọc Diệp (Số 4 Chùa Bộc )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.355.74.199& 04.3678.8406 Chị Thu Hà/ 3577.2927",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_7",
-    "code": "NCC-VT-006",
-    "name": "Ngoc Việt (A.bình )",
-    "contact_person": "Ngoc Việt (A.bình )",
-    "company_name": "Ngoc Việt (A.bình )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.66.7008.27 -36.27.60.48 (Nhã)",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_8",
-    "code": "NCC-VT-007",
-    "name": "Ngoc việt (a.kha )",
-    "contact_person": "Ngoc việt (a.kha )",
-    "company_name": "Ngoc việt (a.kha )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "38.55.18.81-0989.92.82.32-33868202",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_9",
-    "code": "NCC-VT-008",
-    "name": "Ke toán công nợ A Kha\n ngọc việt",
-    "contact_person": "Ke toán công nợ A Kha\n ngọc việt",
-    "company_name": "Ke toán công nợ A Kha\n ngọc việt",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "338 68 202",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_10",
-    "code": "NCC-VT-009",
-    "name": "A.Đạt",
-    "contact_person": "A.Đạt",
-    "company_name": "A.Đạt",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "37.322.123",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_11",
-    "code": "NCC-VT-010",
-    "name": "Giay Phú Gia",
-    "contact_person": "Giay Phú Gia",
-    "company_name": "Giay Phú Gia",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0902179719",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_12",
-    "code": "NCC-VT-011",
-    "name": "Nhật Linh",
-    "contact_person": "Nhật Linh",
-    "company_name": "Nhật Linh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "3772.12.27-3772.1228",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_13",
-    "code": "NCC-VT-012",
-    "name": "Đề Can Hoàng Minh",
-    "contact_person": "Đề Can Hoàng Minh",
-    "company_name": "Đề Can Hoàng Minh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3655.74.19",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_14",
-    "code": "NCC-VT-013",
-    "name": "Hân Việt Linh (DL )",
-    "contact_person": "Hân Việt Linh (DL )",
-    "company_name": "Hân Việt Linh (DL )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.37.100.708",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_15",
-    "code": "NCC-VT-014",
-    "name": "Linh Hiếu",
-    "contact_person": "Linh Hiếu",
-    "company_name": "Linh Hiếu",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.376.178.51-chị vân : 04.32.474.283",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_16",
-    "code": "NCC-VT-015",
-    "name": "A .Cử - CTY SIC",
-    "contact_person": "A .Cử - CTY SIC",
-    "company_name": "A .Cử - CTY SIC",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0979.718.105-366.87.173",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_17",
-    "code": "NCC-VT-016",
-    "name": "Màng Hòa Trung",
-    "contact_person": "Màng Hòa Trung",
-    "company_name": "Màng Hòa Trung",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0933.133.108-38.641.339",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_18",
-    "code": "NCC-VT-017",
-    "name": "Màng SIC",
-    "contact_person": "Màng SIC",
-    "company_name": "Màng SIC",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3858 0248",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_19",
-    "code": "NCC-VT-018",
-    "name": "ANH ĐOÀN ĐẠI ViỆT",
-    "contact_person": "ANH ĐOÀN ĐẠI ViỆT",
-    "company_name": "ANH ĐOÀN ĐẠI ViỆT",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0982.775.989/ 04.3516.1589",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_20",
-    "code": "NCC-VT-019",
-    "name": "giay trang linh",
-    "contact_person": "giay trang linh",
-    "company_name": "giay trang linh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "3762.4585",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (chyên cung cấp giấy ngoại)"
-  },
-  {
-    "id": "p_ncc_xls_21",
-    "code": "NCC-VT-020",
-    "name": "Hưng Mê Linh -Chị Kim Anh",
-    "contact_person": "Hưng Mê Linh -Chị Kim Anh",
-    "company_name": "Hưng Mê Linh -Chị Kim Anh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "inmelinh.vp@gmail.com --0165.765.1984-",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "37.326.696-0169.922.3478 chị hiền",
-    "email": "inmelinh.vp@gmail.com --0165.765.1984-",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_22",
-    "code": "NCC-VT-021",
-    "name": "Hạnh phụ trách gia công",
-    "contact_person": "Hạnh phụ trách gia công",
-    "company_name": "Hạnh phụ trách gia công",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_23",
-    "code": "NCC-VT-022",
-    "name": "Tuấn STV",
-    "contact_person": "Tuấn STV",
-    "company_name": "Tuấn STV",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0909.737.686-04.379.584.79",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_24",
-    "code": "NCC-VT-023",
-    "name": "A.Hà Béo (Nhà in Hải Anh )",
-    "contact_person": "A.Hà Béo (Nhà in Hải Anh )",
-    "company_name": "A.Hà Béo (Nhà in Hải Anh )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "362.77.159-0984.83.99.87\nSếp hải anh : 0932.288.782",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_25",
-    "code": "NCC-VT-024",
-    "name": "Chú hải-cát linh- IN ViỆT ANH",
-    "contact_person": "Chú hải-cát linh- IN ViỆT ANH",
-    "company_name": "Chú hải-cát linh- IN ViỆT ANH",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "invietanhhn@gmail.com",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0913.51.31.08/ 04.3734.0188 (Uyên)",
-    "email": "invietanhhn@gmail.com",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_26",
-    "code": "NCC-VT-025",
-    "name": "Nam phát",
-    "contact_person": "Nam phát",
-    "company_name": "Nam phát",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "043.627.7082",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_27",
-    "code": "NCC-VT-026",
-    "name": "CT In Trần Gia ( Anh Bình)",
-    "contact_person": "CT In Trần Gia ( Anh Bình)",
-    "company_name": "CT In Trần Gia ( Anh Bình)",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.373.264.36",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_28",
-    "code": "NCC-VT-027",
-    "name": "Cường Trần Gia -In phu bong",
-    "contact_person": "Cường Trần Gia -In phu bong",
-    "company_name": "Cường Trần Gia -In phu bong",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3732.7325-0985.856.164",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (Khổ 39x54 = 600,43x65=800,52x72=1000\nĐơn giá tính cho 1000 lượt, thêm lượt tính 200đ)"
-  },
-  {
-    "id": "p_ncc_xls_29",
-    "code": "NCC-VT-028",
-    "name": "A.Vương -In tem",
-    "contact_person": "A.Vương -In tem",
-    "company_name": "A.Vương -In tem",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0989.666.869",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_30",
-    "code": "NCC-VT-029",
-    "name": "A.CHÚ (in 2 màu pha )",
-    "contact_person": "A.CHÚ (in 2 màu pha )",
-    "company_name": "A.CHÚ (in 2 màu pha )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0914.335.382-",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_31",
-    "code": "NCC-VT-030",
-    "name": "In đề can Anh Tuy",
-    "contact_person": "In đề can Anh Tuy",
-    "company_name": "In đề can Anh Tuy",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0164.971.651-04.62.93.28.42",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_32",
-    "code": "NCC-VT-031",
-    "name": "A Long trương định",
-    "contact_person": "A Long trương định",
-    "company_name": "A Long trương định",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0164.971.651-04.62.93.28.42",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_33",
-    "code": "NCC-VT-032",
-    "name": "Vinh Thành",
-    "contact_person": "Vinh Thành",
-    "company_name": "Vinh Thành",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.668.47.328/  0974.30.74.78",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (0979 696 271)"
-  },
-  {
-    "id": "p_ncc_xls_34",
-    "code": "NCC-VT-033",
-    "name": "A.Thành Đạt- Tem",
-    "contact_person": "A.Thành Đạt- Tem",
-    "company_name": "A.Thành Đạt- Tem",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0988.762.888",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_35",
-    "code": "NCC-VT-034",
-    "name": "ANH HÒA 2D KHÂM THIÊN",
-    "contact_person": "ANH HÒA 2D KHÂM THIÊN",
-    "company_name": "ANH HÒA 2D KHÂM THIÊN",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0912.572.509 Chị Hằng",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_36",
-    "code": "NCC-VT-035",
-    "name": "A.HỒ",
-    "contact_person": "A.HỒ",
-    "company_name": "A.HỒ",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "36.27.43.64 - 0912.505.308 Anh Thành",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_37",
-    "code": "NCC-VT-036",
-    "name": "Công Nghệ In Đức Phương",
-    "contact_person": "Công Nghệ In Đức Phương",
-    "company_name": "Công Nghệ In Đức Phương",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "dp.outfilm@gmail.com",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0904.816.909 - 35.13.38.26",
-    "email": "dp.outfilm@gmail.com",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_38",
-    "code": "NCC-VT-037",
-    "name": "Out film Thiên Vân",
-    "contact_person": "Out film Thiên Vân",
-    "company_name": "Out film Thiên Vân",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "38.63.34.31-0976.254.982 A.Hạ",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_39",
-    "code": "NCC-VT-038",
-    "name": "Thiên Việt",
-    "contact_person": "Thiên Việt",
-    "company_name": "Thiên Việt",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "thienvietin@gmail.com",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0982.062.178",
-    "email": "thienvietin@gmail.com",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_40",
-    "code": "NCC-VT-039",
-    "name": "Chú trường (Gia công  )",
-    "contact_person": "Chú trường (Gia công  )",
-    "company_name": "Chú trường (Gia công  )",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0903.434.074",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_41",
-    "code": "NCC-VT-040",
-    "name": "Cô Thanh",
-    "contact_person": "Cô Thanh",
-    "company_name": "Cô Thanh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "043.852.6247/ 0123.6652.666",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_42",
-    "code": "NCC-VT-041",
-    "name": "Tuan tk",
-    "contact_person": "Tuan tk",
-    "company_name": "Tuan tk",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0968.110.555",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_43",
-    "code": "NCC-VT-042",
-    "name": "Anh Kiên khuôn:",
-    "contact_person": "Anh Kiên khuôn:",
-    "company_name": "Anh Kiên khuôn:",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0986.572.508",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_44",
-    "code": "NCC-VT-043",
-    "name": "Chị Hiền Phong",
-    "contact_person": "Chị Hiền Phong",
-    "company_name": "Chị Hiền Phong",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0167.669.2763",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_45",
-    "code": "NCC-VT-044",
-    "name": "A.Tuấn bạch mai",
-    "contact_person": "A.Tuấn bạch mai",
-    "company_name": "A.Tuấn bạch mai",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0915.924.544",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_46",
-    "code": "NCC-VT-045",
-    "name": "A.Chiến gia công",
-    "contact_person": "A.Chiến gia công",
-    "company_name": "A.Chiến gia công",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.62.959.784",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_47",
-    "code": "NCC-VT-046",
-    "name": "Cô Nhung gia công phong bì",
-    "contact_person": "Cô Nhung gia công phong bì",
-    "company_name": "Cô Nhung gia công phong bì",
-    "tax_code": "",
-    "billing_address": "Mang hàng tới ngõ hòa bình 3 phố minh khai",
-    "billing_email": "",
-    "address": "Mang hàng tới ngõ hòa bình 3 phố minh khai",
-    "region": "",
-    "ward": "",
-    "phone": "0127.235.9974",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_48",
-    "code": "NCC-VT-047",
-    "name": "SIC",
-    "contact_person": "SIC",
-    "company_name": "SIC",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0979.718.105.-043.66.87.174-Tân",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_49",
-    "code": "NCC-VT-048",
-    "name": "CHỊ HÀ PHỦ UV",
-    "contact_person": "CHỊ HÀ PHỦ UV",
-    "company_name": "CHỊ HÀ PHỦ UV",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0912 398 572",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_50",
-    "code": "NCC-VT-049",
-    "name": "Quyết tân mai",
-    "contact_person": "Quyết tân mai",
-    "company_name": "Quyết tân mai",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0912857078",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_51",
-    "code": "NCC-VT-050",
-    "name": "Nhật Minh",
-    "contact_person": "Nhật Minh",
-    "company_name": "Nhật Minh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0989.129.462-0934359909 tk nhật minh",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_52",
-    "code": "NCC-VT-051",
-    "name": "Chu Hoa",
-    "contact_person": "Chu Hoa",
-    "company_name": "Chu Hoa",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0988.553.141",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (Điac chi :2/19 đặng trần côn)"
-  },
-  {
-    "id": "p_ncc_xls_53",
-    "code": "NCC-VT-052",
-    "name": "Thùng caton cũ -Anh cam",
-    "contact_person": "Thùng caton cũ -Anh cam",
-    "company_name": "Thùng caton cũ -Anh cam",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0989.653.872",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_54",
-    "code": "NCC-VT-053",
-    "name": "Dây A.Thành",
-    "contact_person": "Dây A.Thành",
-    "company_name": "Dây A.Thành",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0943 611 222",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_55",
-    "code": "NCC-VT-054",
-    "name": "Khuôn ép nhũ",
-    "contact_person": "Khuôn ép nhũ",
-    "company_name": "Khuôn ép nhũ",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "CHú Hoa: 0988 553 141",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (5200.0)"
-  },
-  {
-    "id": "p_ncc_xls_56",
-    "code": "NCC-VT-055",
-    "name": "Xốp",
-    "contact_person": "Xốp",
-    "company_name": "Xốp",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "Viết Thuận 33-37 Phố Yên Bái II, Chợ Hòa Bình,\n HN: 0915.42.66.88/ 0915.43.6688 / 04.3821.5136",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (5095.0)"
-  },
-  {
-    "id": "p_ncc_xls_57",
-    "code": "NCC-VT-056",
-    "name": "keo nến, mút",
-    "contact_person": "keo nến, mút",
-    "company_name": "keo nến, mút",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "Tiến Đạt 78 Hàng Chiếu: 0987.900.491 - 043.266.8762",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_58",
-    "code": "NCC-VT-057",
-    "name": "Chị thương -keo phá màng",
-    "contact_person": "Chị thương -keo phá màng",
-    "company_name": "Chị thương -keo phá màng",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "090.6008.392",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_59",
-    "code": "NCC-VT-058",
-    "name": "0917.356.282",
-    "contact_person": "0917.356.282",
-    "company_name": "0917.356.282",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_60",
-    "code": "NCC-VT-059",
-    "name": "Keo, chun, dây buộc",
-    "contact_person": "Keo, chun, dây buộc",
-    "company_name": "Keo, chun, dây buộc",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "A.Quốc: 0917 956 282",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_61",
-    "code": "NCC-VT-060",
-    "name": "Anh Quang",
-    "contact_person": "Anh Quang",
-    "company_name": "Anh Quang",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0963.594.280 A. Quang",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_62",
-    "code": "NCC-VT-061",
-    "name": "A.TƯỜNG",
-    "contact_person": "A.TƯỜNG",
-    "company_name": "A.TƯỜNG",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0981.232.662",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_63",
-    "code": "NCC-VT-062",
-    "name": "Chiến",
-    "contact_person": "Chiến",
-    "company_name": "Chiến",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "964682288.0",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_64",
-    "code": "NCC-VT-063",
-    "name": "Hường",
-    "contact_person": "Hường",
-    "company_name": "Hường",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0969.200.841",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_65",
-    "code": "NCC-VT-064",
-    "name": "A.Tiến",
-    "contact_person": "A.Tiến",
-    "company_name": "A.Tiến",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0904.61.62.64-04.62.91.98.91",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_66",
-    "code": "NCC-VT-065",
-    "name": "Vỏ hộp các",
-    "contact_person": "Vỏ hộp các",
-    "company_name": "Vỏ hộp các",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.392.724.09-22.19.33.11",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_67",
-    "code": "NCC-VT-066",
-    "name": "C.Thúy -bên anh tuyển",
-    "contact_person": "C.Thúy -bên anh tuyển",
-    "company_name": "C.Thúy -bên anh tuyển",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "số nhà 8 ngõ 97 hoàng hoa thám",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_68",
-    "code": "NCC-VT-067",
-    "name": "Nam -Gia công",
-    "contact_person": "Nam -Gia công",
-    "company_name": "Nam -Gia công",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "973574054.0",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_69",
-    "code": "NCC-VT-068",
-    "name": "sua may  tinh",
-    "contact_person": "sua may  tinh",
-    "company_name": "sua may  tinh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0972.252.789/ 0935.762.888",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_70",
-    "code": "NCC-VT-069",
-    "name": "Sua điện thoại",
-    "contact_person": "Sua điện thoại",
-    "company_name": "Sua điện thoại",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3576.5074 / 04.3576.5075/ 0166.3838.318",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_71",
-    "code": "NCC-VT-070",
-    "name": "Đổ mực",
-    "contact_person": "Đổ mực",
-    "company_name": "Đổ mực",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.6662.3968 / 0989.04.5558",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_72",
-    "code": "NCC-VT-071",
-    "name": "Báo hỏng điện thoại bàn công ty",
-    "contact_person": "Báo hỏng điện thoại bàn công ty",
-    "company_name": "Báo hỏng điện thoại bàn công ty",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.358.00.119",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_73",
-    "code": "NCC-VT-072",
-    "name": "btmc",
-    "contact_person": "btmc",
-    "company_name": "btmc",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "37181531",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_74",
-    "code": "NCC-VT-073",
-    "name": "A.Tuờng",
-    "contact_person": "A.Tuờng",
-    "company_name": "A.Tuờng",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0981232662",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_75",
-    "code": "NCC-VT-074",
-    "name": "Chi phuơng tem",
-    "contact_person": "Chi phuơng tem",
-    "company_name": "Chi phuơng tem",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "01248.336.866",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_76",
-    "code": "NCC-VT-075",
-    "name": "anh manh intem",
-    "contact_person": "anh manh intem",
-    "company_name": "anh manh intem",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0979.600.155",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_77",
-    "code": "NCC-VT-076",
-    "name": "Chi tuyet-BTMC",
-    "contact_person": "Chi tuyet-BTMC",
-    "company_name": "Chi tuyet-BTMC",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0913.345.644",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_78",
-    "code": "NCC-VT-077",
-    "name": "A.Quyền -in tem bạc",
-    "contact_person": "A.Quyền -in tem bạc",
-    "company_name": "A.Quyền -in tem bạc",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "anh quyền 043.73000338-số 12 ngõ\n 120 nghách 42 kim giang",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_79",
-    "code": "NCC-VT-078",
-    "name": "Chị Phuơng",
-    "contact_person": "Chị Phuơng",
-    "company_name": "Chị Phuơng",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "số nhà 8 ngõ 97 hoàng hoa thám",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_80",
-    "code": "NCC-VT-079",
-    "name": "Chị Duị bế tem- luận bê",
-    "contact_person": "Chị Duị bế tem- luận bê",
-    "company_name": "Chị Duị bế tem- luận bê",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.2211.79.88",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_81",
-    "code": "NCC-VT-080",
-    "name": "Chị lan Fomum",
-    "contact_person": "Chị lan Fomum",
-    "company_name": "Chị lan Fomum",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "942673998.0",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_82",
-    "code": "NCC-VT-081",
-    "name": "THL",
-    "contact_person": "THL",
-    "company_name": "THL",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "35-16-2228",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_83",
-    "code": "NCC-VT-082",
-    "name": "Nhà xuất bản xây dựng",
-    "contact_person": "Nhà xuất bản xây dựng",
-    "company_name": "Nhà xuất bản xây dựng",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "094.406.4623/ trinhthihoa2011@gmail.com",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_84",
-    "code": "NCC-VT-083",
-    "name": "Mẹ thủy",
-    "contact_person": "Mẹ thủy",
-    "company_name": "Mẹ thủy",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0912.678.467",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_85",
-    "code": "NCC-VT-084",
-    "name": "Kế tóan xi măng miền bắc",
-    "contact_person": "Kế tóan xi măng miền bắc",
-    "company_name": "Kế tóan xi măng miền bắc",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0989.660.233",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_86",
-    "code": "NCC-VT-085",
-    "name": "Điện nuớc duới xuởng-LOAN",
-    "contact_person": "Điện nuớc duới xuởng-LOAN",
-    "company_name": "Điện nuớc duới xuởng-LOAN",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0982.666.688",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_87",
-    "code": "NCC-VT-086",
-    "name": "Bạn Minh -Kế toán tường minh",
-    "contact_person": "Bạn Minh -Kế toán tường minh",
-    "company_name": "Bạn Minh -Kế toán tường minh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "thuyhoang87hn@gmail.com, / nguyenhanh852505@yahoo.com.vn",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.35.145.530 -103/ 0903.266.605 bác Lee",
-    "email": "thuyhoang87hn@gmail.com, / nguyenhanh852505@yahoo.com.vn",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_88",
-    "code": "NCC-VT-087",
-    "name": "Chị Thơm - Nội thất 190",
-    "contact_person": "Chị Thơm - Nội thất 190",
-    "company_name": "Chị Thơm - Nội thất 190",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0936.477.754",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_89",
-    "code": "NCC-VT-088",
-    "name": "chị Hà bên minh hòa đòi tiền đi",
-    "contact_person": "chị Hà bên minh hòa đòi tiền đi",
-    "company_name": "chị Hà bên minh hòa đòi tiền đi",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0984.245.954",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_90",
-    "code": "NCC-VT-089",
-    "name": "Chị Nhung bên cá nhân hóa-946528284",
-    "contact_person": "Chị Nhung bên cá nhân hóa-946528284",
-    "company_name": "Chị Nhung bên cá nhân hóa-946528284",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "Chị Nhung bên cá nhân hóa-946528284",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_91",
-    "code": "NCC-VT-090",
-    "name": "A.KHA Rượi",
-    "contact_person": "A.KHA Rượi",
-    "company_name": "A.KHA Rượi",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0982.913.836",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (0916181151)"
-  },
-  {
-    "id": "p_ncc_xls_92",
-    "code": "NCC-VT-091",
-    "name": "974.307478-Chị Nga",
-    "contact_person": "974.307478-Chị Nga",
-    "company_name": "974.307478-Chị Nga",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_93",
-    "code": "NCC-VT-092",
-    "name": "Ke toan patech:",
-    "contact_person": "Ke toan patech:",
-    "company_name": "Ke toan patech:",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0912.348.935",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_94",
-    "code": "NCC-VT-093",
-    "name": "Bích KT -Innoguchi",
-    "contact_person": "Bích KT -Innoguchi",
-    "company_name": "Bích KT -Innoguchi",
-    "tax_code": "",
-    "billing_address": "Lô 14, khu D tập thể K612, xã Dương Xá, Gia Lâm, HN",
-    "billing_email": "",
-    "address": "Lô 14, khu D tập thể K612, xã Dương Xá, Gia Lâm, HN",
-    "region": "Hà Nội",
-    "ward": "",
-    "phone": "043.678.2299/  0968.108.560 Bích",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_95",
-    "code": "NCC-VT-094",
-    "name": "Tuyết chiến",
-    "contact_person": "Tuyết chiến",
-    "company_name": "Tuyết chiến",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0936.822.669",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_96",
-    "code": "NCC-VT-095",
-    "name": "Chị Linh thiên trang địa chỉ mới.",
-    "contact_person": "Chị Linh thiên trang địa chỉ mới.",
-    "company_name": "Chị Linh thiên trang địa chỉ mới.",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "Phòng 1502, Beta CT7B, Khu đô thị mới Dương\n Nội, Đường Lê Văn Lương kéo Dài, Quận Hà Đông, Hà Nội",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_97",
-    "code": "NCC-VT-096",
-    "name": "thientrang.06@gmail.com",
-    "contact_person": "thientrang.06@gmail.com",
-    "company_name": "thientrang.06@gmail.com",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_98",
-    "code": "NCC-VT-097",
-    "name": "Chuyển phát nhanh",
-    "contact_person": "Chuyển phát nhanh",
-    "company_name": "Chuyển phát nhanh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0466.720.077/ 0942.389.987",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (Viettel: 04.627.56.555)"
-  },
-  {
-    "id": "p_ncc_xls_99",
-    "code": "NCC-VT-098",
-    "name": "A. Mạnh cty giấy Ninh Thanh",
-    "contact_person": "A. Mạnh cty giấy Ninh Thanh",
-    "company_name": "A. Mạnh cty giấy Ninh Thanh",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0973.965.976",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_100",
-    "code": "NCC-VT-099",
-    "name": "Gọi nước: 0904.695.811",
-    "contact_person": "Gọi nước: 0904.695.811",
-    "company_name": "Gọi nước: 0904.695.811",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_101",
-    "code": "NCC-VT-100",
-    "name": "Bạn thơm-Công ty HTC",
-    "contact_person": "Bạn thơm-Công ty HTC",
-    "company_name": "Bạn thơm-Công ty HTC",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0986.071.238",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_102",
-    "code": "NCC-VT-101",
-    "name": "Kế toán Korihome",
-    "contact_person": "Kế toán Korihome",
-    "company_name": "Kế toán Korihome",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "Tươi: 0925.090.711/ 04.368.30972 máy lẻ: 402",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư (04.368.309.73)"
-  },
-  {
-    "id": "p_ncc_xls_103",
-    "code": "NCC-VT-102",
-    "name": "A. Chiến giấy thông tấn xã",
-    "contact_person": "A. Chiến giấy thông tấn xã",
-    "company_name": "A. Chiến giấy thông tấn xã",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0946.56.56.53",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_104",
-    "code": "NCC-VT-103",
-    "name": "thuongmaidichvu.htc@gmail.com",
-    "contact_person": "thuongmaidichvu.htc@gmail.com",
-    "company_name": "thuongmaidichvu.htc@gmail.com",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_105",
-    "code": "NCC-VT-104",
-    "name": "KT MT HÒA BÌNH",
-    "contact_person": "KT MT HÒA BÌNH",
-    "company_name": "KT MT HÒA BÌNH",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0984.247.283",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_106",
-    "code": "NCC-VT-105",
-    "name": "Vỏ hộp các  04.392.724.09 / 22.19.33.11",
-    "contact_person": "Vỏ hộp các  04.392.724.09 / 22.19.33.11",
-    "company_name": "Vỏ hộp các  04.392.724.09 / 22.19.33.11",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_107",
-    "code": "NCC-VT-106",
-    "name": "CHỊ HUYỀN FORMUM",
-    "contact_person": "CHỊ HUYỀN FORMUM",
-    "company_name": "CHỊ HUYỀN FORMUM",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0976.146.869",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_108",
-    "code": "NCC-VT-107",
-    "name": "Hằng Hacico",
-    "contact_person": "Hằng Hacico",
-    "company_name": "Hằng Hacico",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0948.00.88.98",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_109",
-    "code": "NCC-VT-108",
-    "name": "anh manh intem 0979.600.155",
-    "contact_person": "anh manh intem 0979.600.155",
-    "company_name": "anh manh intem 0979.600.155",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_110",
-    "code": "NCC-VT-109",
-    "name": "KT XN CẦU ĐƯỜNG",
-    "contact_person": "KT XN CẦU ĐƯỜNG",
-    "company_name": "KT XN CẦU ĐƯỜNG",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3733.1837/ 38564.504 chị Lượng KD",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_111",
-    "code": "NCC-VT-110",
-    "name": "THÀNH ĐẠT",
-    "contact_person": "THÀNH ĐẠT",
-    "company_name": "THÀNH ĐẠT",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "intemvietnam@gmail.com",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0915 313 555/ 3355 9999 Thu",
-    "email": "intemvietnam@gmail.com",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_112",
-    "code": "NCC-VT-111",
-    "name": "KT MINH HÒA, LOAN",
-    "contact_person": "KT MINH HÒA, LOAN",
-    "company_name": "KT MINH HÒA, LOAN",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0975 272 212 / C.Nguyệt thủ quỹ: 0988.230.823",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_113",
-    "code": "NCC-VT-112",
-    "name": "QC An Nam, Ngọc",
-    "contact_person": "QC An Nam, Ngọc",
-    "company_name": "QC An Nam, Ngọc",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0975 698 698",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_114",
-    "code": "NCC-VT-113",
-    "name": "CHỊ HOA LỘC VIỆT",
-    "contact_person": "CHỊ HOA LỘC VIỆT",
-    "company_name": "CHỊ HOA LỘC VIỆT",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0983.1989.86",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_115",
-    "code": "NCC-VT-114",
-    "name": "Chè Thúy Vân",
-    "contact_person": "Chè Thúy Vân",
-    "company_name": "Chè Thúy Vân",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": ";0969.482.921",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_116",
-    "code": "NCC-VT-115",
-    "name": "Nội thất 190",
-    "contact_person": "Nội thất 190",
-    "company_name": "Nội thất 190",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0989.633.343 Linh / 0986.124.902",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_117",
-    "code": "NCC-VT-116",
-    "name": "QC LINH GIANG",
-    "contact_person": "QC LINH GIANG",
-    "company_name": "QC LINH GIANG",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "094.880.3667/ 02413.822.282",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_118",
-    "code": "NCC-VT-117",
-    "name": "CHỊ LAN BHXH THANH XUÂN",
-    "contact_person": "CHỊ LAN BHXH THANH XUÂN",
-    "company_name": "CHỊ LAN BHXH THANH XUÂN",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3554.0618 / 0912.683.569",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_119",
-    "code": "NCC-VT-118",
-    "name": "Chị Huyền, Quản lý thuế Thanh Xuân",
-    "contact_person": "Chị Huyền, Quản lý thuế Thanh Xuân",
-    "company_name": "Chị Huyền, Quản lý thuế Thanh Xuân",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04. 355 722 82/ 0904 710 169",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_120",
-    "code": "NCC-VT-119",
-    "name": "KT OSUM",
-    "contact_person": "KT OSUM",
-    "company_name": "KT OSUM",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "04.3771.0642",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_121",
-    "code": "NCC-VT-120",
-    "name": "CÔNG TY VIÊN THÀNH",
-    "contact_person": "CÔNG TY VIÊN THÀNH",
-    "company_name": "CÔNG TY VIÊN THÀNH",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0105612232",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_122",
-    "code": "NCC-VT-121",
-    "name": "QC MINH LẠNG SƠN",
-    "contact_person": "QC MINH LẠNG SƠN",
-    "company_name": "QC MINH LẠNG SƠN",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "0983.678.288",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_123",
-    "code": "NCC-VT-122",
-    "name": "CHỊ HOA ViỄN THÔNG VNPT",
-    "contact_person": "CHỊ HOA ViỄN THÔNG VNPT",
-    "company_name": "CHỊ HOA ViỄN THÔNG VNPT",
-    "tax_code": "",
-    "billing_address": "",
-    "billing_email": "",
-    "address": "",
-    "region": "",
-    "ward": "",
-    "phone": "091.669.6465",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
-  },
-  {
-    "id": "p_ncc_xls_124",
-    "code": "NCC-VT-123",
-    "name": "CÒNG SẮT",
-    "contact_person": "CÒNG SẮT",
-    "company_name": "CÒNG SẮT",
-    "tax_code": "",
-    "billing_address": "B709 Golden Land Hoàng Huy, 275 Nguyễn Trãi, Thanh Xuân, Hà Nội",
-    "billing_email": "",
-    "address": "B709 Golden Land Hoàng Huy, 275 Nguyễn Trãi, Thanh Xuân, Hà Nội",
-    "region": "Hà Nội",
-    "ward": "",
-    "phone": "Hotline : 0914 006 627 (Ms. Nga) – 0961 099 899 (Mr. Cương)",
-    "email": "",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 50000000,
-    "note": "Nhà cung cấp Vật tư ()"
   }
 ];
 
@@ -13396,6 +11056,74 @@ const DEFAULT_ONLINE_STOCK_LOGS = [
     { id: "log-T40", created_at: "2026-10-19T08:00:00Z", sku: "T40", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" }
 ];
 
+const DEFAULT_ONLINE_EXPORT_RECORDS = [
+    {
+        id: "PXK-20261021-001",
+        voucher_no: "PXK-20261021-001",
+        created_at: "2026-10-21T10:15:00Z",
+        date: "2026-10-21",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        sdns_code: "",
+        debit_acc: "632",
+        credit_acc: "156",
+        receiver_name: "Công ty Lạc Hồng",
+        receiver_address: "Hà Nội",
+        vehicle_plate: "BX: 29H-67323",
+        reason: "Xuất giao hàng thành phẩm theo đơn",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            {
+                sku: "SIZE-B-RED",
+                name: "2B H36-02 Đỏ",
+                unit: "Hộp",
+                req_qty_note: "30 b x 8",
+                real_qty: 240,
+                price: 75000,
+                total: 18000000
+            },
+            {
+                sku: "TP-40-GOLD",
+                name: "TP-40 H36-01 Vàng",
+                unit: "Hộp",
+                req_qty_note: "32 T x 10",
+                real_qty: 320,
+                price: 80000,
+                total: 25600000
+            },
+            {
+                sku: "SIZE-A",
+                name: "Hộp quà Tết Size A (42 x 36 x 10.5 cm)",
+                unit: "Bộ",
+                req_qty_note: "12 T x 5",
+                real_qty: 60,
+                price: 80000,
+                total: 4800000
+            },
+            {
+                sku: "BAG-01",
+                name: "Túi giấy cao cấp",
+                unit: "Chiếc",
+                req_qty_note: "2 T x 10",
+                real_qty: 20,
+                price: 15000,
+                total: 300000
+            }
+        ],
+        total_real_qty: 640,
+        total_amount: 48700000,
+        amount_in_words: "Bốn mươi tám triệu bảy trăm nghìn đồng",
+        attached_docs: "Hóa đơn số 002345, Đơn hàng SO-ON-202610-0082",
+        signer_creator: "Trang",
+        signer_receiver: "Huy",
+        signer_storekeeper: "Trần Thị Trang",
+        signer_accountant: "Nguyễn Thị Mai",
+        signer_director: "Giám đốc điều hành",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    }
+];
+
 const DEFAULT_ONLINE_IMPORT_RECORDS = [
     {
         id: "IMP-20261019-001",
@@ -13551,6 +11279,116 @@ window.autoUpdateAllMissingProductImages = function(forceAll = false) {
 class AppState {
     constructor() {
         this.partners = this.load("partners", DEFAULT_PARTNERS);
+
+        // Đảm bảo lọc sạch toàn bộ nhà cung cấp cũ, chỉ giữ lại In Lạc Hồng và Tuấn Dung
+        if (Array.isArray(this.partners)) {
+            const isAllowedPartner = (p) => {
+                if (p.role !== 'SUPPLIER') return true;
+                const n = (p.name || '').toLowerCase();
+                const c = (p.code || '').toLowerCase();
+                const comp = (p.company_name || '').toLowerCase();
+                return n.includes('lạc hồng') || c.includes('lachong') || comp.includes('lạc hồng') ||
+                       n.includes('tuấn dung') || c.includes('tuandung') || comp.includes('tuấn dung');
+            };
+            const beforeCount = this.partners.length;
+            let filteredPartners = this.partners.filter(isAllowedPartner);
+
+            // Đảm bảo luôn có In Lạc Hồng với đầy đủ thông tin chuẩn doanh nghiệp
+            let lacHong = filteredPartners.find(p => (p.name || '').toLowerCase().includes('lạc hồng') || (p.code || '').toLowerCase().includes('lachong'));
+            if (!lacHong) {
+                filteredPartners.push({
+                    id: "p_ncc_lac_hong",
+                    code: "NCC-LACHONG",
+                    name: "In Lạc Hồng",
+                    company_name: "Công ty Cổ phần In Lạc Hồng",
+                    business_type: "ENTERPRISE",
+                    customer_type: "SUPPLIER",
+                    legal_representative: "Đại Hùng",
+                    representative_position: "Giám đốc",
+                    tax_code: "0106123456",
+                    bank_name: "Vietcombank (Ngoại Thương Việt Nam)",
+                    bank_account_no: "0011004567899",
+                    bank_account_holder: "CÔNG TY CỔ PHẦN IN LẠC HỒNG",
+                    bank_branch: "Sở Giao Dịch Hà Nội",
+                    billing_address: "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
+                    billing_email: "xuongin@inlachong.vn",
+                    shipping_address: "Kho xưởng: Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
+                    address: "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
+                    region: "Thành phố Hà Nội",
+                    ward: "Xã Tân Triều",
+                    phone: "0987654321",
+                    email: "xuongin@inlachong.vn",
+                    role: "SUPPLIER",
+                    status: true,
+                    credit_limit: 500000000,
+                    note: "Xưởng in và gia công Lạc Hồng - NCC chính thức"
+                });
+            } else {
+                lacHong.role = "SUPPLIER";
+                lacHong.customer_type = "SUPPLIER";
+                lacHong.business_type = "ENTERPRISE";
+                lacHong.company_name = lacHong.company_name || "Công ty Cổ phần In Lạc Hồng";
+                lacHong.tax_code = lacHong.tax_code || "0106123456";
+                lacHong.legal_representative = lacHong.legal_representative || "Đại Hùng";
+                lacHong.representative_position = lacHong.representative_position || "Giám đốc";
+                lacHong.bank_name = lacHong.bank_name || "Vietcombank (Ngoại Thương Việt Nam)";
+                lacHong.bank_account_no = lacHong.bank_account_no || "0011004567899";
+                lacHong.bank_account_holder = lacHong.bank_account_holder || "CÔNG TY CỔ PHẦN IN LẠC HỒNG";
+                lacHong.bank_branch = lacHong.bank_branch || "Sở Giao Dịch Hà Nội";
+                lacHong.shipping_address = lacHong.shipping_address || lacHong.address || "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội";
+            }
+
+            // Đảm bảo luôn có Tuấn Dung với đầy đủ thông tin chuẩn doanh nghiệp
+            let tuanDung = filteredPartners.find(p => (p.name || '').toLowerCase().includes('tuấn dung') || (p.code || '').toLowerCase().includes('tuandung'));
+            if (!tuanDung) {
+                filteredPartners.push({
+                    id: "p_ncc_tuan_dung",
+                    code: "NCC-TUANDUNG",
+                    name: "Tuấn Dung",
+                    company_name: "Công ty Cổ phần In Tuấn Dung",
+                    business_type: "ENTERPRISE",
+                    customer_type: "SUPPLIER",
+                    legal_representative: "Anh Tuấn",
+                    representative_position: "Giám đốc điều hành",
+                    tax_code: "0105432198",
+                    bank_name: "Techcombank (Kỹ Thương Việt Nam)",
+                    bank_account_no: "19033456789012",
+                    bank_account_holder: "CÔNG TY CỔ PHẦN IN TUẤN DUNG",
+                    bank_branch: "Đống Đa, Hà Nội",
+                    billing_address: "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
+                    billing_email: "tuandung@supplier.vn",
+                    shipping_address: "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
+                    address: "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
+                    region: "Thành phố Hà Nội",
+                    ward: "Phường Trung Liệt",
+                    phone: "0934567890",
+                    email: "tuandung@supplier.vn",
+                    role: "SUPPLIER",
+                    status: true,
+                    credit_limit: 200000000,
+                    note: "Nhà cung cấp thương hiệu Hộp Tuấn Dung"
+                });
+            } else {
+                tuanDung.role = "SUPPLIER";
+                tuanDung.customer_type = "SUPPLIER";
+                tuanDung.business_type = "ENTERPRISE";
+                tuanDung.company_name = tuanDung.company_name || "Công ty Cổ phần In Tuấn Dung";
+                tuanDung.tax_code = tuanDung.tax_code || "0105432198";
+                tuanDung.legal_representative = tuanDung.legal_representative || "Anh Tuấn";
+                tuanDung.representative_position = tuanDung.representative_position || "Giám đốc điều hành";
+                tuanDung.bank_name = tuanDung.bank_name || "Techcombank (Kỹ Thương Việt Nam)";
+                tuanDung.bank_account_no = tuanDung.bank_account_no || "19033456789012";
+                tuanDung.bank_account_holder = tuanDung.bank_account_holder || "CÔNG TY CỔ PHẦN IN TUẤN DUNG";
+                tuanDung.bank_branch = tuanDung.bank_branch || "Đống Đa, Hà Nội";
+                tuanDung.shipping_address = tuanDung.shipping_address || tuanDung.address || "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
+            }
+
+            if (filteredPartners.length !== beforeCount || !localStorage.getItem("ihp_clean_suppliers_20261021_v1")) {
+                this.partners = filteredPartners;
+                this.save("partners", filteredPartners);
+                localStorage.setItem("ihp_clean_suppliers_20261021_v1", "true");
+            }
+        }
         this.materials = this.load("materials", DEFAULT_MATERIALS);
         this.orders = this.load("orders", []);
         this.productions = this.load("productions", DEFAULT_PRODUCTIONS);
@@ -13655,6 +11493,11 @@ class AppState {
         this.online_returns = this.load("online_returns", []);
         this.online_inventory_checks = this.load("online_inventory_checks", []);
         this.online_internal_exits = this.load("online_internal_exits", []);
+        this.online_export_records = this.load("online_export_records", null);
+        if (!this.online_export_records || this.online_export_records.length === 0) {
+            this.online_export_records = DEFAULT_ONLINE_EXPORT_RECORDS;
+            this.save("online_export_records", this.online_export_records);
+        }
         this.crm_notes = this.load("crm_notes", DEFAULT_CRM_NOTES);
         this.conversations = this.load("conversations", DEFAULT_CONVERSATIONS);
         this.messages = this.load("messages", DEFAULT_MESSAGES);
@@ -14428,12 +12271,13 @@ window.ROUTE_DEFINITIONS = [
     { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Hoàn hàng Online | In Lạc Hồng', aliases: ['online-returns', 'hoan-hang'] },
     { slug: 'hoan-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Hoàn hàng Online | In Lạc Hồng', aliases: ['online-returns', 'tra-hang'] },
     { slug: 'hang-hoa', tabId: 'online-sales', subtab: 'online-products', title: 'Danh mục Hàng hóa Sản phẩm | In Lạc Hồng', aliases: ['online-products', 'san-pham', 'danh-sach-hang-hoa'] },
-    { slug: 'nhap-kho-hang-hoa', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập kho hàng hóa (Bổ sung số lượng) | In Lạc Hồng', aliases: ['nhap-kho', 'nhap-hang-hoa', 'online-import-goods', 'nhap-kho-hang-hoa'] },
+    { slug: 'nhap-kho', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập kho hàng hóa (POS) | In Lạc Hồng', aliases: ['nhap-kho-hang-hoa', 'nhap-hang-hoa', 'online-import-goods'] },
+    { slug: 'xuat-kho', tabId: 'online-sales', subtab: 'online-export-goods', title: 'Xuất kho hàng hóa (Mẫu số 02 - VT) | In Lạc Hồng', aliases: ['xuat-kho-hang-hoa', 'online-export-goods', 'xuat-kho-noi-bo'] },
     { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
-    { slug: 'kho-hang', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng | In Lạc Hồng', aliases: ['ton-kho', 'online-stock', 'ton-kho-hang-hoa', 'kho'] },
-    { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng | In Lạc Hồng', aliases: ['kho-hang'] },
+    { slug: 'kho-hang', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Tồn kho | In Lạc Hồng', aliases: ['ton-kho', 'online-stock', 'ton-kho-hang-hoa', 'kho'] },
+    { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Tồn kho | In Lạc Hồng', aliases: ['kho-hang'] },
     { slug: 'kiem-ke-kho', tabId: 'online-sales', subtab: 'online-inventory-check', title: 'Kiểm kê Kho hàng hóa | In Lạc Hồng', aliases: ['online-inventory-check'] },
-    { slug: 'xuat-kho-noi-bo', tabId: 'online-sales', subtab: 'online-internal-exits', title: 'Xuất kho nội bộ | In Lạc Hồng', aliases: ['online-internal-exits'] },
+    { slug: 'xuat-kho-noi-bo', tabId: 'online-sales', subtab: 'online-export-goods', title: 'Xuất kho hàng hóa | In Lạc Hồng', aliases: ['xuat-kho'] },
 
     // 3. Sản xuất
     { slug: 'tinh-gia', tabId: 'quotes', title: 'Tính giá & Báo giá in ấn | In Lạc Hồng', aliases: ['quotes', 'bao-gia'] },
@@ -16201,6 +14045,22 @@ window.FINANCE_TABLE_SCHEMAS = {
             { id: "creator", label: "Người thực hiện", weight: 13, defaultVisible: true },
             { id: "note", label: "Ghi chú", weight: 18, defaultVisible: true }
         ]
+    },
+    contractsTable: {
+        title: "Bảng Hợp Đồng Thương Mại & Sản Xuất",
+        columns: [
+            { id: "contract_number", label: "Mã hợp đồng", weight: 13, defaultVisible: true, fixed: true },
+            { id: "signing_date", label: "Ngày ký", weight: 8, defaultVisible: true },
+            { id: "partner", label: "Khách hàng / Đối tác", weight: 20, defaultVisible: true, fixed: true },
+            { id: "order_type", label: "Loại hợp đồng", weight: 8, defaultVisible: true },
+            { id: "linked_orders", label: "Đơn hàng liên kết", weight: 14, defaultVisible: true },
+            { id: "value", label: "Giá trị HĐ", weight: 11, defaultVisible: true },
+            { id: "deposit", label: "Đã tạm ứng", weight: 9, defaultVisible: true },
+            { id: "remaining", label: "Còn nợ", weight: 9, defaultVisible: true },
+            { id: "status", label: "Trạng thái", weight: 9, defaultVisible: true },
+            { id: "documents", label: "Hồ sơ văn bản", weight: 9, defaultVisible: true },
+            { id: "actions", label: "Thao tác", weight: 9, defaultVisible: true, fixed: true }
+        ]
     }
 };
 
@@ -16337,6 +14197,9 @@ window.saveCurrentFinanceColConfig = function() {
     }
 
     window.applyFinanceTableColumns(tableId);
+    if (tableId === 'contractsTable' && typeof window.renderContracts === 'function') {
+        window.renderContracts();
+    }
     closeModal("financeColumnConfigModal");
 };
 
@@ -16358,6 +14221,9 @@ window.resetFinanceColConfig = function() {
     }
 
     window.applyFinanceTableColumns(tableId);
+    if (tableId === 'contractsTable' && typeof window.renderContracts === 'function') {
+        window.renderContracts();
+    }
 };
 
 window.openAddSupplierModal = function() {
@@ -16367,6 +14233,8 @@ window.openAddSupplierModal = function() {
     if (idInput) idInput.value = "";
     const roleSelect = document.getElementById("partnerRole");
     if (roleSelect) roleSelect.value = "SUPPLIER";
+    const custTypeSelect = document.getElementById("partnerCustomerType");
+    if (custTypeSelect) custTypeSelect.value = "SUPPLIER";
     const title = document.getElementById("partnerModalTitle");
     if (title) title.textContent = "Thêm mới Nhà cung cấp";
     openModal("partnerModal");
@@ -16379,6 +14247,8 @@ window.openAddCustomerModal = function() {
     if (idInput) idInput.value = "";
     const roleSelect = document.getElementById("partnerRole");
     if (roleSelect) roleSelect.value = "CUSTOMER";
+    const custTypeSelect = document.getElementById("partnerCustomerType");
+    if (custTypeSelect) custTypeSelect.value = "DIRECT";
     const title = document.getElementById("partnerModalTitle");
     if (title) title.textContent = "Thêm mới Khách hàng";
     openModal("partnerModal");
@@ -20310,9 +18180,10 @@ window.onCrmFilterTypeChange = function() {
     } else if (filterType === "customer_type") {
         container.innerHTML = `
             <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
-                <option value="">-- Tất cả loại khách hàng --</option>
-                <option value="RETAIL">Khách lẻ</option>
-                <option value="WHOLESALE">Khách sỉ</option>
+                <option value="">-- Tất cả loại đối tác / KH --</option>
+                <option value="DIRECT">👑 Chính chủ</option>
+                <option value="AGENCY">🏪 Đại lý</option>
+                <option value="SUPPLIER">🚚 NCC (Nhà cung cấp)</option>
             </select>
         `;
     } else if (filterType === "status") {
@@ -20348,8 +18219,14 @@ function renderCRM() {
             if (!query) return true;
             return (p.name || '').toLowerCase().includes(query) ||
                    (p.code || '').toLowerCase().includes(query) ||
+                   (p.company_name || '').toLowerCase().includes(query) ||
+                   (p.tax_code || '').includes(query) ||
+                   (p.legal_representative || '').toLowerCase().includes(query) ||
                    (p.phone || '').includes(query) ||
                    (p.address || '').toLowerCase().includes(query) ||
+                   (p.shipping_address || '').toLowerCase().includes(query) ||
+                   (p.billing_address || '').toLowerCase().includes(query) ||
+                   (p.bank_account_no || '').includes(query) ||
                    (p.region || '').toLowerCase().includes(query) ||
                    (p.ward || '').toLowerCase().includes(query) ||
                    (p.sales_staff || '').toLowerCase().includes(query) ||
@@ -20372,8 +18249,14 @@ function renderCRM() {
             return p.sales_channel === selectVal;
         } else if (filterType === "customer_type") {
             if (!selectVal) return true;
-            const isCustWholesale = (p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI");
-            return selectVal === "WHOLESALE" ? isCustWholesale : !isCustWholesale;
+            if (selectVal === "AGENCY") {
+                return p.customer_type === "AGENCY" || p.customer_type === "Đại lý" || p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI";
+            } else if (selectVal === "SUPPLIER") {
+                return p.customer_type === "SUPPLIER" || p.customer_type === "NCC" || p.role === "SUPPLIER";
+            } else if (selectVal === "DIRECT") {
+                return p.customer_type === "DIRECT" || p.customer_type === "Chính chủ" || p.customer_type === "RETAIL" || (!p.customer_type && p.role !== "SUPPLIER");
+            }
+            return true;
         } else if (filterType === "status") {
             if (!selectVal) return true;
             return selectVal === "active" ? (p.status !== false) : (p.status === false);
@@ -20391,8 +18274,6 @@ function renderCRM() {
     }
 
     filteredPartners.forEach(p => {
-        const roleLabels = { CUSTOMER: "Khách hàng", SUPPLIER: "Nhà cung cấp", SUBCONTRACTOR: "Đơn vị gia công", BOTH: "Khách & NCC" };
-        
         let spendVal = 0;
         let debtVal = 0;
 
@@ -20416,36 +18297,47 @@ function renderCRM() {
 
         const statusBadge = p.status !== false ? `<span class="badge badge-success">Đang làm việc</span>` : `<span class="badge badge-danger">Tạm dừng</span>`;
 
-        const isWholesale = (p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI");
-        const custTypeBadge = isWholesale 
-            ? `<span class="badge badge-warning" style="font-size:0.75rem; background:#fef3c7; color:#b45309; border:1px solid #fde68a;">🏢 Khách sỉ</span>`
-            : `<span class="badge badge-info" style="font-size:0.75rem; background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">👤 Khách lẻ</span>`;
+        // Phân loại khách hàng: Đại lý, NCC, Chính chủ
+        let custTypeBadge = '';
+        const isAgency = p.customer_type === "AGENCY" || p.customer_type === "Đại lý" || p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI";
+        const isSupplier = p.customer_type === "SUPPLIER" || p.customer_type === "NCC" || p.role === "SUPPLIER";
+        
+        if (isAgency) {
+            custTypeBadge = `<span class="badge" style="font-size:0.75rem; background:#ede9fe; color:#5b21b6; border:1px solid #ddd6fe; font-weight:600;"><i data-lucide="store" style="width:11px; height:11px; margin-right:3px;"></i>Đại lý</span>`;
+        } else if (isSupplier) {
+            custTypeBadge = `<span class="badge" style="font-size:0.75rem; background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-weight:600;"><i data-lucide="truck" style="width:11px; height:11px; margin-right:3px;"></i>NCC</span>`;
+        } else {
+            custTypeBadge = `<span class="badge" style="font-size:0.75rem; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; font-weight:600;"><i data-lucide="user-check" style="width:11px; height:11px; margin-right:3px;"></i>Chính chủ</span>`;
+        }
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><a href="javascript:void(0)" onclick="window.openEditPartner('${p.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${p.code || 'N/A'}</strong></a></td>
+            <td style="text-align:center;"><a href="javascript:void(0)" onclick="window.openEditPartner('${p.id}')" style="text-decoration:none; font-weight:700; color:var(--accent); font-family:monospace;">${p.code || 'N/A'}</a></td>
             <td>
-                <div style="display:inline-flex; align-items:center; gap:4px; flex-wrap:nowrap; white-space:nowrap;">
-                    <strong>${p.name || ''}</strong>
-                    ${p.company_name && p.company_name !== p.name ? `<small class="text-muted" title="Tên công ty">(${p.company_name})</small>` : ''}
-                    ${p.contact_person && p.contact_person !== p.name && p.contact_person !== 'Đại diện công ty' ? `<small style="color:var(--accent);" title="Người liên hệ">• ${p.contact_person}</small>` : ''}
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem;">${p.name || ''}</div>
+                    ${p.company_name && p.company_name !== p.name ? `<div style="font-size:0.76rem; color:var(--text-secondary); max-width:230px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.company_name}">🏢 ${p.company_name}</div>` : ''}
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:2px;">
+                        ${p.tax_code ? `<span class="badge" style="font-size:0.68rem; background:#f1f5f9; color:#475569; font-family:monospace; padding:1px 5px;" title="Mã số thuế">MST: ${p.tax_code}</span>` : ''}
+                        ${p.legal_representative ? `<span style="font-size:0.72rem; color:var(--accent); font-weight:500;" title="Người đại diện"><i data-lucide="user" style="width:10px; height:10px; display:inline;"></i> ${p.legal_representative}</span>` : ''}
+                    </div>
                 </div>
             </td>
             <td style="text-align:center;">${custTypeBadge}</td>
-            <td>${p.phone || '<span class="text-muted">-</span>'}</td>
-            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.address || ''}">${p.address || '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:center;"><a href="tel:${p.phone}" style="text-decoration:none; color:inherit; font-weight:600; font-family:monospace;">${p.phone || '<span class="text-muted">-</span>'}</a></td>
+            <td style="max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.shipping_address || p.address || ''}">📍 ${p.shipping_address || p.address || '<span class="text-muted">-</span>'}</td>
+            <td style="max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.billing_address || ''}">${p.billing_address ? `📋 ${p.billing_address}` : '<span class="text-muted">-</span>'}</td>
             <td style="text-align:center;">${p.region ? `<span class="badge badge-info" style="font-size:0.75rem;">${p.region}</span>` : '<span class="text-muted">-</span>'}</td>
-            <td>${p.ward || '<span class="text-muted">-</span>'}</td>
-            <td>${p.sales_staff ? `<span class="badge badge-primary" style="font-size:0.75rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px; margin-right:2px;"></i>${p.sales_staff}</span>` : '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:center;">${p.sales_staff ? `<span class="badge badge-primary" style="font-size:0.75rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px; margin-right:2px;"></i>${p.sales_staff}</span>` : '<span class="text-muted">-</span>'}</td>
             <td style="text-align:center;">${p.sales_channel ? `<span class="badge badge-secondary" style="font-size:0.75rem;">${p.sales_channel}</span>` : '<span class="text-muted">-</span>'}</td>
-            <td style="max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.note || ''}">${p.note || '<span class="text-muted">-</span>'}</td>
-            <td style="text-align:right;"><strong>${typeof formatMoney === 'function' ? formatMoney(spendVal) : spendVal}</strong></td>
-            <td style="text-align:right;" class="${debtVal > 0 ? 'text-warning font-bold' : ''}">${typeof formatMoney === 'function' ? formatMoney(debtVal) : debtVal}</td>
+            <td style="max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.note || ''}">${p.note || '<span class="text-muted">-</span>'}</td>
+            <td style="text-align:right; font-variant-numeric:tabular-nums;"><strong>${typeof formatMoney === 'function' ? formatMoney(spendVal) : spendVal}</strong></td>
+            <td style="text-align:right; font-variant-numeric:tabular-nums;" class="${debtVal > 0 ? 'text-warning font-bold' : ''}">${typeof formatMoney === 'function' ? formatMoney(debtVal) : debtVal}</td>
             <td style="text-align:center;">${statusBadge}</td>
-            <td>
-                <div class="card-actions-row" style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+            <td style="text-align:center;">
+                <div class="card-actions-row" style="display:inline-flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap;">
                     <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="window.openCrmDetail('${p.id}')">Xem CRM</button>
-                    <button class="btn-icon" onclick="window.viewPartnerBillingDetails('${p.id}')" title="Xem Hóa đơn VAT / Trụ sở"><i data-lucide="receipt"></i></button>
+                    <button class="btn-icon" onclick="window.viewPartnerBillingDetails('${p.id}')" title="Xem Hồ sơ DN / Hóa đơn VAT"><i data-lucide="receipt"></i></button>
                     <button class="btn-icon" onclick="window.openEditPartner('${p.id}')" title="Sửa"><i data-lucide="edit-2"></i></button>
                     <button class="btn-icon" style="color:var(--danger)" onclick="window.deletePartner('${p.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
                 </div>
@@ -20464,30 +18356,66 @@ function filterCRMTable() {
 function handlePartnerSubmit(e) {
     e.preventDefault();
     const id = document.getElementById("partnerIdInput").value;
-    const name = document.getElementById("partnerName").value;
-    const phone = document.getElementById("partnerPhone").value;
-    const email = document.getElementById("partnerEmail").value;
-    const address = document.getElementById("partnerAddress").value;
-    const role = document.getElementById("partnerRole").value;
+    const name = document.getElementById("partnerName").value.trim();
+    const phone = document.getElementById("partnerPhone").value.trim();
+    const email = document.getElementById("partnerEmail") ? document.getElementById("partnerEmail").value.trim() : "";
+    const role = document.getElementById("partnerRole") ? document.getElementById("partnerRole").value : "CUSTOMER";
     const limit = parseInt(document.getElementById("partnerLimit").value) || 0;
-    const customer_type = document.getElementById("partnerCustomerType") ? document.getElementById("partnerCustomerType").value : "RETAIL";
+    const customer_type = document.getElementById("partnerCustomerType") ? document.getElementById("partnerCustomerType").value : "DIRECT";
+    const business_type = document.getElementById("partnerBusinessType") ? document.getElementById("partnerBusinessType").value : "ENTERPRISE";
 
-    const company_name = document.getElementById("partnerCompanyName").value.trim();
-    const tax_code = document.getElementById("partnerTaxCode").value.trim();
-    const billing_address = document.getElementById("partnerBillingAddress").value.trim();
-    const billing_email = document.getElementById("partnerBillingEmail").value.trim();
+    const company_name = document.getElementById("partnerCompanyName") ? document.getElementById("partnerCompanyName").value.trim() : "";
+    const tax_code = document.getElementById("partnerTaxCode") ? document.getElementById("partnerTaxCode").value.trim() : "";
+    const legal_representative = document.getElementById("partnerLegalRepresentative") ? document.getElementById("partnerLegalRepresentative").value.trim() : "";
+    const representative_position = document.getElementById("partnerRepresentativePosition") ? document.getElementById("partnerRepresentativePosition").value.trim() : "";
+    const billing_address = document.getElementById("partnerBillingAddress") ? document.getElementById("partnerBillingAddress").value.trim() : "";
+    const billing_email = document.getElementById("partnerBillingEmail") ? document.getElementById("partnerBillingEmail").value.trim() : "";
 
+    const bank_name = document.getElementById("partnerBankName") ? document.getElementById("partnerBankName").value.trim() : "";
+    const bank_account_no = document.getElementById("partnerBankAccountNo") ? document.getElementById("partnerBankAccountNo").value.trim() : "";
+    const bank_account_holder = document.getElementById("partnerBankAccountHolder") ? document.getElementById("partnerBankAccountHolder").value.trim() : "";
+    const bank_branch = document.getElementById("partnerBankBranch") ? document.getElementById("partnerBankBranch").value.trim() : "";
+
+    const shipping_address = document.getElementById("partnerShippingAddress") ? document.getElementById("partnerShippingAddress").value.trim() : "";
+    const address = document.getElementById("partnerAddress") ? document.getElementById("partnerAddress").value.trim() : "";
     const region = document.getElementById("partnerRegion") ? document.getElementById("partnerRegion").value.trim() : "";
     const ward = document.getElementById("partnerWard") ? document.getElementById("partnerWard").value.trim() : "";
     const sales_staff = document.getElementById("partnerSalesStaff") ? document.getElementById("partnerSalesStaff").value.trim() : "";
     const sales_channel = document.getElementById("partnerSalesChannel") ? document.getElementById("partnerSalesChannel").value.trim() : "";
     const note = document.getElementById("partnerNote") ? document.getElementById("partnerNote").value.trim() : "";
 
+    const partnerPayload = {
+        name,
+        phone,
+        email,
+        address: address || shipping_address || billing_address,
+        role,
+        customer_type,
+        business_type,
+        credit_limit: limit,
+        company_name,
+        tax_code,
+        legal_representative,
+        representative_position,
+        billing_address,
+        billing_email,
+        bank_name,
+        bank_account_no,
+        bank_account_holder,
+        bank_branch,
+        shipping_address,
+        region,
+        ward,
+        sales_staff,
+        sales_channel,
+        note
+    };
+
     if (id) {
         // Edit Partner
         const newPartners = state.partners.map(p => {
             if (p.id === id) {
-                return { ...p, name, phone, email, address, role, customer_type, credit_limit: limit, company_name, tax_code, billing_address, billing_email, region, ward, sales_staff, sales_channel, note };
+                return { ...p, ...partnerPayload };
             }
             return p;
         });
@@ -20503,23 +18431,8 @@ function handlePartnerSubmit(e) {
         const newPartner = {
             id: newId,
             code: code,
-            name: name,
-            phone: phone,
-            email: email,
-            address: address,
-            role: role,
-            customer_type: customer_type || "RETAIL",
-            credit_limit: limit,
             status: true,
-            company_name,
-            tax_code,
-            billing_address,
-            billing_email,
-            region,
-            ward,
-            sales_staff,
-            sales_channel,
-            note
+            ...partnerPayload
         };
 
         const newPartners = [...state.partners, newPartner];
@@ -21050,29 +18963,49 @@ window.openEditPartner = function(partnerId) {
     if (!partner) return;
 
     document.getElementById("partnerIdInput").value = partner.id;
-    document.getElementById("partnerName").value = partner.name;
-    document.getElementById("partnerPhone").value = partner.phone;
+    document.getElementById("partnerName").value = partner.name || "";
+    document.getElementById("partnerPhone").value = partner.phone || "";
     document.getElementById("partnerEmail").value = partner.email || "";
-    document.getElementById("partnerAddress").value = partner.address || "";
-    document.getElementById("partnerRole").value = partner.role;
-    document.getElementById("partnerLimit").value = partner.credit_limit;
+    document.getElementById("partnerRole").value = partner.role || "CUSTOMER";
+    document.getElementById("partnerLimit").value = partner.credit_limit || 0;
+
     if (document.getElementById("partnerCustomerType")) {
-        const isWholesale = partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI";
-        document.getElementById("partnerCustomerType").value = isWholesale ? "WHOLESALE" : "RETAIL";
+        let cType = partner.customer_type;
+        if (cType === "WHOLESALE" || cType === "Khách sỉ" || cType === "SI" || cType === "AGENCY") {
+            cType = "AGENCY";
+        } else if (cType === "SUPPLIER" || cType === "NCC" || partner.role === "SUPPLIER") {
+            cType = "SUPPLIER";
+        } else {
+            cType = "DIRECT";
+        }
+        document.getElementById("partnerCustomerType").value = cType;
     }
 
-    document.getElementById("partnerCompanyName").value = partner.company_name || "";
-    document.getElementById("partnerTaxCode").value = partner.tax_code || "";
-    document.getElementById("partnerBillingAddress").value = partner.billing_address || "";
-    document.getElementById("partnerBillingEmail").value = partner.billing_email || "";
+    if (document.getElementById("partnerBusinessType")) {
+        document.getElementById("partnerBusinessType").value = partner.business_type || "ENTERPRISE";
+    }
 
+    if (document.getElementById("partnerCompanyName")) document.getElementById("partnerCompanyName").value = partner.company_name || "";
+    if (document.getElementById("partnerTaxCode")) document.getElementById("partnerTaxCode").value = partner.tax_code || "";
+    if (document.getElementById("partnerLegalRepresentative")) document.getElementById("partnerLegalRepresentative").value = partner.legal_representative || partner.contact_person || "";
+    if (document.getElementById("partnerRepresentativePosition")) document.getElementById("partnerRepresentativePosition").value = partner.representative_position || "";
+    if (document.getElementById("partnerBillingAddress")) document.getElementById("partnerBillingAddress").value = partner.billing_address || "";
+    if (document.getElementById("partnerBillingEmail")) document.getElementById("partnerBillingEmail").value = partner.billing_email || "";
+
+    if (document.getElementById("partnerBankName")) document.getElementById("partnerBankName").value = partner.bank_name || "";
+    if (document.getElementById("partnerBankAccountNo")) document.getElementById("partnerBankAccountNo").value = partner.bank_account_no || "";
+    if (document.getElementById("partnerBankAccountHolder")) document.getElementById("partnerBankAccountHolder").value = partner.bank_account_holder || "";
+    if (document.getElementById("partnerBankBranch")) document.getElementById("partnerBankBranch").value = partner.bank_branch || "";
+
+    if (document.getElementById("partnerShippingAddress")) document.getElementById("partnerShippingAddress").value = partner.shipping_address || "";
+    if (document.getElementById("partnerAddress")) document.getElementById("partnerAddress").value = partner.address || "";
     if (document.getElementById("partnerRegion")) document.getElementById("partnerRegion").value = partner.region || "";
     if (document.getElementById("partnerWard")) document.getElementById("partnerWard").value = partner.ward || "";
     if (document.getElementById("partnerSalesStaff")) document.getElementById("partnerSalesStaff").value = partner.sales_staff || "";
     if (document.getElementById("partnerSalesChannel")) document.getElementById("partnerSalesChannel").value = partner.sales_channel || "";
     if (document.getElementById("partnerNote")) document.getElementById("partnerNote").value = partner.note || "";
 
-    document.getElementById("partnerModalTitle").textContent = `Chỉnh sửa đối tác: ${partner.code}`;
+    document.getElementById("partnerModalTitle").textContent = `Chỉnh sửa hồ sơ đối tác: ${partner.code}`;
     openModal("partnerModal");
 };
 
@@ -24143,8 +22076,9 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         else if (subtab === "online-invoices") label = "📄 Xuất hoá đơn";
         else if (subtab === "online-products") label = "📦 Danh sách Hàng hóa";
         else if (subtab === "online-prices" || subtab === "online-pricing") label = "🏷️ Thiết lập Giá";
-        else if (subtab === "online-import-goods") label = "📥 Nhập kho hàng hóa (Bổ sung số lượng)";
-        else if (subtab === "online-stock") label = "📦 Kho hàng";
+        else if (subtab === "online-import-goods") label = "📥 Nhập kho hàng hóa (POS)";
+        else if (subtab === "online-export-goods") label = "📤 Quản lý Xuất kho hàng hóa (Mẫu số 02 - VT)";
+        else if (subtab === "online-stock") label = "📦 Kho hàng & Tồn kho";
         titleEl.innerHTML = label;
     }
     
@@ -24158,6 +22092,8 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         renderOnlineProducts();
     } else if (subtab === "online-import-goods") {
         if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
+    } else if (subtab === "online-export-goods") {
+        if (window.renderOnlineExportGoods) window.renderOnlineExportGoods();
     } else if (subtab === "online-stock") {
         window.renderOnlineStock();
         window.renderOnlineStockLogs();
@@ -32041,78 +29977,267 @@ window.populateSalespersonsDropdowns = function() {
 };
 
 // ==========================================================================
-// BUSINESS CONTRACTS MANAGEMENT
+// BUSINESS CONTRACTS & COMMERCIAL DOCUMENTS SUITE
 // ==========================================================================
+
+// 1. Vietnamese Currency Number to Text Converter
+window.docSoThanhChu = function(n) {
+    if (isNaN(n) || n === null || n === undefined) return "Không đồng";
+    n = Math.round(Math.abs(Number(n)));
+    if (n === 0) return "Không đồng";
+
+    const chuSo = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
+    const tien = ["", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ"];
+
+    function docBlock3(so, dayDu) {
+        let tram = Math.floor(so / 100);
+        let chuc = Math.floor((so % 100) / 10);
+        let donvi = so % 10;
+        let res = "";
+
+        if (tram > 0 || dayDu) {
+            res += chuSo[tram] + " trăm ";
+        }
+
+        if (chuc > 1) {
+            res += chuSo[chuc] + " mươi ";
+            if (donvi === 1) res += "mốt ";
+            else if (donvi === 4) res += "tư ";
+            else if (donvi === 5) res += "lăm ";
+            else if (donvi > 0) res += chuSo[donvi] + " ";
+        } else if (chuc === 1) {
+            res += "mười ";
+            if (donvi === 1) res += "một ";
+            else if (donvi === 4) res += "bốn ";
+            else if (donvi === 5) res += "lăm ";
+            else if (donvi > 0) res += chuSo[donvi] + " ";
+        } else {
+            if (tram > 0 || dayDu) {
+                if (donvi > 0) res += "lẻ " + chuSo[donvi] + " ";
+            } else {
+                if (donvi > 0) res += chuSo[donvi] + " ";
+            }
+        }
+        return res;
+    }
+
+    let viTri = 0;
+    let ketQua = "";
+    let tmp = n;
+
+    while (tmp > 0) {
+        let block = tmp % 1000;
+        if (block > 0) {
+            let doc = docBlock3(block, tmp > 999);
+            ketQua = doc + tien[viTri] + " " + ketQua;
+        }
+        tmp = Math.floor(tmp / 1000);
+        viTri++;
+    }
+
+    ketQua = ketQua.trim().replace(/\s+/g, " ");
+    if (!ketQua) return "Không đồng";
+    return ketQua.charAt(0).toUpperCase() + ketQua.slice(1) + " đồng chẵn";
+};
+
+// 2. Auto-repair and link any legacy contracts with missing customer/order info
+window.autoRepairContractsData = function() {
+    if (!Array.isArray(state.contracts)) return;
+    let modified = false;
+    const customers = (state.partners || []).filter(p => p.role === "CUSTOMER" || p.role === "BOTH");
+    const fallbackCustomer = customers[0] || (state.partners && state.partners[0]) || { id: "p_cust_default", name: "Khách hàng Doanh Nghiệp" };
+
+    state.contracts.forEach((c, idx) => {
+        let partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
+        if (!partner) {
+            const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
+            let ord = (state.online_orders || []).find(o => orderIds.includes(o.id) || (c.order_numbers && c.order_numbers.includes(o.order_number))) ||
+                      (state.orders || []).find(o => orderIds.includes(o.id) || (c.order_numbers && c.order_numbers.includes(o.order_number)));
+            if (ord && ord.customer_id) {
+                c.partner_id = ord.customer_id;
+                modified = true;
+            } else {
+                const picked = customers[idx % Math.max(1, customers.length)] || fallbackCustomer;
+                c.partner_id = picked.id;
+                modified = true;
+            }
+        }
+
+        if (!c.order_ids || c.order_ids.length === 0) {
+            if (c.order_id) {
+                c.order_ids = [c.order_id];
+                modified = true;
+            } else {
+                let ord = (state.online_orders || []).find(o => o.customer_id === c.partner_id) ||
+                          (state.orders || []).find(o => o.customer_id === c.partner_id);
+                if (ord) {
+                    c.order_ids = [ord.id];
+                    c.order_id = ord.id;
+                    c.order_numbers = [ord.order_number];
+                    modified = true;
+                } else {
+                    const fallbackOrder = (state.online_orders && state.online_orders[0]) || (state.orders && state.orders[0]);
+                    if (fallbackOrder) {
+                        c.order_ids = [fallbackOrder.id];
+                        c.order_id = fallbackOrder.id;
+                        c.order_numbers = [fallbackOrder.order_number];
+                        modified = true;
+                    }
+                }
+            }
+        }
+
+        if (c.deposit === undefined || c.deposit === null) {
+            c.deposit = Math.round((c.value || 0) * 0.5);
+            modified = true;
+        }
+    });
+
+    if (modified) {
+        state.save("contracts", state.contracts);
+    }
+};
+
+// 3. Render Contracts Table with high-contrast, multi-order badges & dynamic columns
 window.renderContracts = function() {
+    window.autoRepairContractsData();
+
     const tableBody = document.querySelector("#contractsTable tbody");
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
     const query = (document.getElementById("contractSearchInput")?.value || "").toLowerCase().trim();
+    const typeFilter = document.getElementById("contractFilterType")?.value || "";
+    const statusFilter = document.getElementById("contractFilterStatus")?.value || "";
 
-    const filtered = state.contracts.filter(c => {
-        const partner = state.partners.find(p => p.id === c.partner_id);
-        const partnerName = partner ? partner.name.toLowerCase() : "";
+    const filtered = (state.contracts || []).filter(c => {
+        const partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
+        const partnerName = (partner ? (partner.company_name || partner.name) : (c.customer_name || "")).toLowerCase();
+        const partnerPhone = (partner ? (partner.phone || "") : "").toLowerCase();
+        const partnerCode = (partner ? (partner.code || "") : "").toLowerCase();
+
+        const orderNums = Array.isArray(c.order_numbers) ? c.order_numbers.join(" ") : (c.order_id || "");
         
-        let linkedOrderNum = "";
-        if (c.order_type === "PRODUCTION") {
-            const order = state.orders.find(o => o.id === c.order_id);
-            if (order) linkedOrderNum = order.order_number;
-        } else {
-            const onlineOrder = state.online_orders.find(o => o.id === c.order_id);
-            if (onlineOrder) linkedOrderNum = onlineOrder.order_number;
-        }
-        
-        return c.contract_number.toLowerCase().includes(query) ||
-               partnerName.includes(query) ||
-               linkedOrderNum.toLowerCase().includes(query) ||
-               (c.details || "").toLowerCase().includes(query);
+        const matchesQuery = !query ||
+            c.contract_number.toLowerCase().includes(query) ||
+            partnerName.includes(query) ||
+            partnerPhone.includes(query) ||
+            partnerCode.includes(query) ||
+            orderNums.toLowerCase().includes(query) ||
+            (c.details || "").toLowerCase().includes(query);
+
+        const matchesType = !typeFilter || c.order_type === typeFilter;
+        const matchesStatus = !statusFilter || c.status === statusFilter;
+
+        return matchesQuery && matchesType && matchesStatus;
     });
 
     if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="8" class="text-muted text-center">Không tìm thấy hợp đồng nào</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="11" class="text-muted text-center" style="padding: 24px;">Không tìm thấy hợp đồng nào phù hợp</td></tr>`;
+        if (typeof window.applyFinanceTableColumns === 'function') {
+            window.applyFinanceTableColumns('contractsTable');
+        }
         return;
     }
 
     filtered.forEach(c => {
-        const partner = state.partners.find(p => p.id === c.partner_id);
-        
-        let linkedOrderNum = "N/A";
-        if (c.order_type === "PRODUCTION") {
-            const order = state.orders.find(o => o.id === c.order_id);
-            if (order) linkedOrderNum = order.order_number;
+        const partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
+        const partnerDisplayName = partner ? (partner.company_name || partner.name) : (c.customer_name || 'Khách hàng đối tác');
+        const partnerCodeBadge = partner && partner.code ? `<span class="debt-partner-code" style="font-size:0.68rem; margin-right:4px;">${escapeHtml(partner.code)}</span>` : '';
+        const partnerPhoneStr = partner && partner.phone ? `<div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;"><i data-lucide="phone" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${escapeHtml(partner.phone)}</div>` : '';
+        const partnerTaxStr = partner && partner.tax_code ? `<span style="font-size:0.72rem; color:var(--text-muted); margin-left:4px;">MST: ${escapeHtml(partner.tax_code)}</span>` : '';
+
+        // Extract linked orders
+        const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
+        let linkedOrdersHtml = '';
+        if (orderIds.length > 0) {
+            linkedOrdersHtml = orderIds.map(oid => {
+                const onlineOrd = (state.online_orders || []).find(o => o.id === oid);
+                const prodOrd = (state.orders || []).find(o => o.id === oid);
+                const ord = onlineOrd || prodOrd;
+                const ordNum = ord ? ord.order_number : (c.order_numbers && c.order_numbers[0] ? c.order_numbers[0] : oid);
+                const isOnline = !!onlineOrd;
+                return `
+                    <span class="badge ${isOnline ? 'badge-info' : 'badge-primary'}" 
+                          onclick="${isOnline ? `openOnlineOrderInvoicePdf('${oid}')` : `openOrderDetailModal('${oid}')`}" 
+                          title="Xem chi tiết đơn hàng ${ordNum}"
+                          style="cursor:pointer; font-size:0.72rem; margin:1px 2px; font-weight:600;">
+                        ${isOnline ? '<i data-lucide="shopping-cart" style="width:10px; height:10px;"></i>' : '<i data-lucide="printer" style="width:10px; height:10px;"></i>'}
+                        ${escapeHtml(ordNum)}
+                    </span>
+                `;
+            }).join("");
         } else {
-            const onlineOrder = state.online_orders.find(o => o.id === c.order_id);
-            if (onlineOrder) linkedOrderNum = onlineOrder.order_number;
+            linkedOrdersHtml = '<span class="text-muted" style="font-size:0.75rem;">Chưa gắn đơn</span>';
         }
 
         const statusBadges = {
-            ACTIVE: '<span class="badge badge-info">Đang thực hiện</span>',
-            LIQUIDATED: '<span class="badge badge-success">Đã thanh lý</span>',
-            EXPIRED: '<span class="badge badge-danger">Đã hết hạn</span>'
+            ACTIVE: '<span class="badge badge-info"><i data-lucide="clock" style="width:11px; height:11px;"></i> Đang thực hiện</span>',
+            LIQUIDATED: '<span class="badge badge-success"><i data-lucide="check-circle" style="width:11px; height:11px;"></i> Đã thanh lý</span>',
+            EXPIRED: '<span class="badge badge-danger"><i data-lucide="alert-circle" style="width:11px; height:11px;"></i> Đã hết hạn</span>'
         };
 
-        const typeLabels = {
-            PRODUCTION: "Sản xuất",
-            ONLINE: "Online"
+        const typeBadges = {
+            PRODUCTION: '<span class="badge badge-secondary" style="font-weight:600;">Sản xuất</span>',
+            ONLINE: '<span class="badge badge-info" style="font-weight:600;">Bán online</span>',
+            ALL: '<span class="badge badge-primary" style="font-weight:600;">Hỗn hợp</span>'
         };
+
+        const totalVal = Number(c.value || 0);
+        const depositVal = Number(c.deposit || 0);
+        const remainingVal = Math.max(0, totalVal - depositVal);
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${c.contract_number}</strong></td>
-            <td><strong>${partner ? partner.name : 'N/A'}</strong></td>
-            <td style="text-align:center;">${new Date(c.signing_date).toLocaleDateString('vi-VN')}</td>
-            <td style="text-align:right;"><strong>${formatMoney(c.value)}</strong></td>
-            <td style="text-align:center;"><span class="badge badge-secondary">${typeLabels[c.order_type] || c.order_type}</span></td>
-            <td style="text-align:center;"><strong>${linkedOrderNum}</strong></td>
-            <td style="text-align:center;">${statusBadges[c.status] || c.status}</td>
-            <td>
+            <td data-col="contract_number">
+                <a href="javascript:void(0)" onclick="window.openCommercialDocsModal('${c.id}', 'CONTRACT')" style="font-weight:700; color:var(--accent); text-decoration:underline;" title="Xem hồ sơ hợp đồng">
+                    <strong>${escapeHtml(c.contract_number)}</strong>
+                </a>
+            </td>
+            <td data-col="signing_date" style="text-align:center;">
+                ${c.signing_date ? new Date(c.signing_date).toLocaleDateString('vi-VN') : '-'}
+            </td>
+            <td data-col="partner">
+                <div>
+                    ${partnerCodeBadge}<strong>${escapeHtml(partnerDisplayName)}</strong> ${partnerTaxStr}
+                    ${partnerPhoneStr}
+                </div>
+            </td>
+            <td data-col="order_type" style="text-align:center;">
+                ${typeBadges[c.order_type] || `<span class="badge badge-secondary">${c.order_type}</span>`}
+            </td>
+            <td data-col="linked_orders">
+                <div style="display:flex; flex-wrap:wrap; gap:2px; max-width:240px;">
+                    ${linkedOrdersHtml}
+                </div>
+            </td>
+            <td data-col="value" style="text-align:right;">
+                <strong style="color:var(--text-primary); font-variant-numeric:tabular-nums;">${formatMoney(totalVal)}</strong>
+            </td>
+            <td data-col="deposit" style="text-align:right;">
+                <span style="color:#0e7542; font-weight:600; font-variant-numeric:tabular-nums;">${formatMoney(depositVal)}</span>
+            </td>
+            <td data-col="remaining" style="text-align:right;">
+                <span class="${remainingVal > 0 ? 'debt-amount-due' : 'debt-amount-zero'}">
+                    ${formatMoney(remainingVal)}
+                </span>
+            </td>
+            <td data-col="status" style="text-align:center;">
+                ${statusBadges[c.status] || `<span class="badge badge-secondary">${c.status}</span>`}
+            </td>
+            <td data-col="documents" style="text-align:center;">
+                <button class="btn btn-secondary" onclick="window.openCommercialDocsModal('${c.id}', 'CONTRACT')" style="padding:4px 9px; font-size:0.75rem; font-weight:600; display:inline-flex; align-items:center; gap:4px; border-color:var(--accent); color:var(--accent);" title="Xem & In đầy đủ bộ hồ sơ văn bản">
+                    <i data-lucide="file-check-2" style="width:13px; height:13px;"></i>
+                    <span>Bộ hồ sơ</span>
+                </button>
+            </td>
+            <td data-col="actions" style="text-align:center;">
                 <div class="card-actions-row" style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="openEditContract('${c.id}')">Sửa</button>
+                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="openEditContract('${c.id}')" title="Sửa thông tin hợp đồng">Sửa</button>
                     ${c.status !== "LIQUIDATED" ? `
-                        <button class="btn btn-success" style="padding: 3px 8px; font-size: 0.75rem;" onclick="liquidateContract('${c.id}')">Thanh lý</button>
+                        <button class="btn btn-success" style="padding: 3px 8px; font-size: 0.75rem;" onclick="liquidateContract('${c.id}')" title="Lập thanh lý hợp đồng">Thanh lý</button>
                     ` : ''}
-                    <button class="btn-icon" style="color:var(--danger)" onclick="deleteContract('${c.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
+                    <button class="btn-icon" style="color:var(--danger);" onclick="deleteContract('${c.id}')" title="Xóa hợp đồng"><i data-lucide="trash-2"></i></button>
                 </div>
             </td>
         `;
@@ -32122,101 +30247,204 @@ window.renderContracts = function() {
     if (window.lucide) {
         lucide.createIcons();
     }
+
+    if (typeof window.applyFinanceTableColumns === 'function') {
+        window.applyFinanceTableColumns('contractsTable');
+    }
 };
 
+// 4. Populate Contract Partners Dropdown
 window.populateContractPartners = function() {
     const select = document.getElementById("contractPartnerId");
     if (!select) return;
-    select.innerHTML = "";
+    const currentVal = select.value;
+    select.innerHTML = '<option value="">-- Chọn khách hàng / Đối tác --</option>';
 
-    const customers = state.partners.filter(p => p.role === "CUSTOMER" || p.role === "BOTH");
+    const customers = (state.partners || []).filter(p => p.role === "CUSTOMER" || p.role === "BOTH" || !p.role);
     customers.forEach(p => {
         const option = document.createElement("option");
         option.value = p.id;
-        option.textContent = `${p.code} - ${p.name}`;
+        option.textContent = `${p.code ? p.code + ' - ' : ''}${p.name}${p.company_name ? ' (' + p.company_name + ')' : ''}`;
         select.appendChild(option);
     });
+
+    if (currentVal && Array.from(select.options).some(o => o.value === currentVal)) {
+        select.value = currentVal;
+    }
 };
 
-window.populateContractOrders = function() {
+// 5. Populate Contract Orders Checklist (Multi-Order selection)
+window.populateContractOrders = function(preselectedOrderIds = []) {
     const partnerSelect = document.getElementById("contractPartnerId");
     const typeSelect = document.getElementById("contractOrderType");
-    const orderSelect = document.getElementById("contractOrderId");
-    if (!partnerSelect || !typeSelect || !orderSelect) return;
+    const container = document.getElementById("contractOrdersListContainer");
+    const summaryEl = document.getElementById("contractSelectedOrdersSummary");
+    const hiddenSelect = document.getElementById("contractOrderId");
+    if (!partnerSelect || !container) return;
 
     const partnerId = partnerSelect.value;
-    const orderType = typeSelect.value;
-    orderSelect.innerHTML = "";
+    const orderType = typeSelect ? typeSelect.value : "ALL";
 
-    if (!partnerId) return;
-
-    if (orderType === "PRODUCTION") {
-        const orders = state.orders.filter(o => o.customer_id === partnerId);
-        orders.forEach(o => {
-            const option = document.createElement("option");
-            option.value = o.id;
-            option.textContent = `${o.order_number} (${o.print_spec} - ${formatMoney(o.total_amount)})`;
-            orderSelect.appendChild(option);
-        });
-    } else {
-        const onlineOrders = state.online_orders.filter(o => o.customer_id === partnerId);
-        onlineOrders.forEach(o => {
-            const option = document.createElement("option");
-            option.value = o.id;
-            option.textContent = `${o.order_number} (${formatMoney(o.total_amount)})`;
-            orderSelect.appendChild(option);
-        });
+    // Update partner summary box
+    const partnerSummaryBox = document.getElementById("contractPartnerSummary");
+    const partner = (state.partners || []).find(p => p.id === partnerId);
+    if (partnerSummaryBox && partner) {
+        partnerSummaryBox.style.display = "block";
+        partnerSummaryBox.innerHTML = `
+            <div><strong>${escapeHtml(partner.company_name || partner.name)}</strong> ${partner.tax_code ? ` | <span>MST: <strong>${escapeHtml(partner.tax_code)}</strong></span>` : ''} ${partner.phone ? ` | <span>ĐT: <strong>${escapeHtml(partner.phone)}</strong></span>` : ''}</div>
+            ${partner.address ? `<div style="color:var(--text-secondary); margin-top:2px;">Địa chỉ: ${escapeHtml(partner.address)}</div>` : ''}
+        `;
+    } else if (partnerSummaryBox) {
+        partnerSummaryBox.style.display = "none";
     }
 
-    updateContractValueField();
-};
+    container.innerHTML = "";
+    if (hiddenSelect) hiddenSelect.innerHTML = "";
 
-function updateContractValueField() {
-    const orderSelect = document.getElementById("contractOrderId");
-    const typeSelect = document.getElementById("contractOrderType");
-    const valueInput = document.getElementById("contractValue");
-    if (!orderSelect || !typeSelect || !valueInput) return;
-
-    const orderId = orderSelect.value;
-    const orderType = typeSelect.value;
-
-    if (!orderId) {
-        valueInput.value = 0;
+    if (!partnerId) {
+        container.innerHTML = `<div class="text-muted text-center" style="padding:14px; font-size:0.83rem;">Vui lòng chọn khách hàng để tải danh sách đơn hàng</div>`;
+        if (summaryEl) summaryEl.innerHTML = `<span>Đã chọn: 0 đơn hàng</span><span>Tổng tiền: 0đ</span>`;
         return;
     }
 
-    if (orderType === "PRODUCTION") {
-        const order = state.orders.find(o => o.id === orderId);
-        if (order) valueInput.value = order.total_amount;
-    } else {
-        const onlineOrder = state.online_orders.find(o => o.id === orderId);
-        if (onlineOrder) valueInput.value = onlineOrder.total_amount;
-    }
-}
+    // Gather candidate orders
+    let candidateOrders = [];
 
+    if (orderType === "PRODUCTION" || orderType === "ALL") {
+        (state.orders || []).filter(o => o.customer_id === partnerId).forEach(o => {
+            candidateOrders.push({
+                id: o.id,
+                order_number: o.order_number,
+                type: "PRODUCTION",
+                typeName: "Sản xuất",
+                date: o.created_at || o.order_date || "",
+                spec: o.print_spec || o.name || "Sản xuất in ấn",
+                total_amount: Number(o.total_amount || 0),
+                deposit: Number(o.deposit || o.paid_amount || 0),
+                status: o.status || "PENDING"
+            });
+        });
+    }
+
+    if (orderType === "ONLINE" || orderType === "ALL") {
+        (state.online_orders || []).filter(o => o.customer_id === partnerId).forEach(o => {
+            candidateOrders.push({
+                id: o.id,
+                order_number: o.order_number,
+                type: "ONLINE",
+                typeName: "Online",
+                date: o.created_at || "",
+                spec: (o.items || []).map(i => `${i.sku} x${i.qty}`).join(", ") || "Hàng hóa online",
+                total_amount: Number(o.total_amount || 0),
+                deposit: Number(o.deposit_amount || o.paid_amount || 0),
+                status: o.status || "ORDER"
+            });
+        });
+    }
+
+    if (candidateOrders.length === 0) {
+        container.innerHTML = `<div class="text-muted text-center" style="padding:14px; font-size:0.83rem;">Khách hàng này hiện chưa có đơn hàng nào trên hệ thống.</div>`;
+        if (summaryEl) summaryEl.innerHTML = `<span>Đã chọn: 0 đơn hàng</span><span>Tổng tiền: 0đ</span>`;
+        return;
+    }
+
+    // Render checkbox list
+    candidateOrders.forEach(ord => {
+        const isChecked = Array.isArray(preselectedOrderIds) && preselectedOrderIds.includes(ord.id);
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "contract-order-item";
+        itemDiv.style.cssText = "display:flex; align-items:center; justify-content:space-between; padding:6px 10px; margin-bottom:4px; border-radius:6px; background:var(--bg-card); border:1px solid var(--border-color);";
+        itemDiv.innerHTML = `
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1; margin:0;">
+                <input type="checkbox" name="contractOrderIds" value="${ord.id}" data-amount="${ord.total_amount}" data-deposit="${ord.deposit}" data-number="${ord.order_number}" ${isChecked ? 'checked' : ''} onchange="window.onContractOrderSelectionChange()" style="accent-color:var(--accent); width:16px; height:16px;">
+                <div>
+                    <div style="font-size:0.825rem; font-weight:700; color:var(--text-primary);">
+                        <span class="badge ${ord.type === 'ONLINE' ? 'badge-info' : 'badge-primary'}" style="font-size:0.65rem; margin-right:4px;">${ord.typeName}</span>
+                        ${escapeHtml(ord.order_number)}
+                        <small style="font-weight:400; color:var(--text-secondary); margin-left:6px;">(${ord.date ? ord.date.split('T')[0] : ''})</small>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px; max-width:420px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        ${escapeHtml(ord.spec)}
+                    </div>
+                </div>
+            </label>
+            <div style="text-align:right; flex-shrink:0; margin-left:10px;">
+                <div style="font-size:0.85rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums;">${formatMoney(ord.total_amount)}</div>
+                <div style="font-size:0.7rem; color:var(--text-muted);">Cọc: ${formatMoney(ord.deposit)}</div>
+            </div>
+        `;
+        container.appendChild(itemDiv);
+
+        if (hiddenSelect) {
+            const opt = document.createElement("option");
+            opt.value = ord.id;
+            opt.textContent = ord.order_number;
+            hiddenSelect.appendChild(opt);
+        }
+    });
+
+    window.onContractOrderSelectionChange();
+};
+
+window.selectAllContractOrders = function(selectAll) {
+    const checkboxes = document.querySelectorAll("input[name='contractOrderIds']");
+    checkboxes.forEach(cb => { cb.checked = !!selectAll; });
+    window.onContractOrderSelectionChange();
+};
+
+window.onContractOrderSelectionChange = function() {
+    const checkboxes = document.querySelectorAll("input[name='contractOrderIds']:checked");
+    let totalAmt = 0;
+    let totalDep = 0;
+    checkboxes.forEach(cb => {
+        totalAmt += Number(cb.getAttribute("data-amount") || 0);
+        totalDep += Number(cb.getAttribute("data-deposit") || 0);
+    });
+
+    const summaryEl = document.getElementById("contractSelectedOrdersSummary");
+    if (summaryEl) {
+        summaryEl.innerHTML = `<span>Đã chọn: <strong>${checkboxes.length}</strong> đơn hàng</span><span>Tổng tiền: <strong style="font-size:0.95rem;">${formatMoney(totalAmt)}</strong></span>`;
+    }
+
+    const valueInput = document.getElementById("contractValue");
+    if (valueInput) {
+        valueInput.value = totalAmt;
+    }
+
+    const depositInput = document.getElementById("contractDeposit");
+    if (depositInput && (!depositInput.value || Number(depositInput.value) === 0)) {
+        depositInput.value = totalDep;
+    }
+};
+
+// 6. Edit Contract Modal
 window.openEditContract = function(contractId) {
-    const c = state.contracts.find(item => item.id === contractId);
+    const c = (state.contracts || []).find(item => item.id === contractId);
     if (!c) return;
 
     document.getElementById("contractModalTitle").textContent = "Cập nhật hợp đồng kinh doanh";
     document.getElementById("contractIdInput").value = c.id;
     document.getElementById("contractNumber").value = c.contract_number;
-    document.getElementById("contractSigningDate").value = c.signing_date;
+    document.getElementById("contractSigningDate").value = c.signing_date || new Date().toISOString().split('T')[0];
     
     populateContractPartners();
-    document.getElementById("contractPartnerId").value = c.partner_id;
+    document.getElementById("contractPartnerId").value = c.partner_id || "";
     
-    document.getElementById("contractOrderType").value = c.order_type;
-    populateContractOrders();
-    document.getElementById("contractOrderId").value = c.order_id;
+    document.getElementById("contractOrderType").value = c.order_type || "ALL";
+    const selectedIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
+    populateContractOrders(selectedIds);
     
-    document.getElementById("contractValue").value = c.value;
-    document.getElementById("contractStatus").value = c.status;
+    document.getElementById("contractValue").value = c.value || 0;
+    document.getElementById("contractDeposit").value = c.deposit !== undefined ? c.deposit : Math.round((c.value || 0) * 0.5);
+    document.getElementById("contractExpiryDate").value = c.expiry_date || "";
+    document.getElementById("contractSigner").value = c.signer || "Bùi Đại Hùng - Giám đốc";
+    document.getElementById("contractStatus").value = c.status || "ACTIVE";
     document.getElementById("contractDetails").value = c.details || "";
 
     openModal("contractModal");
 };
 
+// 7. Quick Create Contract from Order
 window.quickCreateContract = function(orderId, isOnline = false) {
     const typeStr = isOnline ? "ONLINE" : "PRODUCTION";
     let order = null;
@@ -32231,10 +30459,7 @@ window.quickCreateContract = function(orderId, isOnline = false) {
         return;
     }
 
-    // Populate partners dropdown
-    if (window.populateContractPartners) {
-        window.populateContractPartners();
-    }
+    populateContractPartners();
 
     const modalTitle = document.getElementById("contractModalTitle");
     if (modalTitle) {
@@ -32244,7 +30469,6 @@ window.quickCreateContract = function(orderId, isOnline = false) {
     const idInput = document.getElementById("contractIdInput");
     if (idInput) idInput.value = "";
     
-    // Auto contract number: HĐ-YYYYMM-XXXX
     const now = new Date();
     const dateCode = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0');
     const randCode = String(Math.floor(1000 + Math.random() * 9000));
@@ -32254,49 +30478,47 @@ window.quickCreateContract = function(orderId, isOnline = false) {
     const signInput = document.getElementById("contractSigningDate");
     if (signInput) signInput.value = now.toISOString().split('T')[0];
     
-    // Set partner
     const partnerSelect = document.getElementById("contractPartnerId");
     if (partnerSelect && order.customer_id) {
         partnerSelect.value = order.customer_id;
     }
 
-    // Set order type & populate orders
     const typeSelect = document.getElementById("contractOrderType");
     if (typeSelect) {
         typeSelect.value = typeStr;
     }
 
-    if (window.populateContractOrders) {
-        window.populateContractOrders();
-    }
+    populateContractOrders([order.id]);
 
-    const orderSelect = document.getElementById("contractOrderId");
-    if (orderSelect) {
-        orderSelect.value = order.id;
-    }
-
-    // Set contract value
     const valueInput = document.getElementById("contractValue");
     if (valueInput) {
         valueInput.value = order.total_amount || 0;
     }
 
-    // Set status
+    const depositInput = document.getElementById("contractDeposit");
+    if (depositInput) {
+        depositInput.value = order.deposit || order.deposit_amount || order.paid_amount || 0;
+    }
+
+    const signerInput = document.getElementById("contractSigner");
+    if (signerInput) {
+        signerInput.value = "Bùi Đại Hùng - Giám đốc";
+    }
+
     const statusSelect = document.getElementById("contractStatus");
     if (statusSelect) {
         statusSelect.value = "ACTIVE";
     }
 
-    // Set details
     const detailsInput = document.getElementById("contractDetails");
     if (detailsInput) {
         const partner = (state.partners || []).find(p => p.id === order.customer_id);
-        const custName = partner ? partner.name : "Khách hàng";
+        const custName = partner ? (partner.company_name || partner.name) : "Khách hàng";
         if (isOnline) {
-            detailsInput.value = `Hợp đồng kinh doanh cung cấp sản phẩm Online cho đơn hàng ${order.order_number}. Khách hàng: ${custName}. Tổng giá trị hợp đồng: ${formatMoney(order.total_amount)}.`;
+            detailsInput.value = `Hợp đồng kinh tế cung cấp sản phẩm cho đơn hàng ${order.order_number}. Khách hàng: ${custName}. Cam kết giao đúng tiến độ, bảo hành sản phẩm.`;
         } else {
             const specText = order.print_spec || "Sản xuất in ấn";
-            detailsInput.value = `Hợp đồng sản xuất in ấn cho đơn hàng ${order.order_number} (${specText}). Khách hàng: ${custName}. Tổng giá trị hợp đồng: ${formatMoney(order.total_amount)}.`;
+            detailsInput.value = `Hợp đồng sản xuất in ấn cho đơn hàng ${order.order_number} (${specText}). Khách hàng: ${custName}. Đảm bảo quy cách và chất lượng gia công.`;
         }
     }
 
@@ -32305,14 +30527,14 @@ window.quickCreateContract = function(orderId, isOnline = false) {
 
 window.deleteContract = function(contractId) {
     if (!confirm("Bạn có chắc chắn muốn xóa hợp đồng này không?")) return;
-    const newContracts = state.contracts.filter(c => c.id !== contractId);
+    const newContracts = (state.contracts || []).filter(c => c.id !== contractId);
     state.updateState("contracts", newContracts);
     renderContracts();
 };
 
 window.liquidateContract = function(contractId) {
     if (!confirm("Bạn có chắc chắn muốn thanh lý hợp đồng này không?")) return;
-    const newContracts = state.contracts.map(c => {
+    const newContracts = (state.contracts || []).map(c => {
         if (c.id === contractId) {
             return { ...c, status: "LIQUIDATED" };
         }
@@ -32321,10 +30543,701 @@ window.liquidateContract = function(contractId) {
     state.updateState("contracts", newContracts);
     renderContracts();
     
-    if (selectedCrmPartnerId) {
+    if (typeof selectedCrmPartnerId !== 'undefined' && selectedCrmPartnerId && typeof renderCrmDetailSubtabs === 'function') {
         renderCrmDetailSubtabs(selectedCrmPartnerId);
     }
 };
+
+// ==========================================================================
+// COMMERCIAL DOCUMENTS SUITE: HỢP ĐỒNG, GIAO NHẬN, THANH LÝ, ĐỀ NGHỊ THANH TOÁN
+// ==========================================================================
+window.activeCommercialContractId = null;
+window.activeCommercialDocType = 'CONTRACT';
+
+window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
+    const c = (state.contracts || []).find(item => item.id === contractId);
+    if (!c) {
+        alert("Không tìm thấy dữ liệu hợp đồng!");
+        return;
+    }
+
+    window.activeCommercialContractId = contractId;
+    window.activeCommercialDocType = docType;
+
+    const partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id) || {
+        name: c.customer_name || "Khách hàng đối tác",
+        company_name: c.customer_name || "Công ty Đối tác",
+        tax_code: "Đang cập nhật",
+        phone: "",
+        address: "Hà Nội"
+    };
+
+    // Gather linked orders and their products
+    const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
+    const linkedOrders = [];
+
+    orderIds.forEach(oid => {
+        const oOnline = (state.online_orders || []).find(o => o.id === oid || o.order_number === oid);
+        const oProd = (state.orders || []).find(o => o.id === oid || o.order_number === oid);
+        if (oOnline) {
+            linkedOrders.push({
+                id: oOnline.id,
+                order_number: oOnline.order_number,
+                type: "ONLINE",
+                typeName: "Bán hàng Online",
+                date: oOnline.created_at || "",
+                total_amount: Number(oOnline.total_amount || 0),
+                items: (oOnline.items || []).map(i => ({
+                    sku: i.sku,
+                    name: i.name || i.sku,
+                    spec: i.brand || "Sản phẩm thương mại",
+                    unit: "Chiếc",
+                    qty: i.qty || 1,
+                    price: i.price || (i.qty ? Math.round(oOnline.total_amount / i.qty) : oOnline.total_amount),
+                    amount: (i.qty || 1) * (i.price || 0)
+                }))
+            });
+        } else if (oProd) {
+            linkedOrders.push({
+                id: oProd.id,
+                order_number: oProd.order_number,
+                type: "PRODUCTION",
+                typeName: "Sản xuất gia công",
+                date: oProd.created_at || oProd.order_date || "",
+                total_amount: Number(oProd.total_amount || 0),
+                items: [{
+                    sku: oProd.order_number,
+                    name: oProd.name || "Sản xuất in ấn",
+                    spec: oProd.print_spec || "Theo quy cách thiết kế",
+                    unit: "Bộ/Quyển",
+                    qty: oProd.quantity || 1,
+                    price: oProd.unit_price || oProd.total_amount,
+                    amount: Number(oProd.total_amount || 0)
+                }]
+            });
+        }
+    });
+
+    // If no linked orders found from state, generate synthesized line from contract details
+    if (linkedOrders.length === 0) {
+        linkedOrders.push({
+            id: c.id,
+            order_number: (c.order_numbers && c.order_numbers[0]) || "DON-001",
+            type: c.order_type || "PRODUCTION",
+            typeName: c.order_type === "ONLINE" ? "Bán hàng Online" : "Sản xuất gia công",
+            date: c.signing_date || new Date().toISOString().split('T')[0],
+            total_amount: Number(c.value || 0),
+            items: [{
+                sku: (c.order_numbers && c.order_numbers[0]) || "DON-001",
+                name: c.details || "Hàng hóa & Dịch vụ in ấn thương mại",
+                spec: "Theo thỏa thuận hợp đồng",
+                unit: "Trọn gói",
+                qty: 1,
+                price: Number(c.value || 0),
+                amount: Number(c.value || 0)
+            }]
+        });
+    }
+
+    const titleEl = document.getElementById("commercialDocModalTitle");
+    const subTitleEl = document.getElementById("commercialDocModalSubtitle");
+    if (titleEl) titleEl.textContent = `Bộ Hồ Sơ Văn Bản: ${c.contract_number}`;
+    if (subTitleEl) subTitleEl.textContent = `Đối tác: ${partner.company_name || partner.name} | Trị giá: ${formatMoney(c.value)} | Ngày: ${c.signing_date}`;
+
+    window.switchCommercialDocTab(docType);
+    openModal("commercialDocsModal");
+    if (window.lucide) lucide.createIcons();
+};
+
+window.switchCommercialDocTab = function(docType) {
+    window.activeCommercialDocType = docType;
+
+    const tabs = [
+        { id: 'tabDocContract', type: 'CONTRACT' },
+        { id: 'tabDocDelivery', type: 'DELIVERY' },
+        { id: 'tabDocLiquidation', type: 'LIQUIDATION' },
+        { id: 'tabDocPayment', type: 'PAYMENT' }
+    ];
+
+    tabs.forEach(t => {
+        const btn = document.getElementById(t.id);
+        if (btn) {
+            if (t.type === docType) {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
+        }
+    });
+
+    const c = (state.contracts || []).find(item => item.id === window.activeCommercialContractId);
+    if (!c) return;
+
+    const partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id) || {
+        name: c.customer_name || "Khách hàng đối tác",
+        company_name: c.customer_name || "Công ty Đối tác",
+        tax_code: "Đang cập nhật",
+        phone: "",
+        address: "Hà Nội"
+    };
+
+    const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
+    const linkedOrders = [];
+
+    orderIds.forEach(oid => {
+        const oOnline = (state.online_orders || []).find(o => o.id === oid || o.order_number === oid);
+        const oProd = (state.orders || []).find(o => o.id === oid || o.order_number === oid);
+        if (oOnline) {
+            linkedOrders.push({
+                id: oOnline.id,
+                order_number: oOnline.order_number,
+                type: "ONLINE",
+                typeName: "Bán hàng Online",
+                date: oOnline.created_at || "",
+                total_amount: Number(oOnline.total_amount || 0),
+                items: (oOnline.items || []).map(i => ({
+                    sku: i.sku,
+                    name: i.name || i.sku,
+                    spec: i.brand || "Sản phẩm thương mại",
+                    unit: "Chiếc",
+                    qty: i.qty || 1,
+                    price: i.price || (i.qty ? Math.round(oOnline.total_amount / i.qty) : oOnline.total_amount),
+                    amount: (i.qty || 1) * (i.price || 0)
+                }))
+            });
+        } else if (oProd) {
+            linkedOrders.push({
+                id: oProd.id,
+                order_number: oProd.order_number,
+                type: "PRODUCTION",
+                typeName: "Sản xuất gia công",
+                date: oProd.created_at || oProd.order_date || "",
+                total_amount: Number(oProd.total_amount || 0),
+                items: [{
+                    sku: oProd.order_number,
+                    name: oProd.name || "Sản xuất in ấn",
+                    spec: oProd.print_spec || "Theo quy cách thiết kế",
+                    unit: "Bộ/Quyển",
+                    qty: oProd.quantity || 1,
+                    price: oProd.unit_price || oProd.total_amount,
+                    amount: Number(oProd.total_amount || 0)
+                }]
+            });
+        }
+    });
+
+    if (linkedOrders.length === 0) {
+        linkedOrders.push({
+            id: c.id,
+            order_number: (c.order_numbers && c.order_numbers[0]) || "DON-001",
+            type: c.order_type || "PRODUCTION",
+            typeName: c.order_type === "ONLINE" ? "Bán hàng Online" : "Sản xuất gia công",
+            date: c.signing_date || new Date().toISOString().split('T')[0],
+            total_amount: Number(c.value || 0),
+            items: [{
+                sku: (c.order_numbers && c.order_numbers[0]) || "DON-001",
+                name: c.details || "Hàng hóa & Dịch vụ in ấn thương mại",
+                spec: "Theo thỏa thuận hợp đồng",
+                unit: "Trọn gói",
+                qty: 1,
+                price: Number(c.value || 0),
+                amount: Number(c.value || 0)
+            }]
+        });
+    }
+
+    const paperEl = document.getElementById("commercialDocPaperContent");
+    if (!paperEl) return;
+
+    paperEl.innerHTML = window.renderCommercialDocContent(c, partner, linkedOrders, docType);
+    if (window.lucide) lucide.createIcons();
+};
+
+window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) {
+    const isOnline = c.order_type === "ONLINE";
+    const totalAmount = Number(c.value || 0);
+    const depositAmount = Number(c.deposit || 0);
+    const remainingAmount = Math.max(0, totalAmount - depositAmount);
+    const amountInWords = window.docSoThanhChu(totalAmount);
+    const depositPercent = totalAmount > 0 ? Math.round((depositAmount / totalAmount) * 100) : 0;
+    
+    const signDate = c.signing_date ? new Date(c.signing_date) : new Date();
+    const day = String(signDate.getDate()).padStart(2, '0');
+    const month = String(signDate.getMonth() + 1).padStart(2, '0');
+    const year = signDate.getFullYear();
+
+    // Flatten all items from linked orders
+    let allItems = [];
+    linkedOrders.forEach(ord => {
+        (ord.items || []).forEach(it => {
+            allItems.push({
+                order_number: ord.order_number,
+                sku: it.sku,
+                name: it.name,
+                spec: it.spec,
+                unit: it.unit || "Cái",
+                qty: it.qty || 1,
+                price: it.price || 0,
+                amount: it.amount || (it.qty * it.price) || 0
+            });
+        });
+    });
+
+    if (allItems.length === 0) {
+        allItems.push({
+            order_number: c.contract_number,
+            sku: "SP-01",
+            name: c.details || "Hàng hóa sản xuất in ấn",
+            spec: "Đúng thỏa thuận chất lượng",
+            unit: "Trọn gói",
+            qty: 1,
+            price: totalAmount,
+            amount: totalAmount
+        });
+    }
+
+    // Common Legal Header
+    const nationalHeaderHtml = `
+        <table class="doc-header-table">
+            <tr>
+                <td style="width: 50%;">
+                    <div class="doc-header-company">
+                        <strong>CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong>
+                        <div>Địa chỉ: Số 14 Pháo Đài Láng, P. Láng Thượng, Q. Đống Đa, Hà Nội</div>
+                        <div>MST: 0108993214 - Hotline: 0907.861.111</div>
+                        <div>Email: info@inlachong.com - Web: inlachong.com</div>
+                    </div>
+                </td>
+                <td style="width: 50%;">
+                    <div class="doc-header-national">
+                        <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
+                        <div style="font-weight:700;">Độc lập - Tự do - Hạnh phúc</div>
+                        <div class="underline"></div>
+                        <div style="margin-top:6px; font-style:italic; font-size:11pt;">Hà Nội, ngày ${day} tháng ${month} năm ${year}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    `;
+
+    // Party Information Block
+    const partyInfoHtml = `
+        <div class="doc-parties-box">
+            <div class="doc-party-block">
+                <div class="doc-party-title">BÊN A (BÊN BÁN / BÊN NHẬN SẢN XUẤT): CÔNG TY CỔ PHẦN IN LẠC HỒNG</div>
+                <div class="doc-field-row"><span class="doc-field-label">• Đại diện pháp luật:</span><span class="doc-field-val"><strong>${escapeHtml(c.signer || "Ông Bùi Đại Hùng")}</strong> - Chức vụ: Giám đốc</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Mã số thuế (MST):</span><span class="doc-field-val">0108993214</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Địa chỉ trụ sở:</span><span class="doc-field-val">Số 14 Pháo Đài Láng, P. Láng Thượng, Q. Đống Đa, TP. Hà Nội</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Điện thoại liên hệ:</span><span class="doc-field-val">0907.861.111 / 0988.776.655</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Tài khoản ngân hàng:</span><span class="doc-field-val"><strong>190345678901</strong> tại Ngân hàng Techcombank - CN Ba Đình</span></div>
+            </div>
+
+            <div class="doc-party-block" style="margin-top:10px;">
+                <div class="doc-party-title">BÊN B (BÊN MUA / BÊN ĐẶT HÀNG): ${escapeHtml(partner.company_name || partner.name || "KHÁCH HÀNG ĐỐI TÁC")}</div>
+                <div class="doc-field-row"><span class="doc-field-label">• Người đại diện:</span><span class="doc-field-val"><strong>${escapeHtml(partner.legal_representative || partner.contact_person || partner.name || "Đại diện theo pháp luật")}</strong> - Chức vụ: ${escapeHtml(partner.representative_position || partner.position || "Đại diện theo pháp luật")}</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Mã số thuế (MST):</span><span class="doc-field-val"><strong>${escapeHtml(partner.tax_code || "Chưa cập nhật / Khách cá nhân")}</strong></span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Địa chỉ ĐKKD xuất hóa đơn:</span><span class="doc-field-val">${escapeHtml(partner.billing_address || partner.address || "Theo thỏa thuận giao dịch")}</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Địa chỉ nhận hàng (Kho):</span><span class="doc-field-val">${escapeHtml(partner.shipping_address || partner.address || "Theo thỏa thuận giao nhận")}</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">• Điện thoại & Email:</span><span class="doc-field-val">${escapeHtml(partner.phone || "Chưa cập nhật")} ${partner.billing_email || partner.email ? `• Email: ${escapeHtml(partner.billing_email || partner.email)}` : ''}</span></div>
+                ${partner.bank_account_no ? `<div class="doc-field-row"><span class="doc-field-label">• Tài khoản ngân hàng:</span><span class="doc-field-val"><strong>${escapeHtml(partner.bank_account_no)}</strong> tại Ngân hàng ${escapeHtml(partner.bank_name || "")} ${partner.bank_branch ? `- CN: ${escapeHtml(partner.bank_branch)}` : ''} (Chủ TK: ${escapeHtml(partner.bank_account_holder || partner.company_name || partner.name)})</span></div>` : ''}
+            </div>
+        </div>
+    `;
+
+    // 1. CONTRACT TEMPLATE
+    if (docType === 'CONTRACT') {
+        const itemsRowsHtml = allItems.map((item, idx) => `
+            <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="text-align:center; font-weight:700;">${escapeHtml(item.order_number)}</td>
+                <td><strong>${escapeHtml(item.name)}</strong><br><small style="color:#475569;">${escapeHtml(item.spec)}</small></td>
+                <td style="text-align:center;">${escapeHtml(item.unit)}</td>
+                <td style="text-align:center; font-weight:700;">${item.qty}</td>
+                <td style="text-align:right;">${formatMoney(item.price)}</td>
+                <td style="text-align:right; font-weight:700;">${formatMoney(item.amount)}</td>
+            </tr>
+        `).join("");
+
+        return `
+            ${nationalHeaderHtml}
+            <div class="doc-title-box">
+                <h1 class="doc-main-title">HỢP ĐỒNG KINH TẾ</h1>
+                <div class="doc-sub-number">Số: ${escapeHtml(c.contract_number)} / HĐKT-IHP</div>
+                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">V/v: ${isOnline ? 'Mua bán và cung ứng hàng hóa thành phẩm' : 'Sản xuất, gia công in ấn và bao bì thương mại'}</div>
+            </div>
+
+            <p class="doc-clause-p" style="font-style:italic;">- Căn cứ Bộ luật Dân sự số 91/2015/QH13 ngày 24/11/2015;<br>- Căn cứ Luật Thương mại số 36/2005/QH11 ngày 14/06/2005;<br>- Căn cứ vào nhu cầu của Bên B và năng lực cung ứng của Bên A.</p>
+            
+            ${partyInfoHtml}
+
+            <p class="doc-clause-p">Sau khi bàn bạc, trao đổi, hai bên đồng ý thống nhất ký kết Hợp đồng kinh tế với các điều khoản cụ thể sau đây:</p>
+
+            <div class="doc-clause-title">ĐIỀU 1: ĐỐI TƯỢNG HỢP ĐỒNG & DANH MỤC ĐƠN HÀNG LIÊN KẾT</div>
+            <p class="doc-clause-p">Bên A đồng ý sản xuất, cung cấp và Bên B đồng ý đặt mua các mặt hàng theo chi tiết các đơn hàng đính kèm:</p>
+            
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">STT</th>
+                        <th style="width: 17%;">Mã đơn</th>
+                        <th style="width: 38%;">Tên hàng hóa & Quy cách sản xuất</th>
+                        <th style="width: 8%;">ĐVT</th>
+                        <th style="width: 8%;">SL</th>
+                        <th style="width: 12%;">Đơn giá (đ)</th>
+                        <th style="width: 12%;">Thành tiền (đ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${itemsRowsHtml}
+                    <tr style="background:#f8fafc; font-weight:700;">
+                        <td colspan="6" style="text-align:right; text-transform:uppercase;">Tổng cộng giá trị hàng hóa:</td>
+                        <td style="text-align:right; color:#0e7542;">${formatMoney(totalAmount)} đ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="doc-clause-title">ĐIỀU 2: GIÁ TRỊ HỢP ĐỒNG & PHƯƠNG THỨC THANH TOÁN</div>
+            <p class="doc-clause-p"><strong>2.1. Tổng giá trị hợp đồng:</strong> <strong>${formatMoney(totalAmount)} VNĐ</strong></p>
+            <p class="doc-clause-p"><strong>Bằng chữ:</strong> <em>${amountInWords}</em></p>
+            <p class="doc-clause-p"><strong>2.2. Tiến độ thanh toán:</strong></p>
+            <p class="doc-clause-p">- <strong>Đợt 1 (Tạm ứng/Đặt cọc):</strong> Bên B tạm ứng cho Bên A số tiền: <strong>${formatMoney(depositAmount)} VNĐ</strong> (${depositPercent}% giá trị hợp đồng) ngay sau khi ký hợp đồng.</p>
+            <p class="doc-clause-p">- <strong>Đợt 2 (Thanh toán số tiền còn lại):</strong> Bên B thanh toán nốt số tiền còn lại: <strong>${formatMoney(remainingAmount)} VNĐ</strong> ngay sau khi Bên A giao hàng và hai Bên ký Biên bản giao nhận & nghiệm thu.</p>
+            <p class="doc-clause-p"><strong>2.3. Hình thức thanh toán:</strong> Chuyển khoản qua tài khoản ngân hàng của Bên A nêu tại phần đầu hợp đồng.</p>
+
+            <div class="doc-clause-title">ĐIỀU 3: THỜI GIAN, ĐỊA ĐIỂM & PHƯƠNG THỨC GIAO HÀNG</div>
+            <p class="doc-clause-p"><strong>3.1. Địa điểm giao hàng:</strong> Tại địa chỉ của Bên B: ${escapeHtml(partner.address || partner.billing_address || 'Địa chỉ bên mua chỉ định')}.</p>
+            <p class="doc-clause-p"><strong>3.2. Thời gian giao hàng:</strong> Dự kiến hoàn thành trước ngày <strong>${c.expiry_date ? new Date(c.expiry_date).toLocaleDateString('vi-VN') : 'theo tiến độ đơn hàng'}</strong>.</p>
+            <p class="doc-clause-p"><strong>3.3. Chi phí vận chuyển:</strong> Bên A chịu trách nhiệm đóng gói bao bì quy chuẩn và vận chuyển hàng hóa đến tận nơi cho Bên B.</p>
+
+            <div class="doc-clause-title">ĐIỀU 4: TIÊU CHUẨN KỸ THUẬT, BẢO HÀNH & ĐỔI TRẢ</div>
+            <p class="doc-clause-p"><strong>4.1. Tiêu chuẩn chất lượng:</strong> Sản phẩm được sản xuất đúng mẫu market, kích thước, định lượng giấy, kỹ thuật gia công và chất lượng in ấn theo đúng cam kết.</p>
+            <p class="doc-clause-p"><strong>4.2. Bảo hành & Đổi trả:</strong> Khi nhận hàng, Bên B có quyền kiểm tra đối chiếu. Trường hợp hàng hóa bị lỗi kỹ thuật do Bên A (in sai nội dung, lỗi dán bế, hư hỏng trong quá trình vận chuyển), Bên A cam kết sản xuất bù hoặc đổi mới 100% trong thời gian 03 ngày làm việc mà không thu thêm bất kỳ phụ phí nào.</p>
+
+            <div class="doc-clause-title">ĐIỀU 5: ĐIỀU KHOẢN CHUNG & HIỆU LỰC HỢP ĐỒNG</div>
+            <p class="doc-clause-p">5.1. Hai bên cam kết thực hiện đúng và đầy đủ các điều khoản đã thỏa thuận trong hợp đồng.</p>
+            <p class="doc-clause-p">5.2. Mọi tranh chấp phát sinh trong quá trình thực hiện sẽ được ưu tiên giải quyết bằng thương lượng. Trường hợp không thể thương lượng được, vụ việc sẽ được đưa ra Tòa án nhân dân có thẩm quyền tại TP. Hà Nội để phân xử theo pháp luật Việt Nam.</p>
+            <p class="doc-clause-p">5.3. Hợp đồng này được lập thành 02 (hai) bản có giá trị pháp lý như nhau, Bên A giữ 01 bản, Bên B giữ 01 bản để theo dõi thực hiện.</p>
+
+            <div class="doc-sign-box">
+                <table class="doc-sign-table">
+                    <tr>
+                        <td>
+                            <strong>ĐẠI DIỆN BÊN A</strong><br>
+                            <span>(Ký, ghi rõ họ tên và đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(c.signer || "Bùi Đại Hùng")}</strong>
+                        </td>
+                        <td>
+                            <strong>ĐẠI DIỆN BÊN B</strong><br>
+                            <span>(Ký, ghi rõ họ tên và đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(partner.contact_person || partner.name || "Đại diện Bên B")}</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        `;
+    }
+
+    // 2. DELIVERY & ACCEPTANCE ACT TEMPLATE
+    if (docType === 'DELIVERY') {
+        const itemsRowsHtml = allItems.map((item, idx) => `
+            <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="text-align:center; font-weight:700;">${escapeHtml(item.order_number)}</td>
+                <td><strong>${escapeHtml(item.name)}</strong> - ${escapeHtml(item.spec)}</td>
+                <td style="text-align:center;">${escapeHtml(item.unit)}</td>
+                <td style="text-align:center; font-weight:700;">${item.qty}</td>
+                <td style="text-align:center; font-weight:700; color:#0e7542;">${item.qty}</td>
+                <td style="text-align:center; color:#0e7542; font-weight:600;">Đạt 100%</td>
+            </tr>
+        `).join("");
+
+        return `
+            ${nationalHeaderHtml}
+            <div class="doc-title-box">
+                <h1 class="doc-main-title">BIÊN BẢN GIAO NHẬN HÀNG HÓA & NGHIỆM THU KỸ THUẬT</h1>
+                <div class="doc-sub-number">Số: BBGN-${escapeHtml(c.contract_number)}</div>
+                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">Căn cứ theo Hợp đồng kinh tế số: ${escapeHtml(c.contract_number)} ký ngày ${day}/${month}/${year}</div>
+            </div>
+
+            <p class="doc-clause-p">Hôm nay, ngày ${day} tháng ${month} năm ${year}, tại địa điểm giao hàng của Bên B, chúng tôi gồm có:</p>
+            
+            ${partyInfoHtml}
+
+            <div class="doc-clause-title">I. BẢNG KÊ CHI TIẾT HÀNG HÓA BÀN GIAO THỰC TẾ</div>
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">STT</th>
+                        <th style="width: 17%;">Mã đơn</th>
+                        <th style="width: 44%;">Tên hàng hóa & Quy cách bàn giao</th>
+                        <th style="width: 8%;">ĐVT</th>
+                        <th style="width: 8%;">SL HĐ</th>
+                        <th style="width: 8%;">SL Giao</th>
+                        <th style="width: 10%;">Tình trạng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${itemsRowsHtml}
+                </tbody>
+            </table>
+
+            <div class="doc-clause-title">II. NỘI DUNG NGHIỆM THU & ĐÁNH GIÁ CHẤT LƯỢNG</div>
+            <p class="doc-clause-p">1. Bên B đã tiến hành kiểm tra, đối chiếu trực tiếp số lượng và quy cách toàn bộ kiện hàng do Bên A bàn giao.</p>
+            <p class="doc-clause-p">2. <strong>Kết luận nghiệm thu:</strong> Toàn bộ hàng hóa đạt tiêu chuẩn 100%, đúng mẫu mã thiết kế, in ấn sắc nét, đúng định lượng và kích thước quy chuẩn. Đóng thùng bao bì nguyên vẹn, không có hiện tượng ẩm ướt hay biến dạng.</p>
+            <p class="doc-clause-p">3. Bên B đồng ý tiếp nhận đủ 100% số lượng hàng hóa nói trên và không có bất kỳ khiếu nại nào về chất lượng sản phẩm.</p>
+            <p class="doc-clause-p">4. Biên bản này là căn cứ pháp lý để hai bên thực hiện các thủ tục quyết toán và thanh lý hợp đồng kinh tế theo quy định.</p>
+
+            <div class="doc-sign-box">
+                <table class="doc-sign-table">
+                    <tr>
+                        <td style="width:25%;">
+                            <strong>NGƯỜI GIAO HÀNG</strong><br>
+                            <span>(Ký, ghi rõ họ tên)</span>
+                            <div class="doc-sign-space"></div>
+                            <span>Nguyễn Văn Giao</span>
+                        </td>
+                        <td style="width:25%;">
+                            <strong>ĐẠI DIỆN BÊN A</strong><br>
+                            <span>(Ký, ghi rõ họ tên & đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(c.signer || "Bùi Đại Hùng")}</strong>
+                        </td>
+                        <td style="width:25%;">
+                            <strong>NGƯỜI NHẬN HÀNG</strong><br>
+                            <span>(Ký, ghi rõ họ tên)</span>
+                            <div class="doc-sign-space"></div>
+                            <span>Nguyễn Văn Nhận</span>
+                        </td>
+                        <td style="width:25%;">
+                            <strong>ĐẠI DIỆN BÊN B</strong><br>
+                            <span>(Ký, ghi rõ họ tên & đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(partner.contact_person || partner.name || "Đại diện Bên B")}</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        `;
+    }
+
+    // 3. LIQUIDATION ACT TEMPLATE
+    if (docType === 'LIQUIDATION') {
+        return `
+            ${nationalHeaderHtml}
+            <div class="doc-title-box">
+                <h1 class="doc-main-title">BIÊN BẢN THANH LÝ HỢP ĐỒNG KINH TẾ</h1>
+                <div class="doc-sub-number">Số: BBTL-${escapeHtml(c.contract_number)}</div>
+                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">Căn cứ theo Hợp đồng kinh tế số: ${escapeHtml(c.contract_number)} ký ngày ${day}/${month}/${year}</div>
+            </div>
+
+            <p class="doc-clause-p">- Căn cứ Hợp đồng kinh tế số ${escapeHtml(c.contract_number)} ký ngày ${day}/${month}/${year};<br>- Căn cứ Biên bản giao nhận hàng hóa và nghiệm thu thực tế giữa hai Bên.</p>
+            
+            ${partyInfoHtml}
+
+            <p class="doc-clause-p">Hai bên cùng nhau tiến hành lập Biên bản thanh lý Hợp đồng kinh tế nêu trên với các nội dung sau:</p>
+
+            <div class="doc-clause-title">ĐIỀU 1: XÁC NHẬN NGHĨA VỤ GIAO NHẬN HÀNG HÓA</div>
+            <p class="doc-clause-p">1.1. Bên A đã hoàn thành toàn bộ việc sản xuất, đóng gói và bàn giao đầy đủ 100% số lượng sản phẩm hàng hóa theo đúng quy định tại Hợp đồng kinh tế số ${escapeHtml(c.contract_number)}.</p>
+            <p class="doc-clause-p">1.2. Bên B đã tiếp nhận đầy đủ hàng hóa theo Biên bản giao nhận và xác nhận hàng hóa đạt tiêu chuẩn chất lượng.</p>
+
+            <div class="doc-clause-title">ĐIỀU 2: ĐỐI CHIẾU QUYẾT TOÁN TÀI CHÍNH & CÔNG NỢ</div>
+            <p class="doc-clause-p"><strong>2.1. Tổng giá trị Hợp đồng:</strong> <strong>${formatMoney(totalAmount)} VNĐ</strong></p>
+            <p class="doc-clause-p"><em>(Bằng chữ: ${amountInWords})</em></p>
+            <p class="doc-clause-p"><strong>2.2. Số tiền Bên B đã thanh toán cho Bên A:</strong> <strong>${formatMoney(depositAmount)} VNĐ</strong></p>
+            <p class="doc-clause-p"><strong>2.3. Số tiền Bên B thanh toán đợt thanh lý:</strong> <strong>${formatMoney(remainingAmount)} VNĐ</strong></p>
+            <p class="doc-clause-p"><strong>2.4. Tình trạng công nợ:</strong> Hai bên xác nhận sau khi Bên B thanh toán đầy đủ số tiền trên, hai bên đã hoàn tất toàn bộ nghĩa vụ tài chính liên quan đến Hợp đồng số ${escapeHtml(c.contract_number)}, không còn vướng mắc hay khiếu nại công nợ.</p>
+
+            <div class="doc-clause-title">ĐIỀU 3: HIỆU LỰC THANH LÝ</div>
+            <p class="doc-clause-p">3.1. Hai bên nhất trí thanh lý và giải phóng mọi quyền, nghĩa vụ ràng buộc tại Hợp đồng kinh tế số ${escapeHtml(c.contract_number)}.</p>
+            <p class="doc-clause-p">3.2. Biên bản này được lập thành 02 (hai) bản có giá trị pháp lý như nhau, mỗi Bên giữ 01 bản làm chứng từ quyết toán kế toán.</p>
+
+            <div class="doc-sign-box">
+                <table class="doc-sign-table">
+                    <tr>
+                        <td>
+                            <strong>ĐẠI DIỆN BÊN A</strong><br>
+                            <span>(Ký, ghi rõ họ tên và đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(c.signer || "Bùi Đại Hùng")}</strong>
+                        </td>
+                        <td>
+                            <strong>ĐẠI DIỆN BÊN B</strong><br>
+                            <span>(Ký, ghi rõ họ tên và đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(partner.contact_person || partner.name || "Đại diện Bên B")}</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        `;
+    }
+
+    // 4. PAYMENT REQUEST TEMPLATE
+    if (docType === 'PAYMENT') {
+        const paymentDue = remainingAmount > 0 ? remainingAmount : totalAmount;
+        const paymentWords = window.docSoThanhChu(paymentDue);
+
+        return `
+            ${nationalHeaderHtml}
+            <div class="doc-title-box">
+                <h1 class="doc-main-title">GIẤY ĐỀ NGHỊ THANH TOÁN</h1>
+                <div class="doc-sub-number">Số: DNTT-${escapeHtml(c.contract_number)}</div>
+                <div style="font-size:12pt; font-weight:700; margin-top:4px;">Kính gửi: Ban Giám đốc & Phòng Kế toán - ${escapeHtml(partner.company_name || partner.name)}</div>
+            </div>
+
+            <p class="doc-clause-p">- Căn cứ Hợp đồng kinh tế số: <strong>${escapeHtml(c.contract_number)}</strong> ký ngày ${day}/${month}/${year};<br>- Căn cứ tiến độ giao nhận hàng hóa và đối chiếu công nợ giữa hai bên.</p>
+
+            <p class="doc-clause-p">Công ty Cổ phần In Lạc Hồng trân trọng kính đề nghị Quý Công ty thanh toán kinh phí theo nội dung chi tiết dưới đây:</p>
+
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">STT</th>
+                        <th style="width: 48%;">Nội dung thanh toán</th>
+                        <th style="width: 22%;">Căn cứ / Đơn hàng</th>
+                        <th style="width: 22%;">Số tiền đề nghị (VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center;">1</td>
+                        <td><strong>Thanh toán chi phí theo Hợp đồng số ${escapeHtml(c.contract_number)}</strong><br><small style="color:#475569;">${depositAmount > 0 ? 'Quyết toán số tiền còn lại sau khi bàn giao nghiệm thu hàng hóa' : 'Thanh toán tiền tạm ứng thực hiện đơn hàng'}</small></td>
+                        <td style="text-align:center; font-weight:600;">${(c.order_numbers && c.order_numbers.join(', ')) || c.contract_number}</td>
+                        <td style="text-align:right; font-weight:700; color:#0e7542;">${formatMoney(paymentDue)} đ</td>
+                    </tr>
+                    <tr style="background:#f8fafc; font-weight:700;">
+                        <td colspan="3" style="text-align:right; text-transform:uppercase;">Tổng số tiền đề nghị thanh toán:</td>
+                        <td style="text-align:right; font-size:13pt; color:#dc2626;">${formatMoney(paymentDue)} đ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="doc-clause-p"><strong>Số tiền bằng chữ:</strong> <em>${paymentWords}</em></p>
+
+            <div class="doc-clause-title" style="margin-top:16px;">THÔNG TIN TÀI KHOẢN THỤ HƯỞNG:</div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px 16px; margin:10px 0 16px 0; font-size:12pt; line-height:1.6;">
+                <div>• Tên đơn vị thụ hưởng: <strong>CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong></div>
+                <div>• Số tài khoản: <strong style="font-size:13pt; color:#0e7542;">190345678901</strong></div>
+                <div>• Tại ngân hàng: <strong>Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank) - Chi nhánh Ba Đình</strong></div>
+                <div>• Nội dung chuyển tiền: <strong>Thanh toan hop dong ${escapeHtml(c.contract_number)} - ${escapeHtml(partner.code || partner.name)}</strong></div>
+            </div>
+
+            <p class="doc-clause-p">Kính đề nghị Quý Công ty hỗ trợ giải ngân thanh toán trước ngày <strong>${new Date(Date.now() + 5*86400000).toLocaleDateString('vi-VN')}</strong> để hoàn tất chứng từ sổ sách.</p>
+            <p class="doc-clause-p">Trân trọng cảm ơn sự hợp tác của Quý khách hàng!</p>
+
+            <div class="doc-sign-box">
+                <table class="doc-sign-table">
+                    <tr>
+                        <td style="width:33%;">
+                            <strong>NGƯỜI LẬP BIỂU</strong><br>
+                            <span>(Ký, ghi rõ họ tên)</span>
+                            <div class="doc-sign-space"></div>
+                            <span>Phạm Thị Mai</span>
+                        </td>
+                        <td style="width:33%;">
+                            <strong>KẾ TOÁN TRƯỞNG</strong><br>
+                            <span>(Ký, ghi rõ họ tên)</span>
+                            <div class="doc-sign-space"></div>
+                            <span>Hoàng Thu Hà</span>
+                        </td>
+                        <td style="width:34%;">
+                            <strong>GIÁM ĐỐC DUYỆT</strong><br>
+                            <span>(Ký, ghi rõ họ tên & đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(c.signer || "Bùi Đại Hùng")}</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        `;
+    }
+
+    return `<div style="padding:24px; text-align:center;">Văn bản đang được cập nhật...</div>`;
+};
+
+// 8. Print Commercial Document
+window.printCommercialDoc = function() {
+    const paper = document.getElementById("commercialDocPaperContent");
+    if (!paper) {
+        alert("Không tìm thấy nội dung văn bản để in!");
+        return;
+    }
+
+    const printWindow = window.open('', '_blank', 'width=900,height=750');
+    if (!printWindow) {
+        alert("Trình duyệt đã chặn cửa sổ in popup. Vui lòng cho phép popup để in văn bản!");
+        return;
+    }
+
+    printWindow.document.write('<!DOCTYPE html><html><head><title>In Văn Bản Thương Mại - In Lạc Hồng</title>');
+    printWindow.document.write(`
+        <style>
+            @page {
+                size: A4 portrait;
+                margin: 15mm 18mm 15mm 18mm;
+            }
+            * {
+                box-sizing: border-box;
+                color: #0f172a !important;
+            }
+            body {
+                font-family: 'Times New Roman', Times, serif, 'Be Vietnam Pro';
+                background: #ffffff;
+                margin: 0;
+                padding: 10px 15px;
+                font-size: 13.5pt;
+                line-height: 1.5;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            .doc-header-table td {
+                padding: 2px 4px !important;
+                border: none !important;
+                vertical-align: top !important;
+            }
+            .doc-header-company { font-size: 11pt; line-height: 1.35; }
+            .doc-header-company strong { font-size: 12pt; display: block; margin-bottom: 3px; color: #0e7542 !important; }
+            .doc-header-national { text-align: center; font-size: 11pt; line-height: 1.35; }
+            .doc-header-national strong { font-size: 11.5pt; display: block; }
+            .doc-header-national .underline { display: inline-block; width: 140px; height: 1px; background: #0f172a; margin-top: 4px; }
+            .doc-title-box { text-align: center; margin: 18px 0 22px 0; }
+            .doc-main-title { font-size: 16pt; font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0; color: #0e7542 !important; }
+            .doc-sub-number { font-size: 11pt; font-style: italic; }
+            .doc-parties-box { margin-bottom: 16px; font-size: 12pt; }
+            .doc-party-block { margin-bottom: 12px; }
+            .doc-party-title { font-weight: 700; text-transform: uppercase; font-size: 12pt; margin-bottom: 4px; color: #0e7542 !important; }
+            .doc-field-row { margin-bottom: 3px; display: flex; line-height: 1.4; }
+            .doc-field-label { min-width: 145px; font-weight: 600; }
+            .doc-field-val { flex: 1; }
+            .doc-clause-title { font-weight: 700; text-transform: uppercase; font-size: 12pt; margin: 14px 0 6px 0; color: #0e7542 !important; }
+            .doc-clause-p { margin: 0 0 5px 0; text-align: justify; line-height: 1.45; }
+            .doc-table { margin: 12px 0 14px 0 !important; font-size: 11.5pt !important; }
+            .doc-table th, .doc-table td { border: 1px solid #334155 !important; padding: 6px 8px !important; }
+            .doc-table th { background: #f1f5f9 !important; font-weight: 700 !important; text-align: center !important; }
+            .doc-sign-box { margin-top: 30px; page-break-inside: avoid; }
+            .doc-sign-table td { border: none !important; text-align: center !important; vertical-align: top !important; }
+            .doc-sign-space { height: 75px; }
+            @media print {
+                body { padding: 0; }
+                button { display: none; }
+            }
+        </style>
+    `);
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(paper.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+    }, 300);
+};
+
 
 // ==========================================================================
 // ORDER DEBT PAYMENT MODAL
@@ -32683,21 +31596,27 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("contractModalTitle").textContent = "Tạo hợp đồng kinh doanh mới";
         
         // Generate new contract code
-        const codeSuffix = String(state.contracts.length + 1).padStart(4, '0');
+        const codeSuffix = String((state.contracts || []).length + 1).padStart(4, '0');
         document.getElementById("contractNumber").value = `HĐ-202606-${codeSuffix}`;
         document.getElementById("contractSigningDate").value = new Date().toISOString().split('T')[0];
+        document.getElementById("contractSigner").value = "Bùi Đại Hùng - Giám đốc";
         
         populateContractPartners();
-        populateContractOrders();
+        populateContractOrders([]);
         openModal("contractModal");
+        if (window.lucide) lucide.createIcons();
     });
 
     document.getElementById("btnCloseContractModal")?.addEventListener("click", () => closeModal("contractModal"));
     document.getElementById("btnCancelContract")?.addEventListener("click", () => closeModal("contractModal"));
     
-    document.getElementById("contractPartnerId")?.addEventListener("change", populateContractOrders);
-    document.getElementById("contractOrderType")?.addEventListener("change", populateContractOrders);
-    document.getElementById("contractOrderId")?.addEventListener("change", updateContractValueField);
+    document.getElementById("contractPartnerId")?.addEventListener("change", () => {
+        populateContractOrders([]);
+    });
+    document.getElementById("contractOrderType")?.addEventListener("change", () => {
+        const checkedIds = Array.from(document.querySelectorAll("input[name='contractOrderIds']:checked")).map(cb => cb.value);
+        populateContractOrders(checkedIds);
+    });
 
     document.getElementById("contractForm")?.addEventListener("submit", function(e) {
         e.preventDefault();
@@ -32705,17 +31624,41 @@ document.addEventListener("DOMContentLoaded", () => {
         const number = document.getElementById("contractNumber").value;
         const signingDate = document.getElementById("contractSigningDate").value;
         const partnerId = document.getElementById("contractPartnerId").value;
-        const orderType = document.getElementById("contractOrderType").value;
-        const orderId = document.getElementById("contractOrderId").value;
+        const orderType = document.getElementById("contractOrderType").value || "ALL";
+        
+        // Selected orders
+        const checkedBoxes = Array.from(document.querySelectorAll("input[name='contractOrderIds']:checked"));
+        const orderIds = checkedBoxes.map(cb => cb.value);
+        const orderNumbers = checkedBoxes.map(cb => cb.getAttribute("data-number") || cb.value);
+        const primaryOrderId = orderIds[0] || "";
+
         const value = parseInt(document.getElementById("contractValue").value) || 0;
-        const status = document.getElementById("contractStatus").value;
+        const deposit = parseInt(document.getElementById("contractDeposit").value) || 0;
+        const expiryDate = document.getElementById("contractExpiryDate").value || "";
+        const signer = document.getElementById("contractSigner").value || "Bùi Đại Hùng - Giám đốc";
+        const status = document.getElementById("contractStatus").value || "ACTIVE";
         const details = document.getElementById("contractDetails").value;
 
         if (id) {
             // Edit
-            const newContracts = state.contracts.map(c => {
+            const newContracts = (state.contracts || []).map(c => {
                 if (c.id === id) {
-                    return { ...c, contract_number: number, signing_date: signingDate, partner_id: partnerId, order_type: orderType, order_id: orderId, value, status, details };
+                    return { 
+                        ...c, 
+                        contract_number: number, 
+                        signing_date: signingDate, 
+                        partner_id: partnerId, 
+                        order_type: orderType, 
+                        order_ids: orderIds,
+                        order_numbers: orderNumbers,
+                        order_id: primaryOrderId, 
+                        value, 
+                        deposit,
+                        expiry_date: expiryDate,
+                        signer,
+                        status, 
+                        details 
+                    };
                 }
                 return c;
             });
@@ -32729,20 +31672,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 signing_date: signingDate,
                 partner_id: partnerId,
                 order_type: orderType,
-                order_id: orderId,
+                order_ids: orderIds,
+                order_numbers: orderNumbers,
+                order_id: primaryOrderId,
                 value,
+                deposit,
+                expiry_date: expiryDate,
+                signer,
                 status,
                 details
             };
-            const newContracts = [newContract, ...state.contracts];
+            const newContracts = [newContract, ...(state.contracts || [])];
             state.updateState("contracts", newContracts);
         }
 
         closeModal("contractModal");
         renderContracts();
-        renderCRM();
-        renderFinance();
-        if (selectedCrmPartnerId) {
+        if (typeof renderCRM === 'function') renderCRM();
+        if (typeof renderFinance === 'function') renderFinance();
+        if (typeof selectedCrmPartnerId !== 'undefined' && selectedCrmPartnerId && typeof renderCrmDetailSubtabs === 'function') {
             renderCrmDetailSubtabs(selectedCrmPartnerId);
         }
     });
@@ -34705,31 +33653,114 @@ window.viewPartnerBillingDetails = function(partnerId) {
 
     const titleEl = document.getElementById("billingQuickViewModalTitle");
     if (titleEl) {
-        titleEl.textContent = `Thông tin hóa đơn VAT - ${partner.name} (${partner.code})`;
+        titleEl.textContent = `Hồ sơ Pháp lý & Hóa đơn VAT - ${partner.name} (${partner.code})`;
     }
 
     const bodyEl = document.getElementById("billingQuickViewModalBody");
     if (bodyEl) {
+        const roleLabels = { CUSTOMER: "Khách hàng", SUPPLIER: "Nhà cung cấp", SUBCONTRACTOR: "Đơn vị gia công", BOTH: "Khách hàng & NCC" };
+        const bTypeLabels = { ENTERPRISE: "🏢 Doanh nghiệp", HOUSEHOLD: "🏪 Hộ kinh doanh", INDIVIDUAL: "👤 Cá nhân" };
+        const cTypeLabels = { DIRECT: "👑 Chính chủ", AGENCY: "🏪 Đại lý", SUPPLIER: "🚚 NCC" };
+        
+        let cType = partner.customer_type;
+        if (cType === "WHOLESALE" || cType === "Khách sỉ" || cType === "SI") cType = "AGENCY";
+        else if (cType === "RETAIL" || cType === "Khách lẻ") cType = "DIRECT";
+        else if (!cType) cType = partner.role === "SUPPLIER" ? "SUPPLIER" : "DIRECT";
+
         bodyEl.innerHTML = `
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div>
-                    <strong style="color:var(--text-secondary); font-size:0.8rem; display:block; margin-bottom:4px;">TÊN CÔNG TY XUẤT HÓA ĐƠN</strong>
-                    <div style="font-weight:600; color:var(--text-primary);">${partner.company_name || '<em class="text-muted">Chưa cập nhật</em>'}</div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-hover, #f8fafc); padding:10px 14px; border-radius:8px; border:1px solid var(--border-color, #e2e8f0);">
+                    <div>
+                        <span style="font-weight:700; font-size:1.05rem; color:var(--text-primary);">${escapeHtml(partner.name)}</span>
+                        <div style="font-size:0.8rem; color:var(--text-secondary); font-family:monospace;">Mã: ${partner.code || 'N/A'} • Vai trò: ${roleLabels[partner.role] || partner.role}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <span class="badge" style="background:#ede9fe; color:#5b21b6; border:1px solid #ddd6fe; font-size:0.75rem; font-weight:600;">${cTypeLabels[cType] || cType}</span>
+                        <span class="badge badge-info" style="font-size:0.75rem;">${bTypeLabels[partner.business_type] || "🏢 Doanh nghiệp"}</span>
+                    </div>
                 </div>
-                <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px;">
-                    <strong style="color:var(--text-secondary); font-size:0.8rem; display:block; margin-bottom:4px;">MÃ SỐ THUẾ (MST)</strong>
-                    <div style="font-weight:600; color:var(--text-primary); font-family:monospace; font-size:0.95rem;">${partner.tax_code || '<em class="text-muted">Chưa cập nhật</em>'}</div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--border-color, #e2e8f0); border-radius:8px; padding:12px;">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--accent); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="receipt" style="width:14px; height:14px;"></i>
+                        <span>1. Thông tin ĐKKD & Hóa đơn VAT</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.85rem;">
+                        <div style="grid-column: span 2;">
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">TÊN CÔNG TY / ĐKKD:</span>
+                            <strong style="color:var(--text-primary); font-size:0.92rem;">${escapeHtml(partner.company_name || partner.name || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">MÃ SỐ THUẾ (MST):</span>
+                            <strong style="font-family:monospace; font-size:0.95rem; color:var(--accent);">${escapeHtml(partner.tax_code || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">EMAIL HÓA ĐƠN:</span>
+                            <strong>${escapeHtml(partner.billing_email || partner.email || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">NGƯỜI ĐẠI DIỆN:</span>
+                            <strong>${escapeHtml(partner.legal_representative || partner.contact_person || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">CHỨC DANH:</span>
+                            <strong>${escapeHtml(partner.representative_position || 'Giám đốc / Chủ hộ')}</strong>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">ĐỊA CHỈ XUẤT HÓA ĐƠN:</span>
+                            <div style="color:var(--text-primary);">${escapeHtml(partner.billing_address || partner.address || 'Chưa cập nhật')}</div>
+                        </div>
+                    </div>
                 </div>
-                <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px;">
-                    <strong style="color:var(--text-secondary); font-size:0.8rem; display:block; margin-bottom:4px;">ĐỊA CHỈ XUẤT HÓA ĐƠN</strong>
-                    <div style="font-weight:600; color:var(--text-primary);">${partner.billing_address || '<em class="text-muted">Chưa cập nhật</em>'}</div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--border-color, #e2e8f0); border-radius:8px; padding:12px;">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--accent); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="landmark" style="width:14px; height:14px;"></i>
+                        <span>2. Tài khoản Ngân hàng (Giao dịch & Thanh toán)</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.85rem;">
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">NGÂN HÀNG:</span>
+                            <strong>${escapeHtml(partner.bank_name || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">SỐ TÀI KHOẢN (STK):</span>
+                            <strong style="font-family:monospace; font-size:0.95rem; color:#0284c7;">${escapeHtml(partner.bank_account_no || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">CHỦ TÀI KHOẢN:</span>
+                            <strong style="text-transform:uppercase;">${escapeHtml(partner.bank_account_holder || partner.company_name || partner.name || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); display:block; font-size:0.75rem;">CHI NHÁNH:</span>
+                            <span>${escapeHtml(partner.bank_branch || 'Chưa cập nhật')}</span>
+                        </div>
+                    </div>
                 </div>
-                <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px;">
-                    <strong style="color:var(--text-secondary); font-size:0.8rem; display:block; margin-bottom:4px;">EMAIL NHẬN HÓA ĐƠN</strong>
-                    <div style="font-weight:600; color:var(--text-primary);">${partner.billing_email || '<em class="text-muted">Chưa cập nhật</em>'}</div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--border-color, #e2e8f0); border-radius:8px; padding:12px;">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--accent); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="map-pin" style="width:14px; height:14px;"></i>
+                        <span>3. Hệ thống Địa chỉ & Điểm giao nhận</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
+                        <div>
+                            <span style="color:var(--text-secondary); font-size:0.75rem; display:block;">ĐỊA CHỈ NHẬN / XUẤT HÀNG (KHO):</span>
+                            <strong>📍 ${escapeHtml(partner.shipping_address || partner.address || 'Chưa cập nhật')}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-secondary); font-size:0.75rem; display:block;">ĐỊA CHỈ VĂN PHÒNG / GIAO DỊCH:</span>
+                            <span>🏢 ${escapeHtml(partner.address || 'Chưa cập nhật')}</span>
+                        </div>
+                        <div style="display:flex; gap:16px; margin-top:2px;">
+                            <span>📞 SĐT: <strong>${escapeHtml(partner.phone || 'Chưa có')}</strong></span>
+                            <span>✉️ Email: <strong>${escapeHtml(partner.email || 'Chưa có')}</strong></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
     }
 
     const editBtn = document.getElementById("btnEditPartnerFromBillingView");
@@ -38903,4 +37934,1541 @@ window.exportSingleProductStockHistory = function() {
     XLSX.utils.book_append_sheet(wb, ws, "The_Kho");
     const today = new Date().toISOString().slice(0, 10);
     XLSX.writeFile(wb, `The_Kho_${prod.sku}_${today}.xlsx`);
+};
+
+
+// ==========================================================================
+// 1. MODULE POS NHẬP KHO CHUYÊN DỤNG (KIOTVIET STYLE - FULLSCREEN)
+// ==========================================================================
+
+window.goodsImportPosCart = [];
+window.goodsImportCurrentDisplayMode = "CATALOG";
+window.goodsImportActiveCategory = "";
+window.goodsImportSearchQuery = "";
+
+// Mở màn hình POS Nhập kho
+window.openGoodsImportPosModal = function() {
+    try {
+        const modal = document.getElementById("goodsImportPosModal");
+        if (!modal) {
+            alert("Lỗi: Không tìm thấy modal POS Nhập kho!");
+            return;
+        }
+
+        // 1. Tự động sinh số phiếu nhập mới
+        const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const randomSuffix = String(Math.floor(1000 + Math.random() * 9000));
+        const voucherNo = `PNK-${todayStr}-${randomSuffix}`;
+        const voucherDisplay = document.getElementById("posImportVoucherNoDisplay");
+        if (voucherDisplay) voucherDisplay.textContent = voucherNo;
+
+        // 2. Điền thông tin Người nhập
+        const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+        const operatorDisplay = document.getElementById("posImportOperatorDisplay");
+        if (operatorDisplay) operatorDisplay.textContent = currentUser.name || "Thủ kho / Admin";
+
+        // 3. Ngày nhập
+        const dateInput = document.getElementById("posImportDateInput");
+        if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+
+        // 4. Load Nhà cung cấp từ danh bạ Partners (chỉ lấy SUPPLIER / BOTH / SUBCONTRACTOR)
+        const supplierSelect = document.getElementById("posImportSupplierSelect");
+        if (supplierSelect) {
+            supplierSelect.innerHTML = "";
+            const suppliers = (state.partners || []).filter(p => p && (p.role === "SUPPLIER" || p.role === "BOTH" || p.role === "SUBCONTRACTOR"));
+            suppliers.sort((a, b) => (a.name || "").localeCompare(b.name || "", 'vi'));
+            
+            // Đảm bảo có In Lạc Hồng và Tuấn Dung
+            const seen = new Set();
+            suppliers.forEach(s => {
+                if (s.name && !seen.has(s.name)) {
+                    seen.add(s.name);
+                    const code = s.code ? `[${s.code}] ` : "";
+                    supplierSelect.innerHTML += `<option value="${s.name}">${code}${s.name}</option>`;
+                }
+            });
+            if (!seen.has("Công ty Cổ phần In Lạc Hồng") && !seen.has("In Lạc Hồng")) {
+                supplierSelect.innerHTML = `<option value="In Lạc Hồng">[NCC-LACHONG] In Lạc Hồng</option>` + supplierSelect.innerHTML;
+            }
+            if (!seen.has("Tuấn Dung")) {
+                supplierSelect.innerHTML += `<option value="Tuấn Dung">[NCC-TUANDUNG] Tuấn Dung</option>`;
+            }
+            supplierSelect.innerHTML += `<option value="Tự sản xuất">[XƯỞNG] Tự sản xuất / Gia công nội bộ</option>`;
+            supplierSelect.innerHTML += `<option value="NCC Khác">[KHÁC] Nhà cung cấp khác</option>`;
+        }
+
+        // 5. Khởi tạo giỏ hàng rỗng hoặc giữ nguyên nếu đang nhập dở
+        if (!window.goodsImportPosCart) window.goodsImportPosCart = [];
+        
+        // 6. Render catalog sản phẩm từ bảng state.online_products
+        window.renderGoodsImportPosCatalog();
+        window.renderGoodsImportPosCart();
+
+        // 7. Hiển thị modal
+        modal.classList.add("active");
+
+        // Focus search input
+        setTimeout(() => {
+            const searchInput = document.getElementById("posImportSearchInput");
+            if (searchInput) searchInput.focus();
+        }, 120);
+
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+    } catch (e) {
+        console.error("Lỗi mở POS Nhập kho:", e);
+        alert("Lỗi mở POS Nhập kho: " + e.message);
+    }
+};
+
+window.closeGoodsImportPosModal = function() {
+    const modal = document.getElementById("goodsImportPosModal");
+    if (modal) modal.classList.remove("active");
+};
+
+// Render catalog sản phẩm từ Danh mục hàng hóa đã nhập sẵn
+window.renderGoodsImportPosCatalog = function() {
+    const grid = document.getElementById("posImportProductGrid");
+    if (!grid) return;
+
+    const products = state.online_products || [];
+    const countBadge = document.getElementById("posImportProductCountBadge");
+    if (countBadge) countBadge.textContent = `${products.length} SP`;
+
+    // Populate categories select
+    const catSelect = document.getElementById("posImportCategorySelect");
+    if (catSelect && catSelect.options.length <= 1) {
+        const cats = new Set();
+        products.forEach(p => { if (p.category) cats.add(p.category); });
+        Array.from(cats).sort().forEach(cat => {
+            catSelect.innerHTML += `<option value="${cat}" style="color:#1e293b;">${cat}</option>`;
+        });
+    }
+
+    const query = (window.goodsImportSearchQuery || "").toLowerCase().trim();
+    const activeCat = window.goodsImportActiveCategory || "";
+
+    const filtered = products.filter(p => {
+        if (!p) return false;
+        if (activeCat && p.category !== activeCat) return false;
+        if (query) {
+            const sName = (p.name || "").toLowerCase();
+            const sSku = (p.sku || "").toLowerCase();
+            const sCat = (p.category || "").toLowerCase();
+            const sSup = (p.supplier || p.brand || "").toLowerCase();
+            if (!sName.includes(query) && !sSku.includes(query) && !sCat.includes(query) && !sSup.includes(query)) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                <i data-lucide="package-search" style="width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
+                <div style="font-size: 1rem; font-weight: 700;">Không tìm thấy hàng hóa phù hợp</div>
+                <div style="font-size: 0.85rem; margin-top: 4px;">Thử tìm với từ khóa khác hoặc bỏ lọc nhóm hàng</div>
+            </div>
+        `;
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    let html = "";
+    filtered.forEach(p => {
+        const sku = p.sku || "N/A";
+        const name = p.name || "Sản phẩm";
+        const stockQty = Number(p.stock_qty || 0);
+        const costPrice = Number(p.cost_price || p.import_price || 0);
+        const unit = p.unit || "Cái";
+        const img = p.image || p.image_url || "";
+        const imgTag = img 
+            ? `<img src="${img}" alt="${name}" loading="lazy">` 
+            : `<i data-lucide="package" style="width:36px; height:36px; color:#94a3b8;"></i>`;
+
+        const stockBadgeColor = stockQty <= 0 ? "#ef4444" : (stockQty < 50 ? "#f59e0b" : "#10b981");
+
+        html += `
+            <div class="pos-import-prod-card" onclick="window.addGoodsImportPosItem('${sku}')" title="Bấm để thêm ${name} vào phiếu nhập">
+                <div class="pos-import-prod-img-box">
+                    ${imgTag}
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span style="font-size:0.75rem; font-weight:800; color:#0284c7; background:rgba(2,132,199,0.1); padding:1px 6px; border-radius:4px;">${sku}</span>
+                    <span style="font-size:0.75rem; font-weight:700; color:${stockBadgeColor};">Tồn: ${stockQty.toLocaleString('vi-VN')} ${unit}</span>
+                </div>
+                <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); line-height:1.3; height:34px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; margin-bottom:6px;">
+                    ${name}
+                </div>
+                <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--border-color); padding-top:6px;">
+                    <span style="font-size:0.75rem; color:var(--text-secondary);">Giá nhập vốn:</span>
+                    <strong style="font-size:0.85rem; color:#b91c1c;">${costPrice.toLocaleString('vi-VN')}đ</strong>
+                </div>
+            </div>
+        `;
+    });
+
+    grid.innerHTML = html;
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+// Thêm hàng vào giỏ nhập kho
+window.addGoodsImportPosItem = function(sku) {
+    const prod = (state.online_products || []).find(p => p.sku === sku);
+    if (!prod) return;
+
+    if (!window.goodsImportPosCart) window.goodsImportPosCart = [];
+    const existing = window.goodsImportPosCart.find(item => item.sku === sku);
+
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        window.goodsImportPosCart.unshift({
+            sku: prod.sku,
+            name: prod.name,
+            unit: prod.unit || "Cái",
+            current_stock: prod.stock_qty || 0,
+            cost_price: Number(prod.cost_price || prod.import_price || 0),
+            qty: 1
+        });
+    }
+
+    window.renderGoodsImportPosCart();
+
+    // Feedback animation
+    const bannerTotal = document.getElementById("posImportBannerTotal");
+    if (bannerTotal) {
+        bannerTotal.style.transform = "scale(1.1)";
+        setTimeout(() => { bannerTotal.style.transform = "scale(1)"; }, 200);
+    }
+};
+
+// Render bảng giỏ nhập kho
+window.renderGoodsImportPosCart = function() {
+    const container = document.getElementById("posImportCartContainer");
+    if (!container) return;
+
+    const cart = window.goodsImportPosCart || [];
+    const countInline = document.getElementById("posImportCartCountInline");
+    const countBadge = document.getElementById("posImportItemCountBadge");
+    if (countInline) countInline.textContent = cart.length;
+    if (countBadge) countBadge.textContent = cart.length;
+
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px 16px; color: var(--text-secondary);">
+                <i data-lucide="shopping-cart" style="width: 44px; height: 44px; margin-bottom: 10px; opacity: 0.4; color: #0284c7;"></i>
+                <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Chưa có sản phẩm nào trong phiếu nhập</div>
+                <div style="font-size: 0.8rem; margin-top: 4px;">Chọn sản phẩm từ danh mục bên phải hoặc tìm kiếm theo SKU</div>
+            </div>
+        `;
+        window.recalcGoodsImportPosTotals();
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    let html = "";
+    cart.forEach(item => {
+        const lineTotal = item.qty * item.cost_price;
+        html += `
+            <div class="pos-import-cart-item">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:6px;">
+                    <div>
+                        <span style="font-size:0.75rem; font-weight:800; color:#0284c7; background:rgba(2,132,199,0.1); padding:1px 6px; border-radius:4px; margin-right:4px;">${item.sku}</span>
+                        <strong style="font-size:0.85rem; color:var(--text-primary);">${item.name}</strong>
+                    </div>
+                    <button type="button" onclick="window.removeGoodsImportPosItem('${item.sku}')" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:2px 4px;" title="Xóa khỏi phiếu nhập">
+                        <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                    </button>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; align-items:center;">
+                    <!-- Qty column with +/- and quick buttons -->
+                    <div>
+                        <div style="font-size:0.72rem; color:var(--text-secondary); margin-bottom:2px;">
+                            Số lượng nhập (Tồn: ${item.current_stock} ${item.unit}):
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <button type="button" onclick="window.updateGoodsImportPosItemQty('${item.sku}', -1, true)" style="width:26px; height:28px; border:1px solid #cbd5e1; background:var(--bg-main); border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
+                            <input type="number" min="1" value="${item.qty}" onchange="window.updateGoodsImportPosItemQty('${item.sku}', this.value, false)" style="width:65px; height:28px; text-align:center; font-weight:700; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem;">
+                            <button type="button" onclick="window.updateGoodsImportPosItemQty('${item.sku}', 1, true)" style="width:26px; height:28px; border:1px solid #cbd5e1; background:var(--bg-main); border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+                            <span style="font-size:0.75rem; color:var(--text-secondary);">${item.unit}</span>
+                        </div>
+                        <div style="display:flex; gap:3px; margin-top:4px;">
+                            <button type="button" onclick="window.updateGoodsImportPosItemQty('${item.sku}', 10, true)" style="padding:1px 5px; font-size:0.68rem; border:1px solid #e2e8f0; border-radius:3px; background:#f8fafc; cursor:pointer;">+10</button>
+                            <button type="button" onclick="window.updateGoodsImportPosItemQty('${item.sku}', 50, true)" style="padding:1px 5px; font-size:0.68rem; border:1px solid #e2e8f0; border-radius:3px; background:#f8fafc; cursor:pointer;">+50</button>
+                            <button type="button" onclick="window.updateGoodsImportPosItemQty('${item.sku}', 100, true)" style="padding:1px 5px; font-size:0.68rem; border:1px solid #e2e8f0; border-radius:3px; background:#f8fafc; cursor:pointer;">+100</button>
+                        </div>
+                    </div>
+
+                    <!-- Cost price and Line Total column -->
+                    <div style="text-align:right;">
+                        <div style="font-size:0.72rem; color:var(--text-secondary); margin-bottom:2px;">Đơn giá nhập (VNĐ):</div>
+                        <input type="number" min="0" step="500" value="${item.cost_price}" onchange="window.updateGoodsImportPosItemCost('${item.sku}', this.value)" style="width:115px; height:28px; text-align:right; font-weight:700; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem; padding:0 6px;">
+                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">
+                            Thành tiền: <strong style="color:#0284c7; font-size:0.9rem;">${lineTotal.toLocaleString('vi-VN')}đ</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    window.recalcGoodsImportPosTotals();
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.updateGoodsImportPosItemQty = function(sku, deltaOrVal, isDelta = false) {
+    const item = (window.goodsImportPosCart || []).find(i => i.sku === sku);
+    if (!item) return;
+
+    if (isDelta) {
+        item.qty += parseInt(deltaOrVal) || 0;
+    } else {
+        item.qty = parseInt(deltaOrVal) || 1;
+    }
+    if (item.qty < 1) item.qty = 1;
+
+    window.renderGoodsImportPosCart();
+};
+
+window.updateGoodsImportPosItemCost = function(sku, newCost) {
+    const item = (window.goodsImportPosCart || []).find(i => i.sku === sku);
+    if (!item) return;
+
+    item.cost_price = Math.max(0, parseFloat(newCost) || 0);
+    window.renderGoodsImportPosCart();
+};
+
+window.removeGoodsImportPosItem = function(sku) {
+    window.goodsImportPosCart = (window.goodsImportPosCart || []).filter(i => i.sku !== sku);
+    window.renderGoodsImportPosCart();
+};
+
+window.clearGoodsImportPosCart = function() {
+    if (window.goodsImportPosCart && window.goodsImportPosCart.length > 0) {
+        if (!confirm("Bạn có chắc chắn muốn xóa toàn bộ sản phẩm trong giỏ nhập kho này không?")) return;
+    }
+    window.goodsImportPosCart = [];
+    window.renderGoodsImportPosCart();
+};
+
+window.recalcGoodsImportPosTotals = function() {
+    const cart = window.goodsImportPosCart || [];
+    let totalQty = 0;
+    let totalAmount = 0;
+
+    cart.forEach(item => {
+        totalQty += (item.qty || 0);
+        totalAmount += (item.qty * item.cost_price);
+    });
+
+    const discountInput = document.getElementById("posImportDiscountInput");
+    const discount = Math.max(0, parseFloat(discountInput?.value) || 0);
+    const payable = Math.max(0, totalAmount - discount);
+
+    const totalQtyEl = document.getElementById("posImportTotalQtyDisplay");
+    const totalAmountEl = document.getElementById("posImportTotalAmountDisplay");
+    const payableEl = document.getElementById("posImportPayableDisplay");
+    const bannerTotalEl = document.getElementById("posImportBannerTotal");
+
+    if (totalQtyEl) totalQtyEl.textContent = totalQty.toLocaleString('vi-VN');
+    if (totalAmountEl) totalAmountEl.textContent = totalAmount.toLocaleString('vi-VN') + "đ";
+    if (payableEl) payableEl.textContent = payable.toLocaleString('vi-VN') + "đ";
+    if (bannerTotalEl) bannerTotalEl.textContent = payable.toLocaleString('vi-VN') + "đ";
+};
+
+// Hoàn tất Nhập kho qua POS
+window.submitGoodsImportPos = function(andPrint = false) {
+    const cart = window.goodsImportPosCart || [];
+    if (!cart || cart.length === 0) {
+        alert("Vui lòng chọn ít nhất 1 sản phẩm để nhập kho!");
+        return;
+    }
+
+    const supplier = document.getElementById("posImportSupplierSelect")?.value || "In Lạc Hồng";
+    const date = document.getElementById("posImportDateInput")?.value || new Date().toISOString().slice(0, 10);
+    const notes = document.getElementById("posImportNotesInput")?.value.trim() || "";
+    const paymentMethod = document.getElementById("posImportPaymentMethod")?.value || "BANK_TRANSFER";
+    const paymentStatus = document.getElementById("posImportPaymentStatus")?.value || "PAID";
+    const discount = parseFloat(document.getElementById("posImportDiscountInput")?.value) || 0;
+
+    const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+    const creatorName = currentUser.name || "Thủ kho / Admin";
+    const voucherNo = document.getElementById("posImportVoucherNoDisplay")?.textContent || `PNK-${date.replace(/-/g, '')}-001`;
+
+    let totalQty = 0;
+    let totalCost = 0;
+
+    // 1. Cập nhật tồn kho và giá vốn cho từng sản phẩm
+    cart.forEach(item => {
+        totalQty += item.qty;
+        totalCost += (item.qty * item.cost_price);
+
+        const prod = (state.online_products || []).find(p => p.sku === item.sku);
+        if (prod) {
+            prod.stock_qty = (prod.stock_qty || 0) + item.qty;
+            if (item.cost_price > 0) {
+                prod.cost_price = item.cost_price;
+                prod.import_price = item.cost_price;
+            }
+        }
+
+        // Ghi log biến động kho
+        const newLog = {
+            id: "log_" + Math.random().toString(36).substring(2, 9),
+            created_at: new Date().toISOString(),
+            sku: item.sku,
+            type: "IMPORT",
+            qty: item.qty,
+            note: `[POS Nhập kho ${voucherNo}] NCC: ${supplier}. Đơn giá nhập: ${item.cost_price.toLocaleString('vi-VN')}đ. ${notes}`,
+            creator: creatorName
+        };
+        if (!state.online_stock_logs) state.online_stock_logs = [];
+        state.online_stock_logs.unshift(newLog);
+
+        // Ghi vào chi tiết lịch sử nhập hàng
+        const newImportRec = {
+            id: "IMP-" + new Date().toISOString().slice(0,10).replace(/-/g, "") + "-" + Math.random().toString(36).substring(2, 6).toUpperCase(),
+            batch_id: voucherNo,
+            created_at: new Date().toISOString(),
+            sku: item.sku,
+            name: item.name,
+            unit: item.unit,
+            supplier: supplier,
+            qty: item.qty,
+            cost_price: item.cost_price,
+            total_cost: item.qty * item.cost_price,
+            creator: creatorName,
+            source: "POS_IMPORT",
+            note: `[Phiếu: ${voucherNo}] ${notes}`,
+            type: "IMPORT"
+        };
+        if (!state.online_import_records) state.online_import_records = [];
+        state.online_import_records.unshift(newImportRec);
+    });
+
+    // 2. Lưu state
+    state.updateState("online_products", state.online_products);
+    state.updateState("online_stock_logs", state.online_stock_logs);
+    state.updateState("online_import_records", state.online_import_records);
+
+    // 3. Re-render UI
+    if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+    if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
+    if (typeof window.renderOnlineImportGoods === 'function') window.renderOnlineImportGoods();
+
+    alert(`✅ NHẬP KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nNhà cung cấp: ${supplier}\nTổng sản phẩm nhập: ${cart.length} mặt hàng (${totalQty.toLocaleString('vi-VN')} chiếc/bộ)\nTổng giá trị: ${totalCost.toLocaleString('vi-VN')}đ\n\nTồn kho đã được cộng dồn tự động.`);
+
+    if (andPrint) {
+        window.printGoodsImportVoucher({
+            voucherNo,
+            supplier,
+            date,
+            notes,
+            creatorName,
+            items: cart,
+            totalQty,
+            totalCost,
+            discount,
+            payable: totalCost - discount
+        });
+    }
+
+    // Reset giỏ và đóng modal
+    window.goodsImportPosCart = [];
+    window.closeGoodsImportPosModal();
+};
+
+window.printGoodsImportVoucher = function(data) {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+        alert("Vui lòng cho phép popup để in phiếu nhập kho.");
+        return;
+    }
+
+    const itemsHtml = data.items.map((it, idx) => `
+        <tr>
+            <td style="text-align:center; border:1px solid #000; padding:6px;">${idx + 1}</td>
+            <td style="border:1px solid #000; padding:6px;"><strong>${it.name}</strong><br><small>${it.sku}</small></td>
+            <td style="text-align:center; border:1px solid #000; padding:6px;">${it.unit}</td>
+            <td style="text-align:right; border:1px solid #000; padding:6px; font-weight:bold;">${it.qty.toLocaleString('vi-VN')}</td>
+            <td style="text-align:right; border:1px solid #000; padding:6px;">${it.cost_price.toLocaleString('vi-VN')}đ</td>
+            <td style="text-align:right; border:1px solid #000; padding:6px; font-weight:bold;">${(it.qty * it.cost_price).toLocaleString('vi-VN')}đ</td>
+        </tr>
+    `).join("");
+
+    const amountWords = (typeof window.docSoThanhChu === 'function') ? window.docSoThanhChu(data.payable) : "";
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Phiếu Nhập Kho - ${data.voucherNo}</title>
+            <style>
+                body { font-family: 'Times New Roman', Times, serif; font-size: 13.5px; padding: 20px; line-height: 1.4; color: #000; }
+                table { width: 100%; border-collapse: collapse; margin-top: 14px; margin-bottom: 14px; }
+                th { border: 1px solid #000; padding: 6px; background: #f2f2f2; }
+                @media print { @page { size: A4; margin: 12mm; } }
+            </style>
+        </head>
+        <body onload="window.print()">
+            <div style="display:flex; justify-content:space-between;">
+                <div>
+                    <strong>CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong><br>
+                    Số 14 Pháo Đài Láng, P. Láng, Hà Nội<br>
+                    Hotline: 0907.861.111
+                </div>
+                <div style="text-align:right;">
+                    <strong>MẪU SỐ: 01 - VT</strong><br>
+                    <em>Số phiếu: ${data.voucherNo}</em><br>
+                    Ngày: ${data.date}
+                </div>
+            </div>
+            <div style="text-align:center; margin: 18px 0;">
+                <h2 style="margin:0; font-size:22px; text-transform:uppercase;">PHIẾU NHẬP KHO</h2>
+                <em>(Bổ sung số lượng hàng hóa vào kho thành phẩm)</em>
+            </div>
+            <div>
+                <strong>Nhà cung cấp:</strong> ${data.supplier}<br>
+                <strong>Người nhập kho:</strong> ${data.creatorName}<br>
+                <strong>Ghi chú:</strong> ${data.notes || "Nhập hàng từ xưởng/NCC"}
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:40px;">STT</th>
+                        <th>Tên hàng hóa, quy cách</th>
+                        <th style="width:70px;">ĐVT</th>
+                        <th style="width:90px; text-align:right;">Số lượng</th>
+                        <th style="width:110px; text-align:right;">Đơn giá nhập</th>
+                        <th style="width:130px; text-align:right;">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${itemsHtml}
+                    <tr style="font-weight:bold; background:#fafafa;">
+                        <td colspan="3" style="text-align:right; border:1px solid #000; padding:6px;">Tổng cộng:</td>
+                        <td style="text-align:right; border:1px solid #000; padding:6px;">${data.totalQty.toLocaleString('vi-VN')}</td>
+                        <td style="border:1px solid #000;"></td>
+                        <td style="text-align:right; border:1px solid #000; padding:6px;">${data.totalCost.toLocaleString('vi-VN')}đ</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div><strong>Tổng số tiền bằng chữ:</strong> <em>${amountWords}</em></div>
+            <div style="display:flex; justify-content:space-between; text-align:center; margin-top:35px;">
+                <div><strong>Người lập phiếu</strong><br><em>(ký, họ tên)</em><br><br><br><br>${data.creatorName}</div>
+                <div><strong>Người giao hàng</strong><br><em>(ký, họ tên)</em><br><br><br><br>${data.supplier}</div>
+                <div><strong>Thủ kho</strong><br><em>(ký, họ tên)</em><br><br><br><br>Trần Thị Trang</div>
+            </div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+};
+
+window.toggleGoodsImportPosCatalog = function() {
+    const container = document.getElementById("goodsImportPosContainer");
+    const btnText = document.getElementById("posImportToggleCatalogText");
+    if (!container) return;
+
+    if (container.classList.contains("pos-desktop-hide-catalog")) {
+        container.classList.remove("pos-desktop-hide-catalog");
+        if (btnText) btnText.textContent = "Ẩn danh mục";
+    } else {
+        container.classList.add("pos-desktop-hide-catalog");
+        if (btnText) btnText.textContent = "Hiện danh mục";
+    }
+};
+
+window.setGoodsImportPosDisplayMode = function(mode = "CATALOG") {
+    window.goodsImportCurrentDisplayMode = mode;
+    const container = document.getElementById("goodsImportPosContainer");
+    const tabCart = document.getElementById("posImportMobileTabCart");
+    const tabCatalog = document.getElementById("posImportMobileTabCatalog");
+
+    if (!container) return;
+
+    if (mode === "BILLING") {
+        container.classList.remove("pos-mobile-view-catalog");
+        container.classList.add("pos-mobile-view-cart");
+        if (tabCart) tabCart.classList.add("active");
+        if (tabCatalog) tabCatalog.classList.remove("active");
+    } else {
+        container.classList.remove("pos-mobile-view-cart");
+        container.classList.add("pos-mobile-view-catalog");
+        if (tabCatalog) tabCatalog.classList.add("active");
+        if (tabCart) tabCart.classList.remove("active");
+    }
+};
+
+window.handleGoodsImportPosSearch = function(val) {
+    window.goodsImportSearchQuery = val;
+    window.renderGoodsImportPosCatalog();
+};
+
+window.handleGoodsImportCategoryChange = function(cat) {
+    window.goodsImportActiveCategory = cat;
+    window.renderGoodsImportPosCatalog();
+};
+
+
+// ==========================================================================
+// 2. MODULE XUẤT KHO CHUẨN MẪU SỐ 02 - VT & CHỤP ẢNH KÝ NHẬN MOBILE
+// ==========================================================================
+
+window.currentExportVoucherPhoto = null;
+window.editingStockExportId = null;
+
+// Render danh sách phiếu xuất kho
+window.renderOnlineExportGoods = function() {
+    const tableBody = document.querySelector("#onlineExportRecordsTable tbody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+
+    const records = state.online_export_records || [];
+
+    // 1. Cập nhật KPIs
+    let totalCount = records.length;
+    let totalQty = 0;
+    let totalAmount = 0;
+    let signedCount = 0;
+
+    records.forEach(r => {
+        totalQty += Number(r.total_real_qty || 0);
+        totalAmount += Number(r.total_amount || 0);
+        if (r.signed_photo_url) signedCount++;
+    });
+
+    const kpiCountEl = document.getElementById("kpiExportTotalCount");
+    const kpiQtyEl = document.getElementById("kpiExportTotalQty");
+    const kpiAmountEl = document.getElementById("kpiExportTotalAmount");
+    const kpiSignedEl = document.getElementById("kpiExportSignedCount");
+
+    if (kpiCountEl) kpiCountEl.textContent = totalCount.toLocaleString('vi-VN');
+    if (kpiQtyEl) kpiQtyEl.textContent = totalQty.toLocaleString('vi-VN');
+    if (kpiAmountEl) kpiAmountEl.textContent = totalAmount.toLocaleString('vi-VN') + "đ";
+    if (kpiSignedEl) kpiSignedEl.textContent = signedCount.toLocaleString('vi-VN');
+
+    // 2. Filters
+    const query = (document.getElementById("onlineExportSearchInput")?.value || "").toLowerCase().trim();
+    const signedFilter = document.getElementById("onlineExportSignedFilter")?.value || "all";
+    const period = document.getElementById("onlineExportPeriodFilter")?.value || "all";
+
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    const filtered = records.filter(r => {
+        if (!r) return false;
+
+        if (signedFilter === "signed" && !r.signed_photo_url) return false;
+        if (signedFilter === "unsigned" && r.signed_photo_url) return false;
+
+        const timeStr = r.created_at || r.date || "";
+        if (period === "today") {
+            if (!timeStr.startsWith(todayStr)) return false;
+        } else if (period === "this_week") {
+            const rDate = new Date(timeStr);
+            const diffDays = (now - rDate) / (1000 * 60 * 60 * 24);
+            if (diffDays > 7) return false;
+        } else if (period === "this_month") {
+            const thisMonthStr = now.toISOString().slice(0, 7);
+            if (!timeStr.startsWith(thisMonthStr)) return false;
+        } else if (period === "last_month") {
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const lastMonthStr = lastMonth.toISOString().slice(0, 7);
+            if (!timeStr.startsWith(lastMonthStr)) return false;
+        }
+
+        if (query) {
+            const vNo = (r.voucher_no || r.id || "").toLowerCase();
+            const rec = (r.receiver_name || "").toLowerCase();
+            const plate = (r.vehicle_plate || "").toLowerCase();
+            const reason = (r.reason || "").toLowerCase();
+            const hasSku = (r.items || []).some(i => (i.sku || "").toLowerCase().includes(query) || (i.name || "").toLowerCase().includes(query));
+            if (!vNo.includes(query) && !rec.includes(query) && !plate.includes(query) && !reason.includes(query) && !hasSku) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    if (filtered.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <i data-lucide="inbox" style="width: 44px; height: 44px; margin-bottom: 8px; opacity: 0.5;"></i>
+                    <div style="font-weight: 700; font-size: 0.95rem;">Chưa có phiếu xuất kho nào phù hợp</div>
+                    <div style="font-size: 0.82rem; margin-top: 4px;">Bấm nút "+ Tạo phiếu xuất kho (Mẫu 02-VT)" để tạo phiếu mới</div>
+                </td>
+            </tr>
+        `;
+        if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        return;
+    }
+
+    let html = "";
+    filtered.forEach(r => {
+        const dateDisplay = r.date ? new Date(r.date).toLocaleDateString('vi-VN') : new Date(r.created_at).toLocaleDateString('vi-VN');
+        const itemCount = (r.items || []).length;
+        const totalAmountStr = Number(r.total_amount || 0).toLocaleString('vi-VN') + "đ";
+        const totalQtyStr = Number(r.total_real_qty || 0).toLocaleString('vi-VN');
+
+        let photoCell = "";
+        if (r.signed_photo_url) {
+            photoCell = `
+                <div style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.openStockExportPhotoLightbox('${r.signed_photo_url}', '${r.voucher_no}')" title="Bấm để xem phóng to ảnh phiếu đã ký">
+                    <img src="${r.signed_photo_url}" style="width:34px; height:34px; object-fit:cover; border-radius:4px; border:1px solid #10b981; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                    <span style="font-size:0.75rem; font-weight:700; color:#059669; background:rgba(16,185,129,0.1); padding:2px 6px; border-radius:4px; white-space:nowrap;">📸 Đã ký</span>
+                </div>
+            `;
+        } else {
+            photoCell = `
+                <button type="button" class="btn btn-sm" onclick="window.quickCaptureSignedPhoto('${r.id}')" style="font-size:0.75rem; font-weight:700; color:#d97706; background:rgba(217,119,6,0.1); border:none; padding:4px 8px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;" title="Chụp ảnh phiếu giấy đã ký để lưu trữ">
+                    <i data-lucide="camera" style="width:13px; height:13px;"></i>
+                    <span>Chờ ký</span>
+                </button>
+            `;
+        }
+
+        const vehicleBadge = r.vehicle_plate 
+            ? `<span style="display:inline-block; font-size:0.78rem; font-weight:800; color:#c2410c; background:rgba(234,88,12,0.1); padding:2px 6px; border-radius:4px; margin-top:2px;">${r.vehicle_plate}</span>`
+            : "";
+
+        html += `
+            <tr>
+                <td style="font-size:0.82rem; white-space:nowrap;">${dateDisplay}</td>
+                <td style="font-weight:700; color:#ea580c; white-space:nowrap;">
+                    <a href="javascript:void(0)" onclick="window.openStockExportPrintModal('${r.id}')" style="color:#ea580c; text-decoration:underline;">
+                        ${r.voucher_no}
+                    </a>
+                </td>
+                <td>
+                    <strong>${r.receiver_name}</strong>
+                    <div style="font-size:0.75rem; color:var(--text-secondary);">${r.receiver_address || ""}</div>
+                </td>
+                <td>
+                    ${vehicleBadge}
+                </td>
+                <td style="font-size:0.82rem; color:var(--text-secondary); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    ${r.reason || "Xuất giao hàng"}
+                </td>
+                <td style="text-align:right; font-weight:600;">${itemCount} SP</td>
+                <td style="text-align:right; font-weight:800; color:#ea580c;">${totalQtyStr}</td>
+                <td style="text-align:right; font-weight:800; color:#10b981;">${totalAmountStr}</td>
+                <td style="text-align:center;">${photoCell}</td>
+                <td style="text-align:center; white-space:nowrap;">
+                    <div style="display:inline-flex; gap:4px;">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.openStockExportPrintModal('${r.id}')" title="In phiếu xuất kho Mẫu 02-VT">
+                            <i data-lucide="printer" style="width:14px; height:14px;"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.quickCaptureSignedPhoto('${r.id}')" title="Chụp / Đính kèm ảnh ký nhận">
+                            <i data-lucide="camera" style="width:14px; height:14px; color:#7c3aed;"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.openStockExportModal('EDIT', '${r.id}')" title="Chỉnh sửa phiếu">
+                            <i data-lucide="edit-2" style="width:14px; height:14px;"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="window.deleteStockExportRecord('${r.id}')" style="background:rgba(239,68,68,0.1); color:#ef4444; border:none;" title="Xóa phiếu">
+                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableBody.innerHTML = html;
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+// Mở modal tạo / chỉnh sửa Phiếu xuất kho
+window.openStockExportModal = function(mode = 'ADD', exportId = null) {
+    window.editingStockExportId = mode === 'EDIT' ? exportId : null;
+    window.currentExportVoucherPhoto = null;
+
+    const modal = document.getElementById("stockExportModal");
+    if (!modal) return;
+
+    const titleEl = document.getElementById("stockExportModalTitle");
+    if (titleEl) {
+        titleEl.textContent = mode === 'EDIT' 
+            ? "CHỈNH SỬA PHIẾU XUẤT KHO (MẪU SỐ 02 - VT)" 
+            : "TẠO PHIẾU XUẤT KHO (MẪU SỐ 02 - VT)";
+    }
+
+    // Load partners into receiver select
+    const recSelect = document.getElementById("exportReceiverSelect");
+    if (recSelect) {
+        recSelect.innerHTML = '<option value="">-- Chọn từ Khách hàng --</option>';
+        const partners = state.partners || [];
+        partners.forEach(p => {
+            if (p.name) recSelect.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+        });
+    }
+
+    const tbody = document.getElementById("stockExportItemsTableBody");
+    if (tbody) tbody.innerHTML = "";
+
+    const previewArea = document.getElementById("exportSignedPhotoPreviewArea");
+    if (previewArea) previewArea.style.display = "none";
+
+    const currentUser = JSON.parse(localStorage.getItem("ihp_current_user") || "{}");
+    const creatorInput = document.getElementById("exportSignerCreator");
+    if (creatorInput) creatorInput.value = currentUser.name || "Trang";
+
+    if (mode === 'EDIT' && exportId) {
+        const rec = (state.online_export_records || []).find(r => r.id === exportId);
+        if (!rec) {
+            alert("Lỗi: Không tìm thấy phiếu xuất kho cần sửa.");
+            return;
+        }
+
+        document.getElementById("exportUnitName").value = rec.unit_name || "Công ty Cổ phần In Lạc Hồng";
+        document.getElementById("exportDepartment").value = rec.department || "Bộ phận Kinh doanh / Kho hàng";
+        document.getElementById("exportVoucherNo").value = rec.voucher_no || rec.id;
+        document.getElementById("exportVoucherDate").value = rec.date || (rec.created_at ? rec.created_at.slice(0, 10) : "");
+        document.getElementById("exportSdnsCode").value = rec.sdns_code || "";
+        document.getElementById("exportDebitAcc").value = rec.debit_acc || "632";
+        document.getElementById("exportCreditAcc").value = rec.credit_acc || "156";
+        document.getElementById("exportReceiverName").value = rec.receiver_name || "";
+        document.getElementById("exportReceiverAddress").value = rec.receiver_address || "";
+        document.getElementById("exportVehiclePlate").value = rec.vehicle_plate || "";
+        document.getElementById("exportReason").value = rec.reason || "";
+        document.getElementById("exportWarehouseLocation").value = rec.warehouse_location || "";
+        document.getElementById("exportDestination").value = rec.destination || "";
+        document.getElementById("exportAttachedDocs").value = rec.attached_docs || "";
+        document.getElementById("exportSignerReceiver").value = rec.signer_receiver || rec.receiver_name || "";
+        document.getElementById("exportSignerStorekeeper").value = rec.signer_storekeeper || "Trần Thị Trang";
+        document.getElementById("exportSignerAccountant").value = rec.signer_accountant || "Nguyễn Thị Mai";
+        document.getElementById("exportSignerDirector").value = rec.signer_director || "Giám đốc điều hành";
+
+        // Load items
+        (rec.items || []).forEach(it => {
+            window.addStockExportRow(it);
+        });
+
+        // Load photo if exists
+        if (rec.signed_photo_url) {
+            window.currentExportVoucherPhoto = rec.signed_photo_url;
+            const thumb = document.getElementById("exportSignedPhotoThumbnail");
+            if (thumb) thumb.src = rec.signed_photo_url;
+            if (previewArea) previewArea.style.display = "block";
+        }
+    } else {
+        // Mode ADD: generate voucher no
+        const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const randomNum = String(Math.floor(100 + Math.random() * 900));
+        document.getElementById("exportVoucherNo").value = `PXK-${todayStr}-${randomNum}`;
+        document.getElementById("exportVoucherDate").value = new Date().toISOString().slice(0, 10);
+        document.getElementById("exportReceiverName").value = "";
+        document.getElementById("exportReceiverAddress").value = "Hà Nội";
+        document.getElementById("exportVehiclePlate").value = "BX: 29H-67323";
+        document.getElementById("exportReason").value = "Xuất giao hàng thành phẩm theo đơn";
+        document.getElementById("exportWarehouseLocation").value = "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội";
+        document.getElementById("exportDestination").value = "Hà Nội";
+        document.getElementById("exportAttachedDocs").value = "";
+        document.getElementById("exportSignerReceiver").value = "";
+
+        // Thêm 2 dòng hàng mẫu hoặc trống
+        window.addStockExportRow({ sku: "SIZE-B", name: "2B H36-02 Đỏ", req_qty_note: "30 b x 8", real_qty: 240, price: 75000 });
+        window.addStockExportRow({ sku: "SIZE-A", name: "TP-40 H36-01 Vàng", req_qty_note: "32 T x 10", real_qty: 320, price: 80000 });
+    }
+
+    window.recalcStockExportTotals();
+    modal.classList.add("active");
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.closeStockExportModal = function() {
+    const modal = document.getElementById("stockExportModal");
+    if (modal) modal.classList.remove("active");
+};
+
+// Thêm dòng hàng hóa xuất kho
+window.addStockExportRow = function(item = {}) {
+    const tbody = document.getElementById("stockExportItemsTableBody");
+    if (!tbody) return;
+
+    const rowIdx = tbody.children.length + 1;
+    const products = state.online_products || [];
+
+    let prodOptions = '<option value="">-- Chọn sản phẩm có sẵn --</option>';
+    products.forEach(p => {
+        const isSel = (item.sku && p.sku === item.sku) ? "selected" : "";
+        prodOptions += `<option value="${p.sku}" data-name="${p.name}" data-unit="${p.unit || 'Cái'}" data-price="${p.price || p.wholesale_price || 0}" data-stock="${p.stock_qty || 0}" ${isSel}>${p.sku} - ${p.name} (Tồn: ${p.stock_qty})</option>`;
+    });
+
+    const tr = document.createElement("tr");
+    tr.className = "stock-export-row";
+    tr.innerHTML = `
+        <td style="text-align:center; font-weight:bold;" class="row-stt">${rowIdx}</td>
+        <td>
+            <select class="form-select row-prod-select" onchange="window.handleStockExportRowProductSelect(this)" style="height:32px; font-size:0.8rem; width:100%;">
+                ${prodOptions}
+            </select>
+        </td>
+        <td>
+            <input type="text" class="form-control row-item-name" value="${item.name || ''}" placeholder="Tên nhãn hiệu quy cách" style="height:32px; font-size:0.82rem; font-weight:600;">
+        </td>
+        <td>
+            <input type="text" class="form-control row-item-sku" value="${item.sku || ''}" placeholder="Mã SKU" style="height:32px; font-size:0.82rem; text-align:center;">
+        </td>
+        <td>
+            <input type="text" class="form-control row-item-unit" value="${item.unit || 'Hộp'}" placeholder="ĐVT" style="height:32px; font-size:0.82rem; text-align:center;">
+        </td>
+        <td>
+            <input type="text" class="form-control row-item-req" value="${item.req_qty_note || ''}" placeholder="VD: 30 b x 8" style="height:32px; font-size:0.82rem; text-align:right;">
+        </td>
+        <td>
+            <input type="number" min="1" class="form-control row-item-real" value="${item.real_qty || 0}" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.85rem; font-weight:bold; text-align:right; color:#ea580c;">
+        </td>
+        <td>
+            <input type="number" min="0" step="500" class="form-control row-item-price" value="${item.price || 0}" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.82rem; text-align:right;">
+        </td>
+        <td>
+            <input type="text" readonly class="form-control row-item-total" value="0đ" style="height:32px; font-size:0.85rem; font-weight:bold; text-align:right; background:#f8fafc; color:#10b981;">
+        </td>
+        <td style="text-align:center;">
+            <button type="button" onclick="window.removeStockExportRow(this)" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:4px;">
+                <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+            </button>
+        </td>
+    `;
+
+    tbody.appendChild(tr);
+    window.recalcStockExportTotals();
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.removeStockExportRow = function(btn) {
+    const tr = btn.closest("tr");
+    if (tr) tr.remove();
+
+    // Re-index STT
+    const tbody = document.getElementById("stockExportItemsTableBody");
+    if (tbody) {
+        Array.from(tbody.children).forEach((row, idx) => {
+            const sttEl = row.querySelector(".row-stt");
+            if (sttEl) sttEl.textContent = idx + 1;
+        });
+    }
+
+    window.recalcStockExportTotals();
+};
+
+window.handleStockExportRowProductSelect = function(selectEl) {
+    const row = selectEl.closest("tr");
+    if (!row) return;
+
+    const opt = selectEl.options[selectEl.selectedIndex];
+    if (!opt || !opt.value) return;
+
+    const nameInput = row.querySelector(".row-item-name");
+    const skuInput = row.querySelector(".row-item-sku");
+    const unitInput = row.querySelector(".row-item-unit");
+    const priceInput = row.querySelector(".row-item-price");
+
+    if (skuInput) skuInput.value = opt.value;
+    if (nameInput) nameInput.value = opt.getAttribute("data-name") || "";
+    if (unitInput) unitInput.value = opt.getAttribute("data-unit") || "Cái";
+    if (priceInput && Number(priceInput.value) <= 0) {
+        priceInput.value = opt.getAttribute("data-price") || 0;
+    }
+
+    window.recalcStockExportTotals();
+};
+
+window.handleStockExportReceiverChange = function(receiverName) {
+    if (!receiverName) return;
+    const nameInput = document.getElementById("exportReceiverName");
+    const signerInput = document.getElementById("exportSignerReceiver");
+    const addressInput = document.getElementById("exportReceiverAddress");
+
+    if (nameInput) nameInput.value = receiverName;
+    if (signerInput) signerInput.value = receiverName;
+
+    const p = (state.partners || []).find(part => part.name === receiverName);
+    if (p && p.address && addressInput) {
+        addressInput.value = p.address;
+    }
+};
+
+window.recalcStockExportTotals = function() {
+    const rows = document.querySelectorAll("#stockExportItemsTableBody tr.stock-export-row");
+    let totalRealQty = 0;
+    let totalAmount = 0;
+
+    rows.forEach(r => {
+        const realQty = Math.max(0, parseInt(r.querySelector(".row-item-real")?.value) || 0);
+        const price = Math.max(0, parseFloat(r.querySelector(".row-item-price")?.value) || 0);
+        const lineTotal = realQty * price;
+
+        totalRealQty += realQty;
+        totalAmount += lineTotal;
+
+        const lineTotalInput = r.querySelector(".row-item-total");
+        if (lineTotalInput) lineTotalInput.value = lineTotal.toLocaleString('vi-VN') + "đ";
+    });
+
+    const sumQtyEl = document.getElementById("exportSummaryTotalQty");
+    const sumAmountEl = document.getElementById("exportSummaryTotalAmount");
+    const wordsEl = document.getElementById("exportAmountInWordsDisplay");
+
+    if (sumQtyEl) sumQtyEl.textContent = totalRealQty.toLocaleString('vi-VN');
+    if (sumAmountEl) sumAmountEl.textContent = totalAmount.toLocaleString('vi-VN') + "đ";
+
+    if (wordsEl) {
+        const words = (typeof window.docSoThanhChu === 'function') 
+            ? window.docSoThanhChu(totalAmount) 
+            : totalAmount.toLocaleString('vi-VN') + " đồng";
+        wordsEl.textContent = words.charAt(0).toUpperCase() + words.slice(1);
+    }
+};
+
+// Xử lý upload/chụp ảnh từ camera điện thoại (capture="environment")
+window.handleExportVoucherPhotoUpload = function(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const dataUrl = evt.target.result;
+        window.currentExportVoucherPhoto = dataUrl;
+
+        const thumb = document.getElementById("exportSignedPhotoThumbnail");
+        const previewArea = document.getElementById("exportSignedPhotoPreviewArea");
+
+        if (thumb) thumb.src = dataUrl;
+        if (previewArea) previewArea.style.display = "block";
+
+        if (window.editingStockExportId) {
+            const rec = (state.online_export_records || []).find(r => r.id === window.editingStockExportId);
+            if (rec) {
+                rec.signed_photo_url = dataUrl;
+                state.updateState("online_export_records", state.online_export_records);
+                window.renderOnlineExportGoods();
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+};
+
+window.removeExportSignedPhoto = function() {
+    window.currentExportVoucherPhoto = null;
+    const previewArea = document.getElementById("exportSignedPhotoPreviewArea");
+    if (previewArea) previewArea.style.display = "none";
+
+    if (window.editingStockExportId) {
+        const rec = (state.online_export_records || []).find(r => r.id === window.editingStockExportId);
+        if (rec) {
+            rec.signed_photo_url = "";
+            state.updateState("online_export_records", state.online_export_records);
+            window.renderOnlineExportGoods();
+        }
+    }
+};
+
+window.previewExportSignedPhoto = function() {
+    if (!window.currentExportVoucherPhoto) return;
+    const voucherNo = document.getElementById("exportVoucherNo")?.value || "Phiếu xuất";
+    window.openStockExportPhotoLightbox(window.currentExportVoucherPhoto, voucherNo);
+};
+
+// Lưu phiếu xuất kho
+window.submitStockExport = function(andPrint = false) {
+    const receiverName = document.getElementById("exportReceiverName")?.value.trim();
+    if (!receiverName) {
+        alert("Vui lòng nhập Họ tên người nhận hàng / Khách hàng!");
+        document.getElementById("exportReceiverName")?.focus();
+        return;
+    }
+
+    const rows = document.querySelectorAll("#stockExportItemsTableBody tr.stock-export-row");
+    if (!rows || rows.length === 0) {
+        alert("Vui lòng thêm ít nhất 1 dòng hàng hóa xuất kho!");
+        return;
+    }
+
+    const items = [];
+    let totalRealQty = 0;
+    let totalAmount = 0;
+    let stockWarnings = [];
+
+    rows.forEach(r => {
+        const name = r.querySelector(".row-item-name")?.value.trim() || "Hàng hóa";
+        const sku = r.querySelector(".row-item-sku")?.value.trim() || "";
+        const unit = r.querySelector(".row-item-unit")?.value.trim() || "Cái";
+        const reqQtyNote = r.querySelector(".row-item-req")?.value.trim() || "";
+        const realQty = Math.max(0, parseInt(r.querySelector(".row-item-real")?.value) || 0);
+        const price = Math.max(0, parseFloat(r.querySelector(".row-item-price")?.value) || 0);
+        const total = realQty * price;
+
+        if (realQty > 0) {
+            items.push({
+                name,
+                sku,
+                unit,
+                req_qty_note: reqQtyNote,
+                real_qty: realQty,
+                price,
+                total
+            });
+            totalRealQty += realQty;
+            totalAmount += total;
+
+            // Kiểm tra tồn kho
+            if (sku) {
+                const prod = (state.online_products || []).find(p => p.sku === sku);
+                if (prod && prod.stock_qty < realQty) {
+                    stockWarnings.push(`- ${prod.name} (${sku}): Thực xuất ${realQty} > Tồn hiện tại (${prod.stock_qty})`);
+                }
+            }
+        }
+    });
+
+    if (items.length === 0) {
+        alert("Vui lòng điền số lượng Thực xuất > 0 cho ít nhất 1 mặt hàng!");
+        return;
+    }
+
+    if (stockWarnings.length > 0) {
+        const confirmMsg = "CẢNH BÁO TỒN KHO:\n" + stockWarnings.join("\n") + "\n\nBạn có muốn tiếp tục xuất kho không (tồn kho có thể bị âm)?";
+        if (!confirm(confirmMsg)) return;
+    }
+
+    const voucherNo = document.getElementById("exportVoucherNo")?.value.trim() || `PXK-${Date.now()}`;
+    const date = document.getElementById("exportVoucherDate")?.value || new Date().toISOString().slice(0, 10);
+    const unitName = document.getElementById("exportUnitName")?.value.trim() || "Công ty Cổ phần In Lạc Hồng";
+    const department = document.getElementById("exportDepartment")?.value.trim() || "Bộ phận Kinh doanh / Kho hàng";
+    const sdnsCode = document.getElementById("exportSdnsCode")?.value.trim() || "";
+    const debitAcc = document.getElementById("exportDebitAcc")?.value.trim() || "632";
+    const creditAcc = document.getElementById("exportCreditAcc")?.value.trim() || "156";
+    const receiverAddress = document.getElementById("exportReceiverAddress")?.value.trim() || "";
+    const vehiclePlate = document.getElementById("exportVehiclePlate")?.value.trim() || "";
+    const reason = document.getElementById("exportReason")?.value.trim() || "Xuất giao hàng thành phẩm theo đơn";
+    const warehouseLocation = document.getElementById("exportWarehouseLocation")?.value.trim() || "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội";
+    const destination = document.getElementById("exportDestination")?.value.trim() || "Hà Nội";
+    const attachedDocs = document.getElementById("exportAttachedDocs")?.value.trim() || "";
+    const signerCreator = document.getElementById("exportSignerCreator")?.value.trim() || "Trang";
+    const signerReceiver = document.getElementById("exportSignerReceiver")?.value.trim() || receiverName;
+    const signerStorekeeper = document.getElementById("exportSignerStorekeeper")?.value.trim() || "Trần Thị Trang";
+    const signerAccountant = document.getElementById("exportSignerAccountant")?.value.trim() || "Nguyễn Thị Mai";
+    const signerDirector = document.getElementById("exportSignerDirector")?.value.trim() || "Giám đốc điều hành";
+
+    const amountInWords = (typeof window.docSoThanhChu === 'function') 
+        ? window.docSoThanhChu(totalAmount) 
+        : totalAmount.toLocaleString('vi-VN') + " đồng";
+
+    const recordId = window.editingStockExportId || ("PXK-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-" + Math.random().toString(36).substring(2, 6).toUpperCase());
+
+    const exportRecord = {
+        id: recordId,
+        voucher_no: voucherNo,
+        created_at: new Date().toISOString(),
+        date: date,
+        unit_name: unitName,
+        department: department,
+        sdns_code: sdnsCode,
+        debit_acc: debitAcc,
+        credit_acc: creditAcc,
+        receiver_name: receiverName,
+        receiver_address: receiverAddress,
+        vehicle_plate: vehiclePlate,
+        reason: reason,
+        warehouse_location: warehouseLocation,
+        destination: destination,
+        items: items,
+        total_real_qty: totalRealQty,
+        total_amount: totalAmount,
+        amount_in_words: amountInWords.charAt(0).toUpperCase() + amountInWords.slice(1),
+        attached_docs: attachedDocs,
+        signer_creator: signerCreator,
+        signer_receiver: signerReceiver,
+        signer_storekeeper: signerStorekeeper,
+        signer_accountant: signerAccountant,
+        signer_director: signerDirector,
+        signed_photo_url: window.currentExportVoucherPhoto || ""
+    };
+
+    if (!state.online_export_records) state.online_export_records = [];
+
+    // Trừ tồn kho & Ghi log kho (chỉ khi tạo mới hoặc cập nhật chênh lệch)
+    if (!window.editingStockExportId) {
+        items.forEach(it => {
+            if (it.sku) {
+                const prod = (state.online_products || []).find(p => p.sku === it.sku);
+                if (prod) {
+                    prod.stock_qty = (prod.stock_qty || 0) - it.real_qty;
+                }
+            }
+
+            const newLog = {
+                id: "log_" + Math.random().toString(36).substring(2, 9),
+                created_at: new Date().toISOString(),
+                sku: it.sku,
+                type: "EXPORT",
+                qty: -it.real_qty,
+                note: `[Xuất kho ${voucherNo}] Người nhận: ${receiverName} (${vehiclePlate || 'Xe giao'}). Lý do: ${reason}`,
+                creator: signerCreator
+            };
+            if (!state.online_stock_logs) state.online_stock_logs = [];
+            state.online_stock_logs.unshift(newLog);
+        });
+
+        state.online_export_records.unshift(exportRecord);
+    } else {
+        const idx = state.online_export_records.findIndex(r => r.id === window.editingStockExportId);
+        if (idx !== -1) {
+            state.online_export_records[idx] = exportRecord;
+        }
+    }
+
+    state.updateState("online_products", state.online_products);
+    state.updateState("online_stock_logs", state.online_stock_logs);
+    state.updateState("online_export_records", state.online_export_records);
+
+    if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+    if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
+    window.renderOnlineExportGoods();
+
+    window.closeStockExportModal();
+
+    if (andPrint) {
+        window.openStockExportPrintModal(recordId);
+    } else {
+        alert(`✅ ĐÃ LƯU PHIẾU XUẤT KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nNgười nhận: ${receiverName}\n${vehiclePlate ? 'Biển số xe: ' + vehiclePlate + '\n' : ''}Tổng thực xuất: ${totalRealQty.toLocaleString('vi-VN')} chiếc/bộ\nTổng tiền: ${totalAmount.toLocaleString('vi-VN')}đ\n\nTồn kho đã được tự động giảm.`);
+    }
+};
+
+// Mở modal in ấn Mẫu số 02 - VT
+window.openStockExportPrintModal = function(exportId) {
+    const rec = (state.online_export_records || []).find(r => r.id === exportId);
+    if (!rec) {
+        alert("Lỗi: Không tìm thấy phiếu xuất kho!");
+        return;
+    }
+
+    window.editingPrintExportId = exportId;
+    const printContent = document.getElementById("stockExportPrintContent");
+    if (!printContent) return;
+
+    // Định dạng ngày tháng
+    const d = rec.date ? new Date(rec.date) : new Date(rec.created_at);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+
+    // Render bảng hàng hóa 8 cột
+    let rowsHtml = "";
+    (rec.items || []).forEach((it, idx) => {
+        const reqStr = it.req_qty_note || (it.real_qty ? it.real_qty.toLocaleString('vi-VN') : "");
+        const realStr = it.real_qty ? it.real_qty.toLocaleString('vi-VN') : "0";
+        const priceStr = it.price ? it.price.toLocaleString('vi-VN') : "";
+        const totalStr = it.total ? it.total.toLocaleString('vi-VN') : "";
+
+        rowsHtml += `
+            <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td><strong>${it.name}</strong></td>
+                <td style="text-align:center;">${it.sku || ''}</td>
+                <td style="text-align:center;">${it.unit || ''}</td>
+                <td style="text-align:right;">${reqStr}</td>
+                <td style="text-align:right; font-weight:bold;">${realStr}</td>
+                <td style="text-align:right;">${priceStr}</td>
+                <td style="text-align:right; font-weight:bold;">${totalStr}</td>
+            </tr>
+        `;
+    });
+
+    // Thêm các dòng trống cho tròn 5 dòng theo chuẩn phiếu in
+    const totalRows = (rec.items || []).length;
+    for (let i = totalRows; i < 4; i++) {
+        rowsHtml += `
+            <tr>
+                <td style="text-align:center;">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        `;
+    }
+
+    let photoSectionHtml = "";
+    if (rec.signed_photo_url) {
+        photoSectionHtml = `
+            <div class="mau-02-vt-attached-photo-box">
+                <div style="font-weight:bold; font-size:13px; margin-bottom:8px; color:#1e293b;">
+                    📸 ẢNH CHỨNG TỪ PHIẾU XUẤT KHO ĐÃ KÝ ĐÓNG DẤU (ĐÍNH KÈM TỪ MOBILE):
+                </div>
+                <img src="${rec.signed_photo_url}" alt="Ảnh chữ ký phiếu xuất kho">
+            </div>
+        `;
+    }
+
+    const bxHtml = rec.vehicle_plate 
+        ? `<span class="mau-02-vt-bx-highlight">BX: ${rec.vehicle_plate}</span>` 
+        : "";
+
+    printContent.innerHTML = `
+        <div class="mau-02-vt-header">
+            <div class="mau-02-vt-header-left">
+                <strong>Đơn vị:</strong> ${rec.unit_name || "Công ty Cổ phần In Lạc Hồng"}<br>
+                <strong>Bộ phận:</strong> ${rec.department || "Bộ phận Kinh doanh / Kho hàng"}<br>
+                <strong>Mã đơn vị SDNS:</strong> ${rec.sdns_code || "......................."}
+            </div>
+            <div class="mau-02-vt-header-right">
+                <strong>Mẫu số 02 - VT</strong><br>
+                <em>(Ban hành kèm theo Thông tư của Bộ Tài chính)</em><br>
+                <span>Nợ: ${rec.debit_acc || "........."}</span><br>
+                <span>Có: ${rec.credit_acc || "........."}</span>
+            </div>
+        </div>
+
+        <div class="mau-02-vt-title">
+            <h2>PHIẾU XUẤT KHO</h2>
+            <div class="date-line">Ngày ${day} tháng ${month} năm ${year}</div>
+            <div class="voucher-no">Số: ${rec.voucher_no}</div>
+        </div>
+
+        <div class="mau-02-vt-meta-lines">
+            <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                <div><strong>Họ tên người nhận hàng:</strong> ${rec.receiver_name}</div>
+                <div><strong>Địa chỉ (bộ phận):</strong> ${rec.receiver_address || "......................................."} &nbsp; ${bxHtml}</div>
+            </div>
+            <div class="mau-02-vt-meta-row">
+                <strong>Lý do xuất kho:</strong> ${rec.reason || "......................................................................................................................."}
+            </div>
+            <div class="mau-02-vt-meta-row">
+                <strong>Xuất tại kho:</strong> ${rec.warehouse_location || "......................................."} &nbsp;&nbsp;&nbsp;&nbsp; <strong>địa điểm:</strong> ${rec.destination || "......................................."}
+            </div>
+        </div>
+
+        <table class="mau-02-vt-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width:38px;">Số<br>TT</th>
+                    <th rowspan="2">Tên nhãn hiệu, quy cách<br>phẩm chất vật tư, dụng cụ<br>(sản phẩm, hàng hóa)</th>
+                    <th rowspan="2" style="width:85px;">Mã số</th>
+                    <th rowspan="2" style="width:55px;">Đơn<br>vị<br>tính</th>
+                    <th colspan="2">SỐ LƯỢNG</th>
+                    <th rowspan="2" style="width:90px;">Đơn<br>giá</th>
+                    <th rowspan="2" style="width:110px;">Thành tiền</th>
+                </tr>
+                <tr>
+                    <th style="width:85px;">Yêu cầu</th>
+                    <th style="width:80px;">Thực xuất</th>
+                </tr>
+                <tr class="mau-02-vt-subcol-row">
+                    <td>A</td><td>B</td><td>C</td><td>D</td><td>1</td><td>2</td><td>3</td><td>4</td>
+                </tr>
+            </thead>
+            <tbody>
+                ${rowsHtml}
+                <tr class="summary-row">
+                    <td colspan="4" style="text-align:center; font-weight:bold;">Cộng:</td>
+                    <td></td>
+                    <td style="text-align:right; font-weight:bold;">${Number(rec.total_real_qty || 0).toLocaleString('vi-VN')}</td>
+                    <td></td>
+                    <td style="text-align:right; font-weight:bold;">${Number(rec.total_amount || 0).toLocaleString('vi-VN')}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mau-02-vt-words-section">
+            <div><strong>Tổng số tiền (viết bằng chữ):</strong> <em>${rec.amount_in_words || "......................................................................................................................."}</em></div>
+            <div><strong>Số chứng từ kèm theo:</strong> ${rec.attached_docs || "......................................................................................................................."}</div>
+        </div>
+
+        <div class="mau-02-vt-signatures-section">
+            <div class="mau-02-vt-date-right">Ngày ${day} tháng ${month} năm ${year}</div>
+            <div class="mau-02-vt-sig-grid">
+                <div class="mau-02-vt-sig-col">
+                    <strong>Người lập phiếu</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${rec.signer_creator || ""}</div>
+                </div>
+                <div class="mau-02-vt-sig-col">
+                    <strong>Người nhận hàng</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${rec.signer_receiver || ""}</div>
+                </div>
+                <div class="mau-02-vt-sig-col">
+                    <strong>Thủ kho</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${rec.signer_storekeeper || ""}</div>
+                </div>
+                <div class="mau-02-vt-sig-col">
+                    <strong>Kế toán trưởng</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${rec.signer_accountant || ""}</div>
+                </div>
+                <div class="mau-02-vt-sig-col">
+                    <strong>Thủ trưởng đơn vị</strong>
+                    <em>(ký, họ tên, đóng dấu)</em>
+                    <div class="signer-name">${rec.signer_director || ""}</div>
+                </div>
+            </div>
+        </div>
+
+        ${photoSectionHtml}
+    `;
+
+    document.getElementById("stockExportPrintModal")?.classList.add("active");
+};
+
+window.closeStockExportPrintModal = function() {
+    document.getElementById("stockExportPrintModal")?.classList.remove("active");
+};
+
+window.printStockExportVoucher = function() {
+    window.print();
+};
+
+window.handlePrintModalPhotoUpload = function(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file || !window.editingPrintExportId) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const dataUrl = evt.target.result;
+        const rec = (state.online_export_records || []).find(r => r.id === window.editingPrintExportId);
+        if (rec) {
+            rec.signed_photo_url = dataUrl;
+            state.updateState("online_export_records", state.online_export_records);
+            window.renderOnlineExportGoods();
+            window.openStockExportPrintModal(window.editingPrintExportId);
+            alert("✓ Đã đính kèm ảnh ký nhận vào phiếu xuất kho thành công!");
+        }
+    };
+    reader.readAsDataURL(file);
+};
+
+// Chụp ảnh nhanh từ nút bảng
+window.quickCaptureSignedPhoto = function(exportId) {
+    window.editingPrintExportId = exportId;
+    const input = document.getElementById("printModalCameraInput");
+    if (input) {
+        input.click();
+    }
+};
+
+// Lightbox xem ảnh lớn
+window.openStockExportPhotoLightbox = function(imgSrc, voucherNo = "") {
+    const modal = document.getElementById("stockExportPhotoLightboxModal");
+    const img = document.getElementById("stockExportLightboxImage");
+    const info = document.getElementById("stockExportLightboxVoucherInfo");
+
+    if (img) img.src = imgSrc;
+    if (info) info.textContent = voucherNo ? `Số phiếu: ${voucherNo}` : "Ảnh chứng từ";
+    if (modal) modal.classList.add("active");
+};
+
+window.closeStockExportPhotoLightbox = function() {
+    document.getElementById("stockExportPhotoLightboxModal")?.classList.remove("active");
+};
+
+// Xóa phiếu xuất kho
+window.deleteStockExportRecord = function(exportId) {
+    const rec = (state.online_export_records || []).find(r => r.id === exportId);
+    if (!rec) return;
+
+    if (!confirm(`Bạn có chắc chắn muốn xóa phiếu xuất kho "${rec.voucher_no}" không?\n\nLưu ý: Tồn kho sẽ được tự động hoàn lại cho các mặt hàng trong phiếu.`)) {
+        return;
+    }
+
+    // Hoàn lại tồn kho
+    (rec.items || []).forEach(it => {
+        if (it.sku && it.real_qty > 0) {
+            const prod = (state.online_products || []).find(p => p.sku === it.sku);
+            if (prod) {
+                prod.stock_qty = (prod.stock_qty || 0) + it.real_qty;
+            }
+        }
+    });
+
+    state.online_export_records = (state.online_export_records || []).filter(r => r.id !== exportId);
+    state.updateState("online_products", state.online_products);
+    state.updateState("online_export_records", state.online_export_records);
+
+    if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+    window.renderOnlineExportGoods();
+    alert("Đã xóa phiếu xuất kho và hoàn lại tồn kho thành công.");
+};
+
+// Xuất danh sách phiếu xuất kho ra Excel
+window.exportOnlineExportRecordsToExcel = function() {
+    if (typeof XLSX === 'undefined') {
+        alert("Thư viện SheetJS (XLSX) chưa sẵn sàng!");
+        return;
+    }
+
+    const records = state.online_export_records || [];
+    if (records.length === 0) {
+        alert("Không có dữ liệu phiếu xuất kho để xuất Excel!");
+        return;
+    }
+
+    const exportRows = [];
+    records.forEach((r, idx) => {
+        (r.items || []).forEach(it => {
+            exportRows.push({
+                "STT": idx + 1,
+                "Số phiếu xuất": r.voucher_no,
+                "Ngày xuất": r.date || r.created_at?.slice(0, 10),
+                "Người nhận hàng": r.receiver_name,
+                "Địa chỉ": r.receiver_address || "",
+                "Bến xe / Biển số xe": r.vehicle_plate || "",
+                "Lý do xuất": r.reason || "",
+                "Mã SKU": it.sku || "",
+                "Tên hàng hóa": it.name,
+                "Đơn vị tính": it.unit || "",
+                "SL Yêu cầu": it.req_qty_note || "",
+                "SL Thực xuất": it.real_qty || 0,
+                "Đơn giá": it.price || 0,
+                "Thành tiền": it.total || 0,
+                "Tổng tiền phiếu": r.total_amount || 0,
+                "Ảnh ký nhận": r.signed_photo_url ? "Đã đính kèm ảnh" : "Chưa có",
+                "Thủ kho": r.signer_storekeeper || "",
+                "Người lập": r.signer_creator || ""
+            });
+        });
+    });
+
+    const ws = XLSX.utils.json_to_sheet(exportRows);
+    ws['!cols'] = [
+        { wch: 6 },
+        { wch: 18 },
+        { wch: 12 },
+        { wch: 22 },
+        { wch: 20 },
+        { wch: 18 },
+        { wch: 25 },
+        { wch: 14 },
+        { wch: 28 },
+        { wch: 10 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 16 },
+        { wch: 16 },
+        { wch: 18 },
+        { wch: 18 },
+        { wch: 18 }
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Phieu_Xuat_Kho");
+    const today = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Danh_Sach_Phieu_Xuat_Kho_${today}.xlsx`);
 };
