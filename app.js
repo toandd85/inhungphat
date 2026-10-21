@@ -16363,7 +16363,7 @@ function renderCustomerDebts() {
             <td class="debt-money-cell">${formatMoney(creditLimit)}</td>
             <td>
                 <div class="card-actions-row">
-                    <button class="btn btn-success" style="white-space:nowrap;" onclick="collectCustomerDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                    <button class="btn btn-success" style="white-space:nowrap;" onclick="collectCustomerDebt('${p.id}')">
                         <i data-lucide="plus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Thu nợ
                     </button>
                     <button class="btn btn-info" style="white-space:nowrap; background:#0891b2; color:#fff;" onclick="viewCustomerPaymentHistory('${p.id}')">
@@ -16554,7 +16554,7 @@ function renderSupplierDebts() {
             <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
             <td>
                 <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
-                    <button class="btn btn-danger" onclick="paySupplierDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                    <button class="btn btn-danger" onclick="paySupplierDebt('${p.id}')">
                         <i data-lucide="minus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Thanh toán nợ
                     </button>
                     <button class="btn btn-secondary" style="background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSupplierPaymentHistory('${p.id}')" title="Xem lịch sử">
@@ -16736,7 +16736,7 @@ function renderSubcontractorDebts() {
             <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
             <td>
                 <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
-                    <button class="btn btn-danger" onclick="paySubcontractorDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                    <button class="btn btn-danger" onclick="paySubcontractorDebt('${p.id}')">
                         <i data-lucide="minus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Trả tiền gia công
                     </button>
                     <button class="btn btn-secondary" style="background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSubcontractorPaymentHistory('${p.id}')" title="Xem lịch sử">
@@ -16890,77 +16890,189 @@ window.viewSubcontractorPaymentHistory = function(partnerId) {
 };
 
 window.collectCustomerDebt = function(partnerId) {
-    const p = state.partners.find(x => x.id === partnerId);
-    if (!p) return;
+    const p = (state.partners || []).find(x => String(x.id) === String(partnerId));
+    if (!p) {
+        console.warn("collectCustomerDebt: Không tìm thấy khách hàng với ID:", partnerId);
+        return;
+    }
     
-    document.getElementById("financeModalTitle").textContent = "Lập phiếu THU dòng tiền";
-    document.getElementById("finType").value = "RECEIPT";
+    const titleEl = document.getElementById("financeModalTitle");
+    if (titleEl) titleEl.textContent = `Lập phiếu THU dòng tiền - ${p.name}`;
+    
+    const typeEl = document.getElementById("finType");
+    if (typeEl) typeEl.value = "RECEIPT";
     
     const categorySelect = document.getElementById("finCategory");
-    categorySelect.innerHTML = `
-        <option value="CUSTOMER_FINAL" selected>Thu nợ khách hàng mua in</option>
-        <option value="CUSTOMER_DEPOSIT">Thu tạm ứng cọc đơn hàng</option>
-        <option value="OPERATIONAL">Khoản thu nhập tài chính khác</option>
-    `;
+    if (categorySelect) {
+        categorySelect.innerHTML = `
+            <option value="CUSTOMER_FINAL" selected>Thu nợ khách hàng mua in</option>
+            <option value="CUSTOMER_DEPOSIT">Thu tạm ứng cọc đơn hàng</option>
+            <option value="OPERATIONAL">Khoản thu nhập tài chính khác</option>
+        `;
+    }
     
-    document.getElementById("finPartner").value = partnerId;
+    const finPartner = document.getElementById("finPartner");
+    if (finPartner) {
+        let optExists = false;
+        for (let i = 0; i < finPartner.options.length; i++) {
+            if (String(finPartner.options[i].value) === String(p.id)) {
+                optExists = true;
+                break;
+            }
+        }
+        if (!optExists) {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = `${p.name} (${p.code || ''})`;
+            finPartner.appendChild(opt);
+        }
+        finPartner.value = p.id;
+        if (typeof finPartner.dispatchEvent === 'function') {
+            finPartner.dispatchEvent(new Event('change'));
+        }
+    }
     
-    const totalSales = state.orders.filter(o => o.customer_id === partnerId).reduce((sum, o) => sum + o.total_amount, 0);
-    const paid = state.transactions.filter(t => t.partner_id === partnerId && t.type === "RECEIPT").reduce((sum, t) => sum + t.amount, 0);
+    const totalSales = (state.orders || []).filter(o => String(o.customer_id) === String(partnerId)).reduce((sum, o) => sum + (o.total_amount || 0), 0)
+                     + (state.online_orders || []).filter(o => String(o.customer_id) === String(partnerId)).reduce((sum, o) => sum + (o.total_amount || 0), 0);
+    const paid = (state.transactions || []).filter(t => String(t.partner_id) === String(partnerId) && t.type === "RECEIPT").reduce((sum, t) => sum + (t.amount || 0), 0);
     const debt = Math.max(0, totalSales - paid);
     
-    document.getElementById("finAmount").value = debt;
-    openModal("financeModal");
+    const finAmount = document.getElementById("finAmount");
+    if (finAmount) {
+        finAmount.value = debt > 0 ? debt : "";
+        finAmount.placeholder = debt > 0 ? formatMoney(debt) : "Nhập số tiền thu (VNĐ)";
+    }
+    
+    if (typeof openModal === "function") {
+        openModal("financeModal");
+    } else {
+        const m = document.getElementById("financeModal");
+        if (m) m.classList.add("active");
+    }
 };
 
 window.paySupplierDebt = function(partnerId) {
-    const p = state.partners.find(x => x.id === partnerId);
-    if (!p) return;
+    const p = (state.partners || []).find(x => String(x.id) === String(partnerId));
+    if (!p) {
+        console.warn("paySupplierDebt: Không tìm thấy nhà cung cấp với ID:", partnerId);
+        return;
+    }
     
-    document.getElementById("financeModalTitle").textContent = "Lập phiếu CHI dòng tiền";
-    document.getElementById("finType").value = "PAYMENT";
+    const titleEl = document.getElementById("financeModalTitle");
+    if (titleEl) titleEl.textContent = `Lập phiếu CHI dòng tiền - ${p.name}`;
+    
+    const typeEl = document.getElementById("finType");
+    if (typeEl) typeEl.value = "PAYMENT";
     
     const categorySelect = document.getElementById("finCategory");
-    categorySelect.innerHTML = `
-        <option value="SUPPLIER_PAY" selected>Trả tiền giấy/mực/vật liệu</option>
-        <option value="SUBCONTRACTOR_PAY">Trả tiền gia công ngoài</option>
-        <option value="SALARY">Trả lương nhân sự xưởng</option>
-        <option value="OPERATIONAL">Chi phí điện nước, mặt bằng, sửa máy</option>
-    `;
+    if (categorySelect) {
+        categorySelect.innerHTML = `
+            <option value="SUPPLIER_PAY" selected>Trả tiền giấy/mực/vật liệu</option>
+            <option value="SUBCONTRACTOR_PAY">Trả tiền gia công ngoài</option>
+            <option value="SALARY">Trả lương nhân sự xưởng</option>
+            <option value="OPERATIONAL">Chi phí điện nước, mặt bằng, sửa máy</option>
+        `;
+    }
     
-    document.getElementById("finPartner").value = partnerId;
+    const finPartner = document.getElementById("finPartner");
+    if (finPartner) {
+        let optExists = false;
+        for (let i = 0; i < finPartner.options.length; i++) {
+            if (String(finPartner.options[i].value) === String(p.id)) {
+                optExists = true;
+                break;
+            }
+        }
+        if (!optExists) {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = `${p.name} (${p.code || ''})`;
+            finPartner.appendChild(opt);
+        }
+        finPartner.value = p.id;
+        if (typeof finPartner.dispatchEvent === 'function') {
+            finPartner.dispatchEvent(new Event('change'));
+        }
+    }
     
-    const totalRestock = state.restocks.filter(r => r.supplier_id === partnerId).reduce((sum, r) => sum + r.total_amount, 0);
-    const paid = state.transactions.filter(t => t.partner_id === partnerId && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY").reduce((sum, t) => sum + t.amount, 0);
+    const totalRestock = (state.restocks || []).filter(r => String(r.supplier_id) === String(partnerId)).reduce((sum, r) => sum + (r.total_amount || 0), 0);
+    const paid = (state.transactions || []).filter(t => String(t.partner_id) === String(partnerId) && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY").reduce((sum, t) => sum + (t.amount || 0), 0);
     const debt = Math.max(0, totalRestock - paid);
     
-    document.getElementById("finAmount").value = debt;
-    openModal("financeModal");
+    const finAmount = document.getElementById("finAmount");
+    if (finAmount) {
+        finAmount.value = debt > 0 ? debt : "";
+        finAmount.placeholder = debt > 0 ? formatMoney(debt) : "Nhập số tiền chi (VNĐ)";
+    }
+    
+    if (typeof openModal === "function") {
+        openModal("financeModal");
+    } else {
+        const m = document.getElementById("financeModal");
+        if (m) m.classList.add("active");
+    }
 };
 
 window.paySubcontractorDebt = function(partnerId) {
-    const p = state.partners.find(x => x.id === partnerId);
-    if (!p) return;
+    const p = (state.partners || []).find(x => String(x.id) === String(partnerId));
+    if (!p) {
+        console.warn("paySubcontractorDebt: Không tìm thấy xưởng gia công với ID:", partnerId);
+        return;
+    }
     
-    document.getElementById("financeModalTitle").textContent = "Lập phiếu CHI dòng tiền";
-    document.getElementById("finType").value = "PAYMENT";
+    const titleEl = document.getElementById("financeModalTitle");
+    if (titleEl) titleEl.textContent = `Lập phiếu CHI dòng tiền - ${p.name}`;
+    
+    const typeEl = document.getElementById("finType");
+    if (typeEl) typeEl.value = "PAYMENT";
     
     const categorySelect = document.getElementById("finCategory");
-    categorySelect.innerHTML = `
-        <option value="SUPPLIER_PAY">Trả tiền giấy/mực/vật liệu</option>
-        <option value="SUBCONTRACTOR_PAY" selected>Trả tiền gia công ngoài</option>
-        <option value="SALARY">Trả lương nhân sự xưởng</option>
-        <option value="OPERATIONAL">Chi phí điện nước, mặt bằng, sửa máy</option>
-    `;
+    if (categorySelect) {
+        categorySelect.innerHTML = `
+            <option value="SUPPLIER_PAY">Trả tiền giấy/mực/vật liệu</option>
+            <option value="SUBCONTRACTOR_PAY" selected>Trả tiền gia công ngoài</option>
+            <option value="SALARY">Trả lương nhân sự xưởng</option>
+            <option value="OPERATIONAL">Chi phí điện nước, mặt bằng, sửa máy</option>
+        `;
+    }
     
-    document.getElementById("finPartner").value = partnerId;
+    const finPartner = document.getElementById("finPartner");
+    if (finPartner) {
+        let optExists = false;
+        for (let i = 0; i < finPartner.options.length; i++) {
+            if (String(finPartner.options[i].value) === String(p.id)) {
+                optExists = true;
+                break;
+            }
+        }
+        if (!optExists) {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = `${p.name} (${p.code || ''})`;
+            finPartner.appendChild(opt);
+        }
+        finPartner.value = p.id;
+        if (typeof finPartner.dispatchEvent === 'function') {
+            finPartner.dispatchEvent(new Event('change'));
+        }
+    }
     
-    const totalCost = state.subcontracts.filter(s => s.subcontractor_id === partnerId).reduce((sum, s) => sum + s.cost, 0);
-    const paid = state.transactions.filter(t => t.partner_id === partnerId && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY").reduce((sum, t) => sum + t.amount, 0);
+    const totalCost = (state.subcontracts || []).filter(s => String(s.subcontractor_id) === String(partnerId)).reduce((sum, s) => sum + (s.cost || 0), 0);
+    const paid = (state.transactions || []).filter(t => String(t.partner_id) === String(partnerId) && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY").reduce((sum, t) => sum + (t.amount || 0), 0);
     const debt = Math.max(0, totalCost - paid);
     
-    document.getElementById("finAmount").value = debt;
-    openModal("financeModal");
+    const finAmount = document.getElementById("finAmount");
+    if (finAmount) {
+        finAmount.value = debt > 0 ? debt : "";
+        finAmount.placeholder = debt > 0 ? formatMoney(debt) : "Nhập số tiền chi (VNĐ)";
+    }
+    
+    if (typeof openModal === "function") {
+        openModal("financeModal");
+    } else {
+        const m = document.getElementById("financeModal");
+        if (m) m.classList.add("active");
+    }
 };
 
 // ==========================================================================
@@ -17535,7 +17647,8 @@ function setupEventListeners() {
 }
 
 function openModal(id) {
-    document.getElementById(id).classList.add("active");
+    const el = document.getElementById(id);
+    if (el) el.classList.add("active");
     if (id === "quoteModal") {
         const quoteForm = document.getElementById("quoteForm");
         if (quoteForm && !quoteForm.dataset.editId) {
@@ -17548,10 +17661,13 @@ function openModal(id) {
         }, 50);
     }
 }
+window.openModal = openModal;
 
 function closeModal(id) {
-    document.getElementById(id).classList.remove("active");
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("active");
 }
+window.closeModal = closeModal;
 
 function initDataInForms() {
     populateSalespersonsDropdowns();
