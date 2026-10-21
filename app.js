@@ -12365,12 +12365,17 @@ window.ROUTE_DEFINITIONS = [
     { slug: 'hoa-don', tabId: 'online-sales', subtab: 'online-invoices', title: 'Hóa đơn Bán hàng Online | In Lạc Hồng', aliases: ['online-invoices'] },
     { slug: 'tra-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Hoàn hàng Online | In Lạc Hồng', aliases: ['online-returns', 'hoan-hang'] },
     { slug: 'hoan-hang', tabId: 'online-sales', subtab: 'online-returns', title: 'Quản lý Hoàn hàng Online | In Lạc Hồng', aliases: ['online-returns', 'tra-hang'] },
+    // Phân hệ 1: Hàng hóa
+    { slug: 'bao-cao-hang-hoa', tabId: 'online-sales', subtab: 'online-products-report', title: 'Báo cáo Hàng hóa | In Lạc Hồng', aliases: ['online-products-report', 'bao-cao-san-pham'] },
     { slug: 'hang-hoa', tabId: 'online-sales', subtab: 'online-products', title: 'Danh mục Hàng hóa Sản phẩm | In Lạc Hồng', aliases: ['online-products', 'san-pham', 'danh-sach-hang-hoa'] },
+    { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
+
+    // Phân hệ 2: Kho hàng
+    { slug: 'bao-cao-kho-hang', tabId: 'online-sales', subtab: 'online-warehouse-report', title: 'Báo cáo Kho hàng | In Lạc Hồng', aliases: ['online-warehouse-report', 'bao-cao-kho'] },
     { slug: 'nhap-kho', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập kho hàng hóa (POS) | In Lạc Hồng', aliases: ['nhap-kho-hang-hoa', 'nhap-hang-hoa', 'online-import-goods'] },
     { slug: 'xuat-kho', tabId: 'online-sales', subtab: 'online-export-goods', title: 'Xuất kho hàng hóa (Mẫu số 02 - VT) | In Lạc Hồng', aliases: ['xuat-kho-hang-hoa', 'online-export-goods', 'xuat-kho-noi-bo'] },
-    { slug: 'thiet-lap-gia', tabId: 'online-sales', subtab: 'online-prices', title: 'Thiết lập Bảng giá & Chiết khấu | In Lạc Hồng', aliases: ['online-prices', 'bang-gia'] },
-    { slug: 'kho-hang', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Tồn kho | In Lạc Hồng', aliases: ['ton-kho', 'online-stock', 'ton-kho-hang-hoa', 'kho'] },
-    { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Tồn kho | In Lạc Hồng', aliases: ['kho-hang'] },
+    { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Danh sách Tồn kho | In Lạc Hồng', aliases: ['kho-hang', 'danh-sach-ton-kho', 'online-stock', 'ton-kho-hang-hoa', 'kho'] },
+    { slug: 'kho-hang', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Danh sách Tồn kho | In Lạc Hồng', aliases: ['ton-kho'] },
     { slug: 'kiem-ke-kho', tabId: 'online-sales', subtab: 'online-inventory-check', title: 'Kiểm kê Kho hàng hóa | In Lạc Hồng', aliases: ['online-inventory-check'] },
     { slug: 'xuat-kho-noi-bo', tabId: 'online-sales', subtab: 'online-export-goods', title: 'Xuất kho hàng hóa | In Lạc Hồng', aliases: ['xuat-kho'] },
 
@@ -22169,11 +22174,14 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         else if (subtab === "online-orders") label = "🛍️ Đơn hàng online";
         else if (subtab === "online-returns") label = "🔄 Hoàn hàng";
         else if (subtab === "online-invoices") label = "📄 Xuất hoá đơn";
+        else if (subtab === "online-products-report") label = "📊 Báo cáo Hàng hóa";
         else if (subtab === "online-products") label = "📦 Danh sách Hàng hóa";
         else if (subtab === "online-prices" || subtab === "online-pricing") label = "🏷️ Thiết lập Giá";
+        else if (subtab === "online-warehouse-report") label = "📊 Báo cáo Kho hàng";
         else if (subtab === "online-import-goods") label = "📥 Nhập kho hàng hóa (POS)";
         else if (subtab === "online-export-goods") label = "📤 Quản lý Xuất kho hàng hóa (Mẫu số 02 - VT)";
-        else if (subtab === "online-stock") label = "📦 Kho hàng & Tồn kho";
+        else if (subtab === "online-stock") label = "📦 Kho hàng & Danh sách Tồn kho";
+        else if (subtab === "online-inventory-check") label = "📋 Kiểm kê Kho hàng hóa";
         titleEl.innerHTML = label;
     }
     
@@ -22181,10 +22189,14 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         if (window.renderOnlineDashboard) window.renderOnlineDashboard();
     } else if (subtab === "online-orders") {
         renderOnlineSales();
+    } else if (subtab === "online-products-report") {
+        if (window.renderProductsReport) window.renderProductsReport();
     } else if (subtab === "online-prices") {
         renderOnlinePrices();
     } else if (subtab === "online-products") {
         renderOnlineProducts();
+    } else if (subtab === "online-warehouse-report") {
+        if (window.renderWarehouseReport) window.renderWarehouseReport();
     } else if (subtab === "online-import-goods") {
         if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
     } else if (subtab === "online-export-goods") {
@@ -22192,6 +22204,8 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
     } else if (subtab === "online-stock") {
         window.renderOnlineStock();
         window.renderOnlineStockLogs();
+    } else if (subtab === "online-inventory-check") {
+        if (window.renderOnlineInventoryChecks) window.renderOnlineInventoryChecks();
     }
     
     document.querySelectorAll(".sub-tab-btn").forEach(btn => {
@@ -40595,3 +40609,498 @@ window.exportOnlineExportRecordsToExcel = function() {
     const today = new Date().toISOString().slice(0, 10);
     XLSX.writeFile(wb, `Danh_Sach_Phieu_Xuat_Kho_${today}.xlsx`);
 };
+
+// ==========================================================================
+// PHÂN HỆ 1: BÁO CÁO HÀNG HÓA (PRODUCTS REPORT)
+// ==========================================================================
+window.renderProductsReport = function() {
+    const tableBody = document.querySelector("#productsReportTable tbody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+
+    const products = state.online_products || [];
+
+    // 1. Populate Filter Dropdowns
+    const supSelect = document.getElementById("prodReportSupplierFilter");
+    if (supSelect && supSelect.options.length <= 1) {
+        const uniqueSups = new Set();
+        (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH").forEach(s => uniqueSups.add(s.name));
+        products.forEach(p => {
+            if (p.supplier) uniqueSups.add(p.supplier);
+            if (p.brand) uniqueSups.add(p.brand);
+        });
+        Array.from(uniqueSups).sort((a,b) => (a||"").localeCompare(b||"", 'vi')).forEach(s => {
+            if (s) supSelect.innerHTML += `<option value="${s}">${s}</option>`;
+        });
+    }
+
+    const catSelect = document.getElementById("prodReportCategoryFilter");
+    if (catSelect && catSelect.options.length <= 1) {
+        const uniqueCats = new Set();
+        products.forEach(p => {
+            const cat = p.box_type || p.category;
+            if (cat) uniqueCats.add(cat);
+        });
+        Array.from(uniqueCats).sort((a,b) => (a||"").localeCompare(b||"", 'vi')).forEach(c => {
+            if (c) catSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+    }
+
+    // 2. Filter Products
+    const searchVal = (document.getElementById("prodReportSearchInput")?.value || "").toLowerCase().trim();
+    const supVal = document.getElementById("prodReportSupplierFilter")?.value || "";
+    const catVal = document.getElementById("prodReportCategoryFilter")?.value || "";
+    const stockVal = document.getElementById("prodReportStockFilter")?.value || "";
+
+    const filtered = products.filter(p => {
+        if (searchVal) {
+            const match = `${p.sku || ''} ${p.name || ''} ${p.supplier || ''} ${p.brand || ''} ${p.box_type || ''}`.toLowerCase();
+            if (!match.includes(searchVal)) return false;
+        }
+        if (supVal && (p.supplier !== supVal && p.brand !== supVal)) return false;
+        if (catVal && (p.box_type !== catVal && p.category !== catVal)) return false;
+        const qty = Number(p.stock_qty || 0);
+        if (stockVal === "in_stock" && qty <= 0) return false;
+        if (stockVal === "low_stock" && (qty <= 0 || qty > 10)) return false;
+        if (stockVal === "out_of_stock" && qty > 0) return false;
+        return true;
+    });
+
+    // 3. Compute Totals & Render Rows
+    let totalSKU = filtered.length;
+    let sumCostValue = 0;
+    let sumRetailValue = 0;
+    let sumTotalStock = 0;
+
+    if (filtered.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không tìm thấy hàng hóa nào phù hợp với bộ lọc</td></tr>`;
+    } else {
+        filtered.forEach((p, idx) => {
+            const cost = Number(p.cost_price || p.import_price || 0);
+            const retail = Number(p.price || p.retail_price || 0);
+            const stock = Number(p.stock_qty || 0);
+            const diff = retail - cost;
+            const itemCostVal = stock * cost;
+            const itemRetailVal = stock * retail;
+
+            sumCostValue += itemCostVal;
+            sumRetailValue += itemRetailVal;
+            sumTotalStock += stock;
+
+            let badgeHtml = '';
+            if (stock <= 0) {
+                badgeHtml = `<span class="badge" style="background:#fee2e2; color:#ef4444; font-weight:700;">Hết hàng</span>`;
+            } else if (stock <= 10) {
+                badgeHtml = `<span class="badge" style="background:#fef3c7; color:#d97706; font-weight:700;">Sắp hết (${stock})</span>`;
+            } else {
+                badgeHtml = `<span class="badge" style="background:#dcfce7; color:#108f53; font-weight:700;">Còn hàng (${stock})</span>`;
+            }
+
+            const imgHtml = p.image 
+                ? `<img src="${p.image}" alt="${p.sku}" style="width:36px; height:36px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);">`
+                : `<div style="width:36px; height:36px; border-radius:6px; background:var(--bg-hover); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:0.75rem;"><i data-lucide="package" style="width:18px; height:18px;"></i></div>`;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="text-align:center; color:var(--text-secondary); font-weight:600;">${idx + 1}</td>
+                <td>
+                    <span style="font-family:monospace; font-weight:700; color:var(--accent); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')" title="Bấm để xem/sửa hàng hóa">${p.sku || '-'}</span>
+                </td>
+                <td style="text-align:center;">${imgHtml}</td>
+                <td>
+                    <div style="font-weight:600; color:var(--text-primary); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')">${p.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">NCC: ${p.supplier || p.brand || 'Chưa gán'}</div>
+                </td>
+                <td><span style="font-size:0.8rem; background:rgba(0,0,0,0.04); padding:3px 8px; border-radius:4px; font-weight:500;">${p.box_type || p.category || '-'}</span></td>
+                <td style="text-align:center; font-size:0.85rem;">${p.unit || 'cái'}</td>
+                <td style="text-align:right; font-weight:600; color:#0284c7;">${formatMoney(cost)}</td>
+                <td style="text-align:right; font-weight:700; color:#108f53;">${formatMoney(retail)}</td>
+                <td style="text-align:right; font-weight:600; color:${diff >= 0 ? '#108f53' : '#ef4444'};">
+                    ${diff >= 0 ? '+' : ''}${formatMoney(diff)}
+                </td>
+                <td style="text-align:center; font-weight:700; font-size:0.95rem;">${stock.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:700; color:#0284c7;">${formatMoney(itemCostVal)}</td>
+                <td style="text-align:center;">${badgeHtml}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // 4. Update KPIs
+    const kpiSKU = document.getElementById("kpiProdReportTotalSKU");
+    const kpiCost = document.getElementById("kpiProdReportTotalCost");
+    const kpiRetail = document.getElementById("kpiProdReportTotalRetail");
+    const kpiProfit = document.getElementById("kpiProdReportProfitEst");
+
+    if (kpiSKU) kpiSKU.textContent = totalSKU.toLocaleString('vi-VN');
+    if (kpiCost) kpiCost.textContent = formatMoney(sumCostValue);
+    if (kpiRetail) kpiRetail.textContent = formatMoney(sumRetailValue);
+    if (kpiProfit) kpiProfit.textContent = formatMoney(sumRetailValue - sumCostValue);
+
+    // 5. Update Footer
+    const footStock = document.getElementById("prodReportFootStock");
+    const footVal = document.getElementById("prodReportFootTotalValue");
+    if (footStock) footStock.textContent = sumTotalStock.toLocaleString('vi-VN');
+    if (footVal) footVal.textContent = formatMoney(sumCostValue);
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+// Xuất Excel Báo cáo Hàng hóa
+window.exportProductsReportToExcel = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const products = state.online_products || [];
+    if (products.length === 0) {
+        alert("Chưa có hàng hóa nào để xuất!");
+        return;
+    }
+
+    const exportRows = products.map((p, idx) => {
+        const cost = Number(p.cost_price || p.import_price || 0);
+        const retail = Number(p.price || p.retail_price || 0);
+        const stock = Number(p.stock_qty || 0);
+        const diff = retail - cost;
+        const costVal = stock * cost;
+        const retailVal = stock * retail;
+        let status = "Đủ hàng";
+        if (stock <= 0) status = "Hết hàng";
+        else if (stock <= 10) status = "Sắp hết hàng";
+
+        return {
+            "STT": idx + 1,
+            "Mã SKU": p.sku || "",
+            "Tên hàng hóa": p.name || "",
+            "Loại hộp": p.box_type || p.category || "",
+            "Nhà cung cấp": p.supplier || p.brand || "",
+            "Đơn vị tính": p.unit || "cái",
+            "Giá vốn (đ)": cost,
+            "Giá bán lẻ (đ)": retail,
+            "Chênh lệch lãi (đ)": diff,
+            "Tồn kho thực tế": stock,
+            "Tổng giá trị tồn (Giá vốn)": costVal,
+            "Tổng giá trị niêm yết (Bán lẻ)": retailVal,
+            "Trạng thái": status
+        };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(exportRows);
+    ws['!cols'] = [
+        { wch: 6 },
+        { wch: 14 },
+        { wch: 32 },
+        { wch: 18 },
+        { wch: 22 },
+        { wch: 10 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 16 },
+        { wch: 14 },
+        { wch: 22 },
+        { wch: 22 },
+        { wch: 16 }
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Bao_Cao_Hang_Hoa");
+    const today = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Bao_Cao_Hang_Hoa_InLacHong_${today}.xlsx`);
+};
+
+// ==========================================================================
+// PHÂN HỆ 2: BÁO CÁO KHO HÀNG (WAREHOUSE REPORT)
+// ==========================================================================
+window.renderWarehouseReport = function() {
+    const tableBody = document.querySelector("#warehouseReportTable tbody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+
+    const products = state.online_products || [];
+    const importVouchers = state.online_import_vouchers || [];
+    const exportRecords = state.online_export_records || [];
+    const stockLogs = state.online_stock_logs || [];
+
+    // 1. Populate Supplier Dropdown
+    const supSelect = document.getElementById("whReportSupplierFilter");
+    if (supSelect && supSelect.options.length <= 1) {
+        const uniqueSups = new Set();
+        (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH").forEach(s => uniqueSups.add(s.name));
+        products.forEach(p => {
+            if (p.supplier) uniqueSups.add(p.supplier);
+            if (p.brand) uniqueSups.add(p.brand);
+        });
+        Array.from(uniqueSups).sort((a,b) => (a||"").localeCompare(b||"", 'vi')).forEach(s => {
+            if (s) supSelect.innerHTML += `<option value="${s}">${s}</option>`;
+        });
+    }
+
+    // 2. Pre-calculate Imports and Exports per SKU
+    const importStatsBySku = {};
+    importVouchers.forEach(v => {
+        (v.items || []).forEach(it => {
+            if (!it.sku) return;
+            if (!importStatsBySku[it.sku]) importStatsBySku[it.sku] = { qty: 0, amount: 0 };
+            const q = Number(it.qty || 0);
+            const cost = Number(it.cost_price || it.price || 0);
+            importStatsBySku[it.sku].qty += q;
+            importStatsBySku[it.sku].amount += (q * cost) * 1.08;
+        });
+    });
+
+    const exportStatsBySku = {};
+    exportRecords.forEach(r => {
+        (r.items || []).forEach(it => {
+            if (!it.sku) return;
+            if (!exportStatsBySku[it.sku]) exportStatsBySku[it.sku] = { qty: 0, amount: 0 };
+            const q = Number(it.real_qty || it.qty || 0);
+            const pVal = Number(it.price || 0);
+            exportStatsBySku[it.sku].qty += q;
+            exportStatsBySku[it.sku].amount += (q * pVal) * 1.08;
+        });
+    });
+
+    // 3. Filter Products
+    const searchVal = (document.getElementById("whReportSearchInput")?.value || "").toLowerCase().trim();
+    const supVal = document.getElementById("whReportSupplierFilter")?.value || "";
+    const stockVal = document.getElementById("whReportStockFilter")?.value || "";
+
+    const filtered = products.filter(p => {
+        if (searchVal) {
+            const match = `${p.sku || ''} ${p.name || ''} ${p.supplier || ''} ${p.brand || ''}`.toLowerCase();
+            if (!match.includes(searchVal)) return false;
+        }
+        if (supVal && (p.supplier !== supVal && p.brand !== supVal)) return false;
+        const qty = Number(p.stock_qty || 0);
+        if (stockVal === "in_stock" && qty <= 0) return false;
+        if (stockVal === "low_stock" && (qty <= 0 || qty > 10)) return false;
+        if (stockVal === "out_of_stock" && qty > 0) return false;
+        return true;
+    });
+
+    // 4. Compute Totals & Render Rows
+    let sumImportQty = 0;
+    let sumImportAmount = 0;
+    let sumExportQty = 0;
+    let sumExportAmount = 0;
+    let sumStockQty = 0;
+    let sumStockValue = 0;
+
+    if (filtered.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không có mặt hàng nào phù hợp với bộ lọc kho hàng</td></tr>`;
+    } else {
+        filtered.forEach((p, idx) => {
+            const sku = p.sku || '';
+            const cost = Number(p.cost_price || p.import_price || 0);
+            const stock = Number(p.stock_qty || 0);
+            const itemStockVal = stock * cost;
+
+            // Import stats
+            let impQty = importStatsBySku[sku]?.qty || 0;
+            let impAmt = importStatsBySku[sku]?.amount || 0;
+            if (impQty === 0) {
+                const logs = stockLogs.filter(l => l.sku === sku && l.type === 'IMPORT');
+                impQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
+                impAmt = impQty * cost * 1.08;
+            }
+
+            // Export stats
+            let expQty = exportStatsBySku[sku]?.qty || 0;
+            let expAmt = exportStatsBySku[sku]?.amount || 0;
+            if (expQty === 0) {
+                const logs = stockLogs.filter(l => l.sku === sku && l.type === 'EXPORT');
+                expQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
+                const retailPrice = Number(p.price || p.retail_price || 0);
+                expAmt = expQty * retailPrice * 1.08;
+            }
+
+            sumImportQty += impQty;
+            sumImportAmount += impAmt;
+            sumExportQty += expQty;
+            sumExportAmount += expAmt;
+            sumStockQty += stock;
+            sumStockValue += itemStockVal;
+
+            let badgeHtml = '';
+            if (stock <= 0) {
+                badgeHtml = `<span class="badge" style="background:#fee2e2; color:#ef4444; font-weight:700;">Hết hàng</span>`;
+            } else if (stock <= 10) {
+                badgeHtml = `<span class="badge" style="background:#fef3c7; color:#d97706; font-weight:700;">Sắp hết (${stock})</span>`;
+            } else {
+                badgeHtml = `<span class="badge" style="background:#dcfce7; color:#108f53; font-weight:700;">Đủ hàng (${stock})</span>`;
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="text-align:center; color:var(--text-secondary); font-weight:600;">${idx + 1}</td>
+                <td>
+                    <span style="font-family:monospace; font-weight:700; color:var(--accent); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')" title="Bấm để xem thông tin">${sku}</span>
+                </td>
+                <td>
+                    <div style="font-weight:600; color:var(--text-primary); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')">${p.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">NCC: ${p.supplier || p.brand || 'Chưa gán'}</div>
+                </td>
+                <td style="text-align:center; font-size:0.85rem;">${p.unit || 'cái'}</td>
+                <td style="text-align:center; font-weight:700; color:#0284c7; background:rgba(2,132,199,0.03);">${impQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:600; color:#0284c7; background:rgba(2,132,199,0.03);">${formatMoney(impAmt)}</td>
+                <td style="text-align:center; font-weight:700; color:#ea580c; background:rgba(234,88,12,0.03);">${expQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:600; color:#ea580c; background:rgba(234,88,12,0.03);">${formatMoney(expAmt)}</td>
+                <td style="text-align:center; font-weight:800; font-size:1rem; color:#108f53; background:rgba(16,143,83,0.03);">${stock.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:600; color:var(--text-primary);">${formatMoney(cost)}</td>
+                <td style="text-align:right; font-weight:800; color:#108f53; background:rgba(16,143,83,0.03);">${formatMoney(itemStockVal)}</td>
+                <td style="text-align:center;">${badgeHtml}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // 5. Overall Grand KPIs (calculated across all vouchers/records)
+    let grandImportVal = 0;
+    importVouchers.forEach(v => {
+        grandImportVal += Number(v.total_payable || (v.subtotal ? v.subtotal * 1.08 : 0) || 0);
+    });
+    let grandExportVal = 0;
+    exportRecords.forEach(r => {
+        grandExportVal += Number(r.total_amount || (r.subtotal ? r.subtotal * 1.08 : 0) || 0);
+    });
+
+    const kpiVal = document.getElementById("kpiWhReportTotalValue");
+    const kpiQty = document.getElementById("kpiWhReportTotalQty");
+    const kpiImp = document.getElementById("kpiWhReportTotalImport");
+    const kpiExp = document.getElementById("kpiWhReportTotalExport");
+
+    if (kpiVal) kpiVal.textContent = formatMoney(sumStockValue);
+    if (kpiQty) kpiQty.textContent = sumStockQty.toLocaleString('vi-VN');
+    if (kpiImp) kpiImp.textContent = formatMoney(grandImportVal > 0 ? grandImportVal : sumImportAmount);
+    if (kpiExp) kpiExp.textContent = formatMoney(grandExportVal > 0 ? grandExportVal : sumExportAmount);
+
+    // 6. Update Table Footer
+    const footImpQty = document.getElementById("whReportFootImportQty");
+    const footImpTot = document.getElementById("whReportFootImportTotal");
+    const footExpQty = document.getElementById("whReportFootExportQty");
+    const footExpTot = document.getElementById("whReportFootExportTotal");
+    const footStockQ = document.getElementById("whReportFootStockQty");
+    const footTotVal = document.getElementById("whReportFootTotalValue");
+
+    if (footImpQty) footImpQty.textContent = sumImportQty.toLocaleString('vi-VN');
+    if (footImpTot) footImpTot.textContent = formatMoney(sumImportAmount);
+    if (footExpQty) footExpQty.textContent = sumExportQty.toLocaleString('vi-VN');
+    if (footExpTot) footExpTot.textContent = formatMoney(sumExportAmount);
+    if (footStockQ) footStockQ.textContent = sumStockQty.toLocaleString('vi-VN');
+    if (footTotVal) footTotVal.textContent = formatMoney(sumStockValue);
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+// Xuất Excel Báo cáo Kho hàng (Nhập - Xuất - Tồn)
+window.exportWarehouseReportToExcel = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const products = state.online_products || [];
+    if (products.length === 0) {
+        alert("Chưa có dữ liệu hàng hóa trong kho để xuất!");
+        return;
+    }
+
+    const importVouchers = state.online_import_vouchers || [];
+    const exportRecords = state.online_export_records || [];
+    const stockLogs = state.online_stock_logs || [];
+
+    const importStatsBySku = {};
+    importVouchers.forEach(v => {
+        (v.items || []).forEach(it => {
+            if (!it.sku) return;
+            if (!importStatsBySku[it.sku]) importStatsBySku[it.sku] = { qty: 0, amount: 0 };
+            const q = Number(it.qty || 0);
+            const cost = Number(it.cost_price || it.price || 0);
+            importStatsBySku[it.sku].qty += q;
+            importStatsBySku[it.sku].amount += (q * cost) * 1.08;
+        });
+    });
+
+    const exportStatsBySku = {};
+    exportRecords.forEach(r => {
+        (r.items || []).forEach(it => {
+            if (!it.sku) return;
+            if (!exportStatsBySku[it.sku]) exportStatsBySku[it.sku] = { qty: 0, amount: 0 };
+            const q = Number(it.real_qty || it.qty || 0);
+            const pVal = Number(it.price || 0);
+            exportStatsBySku[it.sku].qty += q;
+            exportStatsBySku[it.sku].amount += (q * pVal) * 1.08;
+        });
+    });
+
+    const exportRows = products.map((p, idx) => {
+        const sku = p.sku || '';
+        const cost = Number(p.cost_price || p.import_price || 0);
+        const stock = Number(p.stock_qty || 0);
+        const stockVal = stock * cost;
+
+        let impQty = importStatsBySku[sku]?.qty || 0;
+        let impAmt = importStatsBySku[sku]?.amount || 0;
+        if (impQty === 0) {
+            const logs = stockLogs.filter(l => l.sku === sku && l.type === 'IMPORT');
+            impQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
+            impAmt = impQty * cost * 1.08;
+        }
+
+        let expQty = exportStatsBySku[sku]?.qty || 0;
+        let expAmt = exportStatsBySku[sku]?.amount || 0;
+        if (expQty === 0) {
+            const logs = stockLogs.filter(l => l.sku === sku && l.type === 'EXPORT');
+            expQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
+            const retailPrice = Number(p.price || p.retail_price || 0);
+            expAmt = expQty * retailPrice * 1.08;
+        }
+
+        let status = "Đủ hàng";
+        if (stock <= 0) status = "Hết hàng";
+        else if (stock <= 10) status = "Sắp hết hàng";
+
+        return {
+            "STT": idx + 1,
+            "Mã SKU": sku,
+            "Tên hàng hóa": p.name || "",
+            "Đơn vị tính": p.unit || "cái",
+            "Nhà cung cấp": p.supplier || p.brand || "",
+            "Tổng Nhập (SL)": impQty,
+            "Tiền Nhập VAT 8% (đ)": Math.round(impAmt),
+            "Tổng Xuất (SL)": expQty,
+            "Tiền Xuất VAT 8% (đ)": Math.round(expAmt),
+            "Tồn kho thực tế": stock,
+            "Đơn giá vốn (đ)": cost,
+            "Tổng giá trị tồn kho (đ)": Math.round(stockVal),
+            "Trạng thái": status
+        };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(exportRows);
+    ws['!cols'] = [
+        { wch: 6 },
+        { wch: 14 },
+        { wch: 32 },
+        { wch: 10 },
+        { wch: 22 },
+        { wch: 14 },
+        { wch: 20 },
+        { wch: 14 },
+        { wch: 20 },
+        { wch: 16 },
+        { wch: 16 },
+        { wch: 22 },
+        { wch: 16 }
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Bao_Cao_Kho_Hang");
+    const today = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Bao_Cao_Kho_Hang_Nhap_Xuat_Ton_${today}.xlsx`);
+};
+

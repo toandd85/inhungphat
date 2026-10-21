@@ -66,7 +66,7 @@
     <!-- html2pdf.js for Clean A4 PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261022_export_polish_v41">
+    <link rel="stylesheet" href="/style.css?v=20261022_split_modules_v42">
 
     <script>
 
@@ -291,78 +291,56 @@
                             </div>
                         </div>
 
-                        <!-- 1. NHẬP KHO (LÊN ĐẦU TIÊN TRONG HÀNG HÓA & KHO HÀNG) -->
+                        <!-- PHÂN HỆ 1: HÀNG HÓA -->
                         <div class="menu-group" style="width: 100%;">
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('nhap-kho');" style="padding: 8px 12px; font-size: 0.9rem; color: #0284c7; font-weight: 700;">
-                                <i data-lucide="arrow-down-to-dot" style="width: 16px; height: 16px; color: #0284c7;"></i>
-                                <span>Nhập kho</span>
-                                <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
-                            </button>
-                            <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-                                <button type="button" onclick="event.stopPropagation(); window.openGoodsImportPosModal();" class="menu-item submenu-item" style="padding: 6px 12px; font-size: 0.85rem; background: rgba(2, 132, 199, 0.08); color: #0284c7; font-weight: 700; border: none; text-align: left; cursor: pointer; width: 100%; border-radius: 6px;">
-                                    <i data-lucide="plus-circle" style="width: 13px; height: 13px;"></i>
-                                    <span>+ Tạo phiếu nhập (POS)</span>
-                                </button>
-                                <a href="/nhap-kho" class="menu-item submenu-item" data-slug="nhap-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="history" style="width: 12px; height: 12px;"></i>
-                                    <span>Lịch sử phiếu nhập kho</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- 2. XUẤT KHO (LÊN ĐẦU TIÊN TRONG HÀNG HÓA & KHO HÀNG) -->
-                        <div class="menu-group" style="width: 100%;">
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('xuat-kho');" style="padding: 8px 12px; font-size: 0.9rem; color: #ea580c; font-weight: 700;">
-                                <i data-lucide="arrow-up-from-dot" style="width: 16px; height: 16px; color: #ea580c;"></i>
-                                <span>Xuất kho</span>
-                                <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
-                            </button>
-                            <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-                                <button type="button" onclick="event.stopPropagation(); window.openStockExportModal();" class="menu-item submenu-item" style="padding: 6px 12px; font-size: 0.85rem; background: rgba(234, 88, 12, 0.08); color: #ea580c; font-weight: 700; border: none; text-align: left; cursor: pointer; width: 100%; border-radius: 6px;">
-                                    <i data-lucide="plus-circle" style="width: 13px; height: 13px;"></i>
-                                    <span>+ Phiếu xuất mới (Mẫu 02-VT)</span>
-                                </button>
-                                <a href="/xuat-kho" class="menu-item submenu-item" data-slug="xuat-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="file-check-2" style="width: 12px; height: 12px;"></i>
-                                    <span>Danh sách phiếu xuất kho</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- 3. HÀNG HOÁ -->
-                        <div class="menu-group" style="width: 100%;">
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('hang-hoa');" style="padding: 8px 12px; font-size: 0.9rem;">
-                                <i data-lucide="package" style="width: 16px; height: 16px;"></i>
+                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('hang-hoa');" style="padding: 8px 12px; font-size: 0.9rem; color: #d97706; font-weight: 700;">
+                                <i data-lucide="package" style="width: 16px; height: 16px; color: #d97706;"></i>
                                 <span>Hàng hóa</span>
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
                             </button>
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
+                                <a href="/bao-cao-hang-hoa" class="menu-item submenu-item" data-slug="bao-cao-hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="bar-chart-3" style="width: 13px; height: 13px;"></i>
+                                    <span>Báo cáo hàng hóa</span>
+                                </a>
                                 <a href="/hang-hoa" class="menu-item submenu-item" data-slug="hang-hoa" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="list" style="width: 12px; height: 12px;"></i>
+                                    <i data-lucide="list" style="width: 13px; height: 13px;"></i>
                                     <span>Danh sách hàng hóa</span>
                                 </a>
                                 <a href="/thiet-lap-gia" class="menu-item submenu-item" data-slug="thiet-lap-gia" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="tags" style="width: 12px; height: 12px;"></i>
+                                    <i data-lucide="tags" style="width: 13px; height: 13px;"></i>
                                     <span>Thiết lập giá</span>
                                 </a>
                             </div>
                         </div>
 
-                        <!-- 4. KHO HÀNG & TỒN KHO -->
+                        <!-- PHÂN HỆ 2: KHO HÀNG -->
                         <div class="menu-group" style="width: 100%;">
-                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('kho-hang');" style="padding: 8px 12px; font-size: 0.9rem;">
-                                <i data-lucide="warehouse" style="width: 16px; height: 16px;"></i>
-                                <span>Kho hàng & Tồn kho</span>
+                            <button class="menu-item menu-parent" onclick="event.stopPropagation(); toggleSubmenu(this); window.navigateTo('ton-kho');" style="padding: 8px 12px; font-size: 0.9rem; color: #108f53; font-weight: 700;">
+                                <i data-lucide="warehouse" style="width: 16px; height: 16px; color: #108f53;"></i>
+                                <span>Kho hàng</span>
                                 <i data-lucide="chevron-down" class="menu-arrow" style="margin-left: auto; width: 12px; height: 12px; transition: transform 0.2s;"></i>
                             </button>
                             <div class="submenu-list" style="display: none; padding-left: 16px; flex-direction: column; gap: 4px; margin-top: 4px;">
-                                <a href="/kho-hang" class="menu-item submenu-item" data-slug="kho-hang" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="boxes" style="width: 12px; height: 12px;"></i>
-                                    <span>Báo cáo tồn kho</span>
+                                <a href="/bao-cao-kho-hang" class="menu-item submenu-item" data-slug="bao-cao-kho-hang" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="bar-chart-2" style="width: 13px; height: 13px;"></i>
+                                    <span>Báo cáo kho hàng</span>
+                                </a>
+                                <a href="/nhap-kho" class="menu-item submenu-item" data-slug="nhap-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="arrow-down-to-dot" style="width: 13px; height: 13px; color: #0284c7;"></i>
+                                    <span>Nhập kho</span>
+                                </a>
+                                <a href="/xuat-kho" class="menu-item submenu-item" data-slug="xuat-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="arrow-up-from-dot" style="width: 13px; height: 13px; color: #ea580c;"></i>
+                                    <span>Xuất kho</span>
+                                </a>
+                                <a href="/ton-kho" class="menu-item submenu-item" data-slug="ton-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="boxes" style="width: 13px; height: 13px;"></i>
+                                    <span>Danh sách tồn kho</span>
                                 </a>
                                 <a href="/kiem-ke-kho" class="menu-item submenu-item" data-slug="kiem-ke-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="check-square" style="width: 12px; height: 12px;"></i>
-                                    <span>Kiểm kê kho hàng</span>
+                                    <i data-lucide="check-square" style="width: 13px; height: 13px;"></i>
+                                    <span>Kiểm kê kho</span>
                                 </a>
                             </div>
                         </div>
@@ -659,55 +637,81 @@
                         </div>
                     </div>
 
-                    <!-- NHÓM 2: HÀNG HÓA & KHO BÁN HÀNG -->
-                    <div class="hub-section-title">
-                        <i data-lucide="package"></i>
-                        <span>Hàng hóa & Kho hàng</span>
+                    <!-- PHÂN HỆ 1: HÀNG HÓA -->
+                    <div class="hub-section-title" style="margin-top:24px;">
+                        <i data-lucide="package" style="color:#d97706;"></i>
+                        <span>1. Phân hệ Hàng hóa</span>
                     </div>
                     <div class="hub-grid">
-                        <div class="hub-card" onclick="window.navigateTo('nhap-kho')">
-                            <div class="hub-icon gradient-1" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
-                                <i data-lucide="arrow-down-to-dot"></i>
+                        <div class="hub-card" onclick="window.navigateTo('bao-cao-hang-hoa')">
+                            <div class="hub-icon gradient-2" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                <i data-lucide="bar-chart-3"></i>
                             </div>
                             <div class="hub-info">
-                                <h3>Nhập kho (POS)</h3>
-                                <p>Tạo phiếu nhập POS & Quản lý nhập hàng</p>
-                            </div>
-                        </div>
-                        <div class="hub-card" onclick="window.navigateTo('xuat-kho')">
-                            <div class="hub-icon gradient-8" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);">
-                                <i data-lucide="arrow-up-from-dot"></i>
-                            </div>
-                            <div class="hub-info">
-                                <h3>Xuất kho (Mẫu 02-VT)</h3>
-                                <p>Phiếu xuất chuẩn, In & Chụp ký nhận Mobile</p>
+                                <h3>Báo cáo hàng hóa</h3>
+                                <p>Cơ cấu chủng loại, giá trị & phân tích bán chạy</p>
                             </div>
                         </div>
                         <div class="hub-card" onclick="window.navigateTo('hang-hoa')">
-                            <div class="hub-icon gradient-5">
+                            <div class="hub-icon gradient-5" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);">
                                 <i data-lucide="list"></i>
                             </div>
                             <div class="hub-info">
-                                <h3>Danh sách Hàng hóa</h3>
-                                <p>Quản lý danh mục sản phẩm online</p>
+                                <h3>Danh sách hàng hóa</h3>
+                                <p>Quản lý danh mục sản phẩm, mã SKU & quy cách</p>
                             </div>
                         </div>
                         <div class="hub-card" onclick="window.navigateTo('thiet-lap-gia')">
-                            <div class="hub-icon gradient-6">
+                            <div class="hub-icon gradient-6" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
                                 <i data-lucide="tags"></i>
                             </div>
                             <div class="hub-info">
-                                <h3>Thiết lập Giá</h3>
-                                <p>Bảng giá bán lẻ & sỉ</p>
+                                <h3>Thiết lập giá</h3>
+                                <p>Bảng giá bán lẻ, bán sỉ & chiết khấu đại lý</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHÂN HỆ 2: KHO HÀNG -->
+                    <div class="hub-section-title" style="margin-top:28px;">
+                        <i data-lucide="warehouse" style="color:#108f53;"></i>
+                        <span>2. Phân hệ Kho hàng</span>
+                    </div>
+                    <div class="hub-grid">
+                        <div class="hub-card" onclick="window.navigateTo('bao-cao-kho-hang')">
+                            <div class="hub-icon gradient-3" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+                                <i data-lucide="bar-chart-2"></i>
+                            </div>
+                            <div class="hub-info">
+                                <h3>Báo cáo kho hàng</h3>
+                                <p>Tổng hợp Nhập - Xuất - Tồn & giá trị kho</p>
+                            </div>
+                        </div>
+                        <div class="hub-card" onclick="window.navigateTo('nhap-kho')">
+                            <div class="hub-icon gradient-1" style="background: linear-gradient(135deg, #0284c7 0%, #075985 100%);">
+                                <i data-lucide="arrow-down-to-dot"></i>
+                            </div>
+                            <div class="hub-info">
+                                <h3>Nhập kho</h3>
+                                <p>Phiếu nhập kho POS & Mẫu 01 - VT kèm VAT 8%</p>
+                            </div>
+                        </div>
+                        <div class="hub-card" onclick="window.navigateTo('xuat-kho')">
+                            <div class="hub-icon gradient-8" style="background: linear-gradient(135deg, #108f53 0%, #065f46 100%);">
+                                <i data-lucide="arrow-up-from-dot"></i>
+                            </div>
+                            <div class="hub-info">
+                                <h3>Xuất kho</h3>
+                                <p>Phiếu xuất Mẫu 02 - VT, VAT 8% & Ký nhận</p>
                             </div>
                         </div>
                         <div class="hub-card" onclick="window.navigateTo('ton-kho')">
-                            <div class="hub-icon gradient-7">
-                                <i data-lucide="warehouse"></i>
+                            <div class="hub-icon gradient-7" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
+                                <i data-lucide="boxes"></i>
                             </div>
                             <div class="hub-info">
-                                <h3>Kho hàng & Tồn kho</h3>
-                                <p>Tổng xuất - tổng nhập từng mã</p>
+                                <h3>Danh sách tồn kho</h3>
+                                <p>Theo dõi tồn thực tế, tổng nhập & tổng xuất từng mã</p>
                             </div>
                         </div>
                         <div class="hub-card" onclick="window.navigateTo('kiem-ke-kho')">
@@ -715,8 +719,8 @@
                                 <i data-lucide="check-square"></i>
                             </div>
                             <div class="hub-info">
-                                <h3>Kiểm kê Kho</h3>
-                                <p>Đối soát & chênh lệch tồn thực tế</p>
+                                <h3>Kiểm kê kho</h3>
+                                <p>Đối soát định kỳ & cân bằng chênh lệch tồn thực tế</p>
                             </div>
                         </div>
                     </div>
@@ -1932,6 +1936,117 @@
 
                     </div>
 
+                    <!-- Sub-tab: Báo cáo Hàng hóa -->
+                    <div id="subtab-online-products-report" class="online-subtab-pane" style="display:none;">
+                        <!-- KPI Row -->
+                        <div class="online-kpis-grid" style="margin-bottom:16px;">
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(217,119,6,0.12); color:#d97706; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="package" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng mã hàng (SKU)</span>
+                                    <h4 id="kpiProdReportTotalSKU" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:var(--text-primary);">0</h4>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(2,132,199,0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="coins" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị tồn (Giá vốn)</span>
+                                    <h4 id="kpiProdReportTotalCost" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#0284c7;">0đ</h4>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(16,143,83,0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="badge-percent" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị niêm yết (Bán lẻ)</span>
+                                    <h4 id="kpiProdReportTotalRetail" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#108f53;">0đ</h4>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(124,58,237,0.12); color:#7c3aed; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="trending-up" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Lợi nhuận dự kiến</span>
+                                    <h4 id="kpiProdReportProfitEst" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#7c3aed;">0đ</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions & Filters Bar -->
+                        <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; min-width:280px;">
+                                <div class="search-box" style="width:240px; max-width:100%;">
+                                    <i data-lucide="search"></i>
+                                    <input type="text" placeholder="Tìm theo SKU, tên hàng hóa..." id="prodReportSearchInput" oninput="window.renderProductsReport()">
+                                </div>
+                                <select class="form-select" id="prodReportSupplierFilter" style="width:200px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderProductsReport()">
+                                    <option value="">-- Tất cả Nhà cung cấp --</option>
+                                </select>
+                                <select class="form-select" id="prodReportCategoryFilter" style="width:180px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderProductsReport()">
+                                    <option value="">-- Tất cả Loại hộp --</option>
+                                </select>
+                                <select class="form-select" id="prodReportStockFilter" style="width:160px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderProductsReport()">
+                                    <option value="">-- Trạng thái tồn --</option>
+                                    <option value="in_stock">Còn hàng (> 0)</option>
+                                    <option value="low_stock">Sắp hết hàng (<= 10)</option>
+                                    <option value="out_of_stock">Hết hàng (= 0)</option>
+                                </select>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <button class="btn btn-secondary" onclick="window.exportProductsReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất báo cáo hàng hóa ra Excel">
+                                    <i data-lucide="file-spreadsheet"></i>
+                                    <span>Xuất Excel</span>
+                                </button>
+                                <button class="btn btn-primary" onclick="window.navigateTo('hang-hoa')" style="display:flex; align-items:center; gap:6px; background:#d97706; border:none; font-weight:600;" title="Xem danh mục chi tiết & quản lý hàng hóa">
+                                    <i data-lucide="list"></i>
+                                    <span>Danh sách hàng hóa</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Data Table Container -->
+                        <div class="table-responsive" style="border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
+                            <table class="table" id="productsReportTable" style="margin-bottom:0;">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px; text-align:center;">STT</th>
+                                        <th style="min-width:110px;">Mã SKU</th>
+                                        <th style="width:60px; text-align:center;">Ảnh</th>
+                                        <th style="min-width:200px;">Tên hàng hóa</th>
+                                        <th style="min-width:140px;">Loại hộp</th>
+                                        <th style="width:70px; text-align:center;">ĐVT</th>
+                                        <th style="min-width:120px; text-align:right;">Giá vốn</th>
+                                        <th style="min-width:120px; text-align:right;">Giá bán lẻ</th>
+                                        <th style="min-width:120px; text-align:right;">Chênh lệch (Lãi)</th>
+                                        <th style="width:90px; text-align:center;">Tồn kho</th>
+                                        <th style="min-width:130px; text-align:right;">Giá trị tồn</th>
+                                        <th style="width:110px; text-align:center;">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                                <tfoot>
+                                    <tr style="background:var(--bg-hover); font-weight:800;">
+                                        <td colspan="6" style="text-align:right;">TỔNG CỘNG:</td>
+                                        <td id="prodReportFootCost" style="text-align:right;">-</td>
+                                        <td id="prodReportFootRetail" style="text-align:right;">-</td>
+                                        <td id="prodReportFootDiff" style="text-align:right;">-</td>
+                                        <td id="prodReportFootStock" style="text-align:center; color:#0284c7;">0</td>
+                                        <td id="prodReportFootTotalValue" style="text-align:right; color:#108f53;">0đ</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
                     <!-- Sub-tab 2: Products & Price -->
 
                     <div id="subtab-online-products" class="online-subtab-pane" style="display:none;">
@@ -2349,6 +2464,124 @@
 
                         </div>
 
+                    </div>
+
+                    <!-- Sub-tab: Báo cáo Kho hàng -->
+                    <div id="subtab-online-warehouse-report" class="online-subtab-pane" style="display:none;">
+                        <!-- KPI Row -->
+                        <div class="online-kpis-grid" style="margin-bottom:16px;">
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(16,143,83,0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="warehouse" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị kho (Giá vốn)</span>
+                                    <h4 id="kpiWhReportTotalValue" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#108f53;">0đ</h4>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(2,132,199,0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="boxes" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng SL tồn thực tế</span>
+                                    <h4 id="kpiWhReportTotalQty" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#0284c7;">0</h4>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(14,165,233,0.12); color:#0ea5e9; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-down-to-dot" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị Nhập (VAT 8%)</span>
+                                    <h4 id="kpiWhReportTotalImport" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#0ea5e9;">0đ</h4>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(234,88,12,0.12); color:#ea580c; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-up-from-dot" style="width:20px; height:20px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị Xuất (VAT 8%)</span>
+                                    <h4 id="kpiWhReportTotalExport" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#ea580c;">0đ</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions & Filters Bar -->
+                        <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; min-width:280px;">
+                                <div class="search-box" style="width:240px; max-width:100%;">
+                                    <i data-lucide="search"></i>
+                                    <input type="text" placeholder="Tìm theo SKU, tên hàng hóa..." id="whReportSearchInput" oninput="window.renderWarehouseReport()">
+                                </div>
+                                <select class="form-select" id="whReportSupplierFilter" style="width:200px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderWarehouseReport()">
+                                    <option value="">-- Tất cả Nhà cung cấp --</option>
+                                </select>
+                                <select class="form-select" id="whReportStockFilter" style="width:160px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderWarehouseReport()">
+                                    <option value="">-- Trạng thái tồn --</option>
+                                    <option value="in_stock">Còn hàng (> 0)</option>
+                                    <option value="low_stock">Sắp hết hàng (<= 10)</option>
+                                    <option value="out_of_stock">Hết hàng (= 0)</option>
+                                </select>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <button class="btn btn-secondary" onclick="window.exportWarehouseReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất báo cáo tổng hợp Nhập - Xuất - Tồn ra Excel">
+                                    <i data-lucide="file-spreadsheet"></i>
+                                    <span>Xuất Excel</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.navigateTo('nhap-kho')" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Mở danh sách & tạo phiếu nhập kho">
+                                    <i data-lucide="arrow-down-to-dot"></i>
+                                    <span>Nhập kho</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.navigateTo('xuat-kho')" style="display:flex; align-items:center; gap:6px; color:#ea580c; border-color:#ea580c; font-weight:600;" title="Mở danh sách & tạo phiếu xuất kho">
+                                    <i data-lucide="arrow-up-from-dot"></i>
+                                    <span>Xuất kho</span>
+                                </button>
+                                <button class="btn btn-primary" onclick="window.navigateTo('ton-kho')" style="display:flex; align-items:center; gap:6px; background:#108f53; border:none; font-weight:600;" title="Xem danh sách tồn kho chi tiết">
+                                    <i data-lucide="boxes"></i>
+                                    <span>Danh sách tồn kho</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Data Table Container -->
+                        <div class="table-responsive" style="border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
+                            <table class="table" id="warehouseReportTable" style="margin-bottom:0;">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px; text-align:center;">STT</th>
+                                        <th style="min-width:110px;">Mã SKU</th>
+                                        <th style="min-width:200px;">Tên hàng hóa</th>
+                                        <th style="width:70px; text-align:center;">ĐVT</th>
+                                        <th style="min-width:100px; text-align:center; background:rgba(2,132,199,0.05); color:#0284c7;">Tổng Nhập (SL)</th>
+                                        <th style="min-width:130px; text-align:right; background:rgba(2,132,199,0.05); color:#0284c7;">Tiền Nhập (VAT 8%)</th>
+                                        <th style="min-width:100px; text-align:center; background:rgba(234,88,12,0.05); color:#ea580c;">Tổng Xuất (SL)</th>
+                                        <th style="min-width:130px; text-align:right; background:rgba(234,88,12,0.05); color:#ea580c;">Tiền Xuất (VAT 8%)</th>
+                                        <th style="min-width:100px; text-align:center; background:rgba(16,143,83,0.05); color:#108f53;">Tồn hiện tại</th>
+                                        <th style="min-width:120px; text-align:right;">Đơn giá vốn</th>
+                                        <th style="min-width:140px; text-align:right; background:rgba(16,143,83,0.05); color:#108f53;">Giá trị tồn kho</th>
+                                        <th style="width:110px; text-align:center;">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                                <tfoot>
+                                    <tr style="background:var(--bg-hover); font-weight:800;">
+                                        <td colspan="4" style="text-align:right;">TỔNG CỘNG:</td>
+                                        <td id="whReportFootImportQty" style="text-align:center; color:#0284c7;">0</td>
+                                        <td id="whReportFootImportTotal" style="text-align:right; color:#0284c7;">0đ</td>
+                                        <td id="whReportFootExportQty" style="text-align:center; color:#ea580c;">0</td>
+                                        <td id="whReportFootExportTotal" style="text-align:right; color:#ea580c;">0đ</td>
+                                        <td id="whReportFootStockQty" style="text-align:center; color:#108f53;">0</td>
+                                        <td style="text-align:right;">-</td>
+                                        <td id="whReportFootTotalValue" style="text-align:right; color:#108f53;">0đ</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- Sub-tab 3: Stock Logs -->
@@ -11650,7 +11883,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261022_export_polish_v41"></script>
+    <script src="/app.js?v=20261022_split_modules_v42"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
