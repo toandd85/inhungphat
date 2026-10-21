@@ -12500,27 +12500,11 @@ const DEFAULT_MATERIALS = [
 ];
 
 const DEFAULT_ORDERS = [];
-
-const DEFAULT_PRODUCTIONS = [
-    { id: "pr1", production_number: "PO-202606-0001", sales_order_id: "o1", start_date: "2026-06-12T10:00:00Z", due_date: "2026-06-16T17:00:00Z", input_qty: 2100, target_qty: 2000, status: "PRINTING", current_stage: "PRINTING", operator_id: "Đại Hùng" },
-    { id: "pr2", production_number: "PO-202606-0002", sales_order_id: "o2", start_date: "2026-06-13T15:00:00Z", due_date: "2026-06-15T12:00:00Z", input_qty: 5150, target_qty: 5000, status: "PROCESSING", current_stage: "PROCESSING", operator_id: "Thế Phương" }
-];
-
-const DEFAULT_SUBCONTRACTS = [
-    { id: "sc1", contract_number: "SC-202606-0001", subcontractor_id: "p5", sales_order_id: "o1", work_detail: "Cán màng mờ bảo vệ 2 mặt toàn bộ lô catalog", cost: 1200000, deadline: "2026-06-15", progress: 60, status: "PROCESSING", payment_status: "UNPAID" }
-];
-
+const DEFAULT_PRODUCTIONS = [];
+const DEFAULT_SUBCONTRACTS = [];
 const DEFAULT_TRANSACTIONS = [];
-
-const DEFAULT_RESTOCKS = [
-    { id: "r1", created_at: "2026-06-13T10:00:00Z", supplier_id: "p3", sku: "GI-COUCHE-150-A3", qty: 20000, cost: 1250, total_amount: 25000000 },
-    { id: "r2", created_at: "2026-06-14T09:00:00Z", supplier_id: "p4", sku: "MK-BLACK-OFFSET", qty: 100, cost: 85000, total_amount: 8500000 }
-];
-
-const DEFAULT_CONTRACTS = [
-    { id: "ct1", contract_number: "HĐ-202606-0001", partner_id: "p1", order_type: "PRODUCTION", order_id: "o1", signing_date: "2026-06-12", value: 6480000, status: "ACTIVE", details: "Hợp đồng in offset brochure quảng cáo 2000 bộ" },
-    { id: "ct2", contract_number: "HĐ-202606-0002", partner_id: "p2", order_type: "PRODUCTION", order_id: "o2", signing_date: "2026-06-13", value: 9990000, status: "LIQUIDATED", details: "Hợp đồng sản xuất tem nhãn decal sữa" }
-];
+const DEFAULT_RESTOCKS = [];
+const DEFAULT_CONTRACTS = [];
 
 const DEFAULT_SALESPERSONS = [
     { 
@@ -13623,41 +13607,42 @@ class AppState {
         if (!this.online_import_records || this.online_import_records.length === 0) {
             this.online_import_records = DEFAULT_ONLINE_IMPORT_RECORDS;
         }
-        // Orders permanently cleared on user request
-        if (!localStorage.getItem("ihp_clean_orders_v5")) {
-            this.online_orders = [];
-            this.orders = [];
-            this.transactions = [];
-            localStorage.setItem("ihp_online_orders", "[]");
-            localStorage.setItem("ihp_orders", "[]");
-            localStorage.setItem("ihp_transactions", "[]");
-            localStorage.removeItem("ihp_partners");
-            localStorage.setItem("ihp_clean_orders_v5", "true");
+        // Reset toàn bộ dữ liệu đơn hàng, giao dịch, lệnh sản xuất, công nợ cũ theo yêu cầu người dùng
+        if (!localStorage.getItem("ihp_clean_old_records_20261021_v2")) {
+            const keysToReset = [
+                'transactions',
+                'orders',
+                'online_orders',
+                'productions',
+                'subcontracts',
+                'restocks',
+                'online_stock_logs',
+                'online_returns',
+                'online_inventory_checks',
+                'online_internal_exits',
+                'warehouse_transactions',
+                'warehouse_audits',
+                'conversations',
+                'messages',
+                'crm_notes'
+            ];
+            keysToReset.forEach(k => {
+                this[k] = [];
+                this.save(k, []);
+                localStorage.setItem(`ihp_${k}`, "[]");
+            });
+            localStorage.setItem("ihp_clean_old_records_20261021_v2", "true");
         } else {
-            // Permanent reset of online orders on user request
-            if (!localStorage.getItem("ihp_clean_online_orders_v8")) {
-                this.online_orders = [];
-                localStorage.setItem("ihp_online_orders", "[]");
-                if (Array.isArray(this.transactions)) {
-                    this.transactions = this.transactions.filter(t => !t || (!t.reference_id || !String(t.reference_id).startsWith("oo_")));
-                    localStorage.setItem("ihp_transactions", JSON.stringify(this.transactions));
-                }
-                localStorage.setItem("ihp_clean_online_orders_v8", "true");
-            } else {
-                this.online_orders = this.load("online_orders", []);
-            }
+            this.online_orders = this.load("online_orders", []);
+            this.transactions = this.load("transactions", []);
+            this.orders = this.load("orders", []);
+            this.productions = this.load("productions", []);
+            this.subcontracts = this.load("subcontracts", []);
+            this.restocks = this.load("restocks", []);
         }
         this.online_returns = this.load("online_returns", []);
         this.online_inventory_checks = this.load("online_inventory_checks", []);
         this.online_internal_exits = this.load("online_internal_exits", []);
-        this.transactions = this.load("transactions", []);
-        // Wipe finance transactions permanently on user request
-        if (!localStorage.getItem("ihp_clean_finance_v20261020_v1")) {
-            this.transactions = [];
-            this.save("transactions", []);
-            localStorage.setItem("ihp_transactions", "[]");
-            localStorage.setItem("ihp_clean_finance_v20261020_v1", "true");
-        }
         this.crm_notes = this.load("crm_notes", DEFAULT_CRM_NOTES);
         this.conversations = this.load("conversations", DEFAULT_CONVERSATIONS);
         this.messages = this.load("messages", DEFAULT_MESSAGES);
@@ -16106,35 +16091,41 @@ function renderFinance() {
 
     // Ledger table
     const tableBody = document.querySelector("#financeTransactionsTable tbody");
-    tableBody.innerHTML = "";
+    if (tableBody) {
+        tableBody.innerHTML = "";
 
-    state.transactions.forEach(t => {
-        const partner = state.partners.find(p => p.id === t.partner_id);
-        const categories = {
-            CUSTOMER_DEPOSIT: "Thu cọc đơn in",
-            CUSTOMER_FINAL: "Thu nợ đơn in",
-            SUPPLIER_PAY: "Thanh toán vật tư",
-            SUBCONTRACTOR_PAY: "Thanh toán gia công",
-            SALARY: "Chi lương nhân sự",
-            OPERATIONAL: "Chi phí vận hành"
-        };
+        if (!state.transactions || state.transactions.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 36px 16px; font-size: 0.95rem;">Chưa có giao dịch thu chi nào. Sổ quỹ sẵn sàng ghi nhận giao dịch mới.</td></tr>`;
+        } else {
+            state.transactions.forEach(t => {
+                const partner = state.partners.find(p => p.id === t.partner_id);
+                const categories = {
+                    CUSTOMER_DEPOSIT: "Thu cọc đơn in",
+                    CUSTOMER_FINAL: "Thu nợ đơn in",
+                    SUPPLIER_PAY: "Thanh toán vật tư",
+                    SUBCONTRACTOR_PAY: "Thanh toán gia công",
+                    SALARY: "Chi lương nhân sự",
+                    OPERATIONAL: "Chi phí vận hành"
+                };
 
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td><strong>${t.tx_number}</strong></td>
-            <td>${new Date(t.created_at).toLocaleString('vi-VN')}</td>
-            <td><span class="badge ${t.type === 'RECEIPT' ? 'badge-success' : 'badge-danger'}">${categories[t.category] || t.category}</span></td>
-            <td>${partner ? partner.name : 'Vãng lai'}</td>
-            <td><strong class="${t.type === 'RECEIPT' ? 'text-success' : 'text-danger'}">${t.type === 'RECEIPT' ? '+' : '-'}${formatMoney(t.amount)}</strong></td>
-            <td>
-                ${t.payment_method === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}
-                ${t.bill_image ? `<a href="#" onclick="window.viewPaymentBill('${t.id}'); return false;" style="margin-left:6px; color:var(--accent);" title="Xem bill chuyển khoản"><i data-lucide="image" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></a>` : ''}
-            </td>
-            <td>${t.account_source === 'VCB' ? 'MBBank' : 'Két tiền'}</td>
-            <td><small>${t.created_by}</small></td>
-        `;
-        tableBody.appendChild(row);
-    });
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><strong>${t.tx_number}</strong></td>
+                    <td>${new Date(t.created_at).toLocaleString('vi-VN')}</td>
+                    <td><span class="badge ${t.type === 'RECEIPT' ? 'badge-success' : 'badge-danger'}">${categories[t.category] || t.category}</span></td>
+                    <td>${partner ? partner.name : 'Vãng lai'}</td>
+                    <td><strong class="${t.type === 'RECEIPT' ? 'text-success' : 'text-danger'}">${t.type === 'RECEIPT' ? '+' : '-'}${formatMoney(t.amount)}</strong></td>
+                    <td>
+                        ${t.payment_method === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}
+                        ${t.bill_image ? `<a href="#" onclick="window.viewPaymentBill('${t.id}'); return false;" style="margin-left:6px; color:var(--accent);" title="Xem bill chuyển khoản"><i data-lucide="image" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></a>` : ''}
+                    </td>
+                    <td>${t.account_source === 'VCB' ? 'MBBank' : 'Két tiền'}</td>
+                    <td><small>${t.created_by}</small></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    }
 
     // Render sub-tabs tables
     renderCustomerDebts();
@@ -16147,12 +16138,21 @@ function renderFinance() {
 }
 
 window.clearFinanceData = function() {
-    if (confirm("Cảnh báo: Bạn có chắc chắn muốn xóa toàn bộ dữ liệu sổ quỹ, phiếu Thu - Chi và các giao dịch trong module Tài chính không? Hành động này không thể hoàn tác.")) {
-        state.transactions = [];
-        state.save("transactions", []);
-        localStorage.setItem("ihp_transactions", "[]");
+    if (confirm("Cảnh báo: Bạn có chắc chắn muốn xóa toàn bộ dữ liệu sổ quỹ, công nợ và các giao dịch trong module Tài chính không? Hành động này không thể hoàn tác.")) {
+        const keysToClear = ['transactions', 'orders', 'online_orders', 'productions', 'subcontracts', 'restocks'];
+        keysToClear.forEach(k => {
+            state[k] = [];
+            state.save(k, []);
+            localStorage.setItem(`ihp_${k}`, "[]");
+            fetch(state.getApiUrl('/api/state/' + k), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify([])
+            }).catch(e => console.warn(e));
+        });
         if (typeof renderFinance === 'function') renderFinance();
-        alert("Đã xóa toàn bộ dữ liệu trong module Tài chính thành công.");
+        if (typeof window.renderSalesCommissions === 'function') window.renderSalesCommissions();
+        alert("Đã xóa toàn bộ dữ liệu giao dịch & công nợ tài chính thành công.");
     }
 };
 
@@ -16679,6 +16679,11 @@ function renderSubcontractorDebts() {
     tableBody.innerHTML = "";
 
     const subcontractors = state.partners.filter(p => p.role === "SUBCONTRACTOR");
+
+    if (subcontractors.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 28px 16px; font-size: 0.95rem;">Chưa có xưởng gia công nào trong danh bạ đối tác.</td></tr>`;
+        return;
+    }
 
     subcontractors.forEach(p => {
         const totalCost = state.subcontracts.filter(s => s.subcontractor_id === p.id).reduce((sum, s) => sum + s.cost, 0);
