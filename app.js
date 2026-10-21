@@ -11214,6 +11214,69 @@ const DEFAULT_ONLINE_IMPORT_RECORDS = [
     }
 ];
 
+const DEFAULT_ONLINE_IMPORT_VOUCHERS = [
+    {
+        id: "PNK-20261021-8080",
+        voucher_no: "PNK-20261021-8080",
+        date: "2026-10-21",
+        created_at: "2026-10-21T08:30:00Z",
+        supplier: "In Lạc Hồng",
+        creator_name: "Thủ kho / Admin",
+        receiver_name: "Trần Thị Trang",
+        notes: "Nhập hàng từ xưởng/NCC",
+        payment_method: "BANK_TRANSFER",
+        payment_status: "PAID",
+        items: [
+            {
+                sku: "LH01A",
+                name: "Hộp LH01A",
+                unit: "Chiếc",
+                qty: 1,
+                cost_price: 62037.04,
+                total_cost: 62037.04
+            }
+        ],
+        total_qty: 1,
+        subtotal: 62037.04,
+        vat_rate: 8,
+        vat_amount: 4962.96,
+        total_amount: 67000,
+        amount_in_words: "Sáu mươi bảy nghìn đồng chẵn",
+        status: "COMPLETED",
+        signed_photo_url: ""
+    },
+    {
+        id: "PNK-20261019-001",
+        voucher_no: "PNK-20261019-001",
+        date: "2026-10-19",
+        created_at: "2026-10-19T09:30:00Z",
+        supplier: "Decal Nguyễn Xiển",
+        creator_name: "Thủ kho Bích Ngọc",
+        receiver_name: "Trần Thị Trang",
+        notes: "Bổ sung tồn kho thành phẩm",
+        payment_method: "BANK_TRANSFER",
+        payment_status: "PAID",
+        items: [
+            {
+                sku: "SP000007",
+                name: "Thuyền",
+                unit: "Chiếc",
+                qty: 1500,
+                cost_price: 8700,
+                total_cost: 13050000
+            }
+        ],
+        total_qty: 1500,
+        subtotal: 13050000,
+        vat_rate: 8,
+        vat_amount: 1044000,
+        total_amount: 14094000,
+        amount_in_words: "Mười bốn triệu không trăm chín mươi tư nghìn đồng",
+        status: "COMPLETED",
+        signed_photo_url: ""
+    }
+];
+
 const DEFAULT_ONLINE_ORDERS = [];
 
 // ==========================================================================
@@ -11524,6 +11587,11 @@ class AppState {
         if (!this.online_export_records || this.online_export_records.length === 0) {
             this.online_export_records = DEFAULT_ONLINE_EXPORT_RECORDS;
             this.save("online_export_records", this.online_export_records);
+        }
+        this.online_import_vouchers = this.load("online_import_vouchers", null);
+        if (!this.online_import_vouchers || this.online_import_vouchers.length === 0) {
+            this.online_import_vouchers = DEFAULT_ONLINE_IMPORT_VOUCHERS;
+            this.save("online_import_vouchers", this.online_import_vouchers);
         }
         this.crm_notes = this.load("crm_notes", DEFAULT_CRM_NOTES);
         this.conversations = this.load("conversations", DEFAULT_CONVERSATIONS);
@@ -37060,20 +37128,44 @@ document.addEventListener("DOMContentLoaded", () => {
 // NHẬP HÀNG HÓA, EXCEL IMPORT/EXPORT & LỊCH SỬ BỔ SUNG KHO
 // ==========================================================================
 
-window.renderOnlineImportGoods = function() {
-    const tableBody = document.querySelector("#onlineImportGoodsTable tbody");
-    if (!tableBody) return;
-    tableBody.innerHTML = "";
+window.importCurrentViewMode = "vouchers";
 
-    const records = state.online_import_records || [];
+window.switchImportViewMode = function(mode) {
+    window.importCurrentViewMode = mode;
+    const btnVouchers = document.getElementById("btnImportViewVouchers");
+    const btnItems = document.getElementById("btnImportViewItems");
+    const vouchersBox = document.getElementById("importVouchersTableContainer");
+    const itemsBox = document.getElementById("importItemsTableContainer");
+
+    if (mode === "vouchers") {
+        if (btnVouchers) { btnVouchers.style.background = "#0284c7"; btnVouchers.style.color = "#ffffff"; }
+        if (btnItems) { btnItems.style.background = "var(--bg-card)"; btnItems.style.color = "var(--text-secondary)"; }
+        if (vouchersBox) vouchersBox.style.display = "block";
+        if (itemsBox) itemsBox.style.display = "none";
+    } else {
+        if (btnVouchers) { btnVouchers.style.background = "var(--bg-card)"; btnVouchers.style.color = "var(--text-secondary)"; }
+        if (btnItems) { btnItems.style.background = "#0284c7"; btnItems.style.color = "#ffffff"; }
+        if (vouchersBox) vouchersBox.style.display = "none";
+        if (itemsBox) itemsBox.style.display = "block";
+    }
+    if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
+};
+
+window.renderOnlineImportGoods = function() {
+    const vouchersTableBody = document.querySelector("#onlineImportVouchersTable tbody");
+    const itemsTableBody = document.querySelector("#onlineImportGoodsTable tbody");
     
+    const vouchers = state.online_import_vouchers || [];
+    const itemsRecords = state.online_import_records || [];
+
     // 1. Populate Supplier filter dropdown
     const supFilter = document.getElementById("onlineImportHistorySupplierFilter");
     if (supFilter) {
         const curVal = supFilter.value;
         const suppliers = (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH");
         const uniqueSups = new Set(suppliers.map(s => s.name));
-        records.forEach(r => { if (r.supplier) uniqueSups.add(r.supplier); });
+        vouchers.forEach(v => { if (v.supplier) uniqueSups.add(v.supplier); });
+        itemsRecords.forEach(r => { if (r.supplier) uniqueSups.add(r.supplier); });
 
         const count = supFilter.options.length;
         if (count <= 1 || count !== uniqueSups.size + 1) {
@@ -37085,7 +37177,7 @@ window.renderOnlineImportGoods = function() {
         }
     }
 
-    // 2. Filter records
+    // 2. Filters
     const query = document.getElementById("onlineImportHistorySearchInput")?.value.toLowerCase().trim() || "";
     const selectedSup = document.getElementById("onlineImportHistorySupplierFilter")?.value || "";
     const period = document.getElementById("onlineImportHistoryPeriodFilter")?.value || "all";
@@ -37093,94 +37185,574 @@ window.renderOnlineImportGoods = function() {
     const now = new Date();
     const todayStr = now.toISOString().slice(0, 10);
 
-    const filtered = records.filter(r => {
-        if (!r) return false;
-        const matchSup = !selectedSup || r.supplier === selectedSup;
-        if (!matchSup) return false;
+    // Filter Vouchers
+    const filteredVouchers = vouchers.filter(v => {
+        if (!v) return false;
+        if (selectedSup && v.supplier !== selectedSup) return false;
 
-        const timeStr = r.created_at || "";
+        const timeStr = v.created_at || v.date || "";
         if (period === "today") {
             if (!timeStr.startsWith(todayStr)) return false;
         } else if (period === "this_week") {
             const rDate = new Date(timeStr);
-            const diffDays = (now - rDate) / (1000 * 60 * 60 * 24);
-            if (diffDays > 7) return false;
+            if ((now - rDate) / (1000 * 60 * 60 * 24) > 7) return false;
         } else if (period === "this_month") {
-            const thisMonthStr = now.toISOString().slice(0, 7);
-            if (!timeStr.startsWith(thisMonthStr)) return false;
+            if (!timeStr.startsWith(now.toISOString().slice(0, 7))) return false;
         } else if (period === "last_month") {
-            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            const lastMonthStr = lastMonth.toISOString().slice(0, 7);
+            const lastMonthStr = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().slice(0, 7);
             if (!timeStr.startsWith(lastMonthStr)) return false;
         }
 
         if (query) {
-            const sku = String(r.sku || "").toLowerCase();
-            const name = String(r.name || "").toLowerCase();
-            const sup = String(r.supplier || "").toLowerCase();
-            const creator = String(r.creator || "").toLowerCase();
-            const note = String(r.note || "").toLowerCase();
-            const id = String(r.id || "").toLowerCase();
-            return sku.includes(query) || name.includes(query) || sup.includes(query) || creator.includes(query) || note.includes(query) || id.includes(query);
+            const vNo = String(v.voucher_no || v.id || "").toLowerCase();
+            const sName = String(v.supplier || "").toLowerCase();
+            const cName = String(v.creator_name || "").toLowerCase();
+            const nStr = String(v.notes || "").toLowerCase();
+            const hasItem = (v.items || []).some(it => String(it.name || "").toLowerCase().includes(query) || String(it.sku || "").toLowerCase().includes(query));
+            return vNo.includes(query) || sName.includes(query) || cName.includes(query) || nStr.includes(query) || hasItem;
         }
         return true;
     });
 
-    // 3. Update KPI cards
-    let totalQty = 0;
-    let totalCost = 0;
-    const supSet = new Set();
-    records.forEach(r => {
-        totalQty += (parseInt(r.qty) || 0);
-        totalCost += (parseFloat(r.total_cost) || ((parseInt(r.qty) || 0) * (parseFloat(r.cost_price) || 0)));
-        if (r.supplier) supSet.add(r.supplier);
+    // 3. Update KPI Summary Cards (Theo dữ liệu phiếu nhập thực tế)
+    let totalImportQty = 0;
+    let totalSubtotal = 0;
+    let totalGrandPayable = 0;
+    vouchers.forEach(v => {
+        totalImportQty += Number(v.total_qty || 0);
+        const sub = Number(v.subtotal || v.total_cost || 0);
+        totalSubtotal += sub;
+        const vat = Number(v.vat_amount || Math.round(sub * 0.08));
+        const total = Number(v.total_amount || v.payable || (sub + vat));
+        totalGrandPayable += total;
     });
 
     const kpiCount = document.getElementById("kpiImportTotalCount");
     const kpiQty = document.getElementById("kpiImportTotalQty");
+    const kpiSub = document.getElementById("kpiImportSubtotalAmount");
     const kpiAmount = document.getElementById("kpiImportTotalAmount");
-    const kpiSup = document.getElementById("kpiImportSupplierCount");
 
-    if (kpiCount) kpiCount.textContent = formatNumber(records.length);
-    if (kpiQty) kpiQty.textContent = formatNumber(totalQty);
-    if (kpiAmount) kpiAmount.textContent = formatMoney(totalCost);
-    if (kpiSup) kpiSup.textContent = formatNumber(supSet.size);
+    if (kpiCount) kpiCount.textContent = formatNumber(vouchers.length);
+    if (kpiQty) kpiQty.textContent = formatNumber(totalImportQty);
+    if (kpiSub) kpiSub.textContent = formatMoney(totalSubtotal);
+    if (kpiAmount) kpiAmount.textContent = formatMoney(totalGrandPayable);
 
-    // 4. Render Table Rows
-    if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không tìm thấy lịch sử nhập hàng phù hợp</td></tr>`;
-        return;
+    // 4. Render Table 1: Vouchers Table
+    if (vouchersTableBody) {
+        vouchersTableBody.innerHTML = "";
+        if (filteredVouchers.length === 0) {
+            vouchersTableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không tìm thấy phiếu nhập kho nào phù hợp</td></tr>`;
+        } else {
+            filteredVouchers.forEach((v, idx) => {
+                const tr = document.createElement("tr");
+                const sub = Number(v.subtotal || v.total_cost || 0);
+                const vat = Number(v.vat_amount || Math.round(sub * 0.08));
+                const total = Number(v.total_amount || v.payable || (sub + vat));
+
+                let photoBadge = '<span style="font-size:0.75rem; color:#94a3b8;">Chưa có</span>';
+                if (v.signed_photo_url) {
+                    photoBadge = `
+                        <button type="button" onclick="window.previewImportSignedPhoto('${v.id}')" style="background:#ecfdf5; border:1px solid #10b981; color:#065f46; border-radius:6px; padding:2px 6px; font-size:0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:4px; cursor:pointer;" title="Xem ảnh chứng từ ký nhận">
+                            <i data-lucide="image" style="width:12px; height:12px; color:#10b981;"></i> 📸 Xem ảnh
+                        </button>
+                    `;
+                }
+
+                const itemsSummary = (v.items || []).map(it => `${it.name} (${it.qty} ${it.unit || 'Cái'})`).slice(0, 2).join(", ") + ((v.items || []).length > 2 ? `... (+${(v.items || []).length - 2})` : '');
+
+                tr.innerHTML = `
+                    <td style="text-align:center; font-weight:bold;">${idx + 1}</td>
+                    <td>
+                        <strong style="color:#0284c7; font-family:monospace; font-size:0.9rem;">${v.voucher_no || v.id}</strong>
+                        <div style="font-size:0.75rem; color:#64748b;">Mẫu 01 - VT</div>
+                    </td>
+                    <td><i data-lucide="calendar" style="width:12px; height:12px; display:inline-block; vertical-align:middle; color:#64748b;"></i> ${v.date || ''}</td>
+                    <td>
+                        <strong>${v.supplier || 'In Lạc Hồng'}</strong>
+                        <div style="font-size:0.75rem; color:#64748b;">${v.notes || 'Nhập từ xưởng/NCC'}</div>
+                    </td>
+                    <td>
+                        <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.82rem; font-weight:600; color:#334155;">
+                            <i data-lucide="user-check" style="width:13px; height:13px; color:#0284c7;"></i> ${v.creator_name || 'Admin'}
+                        </span>
+                    </td>
+                    <td style="text-align:right;">
+                        <span style="font-weight:800; color:#0284c7; font-size:0.95rem;">${Number(v.total_qty || 0).toLocaleString('vi-VN')}</span>
+                        <div style="font-size:0.72rem; color:#64748b;" title="${itemsSummary}">${(v.items || []).length} mặt hàng</div>
+                    </td>
+                    <td style="text-align:right; font-weight:600; color:#334155;">${formatMoney(sub)}</td>
+                    <td style="text-align:right; font-weight:700; color:#047857;">${formatMoney(vat)}</td>
+                    <td style="text-align:right; font-weight:900; color:#108f53; font-size:0.98rem;">${formatMoney(total)}</td>
+                    <td style="text-align:center;">
+                        <span style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; border-radius:12px; padding:3px 10px; font-size:0.75rem; font-weight:800; display:inline-block;">✓ Hoàn thành</span>
+                    </td>
+                    <td style="text-align:center;">${photoBadge}</td>
+                    <td style="text-align:center;">
+                        <div style="display:flex; justify-content:center; gap:6px;">
+                            <button type="button" onclick="window.openGoodsImportPrintModal('${v.id}')" class="btn btn-secondary" style="padding:4px 8px; font-size:0.78rem; display:inline-flex; align-items:center; gap:4px; color:#0284c7; border-color:#0284c7;" title="Xem & In Phiếu nhập kho (Mẫu 01 - VT)">
+                                <i data-lucide="printer" style="width:13px; height:13px;"></i> In phiếu
+                            </button>
+                            <button type="button" onclick="window.quickCaptureImportSignedPhoto('${v.id}')" class="btn btn-secondary" style="padding:4px 8px; font-size:0.78rem; color:#7c3aed; border-color:#7c3aed;" title="Chụp ảnh chứng từ ký nhận Mobile">
+                                <i data-lucide="camera" style="width:13px; height:13px;"></i>
+                            </button>
+                            <button type="button" onclick="window.deleteImportVoucher('${v.id}')" class="btn btn-danger" style="padding:4px 8px; font-size:0.78rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px;" title="Xóa phiếu nhập kho">
+                                <i data-lucide="trash-2" style="width:13px; height:13px;"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                vouchersTableBody.appendChild(tr);
+            });
+        }
     }
 
-    filtered.forEach(rec => {
-        const row = document.createElement("tr");
-        const dateObj = new Date(rec.created_at);
-        const timeFormatted = isNaN(dateObj.getTime()) ? rec.created_at : dateObj.toLocaleString('vi-VN');
-        const lineTotal = rec.total_cost || (rec.qty * (rec.cost_price || 0));
+    // 5. Render Table 2: Items Detailed Table
+    if (itemsTableBody) {
+        itemsTableBody.innerHTML = "";
+        const filteredItems = itemsRecords.filter(r => {
+            if (!r) return false;
+            if (selectedSup && r.supplier !== selectedSup) return false;
+            const timeStr = r.created_at || "";
+            if (period === "today" && !timeStr.startsWith(todayStr)) return false;
+            if (query) {
+                const sku = String(r.sku || "").toLowerCase();
+                const name = String(r.name || "").toLowerCase();
+                const sup = String(r.supplier || "").toLowerCase();
+                return sku.includes(query) || name.includes(query) || sup.includes(query);
+            }
+            return true;
+        });
 
-        row.innerHTML = `
-            <td style="white-space:nowrap; font-size:0.85rem;"><i data-lucide="calendar" style="width:13px; height:13px; display:inline-block; vertical-align:middle; color:var(--text-secondary);"></i> ${timeFormatted}</td>
-            <td><span style="font-family:monospace; font-weight:700; color:var(--primary); font-size:0.85rem;">${rec.id || '---'}</span></td>
-            <td><strong>${rec.sku}</strong></td>
-            <td><strong>${rec.name || '---'}</strong></td>
-            <td>${rec.unit || 'Cái'}</td>
-            <td><span style="display:inline-block; padding:3px 8px; border-radius:4px; background:rgba(59,130,246,0.08); color:#2563eb; font-weight:600; font-size:0.82rem;">${rec.supplier || '---'}</span></td>
-            <td style="text-align:right;"><span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${formatNumber(rec.qty || 0)}</span></td>
-            <td style="text-align:right; font-weight:500;">${formatMoney(rec.cost_price || 0)}</td>
-            <td style="text-align:right; font-weight:700; color:var(--text);">${formatMoney(lineTotal)}</td>
-            <td><span style="display:inline-flex; align-items:center; gap:4px; font-weight:600; color:#334155; font-size:0.85rem;"><i data-lucide="user-check" style="width:14px; height:14px; color:#0284c7;"></i> ${rec.creator || 'Admin'}</span></td>
-            <td style="font-size:0.82rem; color:#64748b;">${rec.note || ''}</td>
-            <td style="text-align:center;">
-                <button class="btn-icon text-danger" onclick="window.deleteOnlineImportRecord('${rec.id}')" title="Xóa bản ghi này"><i data-lucide="trash-2"></i></button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
+        if (filteredItems.length === 0) {
+            itemsTableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không tìm thấy mặt hàng nhập nào phù hợp</td></tr>`;
+        } else {
+            filteredItems.forEach(rec => {
+                const row = document.createElement("tr");
+                const dateObj = new Date(rec.created_at);
+                const timeFormatted = isNaN(dateObj.getTime()) ? rec.created_at : dateObj.toLocaleString('vi-VN');
+                const lineTotal = rec.total_cost || (rec.qty * (rec.cost_price || 0));
+
+                row.innerHTML = `
+                    <td style="white-space:nowrap; font-size:0.85rem;"><i data-lucide="calendar" style="width:13px; height:13px; display:inline-block; vertical-align:middle; color:var(--text-secondary);"></i> ${timeFormatted}</td>
+                    <td><span style="font-family:monospace; font-weight:700; color:#0284c7; font-size:0.85rem;">${rec.batch_id || rec.id || '---'}</span></td>
+                    <td><strong>${rec.sku}</strong></td>
+                    <td><strong>${rec.name || '---'}</strong></td>
+                    <td>${rec.unit || 'Cái'}</td>
+                    <td><span style="display:inline-block; padding:3px 8px; border-radius:4px; background:rgba(59,130,246,0.08); color:#2563eb; font-weight:600; font-size:0.82rem;">${rec.supplier || '---'}</span></td>
+                    <td style="text-align:right;"><span style="font-weight:700; color:#10b981; font-size:0.95rem;">+${formatNumber(rec.qty || 0)}</span></td>
+                    <td style="text-align:right; font-weight:500;">${formatMoney(rec.cost_price || 0)}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--text);">${formatMoney(lineTotal)}</td>
+                    <td><span style="display:inline-flex; align-items:center; gap:4px; font-weight:600; color:#334155; font-size:0.85rem;"><i data-lucide="user-check" style="width:14px; height:14px; color:#0284c7;"></i> ${rec.creator || 'Admin'}</span></td>
+                    <td style="font-size:0.82rem; color:#64748b;">${rec.note || ''}</td>
+                    <td style="text-align:center;">
+                        <button class="btn-icon text-danger" onclick="window.deleteOnlineImportRecord('${rec.id}')" title="Xóa dòng này"><i data-lucide="trash-2"></i></button>
+                    </td>
+                `;
+                itemsTableBody.appendChild(row);
+            });
+        }
+    }
 
     if (window.lucide && typeof lucide.createIcons === 'function') {
         lucide.createIcons();
     }
 };
+
+// Báo cáo tổng hợp Nhập kho
+window.showImportGoodsReport = function() {
+    const vouchers = state.online_import_vouchers || [];
+    let totalQty = 0;
+    let totalSubtotal = 0;
+    let totalVat = 0;
+    let totalGrand = 0;
+    const supMap = {};
+
+    vouchers.forEach(v => {
+        const qty = Number(v.total_qty || 0);
+        const sub = Number(v.subtotal || v.total_cost || 0);
+        const vat = Number(v.vat_amount || Math.round(sub * 0.08));
+        const total = Number(v.total_amount || v.payable || (sub + vat));
+        
+        totalQty += qty;
+        totalSubtotal += sub;
+        totalVat += vat;
+        totalGrand += total;
+
+        const sup = v.supplier || "Khác";
+        if (!supMap[sup]) supMap[sup] = { count: 0, qty: 0, total: 0 };
+        supMap[sup].count++;
+        supMap[sup].qty += qty;
+        supMap[sup].total += total;
+    });
+
+    let supRows = "";
+    Object.keys(supMap).forEach(sName => {
+        const d = supMap[sName];
+        supRows += `
+            <tr>
+                <td style="font-weight:700;">${sName}</td>
+                <td style="text-align:center;">${d.count} phiếu</td>
+                <td style="text-align:right; font-weight:700; color:#0284c7;">${d.qty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:800; color:#108f53;">${d.total.toLocaleString('vi-VN')}đ</td>
+            </tr>
+        `;
+    });
+
+    const reportHtml = `
+        <div style="font-family:inherit; padding:10px;">
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:18px;">
+                <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:12px; text-align:center;">
+                    <div style="font-size:0.8rem; color:#0369a1; font-weight:600;">Tổng số phiếu nhập</div>
+                    <div style="font-size:1.4rem; font-weight:900; color:#0284c7; margin-top:4px;">${vouchers.length}</div>
+                </div>
+                <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:12px; text-align:center;">
+                    <div style="font-size:0.8rem; color:#065f46; font-weight:600;">Tổng số lượng nhập</div>
+                    <div style="font-size:1.4rem; font-weight:900; color:#10b981; margin-top:4px;">${totalQty.toLocaleString('vi-VN')}</div>
+                </div>
+                <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:12px; text-align:center;">
+                    <div style="font-size:0.8rem; color:#92400e; font-weight:600;">Tổng tiền (Gồm VAT 8%)</div>
+                    <div style="font-size:1.4rem; font-weight:900; color:#d97706; margin-top:4px;">${totalGrand.toLocaleString('vi-VN')}đ</div>
+                </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; font-size:0.88rem; margin-bottom:6px;">
+                    <span>Cộng tiền hàng trước thuế:</span>
+                    <strong>${totalSubtotal.toLocaleString('vi-VN')}đ</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.88rem; color:#047857; margin-bottom:6px;">
+                    <span>Tổng tiền thuế GTGT (VAT 8%):</span>
+                    <strong>+${totalVat.toLocaleString('vi-VN')}đ</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; color:#108f53; border-top:1px dashed #cbd5e1; padding-top:6px;">
+                    <span>TỔNG GIÁ TRỊ NHẬP KHO:</span>
+                    <span>${totalGrand.toLocaleString('vi-VN')}đ</span>
+                </div>
+            </div>
+
+            <h4 style="margin:14px 0 8px 0; font-size:0.92rem; font-weight:800; color:#0f172a;">CHI TIẾT THEO NHÀ CUNG CẤP</h4>
+            <table class="table" style="font-size:0.85rem; width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#f1f5f9;">
+                        <th>Nhà cung cấp</th>
+                        <th style="text-align:center;">Số phiếu</th>
+                        <th style="text-align:right;">Tổng SL</th>
+                        <th style="text-align:right;">Tổng tiền (VAT)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${supRows || '<tr><td colspan="4" style="text-align:center;">Chưa có dữ liệu</td></tr>'}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    if (window.showBrandAlert) {
+        window.showBrandAlert("BÁO CÁO TỔNG HỢP NHẬP KHO HÀNG HÓA", reportHtml);
+    } else {
+        alert(`BÁO CÁO TỔNG HỢP NHẬP KHO\n\n- Tổng số phiếu nhập: ${vouchers.length}\n- Tổng SL nhập: ${totalQty.toLocaleString('vi-VN')}\n- Tiền hàng trước thuế: ${totalSubtotal.toLocaleString('vi-VN')}đ\n- Thuế GTGT (VAT 8%): ${totalVat.toLocaleString('vi-VN')}đ\n- Tổng giá trị nhập kho: ${totalGrand.toLocaleString('vi-VN')}đ`);
+    }
+};
+
+// Xuất danh sách phiếu nhập ra Excel
+window.exportImportVouchersToExcel = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const vouchers = state.online_import_vouchers || [];
+    if (vouchers.length === 0) {
+        alert("Chưa có phiếu nhập kho nào để xuất Excel!");
+        return;
+    }
+
+    const rows = [];
+    vouchers.forEach((v, idx) => {
+        const sub = Number(v.subtotal || v.total_cost || 0);
+        const vat = Number(v.vat_amount || Math.round(sub * 0.08));
+        const total = Number(v.total_amount || v.payable || (sub + vat));
+
+        (v.items || []).forEach(it => {
+            rows.push({
+                "STT": idx + 1,
+                "Mã phiếu nhập": v.voucher_no || v.id,
+                "Ngày nhập": v.date,
+                "Nhà cung cấp": v.supplier,
+                "Người lập phiếu": v.creator_name || "Admin",
+                "Mã SKU": it.sku,
+                "Tên sản phẩm": it.name,
+                "Đơn vị tính": it.unit,
+                "Số lượng": it.qty,
+                "Đơn giá nhập": it.cost_price,
+                "Thành tiền (chưa VAT)": it.total_cost || (it.qty * it.cost_price),
+                "Thuế VAT (8%)": vat,
+                "Tổng tiền thanh toán": total,
+                "Ghi chú": v.notes || ""
+            });
+        });
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Danh_Sach_Phieu_Nhap_Kho");
+    XLSX.writeFile(wb, `Danh_Sach_Phieu_Nhap_Kho_${new Date().toISOString().slice(0,10)}.xlsx`);
+};
+
+// ==========================================================================
+// MODAL IN PHIẾU NHẬP KHO CHUẨN MẪU SỐ 01 - VT (A4 - IN LẠC HỒNG THEME)
+// ==========================================================================
+window.openGoodsImportPrintModal = function(voucherId) {
+    const v = (state.online_import_vouchers || []).find(r => r.id === voucherId || r.voucher_no === voucherId);
+    if (!v) {
+        alert("Lỗi: Không tìm thấy phiếu nhập kho!");
+        return;
+    }
+
+    window.editingPrintImportId = voucherId;
+    const printContent = document.getElementById("goodsImportPrintContent");
+    if (!printContent) return;
+
+    const d = v.date ? new Date(v.date) : new Date();
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+
+    let rowsHtml = "";
+    (v.items || []).forEach((it, idx) => {
+        const lineTotal = it.total_cost || (it.qty * (it.cost_price || 0));
+        rowsHtml += `
+            <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="text-align:left; font-weight:bold;">${it.name}<br><small style="font-weight:normal; color:#475569;">${it.sku || ''}</small></td>
+                <td style="text-align:center;">${it.unit || 'Chiếc'}</td>
+                <td style="text-align:right; font-weight:bold; color:#0369a1;">${Number(it.qty || 0).toLocaleString('vi-VN')}</td>
+                <td style="text-align:right;">${Number(it.cost_price || 0).toLocaleString('vi-VN')}đ</td>
+                <td style="text-align:right; font-weight:bold;">${Number(lineTotal).toLocaleString('vi-VN')}đ</td>
+            </tr>
+        `;
+    });
+
+    // Thêm các dòng trống cho tròn 3 dòng nếu ít hàng
+    for (let i = (v.items || []).length; i < 3; i++) {
+        rowsHtml += `
+            <tr>
+                <td style="text-align:center;">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        `;
+    }
+
+    const subtotal = Number(v.subtotal || v.total_cost || 0);
+    const vatAmount = Number(v.vat_amount || Math.round(subtotal * 0.08));
+    const totalAmount = Number(v.total_amount || v.payable || (subtotal + vatAmount));
+    const amountWords = v.amount_in_words || ((typeof window.docSoThanhChu === 'function') ? window.docSoThanhChu(totalAmount) : "");
+
+    printContent.innerHTML = `
+        <div class="mau-01-vt-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; border-bottom:2px solid #0284c7; padding-bottom:8px;">
+            <div class="mau-01-vt-header-left" style="display:flex; align-items:center; gap:12px;">
+                <div style="background:#ffffff; padding:4px 8px; border:1px solid #0284c7; border-radius:6px; display:inline-flex; align-items:center;">
+                    <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng" style="height:36px; max-width:130px; object-fit:contain; display:block;">
+                </div>
+                <div>
+                    <strong style="color:#0284c7; font-size:14px; text-transform:uppercase; letter-spacing:0.3px;">CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong><br>
+                    <span style="font-size:11.5px; color:#475569;">Số 14 Pháo Đài Láng, P. Láng, Hà Nội | Hotline: <strong>0907.86.1111 - 024.3733.1111</strong></span><br>
+                    <span style="font-size:11.5px; color:#475569;">Xưởng Gia Công: KCN Ứng Hòa – Hà Nội</span>
+                </div>
+            </div>
+            <div class="mau-01-vt-header-right" style="text-align:right;">
+                <strong style="color:#0284c7; font-size:13.5px;">MẪU SỐ: 01 - VT</strong><br>
+                <em style="font-size:11px; color:#64748b;">(Ban hành theo Thông tư BTC)</em><br>
+                <span style="font-size:11.5px; font-weight:bold; color:#0369a1;">Số phiếu: ${v.voucher_no || v.id}</span><br>
+                <span style="font-size:11.5px; color:#475569;">Ngày: ${v.date || ''}</span>
+            </div>
+        </div>
+
+        <div class="mau-01-vt-title" style="text-align:center; margin:8px 0 12px 0;">
+            <h2 style="font-size:22px; font-weight:800; color:#0284c7; margin:0 0 3px 0; text-transform:uppercase;">PHIẾU NHẬP KHO</h2>
+            <div class="date-line" style="font-style:italic; font-size:12.5px; color:#475569;">(Bổ sung số lượng hàng hóa vào kho thành phẩm)</div>
+        </div>
+
+        <div class="mau-01-vt-meta-lines" style="margin-bottom:12px; font-size:12.5px; line-height:1.5;">
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:3px;">
+                <div><strong>Nhà cung cấp / Đơn vị giao:</strong> <span style="font-weight:700; color:#0f172a;">${v.supplier || 'In Lạc Hồng'}</span></div>
+                <div><strong>Người nhập kho:</strong> ${v.creator_name || 'Thủ kho / Admin'}</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:3px;">
+                <div><strong>Nhập tại kho:</strong> Kho Thành Phẩm In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội</div>
+                <div><strong>Hình thức thanh toán:</strong> ${v.payment_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'}</div>
+            </div>
+            <div><strong>Ghi chú / Nguồn hàng:</strong> ${v.notes || 'Nhập hàng từ xưởng/NCC'}</div>
+        </div>
+
+        <table class="mau-01-vt-table">
+            <thead>
+                <tr>
+                    <th style="width:36px; text-align:center;">STT</th>
+                    <th style="text-align:left; padding-left:8px;">Tên hàng hóa, quy cách</th>
+                    <th style="width:60px; text-align:center;">ĐVT</th>
+                    <th style="width:90px; text-align:right;">Số lượng</th>
+                    <th style="width:115px; text-align:right;">Đơn giá nhập</th>
+                    <th style="width:130px; text-align:right;">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rowsHtml}
+                <tr class="summary-row" style="background:#f0f9ff; font-weight:bold;">
+                    <td colspan="3" style="text-align:center;">Tổng cộng số lượng:</td>
+                    <td style="text-align:right; color:#0369a1; font-size:0.95rem;">${Number(v.total_qty || 0).toLocaleString('vi-VN')}</td>
+                    <td style="text-align:right;">Cộng tiền hàng:</td>
+                    <td style="text-align:right; color:#0369a1;">${subtotal.toLocaleString('vi-VN')}đ</td>
+                </tr>
+                <tr style="font-weight:bold; background:#fafafa;">
+                    <td colspan="5" style="text-align:right; padding:4px 8px; border:1px solid #0284c7;">Thuế GTGT (VAT 8%):</td>
+                    <td style="text-align:right; padding:4px 8px; border:1px solid #0284c7; color:#047857;">${vatAmount.toLocaleString('vi-VN')}đ</td>
+                </tr>
+                <tr style="font-weight:900; background:#f0f9ff; border-top:2px solid #0284c7;">
+                    <td colspan="5" style="text-align:right; padding:5px 8px; font-size:13px; color:#0369a1; border:1px solid #0284c7;">TỔNG TIỀN THANH TOÁN (GỒM VAT 8%):</td>
+                    <td style="text-align:right; padding:5px 8px; font-size:13.5px; color:#0284c7; border:1px solid #0284c7;">${totalAmount.toLocaleString('vi-VN')}đ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin:8px 0 14px 0; font-size:12.5px;">
+            <strong>Tổng số tiền bằng chữ:</strong> <em style="color:#0369a1; font-weight:bold;">${amountWords}</em>
+        </div>
+
+        <div class="mau-01-vt-signatures-section">
+            <div style="text-align:right; font-style:italic; font-size:12px; margin-bottom:8px; padding-right:15px;">
+                Ngày ${day} tháng ${month} năm ${year}
+            </div>
+            <div class="mau-01-vt-sig-grid">
+                <div class="mau-01-vt-sig-col">
+                    <strong>Người lập phiếu</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${v.creator_name || 'Admin'}</div>
+                </div>
+                <div class="mau-01-vt-sig-col">
+                    <strong>Người giao hàng</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${v.supplier || 'In Lạc Hồng'}</div>
+                </div>
+                <div class="mau-01-vt-sig-col">
+                    <strong>Thủ kho</strong>
+                    <em>(ký, họ tên)</em>
+                    <div class="signer-name">${v.receiver_name || 'Trần Thị Trang'}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("goodsImportPrintModal")?.classList.add("active");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.closeGoodsImportPrintModal = function() {
+    document.getElementById("goodsImportPrintModal")?.classList.remove("active");
+};
+
+window.printGoodsImportVoucherFromModal = function() {
+    window.print();
+};
+
+window.exportGoodsImportToPdf = function() {
+    if (typeof html2pdf === 'undefined') {
+        alert("Thư viện html2pdf đang tải, vui lòng thử lại sau 2 giây.");
+        return;
+    }
+    const printContent = document.getElementById("goodsImportPrintContent");
+    if (!printContent) return;
+
+    const v = (state.online_import_vouchers || []).find(r => r.id === window.editingPrintImportId);
+    const voucherNo = v?.voucher_no || "Phieu-Nhap-Kho";
+    const cleanNo = voucherNo.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+    const opt = {
+        margin: [6, 8, 6, 8],
+        filename: `${cleanNo}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(printContent).save();
+};
+
+window.shareGoodsImportVoucher = function() {
+    const v = (state.online_import_vouchers || []).find(r => r.id === window.editingPrintImportId);
+    const voucherNo = v?.voucher_no || "Phiếu nhập kho";
+    const shareTitle = `Phiếu nhập kho ${voucherNo} - In Lạc Hồng`;
+    const shareText = `In Lạc Hồng - Phiếu nhập kho: ${voucherNo}\nNhà cung cấp: ${v?.supplier || ''}\nSố lượng: ${Number(v?.total_qty || 0).toLocaleString('vi-VN')} chiếc/bộ\nNgày: ${v?.date || ''}`;
+
+    if (navigator.share) {
+        navigator.share({ title: shareTitle, text: shareText, url: window.location.href }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(`${shareTitle}\n${shareText}`);
+        alert("✓ Đã sao chép thông tin phiếu nhập kho vào bộ nhớ đệm (Clipboard) để chia sẻ!");
+    }
+};
+
+window.handleImportPrintModalPhotoUpload = function(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const dataUrl = evt.target.result;
+        const v = (state.online_import_vouchers || []).find(r => r.id === window.editingPrintImportId);
+        if (v) {
+            v.signed_photo_url = dataUrl;
+            state.updateState("online_import_vouchers", state.online_import_vouchers);
+            window.renderOnlineImportGoods();
+            alert("✓ Đã đính kèm ảnh ký nhận chứng từ nhập kho thành công!");
+        }
+    };
+    reader.readAsDataURL(file);
+};
+
+window.quickCaptureImportSignedPhoto = function(voucherId) {
+    window.editingPrintImportId = voucherId;
+    const input = document.getElementById("importPrintModalCameraInput");
+    if (input) input.click();
+};
+
+window.previewImportSignedPhoto = function(voucherId) {
+    const v = (state.online_import_vouchers || []).find(r => r.id === voucherId);
+    if (v && v.signed_photo_url) {
+        window.openStockExportPhotoLightbox(v.signed_photo_url, v.voucher_no || "Phiếu nhập kho");
+    }
+};
+
+window.deleteImportVoucher = function(voucherId) {
+    const v = (state.online_import_vouchers || []).find(r => r.id === voucherId);
+    if (!v) return;
+
+    if (!confirm(`Bạn có chắc chắn muốn xóa phiếu nhập kho "${v.voucher_no || voucherId}" không?\n\nLưu ý: Số lượng trong phiếu sẽ được tự động trừ lùi khỏi tồn kho.`)) {
+        return;
+    }
+
+    // Trừ lùi tồn kho
+    (v.items || []).forEach(it => {
+        if (it.sku && it.qty > 0) {
+            const prod = (state.online_products || []).find(p => p.sku === it.sku);
+            if (prod) {
+                prod.stock_qty = Math.max(0, (prod.stock_qty || 0) - it.qty);
+            }
+        }
+    });
+
+    state.online_import_vouchers = (state.online_import_vouchers || []).filter(r => r.id !== voucherId);
+    state.updateState("online_products", state.online_products);
+    state.updateState("online_import_vouchers", state.online_import_vouchers);
+
+    if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+    window.renderOnlineImportGoods();
+    alert("Đã xóa phiếu nhập kho và cập nhật tồn kho thành công.");
+};
+
 
 // 1. Tải file mẫu Excel chuẩn
 window.downloadImportExcelTemplate = function() {
@@ -38378,36 +38950,66 @@ window.submitGoodsImportPos = function(andPrint = false) {
         state.online_import_records.unshift(newImportRec);
     });
 
-    // 2. Lưu state
+    // 2. Lưu chi tiết phiếu nhập kho & VAT 8%
+    const vatRate = 8;
+    const vatAmount = Math.round(totalCost * 0.08);
+    const grandPayable = totalCost + vatAmount - discount;
+    const amountInWords = (typeof window.docSoThanhChu === 'function') ? window.docSoThanhChu(grandPayable) : "";
+
+    const newVoucher = {
+        id: voucherNo,
+        voucher_no: voucherNo,
+        date: date,
+        created_at: new Date().toISOString(),
+        supplier: supplier,
+        creator_name: creatorName,
+        receiver_name: "Trần Thị Trang",
+        notes: notes,
+        payment_method: paymentMethod,
+        payment_status: paymentStatus,
+        items: cart.map(it => ({
+            sku: it.sku,
+            name: it.name,
+            unit: it.unit || 'Cái',
+            qty: it.qty,
+            cost_price: it.cost_price,
+            total_cost: it.qty * it.cost_price
+        })),
+        total_qty: totalQty,
+        subtotal: totalCost,
+        vat_rate: 8,
+        vat_amount: vatAmount,
+        discount: discount,
+        total_amount: grandPayable,
+        payable: grandPayable,
+        amount_in_words: amountInWords,
+        status: "COMPLETED",
+        signed_photo_url: ""
+    };
+
+    if (!state.online_import_vouchers) state.online_import_vouchers = [];
+    state.online_import_vouchers.unshift(newVoucher);
+
+    // Lưu state
     state.updateState("online_products", state.online_products);
     state.updateState("online_stock_logs", state.online_stock_logs);
     state.updateState("online_import_records", state.online_import_records);
+    state.updateState("online_import_vouchers", state.online_import_vouchers);
 
     // 3. Re-render UI
     if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
     if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
     if (typeof window.renderOnlineImportGoods === 'function') window.renderOnlineImportGoods();
 
-    alert(`✅ NHẬP KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nNhà cung cấp: ${supplier}\nTổng sản phẩm nhập: ${cart.length} mặt hàng (${totalQty.toLocaleString('vi-VN')} chiếc/bộ)\nTổng giá trị: ${totalCost.toLocaleString('vi-VN')}đ\n\nTồn kho đã được cộng dồn tự động.`);
+    alert(`✅ NHẬP KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nNhà cung cấp: ${supplier}\nTổng sản phẩm nhập: ${cart.length} mặt hàng (${totalQty.toLocaleString('vi-VN')} chiếc/bộ)\nTiền hàng: ${totalCost.toLocaleString('vi-VN')}đ | Thuế VAT 8%: ${vatAmount.toLocaleString('vi-VN')}đ\nTổng thanh toán: ${grandPayable.toLocaleString('vi-VN')}đ\n\nTồn kho đã được cộng dồn tự động.`);
 
-    if (andPrint) {
-        window.printGoodsImportVoucher({
-            voucherNo,
-            supplier,
-            date,
-            notes,
-            creatorName,
-            items: cart,
-            totalQty,
-            totalCost,
-            discount,
-            payable: totalCost - discount
-        });
-    }
-
-    // Reset giỏ và đóng modal
+    // Reset giỏ và đóng modal POS
     window.goodsImportPosCart = [];
     window.closeGoodsImportPosModal();
+
+    if (andPrint) {
+        window.openGoodsImportPrintModal(voucherNo);
+    }
 };
 
 window.printGoodsImportVoucher = function(data) {
@@ -38991,6 +39593,12 @@ window.handleStockExportOrderChange = function(orderNumber) {
         const remainingToDeliver = Math.max(0, reqQty - deliveredSoFar);
         totalRemainingQty += remainingToDeliver;
 
+        let itemPrice = Number(it.price || it.unit_price || it.final_price || 0);
+        if (!itemPrice && it.sku) {
+            const prod = (state.online_products || []).find(p => p.sku === it.sku);
+            if (prod) itemPrice = Number(prod.retail_price || prod.wholesale_price || prod.cost_price || 0);
+        }
+
         window.addStockExportRow({
             name: it.name,
             sku: it.sku || "",
@@ -38999,6 +39607,7 @@ window.handleStockExportOrderChange = function(orderNumber) {
             real_qty: remainingToDeliver, // Mặc định xuất hết phần còn lại
             order_qty: reqQty,
             remaining_qty: remainingToDeliver,
+            unit_price: itemPrice,
             note: `Theo đơn ${order.order_number || order.id}`
         });
     });
@@ -39056,7 +39665,7 @@ window.handleStockExportWarehouseChange = function(whCode) {
     }
 };
 
-// Thêm dòng hàng hóa xuất kho (Chỉ cho phép nhập số theo các trường liên quan đến số lượng)
+// Thêm dòng hàng hóa xuất kho (Đầy đủ đơn giá xuất và tính thành tiền + VAT 8%)
 window.addStockExportRow = function(item = {}) {
     const tbody = document.getElementById("stockExportItemsTableBody");
     if (!tbody) return;
@@ -39067,10 +39676,14 @@ window.addStockExportRow = function(item = {}) {
     let prodOptions = '<option value="">-- Chọn sản phẩm có sẵn --</option>';
     products.forEach(p => {
         const isSel = (item.sku && p.sku === item.sku) ? "selected" : "";
-        prodOptions += `<option value="${p.sku}" data-name="${p.name}" data-unit="${p.unit || 'Cái'}" data-stock="${p.stock_qty || 0}" ${isSel}>${p.sku} - ${p.name} (Tồn: ${p.stock_qty})</option>`;
+        const price = p.retail_price || p.wholesale_price || p.cost_price || 0;
+        prodOptions += `<option value="${p.sku}" data-name="${p.name}" data-unit="${p.unit || 'Cái'}" data-stock="${p.stock_qty || 0}" data-price="${price}" ${isSel}>${p.sku} - ${p.name} (Tồn: ${p.stock_qty})</option>`;
     });
 
     const orderQty = (item.order_qty !== undefined) ? item.order_qty : (item.req_qty || 0);
+    const unitPrice = (item.unit_price !== undefined) ? Number(item.unit_price) : Number(item.price || 0);
+    const realQty = (item.real_qty !== undefined) ? Number(item.real_qty) : 0;
+    const lineTotal = realQty * unitPrice;
 
     const tr = document.createElement("tr");
     tr.className = "stock-export-row";
@@ -39095,8 +39708,14 @@ window.addStockExportRow = function(item = {}) {
             <input type="number" min="0" step="1" inputmode="numeric" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control row-item-req" value="${item.req_qty !== undefined ? item.req_qty : ''}" placeholder="SL Yêu cầu" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.85rem; text-align:right;">
         </td>
         <td>
-            <input type="number" min="0" step="1" inputmode="numeric" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control row-item-real" value="${item.real_qty !== undefined ? item.real_qty : 0}" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.88rem; font-weight:bold; text-align:right; color:#108f53;">
+            <input type="number" min="0" step="1" inputmode="numeric" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control row-item-real" value="${realQty}" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.88rem; font-weight:bold; text-align:right; color:#108f53;">
             <div class="row-qty-warning-box" style="font-size:0.75rem; font-weight:700; text-align:right; margin-top:2px;"></div>
+        </td>
+        <td>
+            <input type="number" min="0" step="any" inputmode="numeric" class="form-control row-item-price" value="${unitPrice}" placeholder="Đơn giá" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.85rem; text-align:right; font-weight:600;">
+        </td>
+        <td style="text-align:right; font-weight:700; color:#0f172a; white-space:nowrap;" class="row-item-total">
+            ${lineTotal.toLocaleString('vi-VN')}đ
         </td>
         <td>
             <input type="text" class="form-control row-item-note" value="${item.note || ''}" placeholder="Ghi chú quy cách, số kiện..." style="height:32px; font-size:0.82rem;">
@@ -39139,10 +39758,16 @@ window.handleStockExportRowProductSelect = function(selectEl) {
     const nameInput = row.querySelector(".row-item-name");
     const skuInput = row.querySelector(".row-item-sku");
     const unitInput = row.querySelector(".row-item-unit");
+    const priceInput = row.querySelector(".row-item-price");
 
     if (skuInput) skuInput.value = opt.value;
     if (nameInput) nameInput.value = opt.getAttribute("data-name") || "";
     if (unitInput) unitInput.value = opt.getAttribute("data-unit") || "Cái";
+
+    const prodPrice = opt.getAttribute("data-price");
+    if (priceInput && prodPrice !== null && prodPrice !== undefined) {
+        priceInput.value = prodPrice;
+    }
 
     window.recalcStockExportTotals();
 };
@@ -39164,15 +39789,25 @@ window.handleStockExportReceiverChange = function(receiverName) {
     }
 };
 
-// Tính toán tổng số lượng và hiển thị cảnh báo Vượt / Thiếu so với đơn hàng
+// Tính toán tổng số lượng, thành tiền, VAT 8% và hiển thị cảnh báo Vượt / Thiếu so với đơn hàng
 window.recalcStockExportTotals = function() {
     const rows = document.querySelectorAll("#stockExportItemsTableBody tr.stock-export-row");
     let totalRealQty = 0;
+    let subtotal = 0;
 
     rows.forEach(r => {
         const realQty = Math.max(0, parseInt(r.querySelector(".row-item-real")?.value) || 0);
+        const unitPrice = Math.max(0, parseFloat(r.querySelector(".row-item-price")?.value) || 0);
+        const lineTotal = realQty * unitPrice;
+
+        const totalCell = r.querySelector(".row-item-total");
+        if (totalCell) {
+            totalCell.textContent = lineTotal.toLocaleString('vi-VN') + "đ";
+        }
+
         const orderQty = parseInt(r.getAttribute("data-order-qty")) || parseInt(r.querySelector(".row-item-req")?.value) || 0;
         totalRealQty += realQty;
+        subtotal += lineTotal;
 
         const warnBox = r.querySelector(".row-qty-warning-box");
         if (warnBox) {
@@ -39190,8 +39825,32 @@ window.recalcStockExportTotals = function() {
         }
     });
 
+    const vatAmount = Math.round(subtotal * 0.08);
+    const totalPayment = subtotal + vatAmount;
+
     const sumQtyEl = document.getElementById("exportSummaryTotalQty");
     if (sumQtyEl) sumQtyEl.textContent = totalRealQty.toLocaleString('vi-VN');
+
+    const subtotalDisplayEl = document.getElementById("exportSubtotalDisplay");
+    if (subtotalDisplayEl) subtotalDisplayEl.textContent = subtotal.toLocaleString('vi-VN') + "đ";
+
+    const calcSubtotalEl = document.getElementById("exportCalcSubtotal");
+    if (calcSubtotalEl) calcSubtotalEl.textContent = subtotal.toLocaleString('vi-VN') + "đ";
+
+    const calcVatEl = document.getElementById("exportCalcVat");
+    if (calcVatEl) calcVatEl.textContent = vatAmount.toLocaleString('vi-VN') + "đ";
+
+    const calcTotalPaymentEl = document.getElementById("exportCalcTotalPayment");
+    if (calcTotalPaymentEl) calcTotalPaymentEl.textContent = totalPayment.toLocaleString('vi-VN') + "đ";
+
+    const calcAmountInWordsEl = document.getElementById("exportCalcAmountInWords");
+    if (calcAmountInWordsEl) {
+        if (totalPayment > 0 && typeof window.docSoThanhChu === 'function') {
+            calcAmountInWordsEl.textContent = window.docSoThanhChu(totalPayment);
+        } else {
+            calcAmountInWordsEl.textContent = "Không đồng";
+        }
+    }
 };
 
 // Xử lý upload/chụp ảnh từ camera điện thoại (capture="environment")
@@ -39260,6 +39919,7 @@ window.submitStockExport = function(andPrint = false) {
 
     const items = [];
     let totalRealQty = 0;
+    let subtotal = 0;
     let stockWarnings = [];
     let orderQtyDiffWarnings = [];
 
@@ -39269,6 +39929,8 @@ window.submitStockExport = function(andPrint = false) {
         const unit = r.querySelector(".row-item-unit")?.value.trim() || "Cái";
         const reqQtyNote = r.querySelector(".row-item-req")?.value.trim() || "";
         const realQty = Math.max(0, parseInt(r.querySelector(".row-item-real")?.value) || 0);
+        const unitPrice = Math.max(0, parseFloat(r.querySelector(".row-item-price")?.value) || 0);
+        const lineTotal = realQty * unitPrice;
         const orderQty = parseInt(r.getAttribute("data-order-qty")) || parseInt(reqQtyNote) || 0;
         const note = r.querySelector(".row-item-note")?.value.trim() || "";
 
@@ -39280,9 +39942,12 @@ window.submitStockExport = function(andPrint = false) {
                 req_qty_note: reqQtyNote,
                 order_qty: orderQty,
                 real_qty: realQty,
+                unit_price: unitPrice,
+                total_price: lineTotal,
                 note: note
             });
             totalRealQty += realQty;
+            subtotal += lineTotal;
 
             // Kiểm tra cảnh báo chênh lệch với số lượng đơn hàng
             if (orderQty > 0) {
@@ -39307,6 +39972,12 @@ window.submitStockExport = function(andPrint = false) {
         alert("Vui lòng điền số lượng Thực xuất > 0 cho ít nhất 1 mặt hàng!");
         return;
     }
+
+    // Tính toán tài chính có VAT 8%
+    const vatRate = 8;
+    const vatAmount = Math.round(subtotal * 0.08);
+    const totalAmount = subtotal + vatAmount;
+    const amountInWords = totalAmount > 0 && typeof window.docSoThanhChu === 'function' ? window.docSoThanhChu(totalAmount) : "Không đồng";
 
     // Hiển thị cảnh báo nếu số lượng xuất lệch với đơn hàng
     if (orderQtyDiffWarnings.length > 0) {
@@ -39386,6 +40057,11 @@ window.submitStockExport = function(andPrint = false) {
         destination: destination,
         items: items,
         total_real_qty: totalRealQty,
+        subtotal: subtotal,
+        vat_rate: vatRate,
+        vat_amount: vatAmount,
+        total_amount: totalAmount,
+        amount_in_words: amountInWords,
         attached_docs: attachedDocs,
         signer_creator: signerCreator,
         signer_receiver: signerReceiver,
@@ -39457,7 +40133,7 @@ window.submitStockExport = function(andPrint = false) {
         window.openStockExportPrintModal(recordId);
     } else {
         const statusText = statusVal === 'COMPLETED' ? 'Đã hoàn thành' : (statusVal === 'PARTIAL' ? 'Giao một phần' : 'Chờ xuất');
-        alert(`✅ ĐÃ LƯU PHIẾU XUẤT KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nTrạng thái: ${statusText}\nNgười nhận: ${receiverName} ${receiverPhone ? '(' + receiverPhone + ')' : ''}\n${vehiclePlate ? 'Biển số xe (BX): ' + vehiclePlate + '\n' : ''}Tổng thực xuất: ${totalRealQty.toLocaleString('vi-VN')} chiếc/bộ\n\nTồn kho và trạng thái đơn hàng đã được cập nhật.`);
+        alert(`✅ ĐÃ LƯU PHIẾU XUẤT KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nTrạng thái: ${statusText}\nNgười nhận: ${receiverName} ${receiverPhone ? '(' + receiverPhone + ')' : ''}\n${vehiclePlate ? 'Biển số xe (BX): ' + vehiclePlate + '\n' : ''}Tổng thực xuất: ${totalRealQty.toLocaleString('vi-VN')} chiếc/bộ\nTiền hàng: ${subtotal.toLocaleString('vi-VN')}đ\nVAT (8%): ${vatAmount.toLocaleString('vi-VN')}đ\nTổng tiền thanh toán: ${totalAmount.toLocaleString('vi-VN')}đ\n\nTồn kho và trạng thái đơn hàng đã được cập nhật.`);
     }
 };
 
@@ -39479,29 +40155,38 @@ window.openStockExportPrintModal = function(exportId) {
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
 
-    // Render bảng hàng hóa: STT, Sản phẩm / Hàng hóa, Mã số, ĐVT, Yêu cầu, Thực xuất, Ghi chú
+    // Render bảng hàng hóa: STT, Tên hàng hóa, Mã số, ĐVT, Yêu cầu, Thực xuất, Đơn giá, Thành tiền
     let rowsHtml = "";
+    let calcSubtotal = 0;
     (rec.items || []).forEach((it, idx) => {
         const reqStr = it.req_qty_note || (it.order_qty ? it.order_qty.toLocaleString('vi-VN') : (it.real_qty ? it.real_qty.toLocaleString('vi-VN') : ""));
         const realStr = it.real_qty ? it.real_qty.toLocaleString('vi-VN') : "0";
-        const noteStr = it.note || "";
+        const unitPrice = Number(it.unit_price || it.price || 0);
+        const lineTotal = it.total_price !== undefined ? Number(it.total_price) : (Number(it.real_qty || 0) * unitPrice);
+        calcSubtotal += lineTotal;
+        const priceStr = unitPrice > 0 ? unitPrice.toLocaleString('vi-VN') + "đ" : "-";
+        const totalStr = lineTotal > 0 ? lineTotal.toLocaleString('vi-VN') + "đ" : "-";
 
         rowsHtml += `
             <tr>
                 <td style="text-align:center;">${idx + 1}</td>
-                <td style="text-align:left; font-weight:bold;">${it.name}</td>
+                <td style="text-align:left; font-weight:bold;">
+                    ${it.name}
+                    ${it.note ? `<div style="font-size:11px; font-weight:normal; color:#475569; font-style:italic;">(${it.note})</div>` : ''}
+                </td>
                 <td style="text-align:center;">${it.sku || ''}</td>
                 <td style="text-align:center;">${it.unit || ''}</td>
                 <td style="text-align:right;">${reqStr}</td>
                 <td style="text-align:right; font-weight:bold; color:#065f46;">${realStr}</td>
-                <td style="text-align:left;">${noteStr}</td>
+                <td style="text-align:right;">${priceStr}</td>
+                <td style="text-align:right; font-weight:bold; color:#0f172a;">${totalStr}</td>
             </tr>
         `;
     });
 
-    // Thêm các dòng trống cho tròn 3 dòng nếu ít hàng để bảng cân đối
+    // Thêm các dòng trống cho tròn 2 dòng nếu ít hàng để bảng cân đối
     const totalRows = (rec.items || []).length;
-    for (let i = totalRows; i < 3; i++) {
+    for (let i = totalRows; i < 2; i++) {
         rowsHtml += `
             <tr>
                 <td style="text-align:center;">&nbsp;</td>
@@ -39511,9 +40196,16 @@ window.openStockExportPrintModal = function(exportId) {
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
+                <td>&nbsp;</td>
             </tr>
         `;
     }
+
+    const subtotal = rec.subtotal !== undefined ? Number(rec.subtotal) : calcSubtotal;
+    const vatRate = rec.vat_rate !== undefined ? Number(rec.vat_rate) : 8;
+    const vatAmount = rec.vat_amount !== undefined ? Number(rec.vat_amount) : Math.round(subtotal * (vatRate / 100));
+    const totalAmount = rec.total_amount !== undefined ? Number(rec.total_amount) : (subtotal + vatAmount);
+    const amountInWords = rec.amount_in_words || (totalAmount > 0 && typeof window.docSoThanhChu === 'function' ? window.docSoThanhChu(totalAmount) : "Không đồng");
 
     const bxHtml = rec.vehicle_plate 
         ? `<span class="mau-02-vt-bx-highlight">BX: ${rec.vehicle_plate}</span>` 
@@ -39528,28 +40220,30 @@ window.openStockExportPrintModal = function(exportId) {
         : "";
 
     printContent.innerHTML = `
-        <div class="mau-02-vt-header">
-            <div class="mau-02-vt-header-left">
-                <strong>Đơn vị:</strong> ${rec.unit_name || "Công ty Cổ phần In Lạc Hồng"}<br>
-                <strong>Hotline:</strong> ${rec.unit_phone || "0907.86.1111 - 024.3733.1111"}<br>
-                <strong>Bộ phận:</strong> ${rec.department || "Bộ phận Kinh doanh / Kho hàng"}<br>
-                <strong>Mã đơn vị SDNS:</strong> ${rec.sdns_code || "......................."}
+        <div class="mau-02-vt-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; border-bottom:1.5px solid #108f53; padding-bottom:6px;">
+            <div class="mau-02-vt-header-left" style="display:flex; gap:12px; align-items:center; width:58%;">
+                <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng" style="height:44px; object-fit:contain;" onerror="this.style.display='none'">
+                <div style="font-size:12px; line-height:1.35;">
+                    <div style="font-weight:800; font-size:13px; color:#108f53; text-transform:uppercase;">${rec.unit_name || "Công ty Cổ phần In Lạc Hồng"}</div>
+                    <div><strong>Địa chỉ:</strong> 14 Pháo Đài Láng, Đống Đa, Hà Nội</div>
+                    <div><strong>Hotline:</strong> <span style="color:#108f53; font-weight:700;">${rec.unit_phone || "0907.86.1111 - 024.3733.1111"}</span></div>
+                    <div><strong>Bộ phận:</strong> ${rec.department || "Bộ phận Kinh doanh / Kho hàng"} ${rec.sdns_code ? ` | <strong>Mã ĐV SDNS:</strong> ${rec.sdns_code}` : ''}</div>
+                </div>
             </div>
-            <div class="mau-02-vt-header-right">
-                <strong>Mẫu số 02 - VT</strong><br>
-                <em>(Ban hành kèm theo Thông tư của Bộ Tài chính)</em><br>
-                <span>Nợ: ${rec.debit_acc || "........."}</span><br>
-                <span>Có: ${rec.credit_acc || "........."}</span>
+            <div class="mau-02-vt-header-right" style="width:40%; text-align:right; font-size:12px; line-height:1.35;">
+                <strong style="color:#108f53; font-size:13px;">Mẫu số 02 - VT</strong><br>
+                <em style="font-size:11px; color:#475569;">(Ban hành theo TT số 200/2014/TT-BTC & 133/2016/TT-BTC)</em><br>
+                <div style="margin-top:2px;">Nợ: <strong>${rec.debit_acc || "632"}</strong> &nbsp;|&nbsp; Có: <strong>${rec.credit_acc || "156"}</strong></div>
             </div>
         </div>
 
-        <div class="mau-02-vt-title">
-            <h2>PHIẾU XUẤT KHO</h2>
-            <div class="date-line">Ngày ${day} tháng ${month} năm ${year}</div>
-            <div class="voucher-no">Số: ${rec.voucher_no}</div>
+        <div class="mau-02-vt-title" style="text-align:center; margin:8px 0 12px 0;">
+            <h2 style="font-size:22px; font-weight:800; color:#108f53; margin:0 0 3px 0; letter-spacing:0.5px;">PHIẾU XUẤT KHO</h2>
+            <div class="date-line" style="font-style:italic; font-size:12.5px; color:#334155;">Ngày ${day} tháng ${month} năm ${year}</div>
+            <div class="voucher-no" style="font-weight:700; font-size:13px; color:#065f46; margin-top:2px;">Số: <strong>${rec.voucher_no}</strong></div>
         </div>
 
-        <div class="mau-02-vt-meta-lines">
+        <div class="mau-02-vt-meta-lines" style="margin-bottom:10px; font-size:12.5px; line-height:1.45;">
             <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
                 <div><strong>Họ tên người nhận hàng:</strong> ${rec.receiver_name}${phoneHtml}</div>
                 <div>${companyHtml}</div>
@@ -39558,74 +40252,103 @@ window.openStockExportPrintModal = function(exportId) {
                 <div><strong>Địa chỉ (bộ phận) nhận:</strong> ${rec.receiver_address || "......................................."}</div>
                 <div>${bxHtml}</div>
             </div>
-            <div class="mau-02-vt-meta-row">
-                <strong>Lý do xuất kho:</strong> ${rec.reason || "......................................................................................................................."}
+            <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                <div><strong>Lý do xuất kho:</strong> ${rec.reason || "Xuất giao hàng thành phẩm theo đơn"}</div>
+                ${rec.order_number ? `<div><strong>Đơn hàng:</strong> <span style="color:#0284c7; font-weight:700;">${rec.order_number}</span></div>` : ''}
             </div>
             <div class="mau-02-vt-meta-row">
-                <strong>Xuất tại kho:</strong> ${rec.warehouse_location || rec.warehouse_name || "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội"} &nbsp;&nbsp;&nbsp;&nbsp; <strong>địa điểm:</strong> ${rec.destination || "......................................."}
+                <strong>Xuất tại kho:</strong> ${rec.warehouse_location || rec.warehouse_name || "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội"} &nbsp;&nbsp;&nbsp;&nbsp; <strong>địa điểm:</strong> ${rec.destination || "Hà Nội"}
             </div>
         </div>
 
         <table class="mau-02-vt-table">
             <thead>
                 <tr>
-                    <th rowspan="2" style="width:36px; text-align:center;">STT</th>
-                    <th rowspan="2" style="text-align:left; padding-left:10px;">Sản phẩm / Hàng hóa</th>
-                    <th rowspan="2" style="width:90px; text-align:center;">Mã số</th>
-                    <th rowspan="2" style="width:55px; text-align:center;">ĐVT</th>
+                    <th rowspan="2" style="width:34px; text-align:center;">STT</th>
+                    <th rowspan="2" style="text-align:left; padding-left:8px;">Tên, nhãn hiệu, quy cách hàng hóa</th>
+                    <th rowspan="2" style="width:75px; text-align:center;">Mã số</th>
+                    <th rowspan="2" style="width:50px; text-align:center;">ĐVT</th>
                     <th colspan="2" style="text-align:center;">Số lượng</th>
-                    <th rowspan="2" style="width:160px; text-align:left; padding-left:8px;">Ghi chú</th>
+                    <th rowspan="2" style="width:90px; text-align:right; padding-right:6px;">Đơn giá (đ)</th>
+                    <th rowspan="2" style="width:110px; text-align:right; padding-right:6px;">Thành tiền (đ)</th>
                 </tr>
                 <tr>
-                    <th style="width:80px; text-align:right;">Yêu cầu</th>
-                    <th style="width:80px; text-align:right;">Thực xuất</th>
+                    <th style="width:65px; text-align:right;">Yêu cầu</th>
+                    <th style="width:65px; text-align:right;">Thực xuất</th>
+                </tr>
+                <tr style="font-size:11px; font-weight:normal; background:#f8fafc; color:#64748b; text-align:center;">
+                    <td>A</td>
+                    <td>B</td>
+                    <td>C</td>
+                    <td>D</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4 = 2 x 3</td>
                 </tr>
             </thead>
             <tbody>
                 ${rowsHtml}
                 <tr class="summary-row">
-                    <td colspan="4" style="text-align:center; font-weight:bold;">Cộng:</td>
+                    <td colspan="4" style="text-align:center; font-weight:bold;">Cộng tiền hàng (chưa có thuế GTGT):</td>
                     <td></td>
                     <td style="text-align:right; font-weight:bold; color:#065f46;">${Number(rec.total_real_qty || 0).toLocaleString('vi-VN')}</td>
                     <td></td>
+                    <td style="text-align:right; font-weight:bold; color:#0f172a;">${subtotal.toLocaleString('vi-VN')}đ</td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align:right; font-weight:bold; color:#047857; padding-right:10px;">Thuế giá trị gia tăng (VAT 8%):</td>
+                    <td style="text-align:right; font-weight:bold; color:#047857;">${vatAmount.toLocaleString('vi-VN')}đ</td>
+                </tr>
+                <tr style="background:#f0fdf4; border-top:1.5px solid #108f53;">
+                    <td colspan="7" style="text-align:right; font-weight:800; color:#108f53; font-size:13px; padding-right:10px;">TỔNG TIỀN THANH TOÁN (GỒM VAT 8%):</td>
+                    <td style="text-align:right; font-weight:900; color:#108f53; font-size:13.5px;">${totalAmount.toLocaleString('vi-VN')}đ</td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="mau-02-vt-words-section">
-            <div><strong>Số chứng từ kèm theo:</strong> ${rec.attached_docs || "......................................................................................................................."}</div>
+        <div class="mau-02-vt-words-section" style="margin:6px 0 10px 0; font-size:12.5px; line-height:1.5;">
+            <div><strong>Tổng số tiền (viết bằng chữ):</strong> <em style="color:#065f46; font-weight:700;">${amountInWords}</em></div>
+            <div><strong>Số chứng từ gốc kèm theo:</strong> ${rec.attached_docs || "......................................................................................................................."}</div>
         </div>
 
-        <div class="mau-02-vt-signatures-section">
-            <div class="mau-02-vt-date-right">Ngày ${day} tháng ${month} năm ${year}</div>
-            <div class="mau-02-vt-sig-grid">
+        <div class="mau-02-vt-signatures-section" style="margin-top:10px; page-break-inside:avoid;">
+            <div class="mau-02-vt-date-right" style="text-align:right; font-style:italic; margin-bottom:6px; padding-right:15px; font-size:12.5px;">Ngày ${day} tháng ${month} năm ${year}</div>
+            <div class="mau-02-vt-sig-grid" style="display:grid; grid-template-columns:repeat(5, 1fr); text-align:center; gap:4px;">
                 <div class="mau-02-vt-sig-col">
-                    <strong>Người lập phiếu</strong>
-                    <em>(ký, họ tên)</em>
-                    <div class="signer-name">${rec.signer_creator || ""}</div>
+                    <strong style="display:block; font-size:12px; line-height:1.3; color:#0f172a;">Người lập phiếu</strong>
+                    <em style="display:block; font-size:10.5px; color:#475569; margin-bottom:48px;">(ký, họ tên)</em>
+                    <div class="signer-name" style="font-weight:bold; font-size:11.5px; color:#0f172a; min-height:16px;">${rec.signer_creator || ""}</div>
                 </div>
                 <div class="mau-02-vt-sig-col">
-                    <strong>Người nhận hàng</strong>
-                    <em>(ký, họ tên)</em>
-                    <div class="signer-name">${rec.signer_receiver || ""}</div>
+                    <strong style="display:block; font-size:12px; line-height:1.3; color:#0f172a;">Người nhận hàng</strong>
+                    <em style="display:block; font-size:10.5px; color:#475569; margin-bottom:48px;">(ký, họ tên)</em>
+                    <div class="signer-name" style="font-weight:bold; font-size:11.5px; color:#0f172a; min-height:16px;">${rec.signer_receiver || ""}</div>
                 </div>
                 <div class="mau-02-vt-sig-col">
-                    <strong>Thủ kho</strong>
-                    <em>(ký, họ tên)</em>
-                    <div class="signer-name">${rec.signer_storekeeper || ""}</div>
+                    <strong style="display:block; font-size:12px; line-height:1.3; color:#0f172a;">Thủ kho</strong>
+                    <em style="display:block; font-size:10.5px; color:#475569; margin-bottom:48px;">(ký, họ tên)</em>
+                    <div class="signer-name" style="font-weight:bold; font-size:11.5px; color:#0f172a; min-height:16px;">${rec.signer_storekeeper || ""}</div>
                 </div>
                 <div class="mau-02-vt-sig-col">
-                    <strong>Kế toán trưởng</strong>
-                    <em>(ký, họ tên)</em>
-                    <div class="signer-name">${rec.signer_accountant || ""}</div>
+                    <strong style="display:block; font-size:12px; line-height:1.3; color:#0f172a;">Kế toán trưởng</strong>
+                    <em style="display:block; font-size:10.5px; color:#475569; margin-bottom:48px;">(ký, họ tên)</em>
+                    <div class="signer-name" style="font-weight:bold; font-size:11.5px; color:#0f172a; min-height:16px;">${rec.signer_accountant || ""}</div>
                 </div>
                 <div class="mau-02-vt-sig-col">
-                    <strong>Thủ trưởng đơn vị</strong>
-                    <em>(ký, họ tên, đóng dấu)</em>
-                    <div class="signer-name">${rec.signer_director || ""}</div>
+                    <strong style="display:block; font-size:12px; line-height:1.3; color:#0f172a;">Thủ trưởng đơn vị</strong>
+                    <em style="display:block; font-size:10.5px; color:#475569; margin-bottom:48px;">(ký, họ tên, đóng dấu)</em>
+                    <div class="signer-name" style="font-weight:bold; font-size:11.5px; color:#0f172a; min-height:16px;">${rec.signer_director || ""}</div>
                 </div>
             </div>
         </div>
+
+        ${rec.signed_photo_url ? `
+            <div class="mau-02-vt-attached-photo-box print-hide" style="margin-top:14px; padding-top:10px; border-top:1px dashed #cbd5e1; text-align:center;">
+                <div style="font-weight:bold; font-size:12px; color:#059669; margin-bottom:6px;">📸 Ảnh chụp chứng từ đã ký nhận thực tế:</div>
+                <img src="${rec.signed_photo_url}" alt="Phiếu ký nhận" style="max-height:200px; max-width:90%; border-radius:6px; border:1px solid #cbd5e1; cursor:pointer;" onclick="window.openStockExportPhotoLightbox('${rec.signed_photo_url}', '${rec.voucher_no}')">
+            </div>
+        ` : ''}
     `;
 
     document.getElementById("stockExportPrintModal")?.classList.add("active");

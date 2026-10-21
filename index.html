@@ -66,7 +66,7 @@
     <!-- html2pdf.js for Clean A4 PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261022_voucher_advanced_v39">
+    <link rel="stylesheet" href="/style.css?v=20261022_full_vat8_v40">
 
     <script>
 
@@ -166,9 +166,17 @@
             </div>
             <h1 style="margin: 0; font-size: 1.05rem;">In Lạc Hồng</h1>
         </div>
-        <button class="mobile-quote-btn" id="mobileQuickQuoteBtn" title="Đặt hàng">
-            <i data-lucide="shopping-cart"></i>
-        </button>
+        <div style="display: flex; align-items: center; gap: 6px; margin-left: auto;">
+            <button type="button" onclick="window.openGoodsImportPosModal()" title="Nhập kho nhanh (POS)" style="background: #0284c7; color: #ffffff; border: none; border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(2,132,199,0.35);">
+                <i data-lucide="arrow-down-to-dot" style="width: 17px; height: 17px;"></i>
+            </button>
+            <button type="button" onclick="window.openStockExportModal()" title="Xuất kho nhanh (Mẫu 02-VT)" style="background: #108f53; color: #ffffff; border: none; border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(16,143,83,0.35);">
+                <i data-lucide="arrow-up-from-dot" style="width: 17px; height: 17px;"></i>
+            </button>
+            <button class="mobile-quote-btn" id="mobileQuickQuoteBtn" title="Đặt hàng">
+                <i data-lucide="shopping-cart"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Order Choice Modal -->
@@ -564,6 +572,18 @@
                             </div>
                         </div>
 
+                        <!-- Quick Import Button (Nhập kho nhanh) -->
+                        <button type="button" class="btn-quick-header-action" onclick="window.openGoodsImportPosModal()" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); box-shadow:0 2px 6px rgba(2,132,199,0.25);" title="Nhập kho nhanh (POS)">
+                            <i data-lucide="arrow-down-to-dot" style="width:15px; height:15px;"></i>
+                            <span>Nhập kho</span>
+                        </button>
+
+                        <!-- Quick Export Button (Xuất kho nhanh) -->
+                        <button type="button" class="btn-quick-header-action" onclick="window.openStockExportModal()" style="background:linear-gradient(135deg, #108f53 0%, #059669 100%); box-shadow:0 2px 6px rgba(16,143,83,0.25);" title="Xuất kho nhanh (Mẫu 02-VT)">
+                            <i data-lucide="arrow-up-from-dot" style="width:15px; height:15px;"></i>
+                            <span>Xuất kho</span>
+                        </button>
+
                         <!-- Theme Toggle Button (Light/Dark) -->
                         <button type="button" id="headerThemeToggleBtn" onclick="window.toggleAppTheme()" class="theme-toggle-header-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-primary); flex-shrink: 0;" title="Chuyển chế độ Giao diện Sáng (mặc định) / Tối">
                             <i data-lucide="sun" class="sun-icon" style="width: 18px; height: 18px; color: #f59e0b;"></i>
@@ -645,7 +665,7 @@
                         <span>Hàng hóa & Kho hàng</span>
                     </div>
                     <div class="hub-grid">
-                        <div class="hub-card" onclick="window.openGoodsImportPosModal()">
+                        <div class="hub-card" onclick="window.navigateTo('nhap-kho')">
                             <div class="hub-icon gradient-1" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
                                 <i data-lucide="arrow-down-to-dot"></i>
                             </div>
@@ -2406,11 +2426,11 @@
                         <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; margin-bottom:20px;">
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.85rem; font-weight:600; margin-bottom:8px;">
-                                    <span>Tổng số lượt nhập</span>
-                                    <i data-lucide="history" style="width:18px; height:18px; color:var(--primary);"></i>
+                                    <span>Tổng số phiếu nhập</span>
+                                    <i data-lucide="file-text" style="width:18px; height:18px; color:#0284c7;"></i>
                                 </div>
-                                <div id="kpiImportTotalCount" style="font-size:1.6rem; font-weight:800; color:var(--text-primary);">0</div>
-                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Lịch sử bổ sung kho</div>
+                                <div id="kpiImportTotalCount" style="font-size:1.6rem; font-weight:800; color:#0284c7;">0</div>
+                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Theo Mẫu số 01 - VT</div>
                             </div>
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.85rem; font-weight:600; margin-bottom:8px;">
@@ -2422,19 +2442,19 @@
                             </div>
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.85rem; font-weight:600; margin-bottom:8px;">
-                                    <span>Tổng giá trị nhập</span>
-                                    <i data-lucide="circle-dollar-sign" style="width:18px; height:18px; color:#f59e0b;"></i>
+                                    <span>Tiền hàng trước thuế</span>
+                                    <i data-lucide="calculator" style="width:18px; height:18px; color:#f59e0b;"></i>
                                 </div>
-                                <div id="kpiImportTotalAmount" style="font-size:1.6rem; font-weight:800; color:#f59e0b;">0đ</div>
-                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Theo đơn giá nhập NCC</div>
+                                <div id="kpiImportSubtotalAmount" style="font-size:1.6rem; font-weight:800; color:#f59e0b;">0đ</div>
+                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Theo giá nhập NCC</div>
                             </div>
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.85rem; font-weight:600; margin-bottom:8px;">
-                                    <span>Nhà cung cấp đã giao</span>
-                                    <i data-lucide="truck" style="width:18px; height:18px; color:#8b5cf6;"></i>
+                                    <span>Tổng giá trị nhập (VAT 8%)</span>
+                                    <i data-lucide="circle-dollar-sign" style="width:18px; height:18px; color:#108f53;"></i>
                                 </div>
-                                <div id="kpiImportSupplierCount" style="font-size:1.6rem; font-weight:800; color:#8b5cf6;">0</div>
-                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Từ danh mục đối tác</div>
+                                <div id="kpiImportTotalAmount" style="font-size:1.6rem; font-weight:800; color:#108f53;">0đ</div>
+                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Đã cộng thuế GTGT 8%</div>
                             </div>
                         </div>
 
@@ -2443,28 +2463,42 @@
                             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                                 <div class="search-box" style="width:230px;">
                                     <i data-lucide="search"></i>
-                                    <input type="text" placeholder="Tìm SKU, tên, người nhập..." id="onlineImportHistorySearchInput" oninput="window.renderOnlineImportGoods()">
+                                    <input type="text" placeholder="Tìm số phiếu, NCC, SKU..." id="onlineImportHistorySearchInput" oninput="window.renderOnlineImportGoods()">
                                 </div>
-                                <select class="form-select" id="onlineImportHistorySupplierFilter" style="width:210px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineImportGoods()">
+                                <select class="form-select" id="onlineImportHistorySupplierFilter" style="width:200px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineImportGoods()">
                                     <option value="">-- Tất cả Nhà cung cấp --</option>
                                 </select>
-                                <select class="form-select" id="onlineImportHistoryPeriodFilter" style="width:160px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineImportGoods()">
+                                <select class="form-select" id="onlineImportHistoryPeriodFilter" style="width:150px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineImportGoods()">
                                     <option value="all">Tất cả thời gian</option>
                                     <option value="today">Hôm nay</option>
                                     <option value="this_week">Tuần này</option>
                                     <option value="this_month">Tháng này</option>
                                     <option value="last_month">Tháng trước</option>
                                 </select>
+
+                                <!-- View Toggle: Phiếu Nhập Kho vs Chi tiết Mặt hàng -->
+                                <div class="btn-group" style="display:inline-flex; border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
+                                    <button type="button" id="btnImportViewVouchers" onclick="window.switchImportViewMode('vouchers')" class="btn" style="padding:6px 12px; font-size:0.8rem; font-weight:700; background:#0284c7; color:#fff; border:none; border-radius:0;">
+                                        📑 Danh sách phiếu
+                                    </button>
+                                    <button type="button" id="btnImportViewItems" onclick="window.switchImportViewMode('items')" class="btn" style="padding:6px 12px; font-size:0.8rem; font-weight:700; background:var(--bg-card); color:var(--text-secondary); border:none; border-radius:0;">
+                                        📦 Chi tiết theo SKU
+                                    </button>
+                                </div>
                             </div>
 
                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <button class="btn btn-secondary" onclick="window.showImportGoodsReport()" style="display:flex; align-items:center; gap:6px; font-weight:600; color:#0284c7; border-color:#0284c7;" title="Xem báo cáo tổng hợp nhập kho">
+                                    <i data-lucide="bar-chart-2"></i>
+                                    <span>Báo cáo nhập kho</span>
+                                </button>
                                 <button class="btn btn-secondary" onclick="window.downloadImportExcelTemplate()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Tải file mẫu Excel chuẩn để điền dữ liệu">
                                     <i data-lucide="download-cloud"></i>
                                     <span>Tải mẫu Excel</span>
                                 </button>
-                                <button class="btn btn-primary" onclick="document.getElementById('excelImportGoodsFileInput').click()" style="display:flex; align-items:center; gap:6px; background:#0284c7; border:none;" title="Nhập hàng loạt từ file Excel">
+                                <button class="btn btn-secondary" onclick="document.getElementById('excelImportGoodsFileInput').click()" style="display:flex; align-items:center; gap:6px;" title="Nhập hàng loạt từ file Excel">
                                     <i data-lucide="file-up"></i>
-                                    <span>Nhập từ Excel</span>
+                                    <span>Nhập Excel</span>
                                 </button>
                                 <input type="file" id="excelImportGoodsFileInput" accept=".xlsx, .xls, .csv" style="display:none;" onchange="window.handleExcelImportGoodsFile(event)">
                                 <button class="btn btn-secondary" onclick="window.exportImportHistoryToExcel()" style="display:flex; align-items:center; gap:6px;" title="Xuất lịch sử nhập hàng ra Excel">
@@ -2473,13 +2507,38 @@
                                 </button>
                                 <button class="btn btn-primary" onclick="window.openGoodsImportPosModal()" style="display:flex; align-items:center; gap:6px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border:none; font-weight:700; box-shadow:0 2px 6px rgba(2, 132, 199, 0.35);" title="Mở màn hình POS tạo phiếu nhập kho">
                                     <i data-lucide="plus-circle"></i>
-                                    <span>+ Tạo phiếu nhập (POS)</span>
+                                    <span>+ Tạo phiếu nhập kho (POS)</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Data Table of Import History -->
-                        <div class="table-responsive">
+                        <!-- Data Table 1: Danh sách Phiếu Nhập Kho (Theo chứng từ Mẫu 01 - VT) -->
+                        <div id="importVouchersTableContainer" class="table-responsive">
+                            <table class="table" id="onlineImportVouchersTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px; text-align:center;">STT</th>
+                                        <th style="min-width:140px;">Mã phiếu nhập</th>
+                                        <th style="width:110px;">Ngày nhập</th>
+                                        <th style="min-width:160px;">Nhà cung cấp</th>
+                                        <th style="width:130px;">Người lập</th>
+                                        <th style="width:110px; text-align:right;">Tổng SL</th>
+                                        <th style="width:120px; text-align:right;">Tiền hàng</th>
+                                        <th style="width:110px; text-align:right;">VAT (8%)</th>
+                                        <th style="width:130px; text-align:right; font-weight:800; color:#108f53;">Tổng thanh toán</th>
+                                        <th style="width:115px; text-align:center;">Trạng thái</th>
+                                        <th style="width:110px; text-align:center;">Ảnh ký nhận</th>
+                                        <th style="width:120px; text-align:center;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Injected dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Data Table 2: Chi tiết Mặt hàng Nhập kho (Theo dòng SKU) -->
+                        <div id="importItemsTableContainer" class="table-responsive" style="display:none;">
                             <table class="table" id="onlineImportGoodsTable">
                                 <thead>
                                     <tr>
@@ -11591,7 +11650,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261022_voucher_advanced_v39"></script>
+    <script src="/app.js?v=20261022_full_vat8_v40"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -12115,15 +12174,17 @@
                             <table class="table" id="stockExportItemsTable" style="margin-bottom:0; font-size:0.85rem;">
                                 <thead>
                                     <tr style="background:#f8fafc; border-bottom:2px solid #cbd5e1;">
-                                        <th style="width:40px; text-align:center;">STT</th>
-                                        <th style="min-width:180px;">Chọn SP từ danh mục</th>
-                                        <th style="min-width:200px;">Sản phẩm / Hàng hóa</th>
-                                        <th style="width:110px; text-align:center;">Mã số</th>
-                                        <th style="width:75px; text-align:center;">ĐVT</th>
-                                        <th style="width:115px; text-align:right;">SL Yêu cầu</th>
-                                        <th style="width:110px; text-align:right;">Thực xuất</th>
-                                        <th style="min-width:180px;">Ghi chú</th>
-                                        <th style="width:40px; text-align:center;">Xóa</th>
+                                        <th style="width:36px; text-align:center;">STT</th>
+                                        <th style="min-width:170px;">Chọn SP từ danh mục</th>
+                                        <th style="min-width:190px;">Sản phẩm / Hàng hóa</th>
+                                        <th style="width:100px; text-align:center;">Mã số</th>
+                                        <th style="width:65px; text-align:center;">ĐVT</th>
+                                        <th style="width:105px; text-align:right;">SL Yêu cầu</th>
+                                        <th style="width:105px; text-align:right;">Thực xuất</th>
+                                        <th style="width:125px; text-align:right;">Đơn giá xuất (đ)</th>
+                                        <th style="width:135px; text-align:right;">Thành tiền (đ)</th>
+                                        <th style="min-width:150px;">Ghi chú</th>
+                                        <th style="width:36px; text-align:center;">Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody id="stockExportItemsTableBody">
@@ -12131,12 +12192,35 @@
                                 </tbody>
                                 <tfoot>
                                     <tr style="font-weight:800; background:rgba(16,143,83,0.06); border-top:2px solid #cbd5e1;">
-                                        <td colspan="6" style="text-align:right; font-weight:800; font-size:0.9rem;">Cộng số lượng thực xuất:</td>
-                                        <td id="exportSummaryTotalQty" style="text-align:right; color:#108f53; font-size:0.95rem; font-weight:bold;">0</td>
+                                        <td colspan="6" style="text-align:right; font-weight:800; font-size:0.88rem;">Cộng số lượng thực xuất:</td>
+                                        <td id="exportSummaryTotalQty" style="text-align:right; color:#108f53; font-size:0.92rem; font-weight:bold;">0</td>
+                                        <td style="text-align:right; font-weight:800;">Cộng tiền hàng:</td>
+                                        <td id="exportSubtotalDisplay" style="text-align:right; color:#0f172a; font-weight:bold;">0đ</td>
                                         <td colspan="2"></td>
                                     </tr>
                                 </tfoot>
                             </table>
+                        </div>
+
+                        <!-- VAT 8% Financial Calculation Card -->
+                        <div style="margin-top:14px; background:#f0fdf4; border:1.5px solid #108f53; border-radius:10px; padding:14px 18px;">
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:center;">
+                                <div>
+                                    <div style="font-size:0.8rem; color:#475569; font-weight:600;">Cộng tiền hàng (chưa thuế):</div>
+                                    <div id="exportCalcSubtotal" style="font-size:1.1rem; font-weight:800; color:#0f172a;">0đ</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.8rem; color:#047857; font-weight:700;">Thuế GTGT (VAT 8%):</div>
+                                    <div id="exportCalcVat" style="font-size:1.1rem; font-weight:800; color:#047857;">0đ</div>
+                                </div>
+                                <div style="background:#ffffff; padding:8px 14px; border-radius:8px; border:1px solid #a7f3d0; box-shadow:0 1px 3px rgba(16,143,83,0.1);">
+                                    <div style="font-size:0.8rem; color:#065f46; font-weight:800;">TỔNG TIỀN THANH TOÁN (GỒM VAT 8%):</div>
+                                    <div id="exportCalcTotalPayment" style="font-size:1.35rem; font-weight:900; color:#108f53;">0đ</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:8px; font-size:0.82rem; color:#334155;">
+                                <strong>Số tiền bằng chữ:</strong> <em id="exportCalcAmountInWords" style="color:#065f46; font-weight:600;">Không đồng</em>
+                            </div>
                         </div>
 
                         <!-- Attached Docs Box -->
@@ -12289,6 +12373,54 @@
                 <div class="modal-body" style="padding:24px; background:#ffffff; color:#000000; overflow-y:auto; max-height:85vh;">
                     <div id="stockExportPrintContent" class="mau-02-vt-print-wrapper">
                         <!-- Rendered dynamically by window.renderStockExportPrintPreview() -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL 3B: IN PHIẾU NHẬP KHO CHUẨN MẪU SỐ 01 - VT (A4/A5)  -->
+    <!-- ======================================================== -->
+    <div class="modal" id="goodsImportPrintModal" style="z-index: 2060;">
+        <div class="modal-dialog" style="max-width: 900px; width: 95%;">
+            <div class="modal-content" style="border-radius:14px; overflow:hidden;">
+                <!-- Header (Hidden on Print) -->
+                <div class="modal-header print-hide" style="background:#f8fafc; border-bottom:1px solid var(--border-color); padding:12px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="printer" style="width:20px; height:20px; color:#0284c7;"></i>
+                        <h3 style="margin:0; font-size:1.05rem; font-weight:800; color:var(--text-primary);">Xem trước & In Phiếu Nhập Kho (Mẫu số 01 - VT)</h3>
+                        <span class="badge" style="background:#f0f9ff; color:#0369a1; font-size:0.75rem; border:1px solid #bae6fd; padding:2px 8px; border-radius:6px; font-weight:700;">Chuẩn A4 - In 1 Trang</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="btn btn-secondary print-hide" onclick="document.getElementById('importPrintModalCameraInput').click()" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#7c3aed; border-color:#7c3aed;">
+                            <i data-lucide="camera" style="width:14px; height:14px;"></i>
+                            <span>📸 Chụp ảnh ký nhận</span>
+                        </button>
+                        <input type="file" id="importPrintModalCameraInput" accept="image/*" capture="environment" style="display:none;" onchange="window.handleImportPrintModalPhotoUpload(event)">
+
+                        <button type="button" class="btn btn-secondary print-hide" onclick="window.exportGoodsImportToPdf()" style="background:#ffffff; color:#0284c7; border:1.5px solid #0284c7; display:inline-flex; align-items:center; gap:6px; font-weight:700;">
+                            <i data-lucide="file-down" style="width:16px; height:16px;"></i>
+                            <span>📄 Xuất file PDF</span>
+                        </button>
+
+                        <button type="button" class="btn btn-secondary print-hide" onclick="window.shareGoodsImportVoucher()" style="background:#ffffff; color:#108f53; border:1.5px solid #108f53; display:inline-flex; align-items:center; gap:6px; font-weight:700;">
+                            <i data-lucide="share-2" style="width:16px; height:16px;"></i>
+                            <span>📤 Chia sẻ vào App</span>
+                        </button>
+
+                        <button type="button" class="btn btn-primary" onclick="window.printGoodsImportVoucherFromModal()" style="background:#0284c7; border:none; display:inline-flex; align-items:center; gap:6px; font-weight:700; box-shadow:0 2px 6px rgba(2,132,199,0.3);">
+                            <i data-lucide="printer" style="width:16px; height:16px;"></i>
+                            <span>🖨️ In phiếu ngay</span>
+                        </button>
+                        <button type="button" class="btn-close" onclick="window.closeGoodsImportPrintModal()"><i data-lucide="x"></i></button>
+                    </div>
+                </div>
+
+                <!-- Printable Container for Mẫu 01 - VT -->
+                <div class="modal-body" style="padding:24px; background:#ffffff; color:#000000; overflow-y:auto; max-height:85vh;">
+                    <div id="goodsImportPrintContent" class="mau-01-vt-print-wrapper">
+                        <!-- Rendered dynamically by window.renderGoodsImportPrintPreview() -->
                     </div>
                 </div>
             </div>
