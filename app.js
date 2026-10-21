@@ -13533,11 +13533,16 @@ window.autoUpdateAllMissingProductImages = function(forceAll = false) {
             count++;
         }
     });
-    if (count > 0) {
-        window.state.save("online_products", window.state.online_products);
+    if (count > 0 || forceAll) {
+        if (typeof window.state.updateState === 'function') {
+            window.state.updateState("online_products", window.state.online_products);
+        } else {
+            window.state.save("online_products", window.state.online_products);
+        }
         if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
         if (typeof window.renderOnlineProductsTable === 'function') window.renderOnlineProductsTable();
         if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+        if (typeof window.renderOnlinePrices === 'function') window.renderOnlinePrices();
     }
     return count;
 };
@@ -13576,7 +13581,7 @@ class AppState {
                 }
             });
             if (shouldSaveImages) {
-                this.save("online_products", this.online_products);
+                this.updateState("online_products", this.online_products);
             }
         }
 
@@ -13816,6 +13821,29 @@ class AppState {
                                 let localVal = this[k];
                                 
                                 // Server is the single source of truth for synced keys
+                                if (k === 'online_products' && Array.isArray(serverVal)) {
+                                    let fixedMissingImages = false;
+                                    serverVal.forEach(sp => {
+                                        if (!sp || !sp.sku) return;
+                                        const curImg = String(sp.image || "").trim();
+                                        if (!curImg || curImg === "null" || curImg.length < 15) {
+                                            const existingLocal = Array.isArray(localVal) ? localVal.find(lp => lp.sku === sp.sku) : null;
+                                            if (existingLocal && existingLocal.image && existingLocal.image.length >= 15) {
+                                                sp.image = existingLocal.image;
+                                            } else if (typeof window.generateProductBoxSvg === 'function') {
+                                                sp.image = window.generateProductBoxSvg(sp.sku, sp.name, sp.category, sp.supplier || sp.brand);
+                                            }
+                                            fixedMissingImages = true;
+                                        }
+                                    });
+                                    if (fixedMissingImages) {
+                                        fetch(this.getApiUrl('/api/state/online_products'), {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(serverVal)
+                                        }).catch(err => console.warn("Failed to persist restored product images to server:", err));
+                                    }
+                                }
 
                                 if (JSON.stringify(this[k]) !== JSON.stringify(serverVal)) {
                                     this[k] = serverVal;
@@ -25462,8 +25490,9 @@ window.renderPosCatalog = function() {
         const inCartBadge = cartItem && cartItem.qty > 0 ? `<span class="pos-prod-incart-badge">${formatNumber(cartItem.qty)}</span>` : '';
 
         let imgHtml = "";
-        if (p.image) {
-            imgHtml = `<img src="${p.image}" class="pos-prod-img" alt="${p.name}">`;
+        const effectiveImg = (p.image && String(p.image).trim().length >= 15) ? p.image : (typeof window.generateProductBoxSvg === 'function' ? window.generateProductBoxSvg(p.sku, p.name, p.category, p.supplier || p.brand) : "");
+        if (effectiveImg) {
+            imgHtml = `<img src="${effectiveImg}" class="pos-prod-img" alt="${p.name}">`;
         } else {
             imgHtml = `<i data-lucide="box" style="width:28px; height:28px; color:#cbd5e1;"></i>`;
         }
@@ -27441,8 +27470,9 @@ window.renderOnlineProducts = function() {
         const isLow = prod.stock_qty < prod.min_stock_qty;
         
         let imgHtml = ``;
-        if (prod.image) {
-            imgHtml = `<img src="${prod.image}" style="width:36px; height:36px; object-fit:cover; border-radius:4px; border:1px solid var(--border-color); cursor:pointer;" onclick="viewFullOnlineProductImage('${prod.sku}')">`;
+        const effectiveImg = (prod.image && String(prod.image).trim().length >= 15) ? prod.image : (typeof window.generateProductBoxSvg === 'function' ? window.generateProductBoxSvg(prod.sku, prod.name, prod.category, prod.supplier || prod.brand) : "");
+        if (effectiveImg) {
+            imgHtml = `<img src="${effectiveImg}" style="width:36px; height:36px; object-fit:cover; border-radius:4px; border:1px solid var(--border-color); cursor:pointer;" onclick="viewFullOnlineProductImage('${prod.sku}')">`;
         } else {
             imgHtml = `<div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.04); border-radius:4px; border:1px dashed var(--border-color); color:var(--text-secondary);"><i data-lucide="image" style="width:14px; height:14px;"></i></div>`;
         }
@@ -27505,8 +27535,10 @@ window.updateProductBoxType = function(sku, newCategory) {
 };
 
 window.viewFullOnlineProductImage = function(sku) {
-    const prod = state.online_products.find(p => p.sku === sku);
-    if (prod && prod.image) {
+    const prod = (state.online_products || []).find(p => p.sku === sku);
+    if (!prod) return;
+    const effectiveImg = (prod.image && String(prod.image).trim().length >= 15) ? prod.image : (typeof window.generateProductBoxSvg === 'function' ? window.generateProductBoxSvg(prod.sku, prod.name, prod.category, prod.supplier || prod.brand) : "");
+    if (effectiveImg) {
         const w = window.open();
         if (!w) {
             alert("Vui lòng cho phép popup để xem ảnh sản phẩm kích thước đầy đủ.");
@@ -27521,7 +27553,7 @@ window.viewFullOnlineProductImage = function(sku) {
         w.document.body.style.height = "100vh";
         
         const img = w.document.createElement("img");
-        img.src = prod.image;
+        img.src = effectiveImg;
         img.style.maxWidth = "90%";
         img.style.maxHeight = "90vh";
         img.style.borderRadius = "8px";
@@ -28568,8 +28600,9 @@ window.renderOnlinePrices = function() {
         const row = document.createElement("tr");
         
         let imgHtml = ``;
-        if (p.image) {
-            imgHtml = `<img src="${p.image}" style="width:36px; height:36px; object-fit:cover; border-radius:4px; border:1px solid var(--border-color); cursor:pointer;" onclick="viewFullOnlineProductImage('${p.sku}')">`;
+        const effectiveImg = (p.image && String(p.image).trim().length >= 15) ? p.image : (typeof window.generateProductBoxSvg === 'function' ? window.generateProductBoxSvg(p.sku, p.name, p.category, p.supplier || p.brand) : "");
+        if (effectiveImg) {
+            imgHtml = `<img src="${effectiveImg}" style="width:36px; height:36px; object-fit:cover; border-radius:4px; border:1px solid var(--border-color); cursor:pointer;" onclick="viewFullOnlineProductImage('${p.sku}')">`;
         } else {
             imgHtml = `<div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.04); border-radius:4px; border:1px dashed var(--border-color); color:var(--text-secondary);"><i data-lucide="image" style="width:14px; height:14px;"></i></div>`;
         }
