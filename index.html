@@ -58,7 +58,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261021_crm_2box_filter_v30">
+    <link rel="stylesheet" href="/style.css?v=20261021_finance_v36">
 
     <script>
 
@@ -3215,19 +3215,51 @@
 
                             <!-- Subtab 1: Cashflow Ledger -->
 
+                            <!-- Subtab 1: Cashflow Ledger -->
+
                             <div id="finSubtab-ledger" class="fin-subtab-content active">
 
-                                <div class="actions-bar">
+                                <div class="actions-bar" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:16px;">
 
-                                    <div class="search-box">
+                                    <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:280px; flex-wrap:wrap;">
 
-                                        <i data-lucide="search"></i>
+                                        <div class="search-box" style="flex:1; min-width:200px;">
 
-                                        <input type="text" placeholder="Tìm kiếm giao dịch..." id="financeSearchInput">
+                                            <i data-lucide="search"></i>
+
+                                            <input type="text" placeholder="Tìm kiếm giao dịch thu chi..." id="financeSearchInput">
+
+                                        </div>
+
+                                        <select id="financeFilterCategory" class="form-control" style="width:170px; height:38px; padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text); font-size:0.85rem;">
+
+                                            <option value="">Tất cả phân loại</option>
+
+                                            <option value="CUSTOMER_DEPOSIT">Thu cọc đơn in</option>
+
+                                            <option value="CUSTOMER_FINAL">Thu nợ đơn in</option>
+
+                                            <option value="SUPPLIER_PAY">Thanh toán vật tư</option>
+
+                                            <option value="SUBCONTRACTOR_PAY">Thanh toán gia công</option>
+
+                                            <option value="SALARY">Chi lương nhân sự</option>
+
+                                            <option value="OPERATIONAL">Chi phí vận hành</option>
+
+                                        </select>
+
+                                        <button class="btn btn-secondary" onclick="window.openFinanceColConfig('financeTransactionsTable')" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:6px 12px; font-size:0.85rem;" title="Tùy chỉnh ẩn/hiện cột">
+
+                                            <i data-lucide="sliders-horizontal" style="width:14px; height:14px;"></i>
+
+                                            <span>Tùy chỉnh cột</span>
+
+                                        </button>
 
                                     </div>
 
-                                    <div class="filter-actions">
+                                    <div class="filter-actions" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
 
                                         <button class="btn btn-success" id="btnNewReceipt">
 
@@ -3249,7 +3281,7 @@
 
                                             <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
 
-                                            <span>Xóa dữ liệu tài chính</span>
+                                            <span>Xóa dữ liệu</span>
 
                                         </button>
 
@@ -3257,31 +3289,51 @@
 
                                 </div>
 
-                                <div class="card mt-4">
+                                <div class="card mt-2">
 
                                     <div class="table-responsive">
 
-                                        <table class="table" id="financeTransactionsTable">
+                                        <table class="table" id="financeTransactionsTable" style="table-layout: fixed; width: 100%;">
+
+                                            <colgroup>
+
+                                                <col data-col="tx_code" style="width: 13%;">
+
+                                                <col data-col="date" style="width: 14%;">
+
+                                                <col data-col="category" style="width: 14%;">
+
+                                                <col data-col="partner" style="width: 15%;">
+
+                                                <col data-col="amount" style="width: 13%;">
+
+                                                <col data-col="method" style="width: 11%;">
+
+                                                <col data-col="fund" style="width: 10%;">
+
+                                                <col data-col="creator" style="width: 10%;">
+
+                                            </colgroup>
 
                                             <thead>
 
                                                 <tr>
 
-                                                    <th>Mã giao dịch</th>
+                                                    <th data-col="tx_code">Mã giao dịch</th>
 
-                                                    <th>Thời gian</th>
+                                                    <th data-col="date">Thời gian</th>
 
-                                                    <th>Phân loại</th>
+                                                    <th data-col="category">Phân loại</th>
 
-                                                    <th>Đối tác</th>
+                                                    <th data-col="partner">Đối tác</th>
 
-                                                    <th>Số tiền</th>
+                                                    <th data-col="amount" style="text-align:right;">Số tiền</th>
 
-                                                    <th>Hình thức</th>
+                                                    <th data-col="method">Hình thức</th>
 
-                                                    <th>Tài khoản quỹ</th>
+                                                    <th data-col="fund">Tài khoản quỹ</th>
 
-                                                    <th>Người lập</th>
+                                                    <th data-col="creator">Người lập</th>
 
                                                 </tr>
 
@@ -3305,31 +3357,103 @@
 
                             <div id="finSubtab-customer-debt" class="fin-subtab-content">
 
-                                <div class="card">
+                                <div class="actions-bar" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:16px;">
+
+                                    <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:280px; flex-wrap:wrap;">
+
+                                        <div class="search-box" style="flex:1; min-width:200px;">
+
+                                            <i data-lucide="search"></i>
+
+                                            <input type="text" placeholder="Tìm kiếm khách hàng, SĐT, công ty..." id="customerDebtSearchInput">
+
+                                        </div>
+
+                                        <select id="customerDebtFilterStatus" class="form-control" style="width:165px; height:38px; padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text); font-size:0.85rem;">
+
+                                            <option value="">Tất cả trạng thái nợ</option>
+
+                                            <option value="DEBT_GT_0">Còn nợ (> 0đ)</option>
+
+                                            <option value="DEBT_ZERO">Đã hết nợ (0đ)</option>
+
+                                            <option value="OVER_LIMIT">Vượt hạn mức</option>
+
+                                        </select>
+
+                                        <button class="btn btn-secondary" onclick="window.openFinanceColConfig('customerDebtsTable')" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:6px 12px; font-size:0.85rem;" title="Tùy chỉnh ẩn/hiện cột">
+
+                                            <i data-lucide="sliders-horizontal" style="width:14px; height:14px;"></i>
+
+                                            <span>Tùy chỉnh cột</span>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div class="filter-actions" style="display:flex; gap:8px; align-items:center;">
+
+                                        <button class="btn btn-primary" onclick="window.openAddCustomerModal()" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px;">
+
+                                            <i data-lucide="user-plus" style="width:14px; height:14px;"></i>
+
+                                            <span>+ Thêm khách hàng</span>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card mt-2">
 
                                     <div class="table-responsive">
 
-                                        <table class="table" id="customerDebtsTable">
+                                        <table class="table" id="customerDebtsTable" style="table-layout: fixed; width: 100%;">
+
+                                            <colgroup>
+
+                                                <col data-col="code" style="width: 8%;">    <!-- Mã KH -->
+
+                                                <col data-col="name" style="width: 17%;">   <!-- Khách hàng -->
+
+                                                <col data-col="company" style="width: 15%;">   <!-- Tên công ty -->
+
+                                                <col data-col="phone" style="width: 11.5%;"> <!-- Điện thoại -->
+
+                                                <col data-col="total_sales" style="width: 10.5%;"> <!-- Tổng tiền hàng -->
+
+                                                <col data-col="paid" style="width: 9.5%;">  <!-- Đã thanh toán -->
+
+                                                <col data-col="debt" style="width: 9.5%;">  <!-- Còn nợ -->
+
+                                                <col data-col="credit_limit" style="width: 7.5%;">  <!-- Hạn mức -->
+
+                                                <col data-col="actions" style="width: 11.5%;"> <!-- Thao tác -->
+
+                                            </colgroup>
 
                                             <thead>
 
                                                 <tr>
 
-                                                    <th>Mã KH</th>
+                                                    <th data-col="code">Mã KH</th>
 
-                                                    <th>Tên khách hàng</th>
+                                                    <th data-col="name">Khách hàng</th>
 
-                                                    <th>Điện thoại</th>
+                                                    <th data-col="company">Tên công ty</th>
 
-                                                    <th>Tổng tiền hàng đặt in</th>
+                                                    <th data-col="phone">Điện thoại</th>
 
-                                                    <th>Đã thanh toán</th>
+                                                    <th data-col="total_sales" style="text-align:right;">Tổng tiền hàng</th>
 
-                                                    <th>Còn nợ phải thu</th>
+                                                    <th data-col="paid" style="text-align:right;">Đã thanh toán</th>
 
-                                                    <th>Hạn mức nợ</th>
+                                                    <th data-col="debt" style="text-align:right;">Còn nợ</th>
 
-                                                    <th>Thao tác</th>
+                                                    <th data-col="credit_limit" style="text-align:right;">Hạn mức</th>
+
+                                                    <th data-col="actions" style="text-align:center;">Thao tác</th>
 
                                                 </tr>
 
@@ -3353,29 +3477,97 @@
 
                             <div id="finSubtab-supplier-debt" class="fin-subtab-content">
 
-                                <div class="card">
+                                <div class="actions-bar" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:16px;">
+
+                                    <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:280px; flex-wrap:wrap;">
+
+                                        <div class="search-box" style="flex:1; min-width:200px;">
+
+                                            <i data-lucide="search"></i>
+
+                                            <input type="text" placeholder="Tìm kiếm nhà cung cấp, SĐT, công ty..." id="supplierDebtSearchInput">
+
+                                        </div>
+
+                                        <select id="supplierDebtFilterStatus" class="form-control" style="width:165px; height:38px; padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text); font-size:0.85rem;">
+
+                                            <option value="">Tất cả công nợ</option>
+
+                                            <option value="DEBT_GT_0">Còn nợ (> 0đ)</option>
+
+                                            <option value="DEBT_ZERO">Đã trả hết (0đ)</option>
+
+                                        </select>
+
+                                        <button class="btn btn-secondary" onclick="window.openFinanceColConfig('supplierDebtsTable')" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:6px 12px; font-size:0.85rem;" title="Tùy chỉnh ẩn/hiện cột">
+
+                                            <i data-lucide="sliders-horizontal" style="width:14px; height:14px;"></i>
+
+                                            <span>Tùy chỉnh cột</span>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div class="filter-actions" style="display:flex; gap:8px; align-items:center;">
+
+                                        <button class="btn btn-primary" onclick="window.openAddSupplierModal()" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px;">
+
+                                            <i data-lucide="plus-circle" style="width:14px; height:14px;"></i>
+
+                                            <span>+ Thêm nhà cung cấp</span>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card mt-2">
 
                                     <div class="table-responsive">
 
-                                        <table class="table" id="supplierDebtsTable">
+                                        <table class="table" id="supplierDebtsTable" style="table-layout: fixed; width: 100%;">
+
+                                            <colgroup>
+
+                                                <col data-col="code" style="width: 8%;">    <!-- Mã NCC -->
+
+                                                <col data-col="name" style="width: 18%;">   <!-- Nhà cung cấp -->
+
+                                                <col data-col="company" style="width: 16%;">   <!-- Tên công ty -->
+
+                                                <col data-col="phone" style="width: 12%;">   <!-- Điện thoại -->
+
+                                                <col data-col="total_import" style="width: 12%;">   <!-- Tổng tiền nhập -->
+
+                                                <col data-col="paid" style="width: 10%;"> <!-- Đã trả -->
+
+                                                <col data-col="debt" style="width: 10%;"> <!-- Còn nợ -->
+
+                                                <col data-col="actions" style="width: 14%;">   <!-- Thao tác -->
+
+                                            </colgroup>
 
                                             <thead>
 
                                                 <tr>
 
-                                                    <th>Mã NCC</th>
+                                                    <th data-col="code">Mã NCC</th>
 
-                                                    <th>Tên nhà cung cấp</th>
+                                                    <th data-col="name">Nhà cung cấp</th>
 
-                                                    <th>Điện thoại</th>
+                                                    <th data-col="company">Tên công ty</th>
 
-                                                    <th>Tổng tiền nhập vật tư</th>
+                                                    <th data-col="phone">Điện thoại</th>
 
-                                                    <th>Đã chi trả</th>
+                                                    <th data-col="total_import" style="text-align:right;">Tổng tiền nhập</th>
 
-                                                    <th>Còn nợ phải trả</th>
+                                                    <th data-col="paid" style="text-align:right;">Đã chi trả</th>
 
-                                                    <th>Thao tác</th>
+                                                    <th data-col="debt" style="text-align:right;">Còn nợ</th>
+
+                                                    <th data-col="actions" style="text-align:center;">Thao tác</th>
 
                                                 </tr>
 
@@ -3399,29 +3591,97 @@
 
                             <div id="finSubtab-subcontractor-debt" class="fin-subtab-content">
 
-                                <div class="card">
+                                <div class="actions-bar" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:16px;">
+
+                                    <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:280px; flex-wrap:wrap;">
+
+                                        <div class="search-box" style="flex:1; min-width:200px;">
+
+                                            <i data-lucide="search"></i>
+
+                                            <input type="text" placeholder="Tìm kiếm xưởng gia công, SĐT, công ty..." id="subcontractorDebtSearchInput">
+
+                                        </div>
+
+                                        <select id="subcontractorDebtFilterStatus" class="form-control" style="width:165px; height:38px; padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text); font-size:0.85rem;">
+
+                                            <option value="">Tất cả công nợ</option>
+
+                                            <option value="DEBT_GT_0">Còn nợ (> 0đ)</option>
+
+                                            <option value="DEBT_ZERO">Đã trả hết (0đ)</option>
+
+                                        </select>
+
+                                        <button class="btn btn-secondary" onclick="window.openFinanceColConfig('subcontractorDebtsTable')" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:6px 12px; font-size:0.85rem;" title="Tùy chỉnh ẩn/hiện cột">
+
+                                            <i data-lucide="sliders-horizontal" style="width:14px; height:14px;"></i>
+
+                                            <span>Tùy chỉnh cột</span>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div class="filter-actions" style="display:flex; gap:8px; align-items:center;">
+
+                                        <button class="btn btn-primary" onclick="window.openAddSubcontractorModal()" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px;">
+
+                                            <i data-lucide="plus-circle" style="width:14px; height:14px;"></i>
+
+                                            <span>+ Thêm xưởng gia công</span>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card mt-2">
 
                                     <div class="table-responsive">
 
-                                        <table class="table" id="subcontractorDebtsTable">
+                                        <table class="table" id="subcontractorDebtsTable" style="table-layout: fixed; width: 100%;">
+
+                                            <colgroup>
+
+                                                <col data-col="code" style="width: 8%;">    <!-- Mã Xưởng -->
+
+                                                <col data-col="name" style="width: 18%;">   <!-- Xưởng gia công -->
+
+                                                <col data-col="company" style="width: 16%;">   <!-- Tên công ty -->
+
+                                                <col data-col="phone" style="width: 12%;">   <!-- Điện thoại -->
+
+                                                <col data-col="total_cost" style="width: 12%;">   <!-- Tổng tiền GC -->
+
+                                                <col data-col="paid" style="width: 10%;"> <!-- Đã trả -->
+
+                                                <col data-col="debt" style="width: 10%;"> <!-- Còn nợ -->
+
+                                                <col data-col="actions" style="width: 14%;">   <!-- Thao tác -->
+
+                                            </colgroup>
 
                                             <thead>
 
                                                 <tr>
 
-                                                    <th>Mã Xưởng</th>
+                                                    <th data-col="code">Mã Xưởng</th>
 
-                                                    <th>Tên xưởng gia công</th>
+                                                    <th data-col="name">Xưởng gia công</th>
 
-                                                    <th>Điện thoại</th>
+                                                    <th data-col="company">Tên công ty</th>
 
-                                                    <th>Tổng tiền thuê gia công</th>
+                                                    <th data-col="phone">Điện thoại</th>
 
-                                                    <th>Đã chi trả</th>
+                                                    <th data-col="total_cost" style="text-align:right;">Tổng tiền GC</th>
 
-                                                    <th>Còn nợ gia công</th>
+                                                    <th data-col="paid" style="text-align:right;">Đã chi trả</th>
 
-                                                    <th>Thao tác</th>
+                                                    <th data-col="debt" style="text-align:right;">Còn nợ</th>
+
+                                                    <th data-col="actions" style="text-align:center;">Thao tác</th>
 
                                                 </tr>
 
@@ -3444,7 +3704,9 @@
                             <!-- Subtab 5: Sales Commission Statistics -->
 
                             <div id="finSubtab-sales-commission" class="fin-subtab-content">
+
                                 <h3 id="commissionSubtabTitle" style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 16px; border-left: 4px solid var(--accent); padding-left: 8px;">Thống kê Hoa hồng doanh số</h3>
+
                                 <!-- KPI Cards for Commissions -->
 
                                 <div class="kpi-grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:16px;">
@@ -3493,29 +3755,83 @@
 
                                 </div>
 
-                                <div class="card">
+                                <div class="actions-bar" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:16px;">
+
+                                    <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:280px; flex-wrap:wrap;">
+
+                                        <div class="search-box" style="flex:1; min-width:200px;">
+
+                                            <i data-lucide="search"></i>
+
+                                            <input type="text" placeholder="Tìm kiếm nhân viên Sales / CTV..." id="salesCommSearchInput">
+
+                                        </div>
+
+                                        <select id="salesCommFilterRole" class="form-control" style="width:170px; height:38px; padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text); font-size:0.85rem;">
+
+                                            <option value="ALL">Tất cả nhân sự</option>
+
+                                            <option value="SALESPERSON">Nhân viên Sales (NVKD)</option>
+
+                                            <option value="COLLABORATOR">Cộng tác viên (CTV)</option>
+
+                                            <option value="OWED_ONLY">Còn nợ hoa hồng</option>
+
+                                        </select>
+
+                                        <button class="btn btn-secondary" onclick="window.openFinanceColConfig('salesCommissionsTable')" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:6px 12px; font-size:0.85rem;" title="Tùy chỉnh ẩn/hiện cột">
+
+                                            <i data-lucide="sliders-horizontal" style="width:14px; height:14px;"></i>
+
+                                            <span>Tùy chỉnh cột</span>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card mt-2">
 
                                     <div class="table-responsive">
 
-                                        <table class="table" id="salesCommissionsTable">
+                                        <table class="table" id="salesCommissionsTable" style="table-layout: fixed; width: 100%;">
+
+                                            <colgroup>
+
+                                                <col data-col="salesperson" style="width: 18%;">
+
+                                                <col data-col="online_sales" style="width: 13%;">
+
+                                                <col data-col="online_comm" style="width: 13%;">
+
+                                                <col data-col="prod_sales" style="width: 13%;">
+
+                                                <col data-col="prod_comm" style="width: 13%;">
+
+                                                <col data-col="total_comm" style="width: 15%;">
+
+                                                <col data-col="actions" style="width: 15%;">
+
+                                            </colgroup>
 
                                             <thead>
 
                                                 <tr>
 
-                                                    <th>Nhân viên Sales</th>
+                                                    <th data-col="salesperson">Nhân viên Sales</th>
 
-                                                    <th>Doanh số Online</th>
+                                                    <th data-col="online_sales" style="text-align:right;">Doanh số Online</th>
 
-                                                    <th>Hoa hồng Online</th>
+                                                    <th data-col="online_comm" style="text-align:right;">Hoa hồng Online</th>
 
-                                                    <th>Doanh số Sản xuất</th>
+                                                    <th data-col="prod_sales" style="text-align:right;">Doanh số Sản xuất</th>
 
-                                                    <th>Hoa hồng Sản xuất</th>
+                                                    <th data-col="prod_comm" style="text-align:right;">Hoa hồng Sản xuất</th>
 
-                                                    <th>Tổng Hoa hồng</th>
+                                                    <th data-col="total_comm" style="text-align:right;">Tổng Hoa hồng</th>
 
-                                                    <th>Thao tác</th>
+                                                    <th data-col="actions" style="text-align:center;">Thao tác</th>
 
                                                 </tr>
 
@@ -3587,33 +3903,93 @@
 
                                 </div>
 
-                                <div class="card">
-                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; flex-wrap:wrap; gap:8px;">
-                                        <h3 style="font-size: 0.95rem; font-weight:700; color:var(--text-primary); margin:0;">Nhật ký thu chi nội bộ</h3>
-                                        <button class="btn btn-primary" onclick="window.openNewInternalTxModal()" style="padding: 6px 12px; font-size: 0.8rem;">+ Thêm thu chi nội bộ</button>
+                                <div class="actions-bar" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:16px;">
+
+                                    <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:280px; flex-wrap:wrap;">
+
+                                        <div class="search-box" style="flex:1; min-width:200px;">
+
+                                            <i data-lucide="search"></i>
+
+                                            <input type="text" placeholder="Tìm kiếm thu chi nội bộ, người thực hiện..." id="internalTxSearchInput">
+
+                                        </div>
+
+                                        <select id="internalTxFilterType" class="form-control" style="width:170px; height:38px; padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text); font-size:0.85rem;">
+
+                                            <option value="">Tất cả loại giao dịch</option>
+
+                                            <option value="RECEIPT">Chỉ Thu nội bộ</option>
+
+                                            <option value="PAYMENT">Chỉ Chi nội bộ</option>
+
+                                        </select>
+
+                                        <button class="btn btn-secondary" onclick="window.openFinanceColConfig('internalTransactionsTable')" style="display:inline-flex; align-items:center; gap:6px; white-space:nowrap; padding:6px 12px; font-size:0.85rem;" title="Tùy chỉnh ẩn/hiện cột">
+
+                                            <i data-lucide="sliders-horizontal" style="width:14px; height:14px;"></i>
+
+                                            <span>Tùy chỉnh cột</span>
+
+                                        </button>
+
                                     </div>
+
+                                    <div class="filter-actions" style="display:flex; gap:8px; align-items:center;">
+
+                                        <button class="btn btn-primary" onclick="window.openNewInternalTxModal()" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px;">
+
+                                            <i data-lucide="plus-circle" style="width:14px; height:14px;"></i>
+
+                                            <span>+ Thêm thu chi nội bộ</span>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="card mt-2">
 
                                     <div class="table-responsive">
 
-                                        <table class="table" id="internalTransactionsTable">
+                                        <table class="table" id="internalTransactionsTable" style="table-layout: fixed; width: 100%;">
+
+                                            <colgroup>
+
+                                                <col data-col="date" style="width: 14%;">
+
+                                                <col data-col="tx_code" style="width: 13%;">
+
+                                                <col data-col="type" style="width: 11%;">
+
+                                                <col data-col="category" style="width: 17%;">
+
+                                                <col data-col="amount" style="width: 14%;">
+
+                                                <col data-col="creator" style="width: 13%;">
+
+                                                <col data-col="note" style="width: 18%;">
+
+                                            </colgroup>
 
                                             <thead>
 
                                                 <tr>
 
-                                                    <th>Ngày giao dịch</th>
+                                                    <th data-col="date">Ngày giao dịch</th>
 
-                                                    <th>Mã giao dịch</th>
+                                                    <th data-col="tx_code">Mã giao dịch</th>
 
-                                                    <th>Loại</th>
+                                                    <th data-col="type">Loại</th>
 
-                                                    <th>Hạng mục mục đích</th>
+                                                    <th data-col="category">Hạng mục mục đích</th>
 
-                                                    <th>Số tiền</th>
+                                                    <th data-col="amount" style="text-align:right;">Số tiền</th>
 
-                                                    <th>Người thực hiện</th>
+                                                    <th data-col="creator">Người thực hiện</th>
 
-                                                    <th>Ghi chú</th>
+                                                    <th data-col="note">Ghi chú</th>
 
                                                 </tr>
 
@@ -10831,7 +11207,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261021_recover_images_v31"></script>
+    <script src="/app.js?v=20261021_finance_v36"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -10861,8 +11237,8 @@
 
 
     <!-- Floating Action Button (FAB) for Creating Orders -->
-    <div id="floatingCreateOrderBtn" onclick="document.getElementById('orderChoiceModal').classList.add('active');" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: 99998; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #108f53 0%, #059669 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(16, 143, 83, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.25); cursor: pointer; transition: all 0.2s ease-in-out; border: 2.5px solid #ffffff;" onmouseover="this.style.transform='translateY(-50%) scale(1.15)';" onmouseout="this.style.transform='translateY(-50%) scale(1)';" title="Tạo đơn hàng nhanh">
-        <i data-lucide="plus" style="width: 24px; height: 24px; stroke-width: 3;"></i>
+    <div id="floatingCreateOrderBtn" onclick="document.getElementById('orderChoiceModal').classList.add('active');" style="position: fixed; right: 20px; bottom: 75px; z-index: 99998; width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg, #108f53 0%, #059669 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(16, 143, 83, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.25); cursor: pointer; transition: all 0.2s ease-in-out; border: 2.5px solid #ffffff;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='none';" title="Tạo đơn hàng nhanh">
+        <i data-lucide="plus" style="width: 22px; height: 22px; stroke-width: 3;"></i>
         <span style="font-size: 0.52rem; font-weight: 800; line-height: 1; margin-top: 1px;">TẠO ĐƠN</span>
     </div>
 <script>
@@ -10946,6 +11322,45 @@
         });
 
     </script>
+
+    <!-- Finance Dynamic Column Visibility Config Modal -->
+    <div class="modal" id="financeColumnConfigModal" style="z-index: 2060;">
+        <div class="modal-dialog" style="max-width: 480px;">
+            <div class="modal-content" style="border-radius:14px; overflow:hidden; box-shadow:0 20px 25px -5px rgba(0,0,0,0.15), 0 10px 10px -5px rgba(0,0,0,0.04);">
+                <div class="modal-header" style="background:#f8fafc; border-bottom:1px solid var(--border-color); padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:34px; height:34px; border-radius:8px; background:rgba(37,99,235,0.1); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+                            <i data-lucide="sliders-horizontal" style="width:18px; height:18px;"></i>
+                        </div>
+                        <div>
+                            <h3 id="financeColConfigModalTitle" style="margin:0; font-size:1.05rem; font-weight:700; color:var(--text-primary);">Tùy chỉnh cột hiển thị</h3>
+                            <span id="financeColConfigTableSubtitle" style="font-size:0.75rem; color:var(--text-secondary);">Bảng công nợ</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" onclick="closeModal('financeColumnConfigModal')"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body" style="padding:20px;">
+                    <p style="font-size:0.835rem; color:var(--text-secondary); margin-top:0; margin-bottom:14px; line-height:1.5;">
+                        Chọn các trường thông tin bạn muốn hiển thị hoặc ẩn. Độ rộng của các cột sẽ tự động co giãn theo tỷ lệ để bảng luôn vừa vặn không bị che lấp.
+                    </p>
+                    <div id="financeColConfigList" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; max-height:340px; overflow-y:auto; padding:4px 2px;">
+                        <!-- Checkboxes will be injected dynamically by openFinanceColConfig -->
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top:1px solid var(--border-color); padding-top:14px;">
+                        <button type="button" class="btn btn-secondary" onclick="window.resetFinanceColConfig()" style="font-size:0.825rem; display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="rotate-ccw" style="width:13px; height:13px;"></i> Mặc định
+                        </button>
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('financeColumnConfigModal')" style="font-size:0.85rem;">Hủy</button>
+                            <button type="button" class="btn btn-primary" onclick="window.saveCurrentFinanceColConfig()" style="font-size:0.85rem; display:inline-flex; align-items:center; gap:6px;">
+                                <i data-lucide="check" style="width:14px; height:14px;"></i> Lưu & Áp dụng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Custom Brand Notification Modal (Logo Green Theme) -->
     <div id="brandAlertOverlay" class="brand-alert-overlay" style="display: none;">

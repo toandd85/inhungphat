@@ -13556,6 +13556,13 @@ class AppState {
         this.productions = this.load("productions", DEFAULT_PRODUCTIONS);
         this.subcontracts = this.load("subcontracts", DEFAULT_SUBCONTRACTS);
         
+        // Ensure stale image cache in localStorage is cleared to pull real product photos from server
+        if (!localStorage.getItem("ihp_real_photos_synced_20261021_v32")) {
+            localStorage.removeItem("ihp_online_products");
+            localStorage.removeItem("online_products");
+            localStorage.setItem("ihp_real_photos_synced_20261021_v32", "true");
+        }
+
         this.online_products = this.load("online_products", DEFAULT_ONLINE_PRODUCTS);
         // Force seed Tet 2027 products for existing localstorage (Wipe old and load 11 new products)
         if (!localStorage.getItem("ihp_tet_2027_seeded_v1")) {
@@ -14356,11 +14363,24 @@ window.switchFinanceSubTab = function(subtabId, updateUrl = true) {
         titleEl.innerHTML = label;
     }
 
-    if (subtabId === "sales-commission" && window.renderSalesCommissions) {
-        window.renderSalesCommissions();
-    }
-    if (subtabId === "internal-finance" && window.renderInternalTransactions) {
-        window.renderInternalTransactions();
+    if (subtabId === "ledger") {
+        if (typeof renderFinance === 'function') renderFinance();
+        if (window.applyFinanceTableColumns) window.applyFinanceTableColumns("financeTransactionsTable");
+    } else if (subtabId === "customer-debt") {
+        if (typeof renderCustomerDebts === 'function') renderCustomerDebts();
+        if (window.applyFinanceTableColumns) window.applyFinanceTableColumns("customerDebtsTable");
+    } else if (subtabId === "supplier-debt") {
+        if (typeof renderSupplierDebts === 'function') renderSupplierDebts();
+        if (window.applyFinanceTableColumns) window.applyFinanceTableColumns("supplierDebtsTable");
+    } else if (subtabId === "subcontractor-debt") {
+        if (typeof renderSubcontractorDebts === 'function') renderSubcontractorDebts();
+        if (window.applyFinanceTableColumns) window.applyFinanceTableColumns("subcontractorDebtsTable");
+    } else if (subtabId === "sales-commission") {
+        if (window.renderSalesCommissions) window.renderSalesCommissions();
+        if (window.applyFinanceTableColumns) window.applyFinanceTableColumns("salesCommissionsTable");
+    } else if (subtabId === "internal-finance") {
+        if (window.renderInternalTransactions) window.renderInternalTransactions();
+        if (window.applyFinanceTableColumns) window.applyFinanceTableColumns("internalTransactionsTable");
     }
 };
 
@@ -16101,6 +16121,281 @@ function renderSubcontracting() {
     lucide.createIcons();
 }
 
+// ==========================================================================
+// DYNAMIC COLUMN SCHEMAS & CONFIGURATION FOR FINANCE TABLES
+// ==========================================================================
+window.FINANCE_TABLE_SCHEMAS = {
+    financeTransactionsTable: {
+        title: "Sổ quỹ thu chi",
+        columns: [
+            { id: "tx_code", label: "Mã giao dịch", weight: 13, defaultVisible: true },
+            { id: "date", label: "Thời gian", weight: 14, defaultVisible: true },
+            { id: "category", label: "Phân loại", weight: 14, defaultVisible: true },
+            { id: "partner", label: "Đối tác", weight: 15, defaultVisible: true },
+            { id: "amount", label: "Số tiền", weight: 13, defaultVisible: true },
+            { id: "method", label: "Hình thức", weight: 11, defaultVisible: true },
+            { id: "fund", label: "Tài khoản quỹ", weight: 10, defaultVisible: true },
+            { id: "creator", label: "Người lập", weight: 10, defaultVisible: true }
+        ]
+    },
+    customerDebtsTable: {
+        title: "Công nợ khách hàng",
+        columns: [
+            { id: "code", label: "Mã KH", weight: 8, defaultVisible: true },
+            { id: "name", label: "Khách hàng", weight: 17, defaultVisible: true, fixed: true },
+            { id: "company", label: "Tên công ty", weight: 15, defaultVisible: true },
+            { id: "phone", label: "Điện thoại", weight: 11.5, defaultVisible: true },
+            { id: "total_sales", label: "Tổng tiền hàng", weight: 10.5, defaultVisible: true },
+            { id: "paid", label: "Đã thanh toán", weight: 9.5, defaultVisible: true },
+            { id: "debt", label: "Còn nợ", weight: 9.5, defaultVisible: true },
+            { id: "credit_limit", label: "Hạn mức", weight: 7.5, defaultVisible: true },
+            { id: "actions", label: "Thao tác", weight: 11.5, defaultVisible: true, fixed: true }
+        ]
+    },
+    supplierDebtsTable: {
+        title: "Công nợ nhà cung cấp",
+        columns: [
+            { id: "code", label: "Mã NCC", weight: 8, defaultVisible: true },
+            { id: "name", label: "Nhà cung cấp", weight: 18, defaultVisible: true, fixed: true },
+            { id: "company", label: "Tên công ty", weight: 16, defaultVisible: true },
+            { id: "phone", label: "Điện thoại", weight: 12, defaultVisible: true },
+            { id: "total_import", label: "Tổng tiền nhập", weight: 12, defaultVisible: true },
+            { id: "paid", label: "Đã chi trả", weight: 10, defaultVisible: true },
+            { id: "debt", label: "Còn nợ", weight: 10, defaultVisible: true },
+            { id: "actions", label: "Thao tác", weight: 14, defaultVisible: true, fixed: true }
+        ]
+    },
+    subcontractorDebtsTable: {
+        title: "Công nợ xưởng gia công",
+        columns: [
+            { id: "code", label: "Mã Xưởng", weight: 8, defaultVisible: true },
+            { id: "name", label: "Xưởng gia công", weight: 18, defaultVisible: true, fixed: true },
+            { id: "company", label: "Tên công ty", weight: 16, defaultVisible: true },
+            { id: "phone", label: "Điện thoại", weight: 12, defaultVisible: true },
+            { id: "total_cost", label: "Tổng tiền GC", weight: 12, defaultVisible: true },
+            { id: "paid", label: "Đã chi trả", weight: 10, defaultVisible: true },
+            { id: "debt", label: "Còn nợ", weight: 10, defaultVisible: true },
+            { id: "actions", label: "Thao tác", weight: 14, defaultVisible: true, fixed: true }
+        ]
+    },
+    salesCommissionsTable: {
+        title: "Hoa hồng bán hàng",
+        columns: [
+            { id: "salesperson", label: "Nhân viên Sales", weight: 18, defaultVisible: true, fixed: true },
+            { id: "online_sales", label: "Doanh số Online", weight: 13, defaultVisible: true },
+            { id: "online_comm", label: "Hoa hồng Online", weight: 13, defaultVisible: true },
+            { id: "prod_sales", label: "Doanh số Sản xuất", weight: 13, defaultVisible: true },
+            { id: "prod_comm", label: "Hoa hồng Sản xuất", weight: 13, defaultVisible: true },
+            { id: "total_comm", label: "Tổng Hoa hồng", weight: 15, defaultVisible: true },
+            { id: "actions", label: "Thao tác", weight: 15, defaultVisible: true, fixed: true }
+        ]
+    },
+    internalTransactionsTable: {
+        title: "Thu chi nội bộ",
+        columns: [
+            { id: "date", label: "Ngày giao dịch", weight: 14, defaultVisible: true },
+            { id: "tx_code", label: "Mã giao dịch", weight: 13, defaultVisible: true },
+            { id: "type", label: "Loại GD", weight: 11, defaultVisible: true },
+            { id: "category", label: "Hạng mục", weight: 17, defaultVisible: true },
+            { id: "amount", label: "Số tiền", weight: 14, defaultVisible: true },
+            { id: "creator", label: "Người thực hiện", weight: 13, defaultVisible: true },
+            { id: "note", label: "Ghi chú", weight: 18, defaultVisible: true }
+        ]
+    }
+};
+
+window.getFinanceVisibleCols = function(tableId) {
+    const schema = window.FINANCE_TABLE_SCHEMAS[tableId];
+    if (!schema) return [];
+    try {
+        const saved = localStorage.getItem('ihp_cols_' + tableId);
+        if (saved) {
+            const arr = JSON.parse(saved);
+            if (Array.isArray(arr) && arr.length > 0) return arr;
+        }
+    } catch (e) {
+        console.warn('Could not read table columns for', tableId, e);
+    }
+    return schema.columns.map(c => c.id);
+};
+
+window.applyFinanceTableColumns = function(tableId) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const schema = window.FINANCE_TABLE_SCHEMAS[tableId];
+    if (!schema) return;
+
+    const visibleCols = window.getFinanceVisibleCols(tableId);
+    
+    // Calculate total weight of visible columns
+    let totalWeight = 0;
+    schema.columns.forEach(col => {
+        if (visibleCols.includes(col.id)) {
+            totalWeight += (col.weight || 10);
+        }
+    });
+    if (totalWeight <= 0) totalWeight = 100;
+
+    // 1. Update col elements in colgroup
+    const colgroup = table.querySelector("colgroup");
+    if (colgroup) {
+        schema.columns.forEach(col => {
+            const colEl = colgroup.querySelector(`col[data-col="${col.id}"]`);
+            if (colEl) {
+                if (visibleCols.includes(col.id)) {
+                    const pct = ((col.weight / totalWeight) * 100).toFixed(2);
+                    colEl.style.width = pct + "%";
+                    colEl.classList.remove("finance-col-hidden");
+                } else {
+                    colEl.style.width = "0%";
+                    colEl.classList.add("finance-col-hidden");
+                }
+            }
+        });
+    }
+
+    // 2. Hide / show TH elements
+    table.querySelectorAll("thead th[data-col]").forEach(th => {
+        const colId = th.getAttribute("data-col");
+        if (visibleCols.includes(colId)) {
+            th.classList.remove("finance-col-hidden");
+        } else {
+            th.classList.add("finance-col-hidden");
+        }
+    });
+
+    // 3. Hide / show TD elements
+    table.querySelectorAll("tbody td[data-col]").forEach(td => {
+        const colId = td.getAttribute("data-col");
+        if (visibleCols.includes(colId)) {
+            td.classList.remove("finance-col-hidden");
+        } else {
+            td.classList.add("finance-col-hidden");
+        }
+    });
+};
+
+window.activeFinanceConfigTableId = null;
+
+window.openFinanceColConfig = function(tableId) {
+    const schema = window.FINANCE_TABLE_SCHEMAS[tableId];
+    if (!schema) return;
+    window.activeFinanceConfigTableId = tableId;
+
+    const modal = document.getElementById("financeColumnConfigModal");
+    if (!modal) return;
+
+    const titleEl = document.getElementById("financeColConfigModalTitle");
+    const subTitleEl = document.getElementById("financeColConfigTableSubtitle");
+    if (titleEl) titleEl.textContent = "Tùy chỉnh cột hiển thị";
+    if (subTitleEl) subTitleEl.textContent = schema.title || "Bảng dữ liệu";
+
+    const visibleCols = window.getFinanceVisibleCols(tableId);
+    const listEl = document.getElementById("financeColConfigList");
+    if (listEl) {
+        listEl.innerHTML = schema.columns.map(col => {
+            const isChecked = visibleCols.includes(col.id);
+            const isFixed = !!col.fixed;
+            return `
+                <label class="col-config-item">
+                    <input type="checkbox" value="${col.id}" ${isChecked ? 'checked' : ''} ${isFixed ? 'disabled' : ''} data-fixed="${isFixed ? '1' : '0'}" style="accent-color:var(--primary); width:16px; height:16px; cursor:pointer;">
+                    <span style="font-size:0.875rem; font-weight:${isFixed ? '600' : '500'}; color:${isFixed ? 'var(--text-secondary)' : 'var(--text-primary)'};">
+                        ${escapeHtml(col.label)} ${isFixed ? '<small style="font-size:0.7rem; color:var(--text-secondary);">(Cố định)</small>' : ''}
+                    </span>
+                </label>
+            `;
+        }).join('');
+    }
+
+    if (window.lucide) {
+        lucide.createIcons({ root: modal });
+    }
+    openModal("financeColumnConfigModal");
+};
+
+window.saveCurrentFinanceColConfig = function() {
+    const tableId = window.activeFinanceConfigTableId;
+    if (!tableId) return;
+    const schema = window.FINANCE_TABLE_SCHEMAS[tableId];
+    if (!schema) return;
+
+    const listEl = document.getElementById("financeColConfigList");
+    if (!listEl) return;
+
+    const checkedInputs = listEl.querySelectorAll("input[type='checkbox']:checked");
+    const selectedCols = Array.from(checkedInputs).map(cb => cb.value);
+
+    if (selectedCols.length === 0) {
+        alert("Vui lòng chọn ít nhất 1 cột để hiển thị.");
+        return;
+    }
+
+    try {
+        localStorage.setItem('ihp_cols_' + tableId, JSON.stringify(selectedCols));
+    } catch (e) {
+        console.error("Error saving column preferences", e);
+    }
+
+    window.applyFinanceTableColumns(tableId);
+    closeModal("financeColumnConfigModal");
+};
+
+window.resetFinanceColConfig = function() {
+    const tableId = window.activeFinanceConfigTableId;
+    if (!tableId) return;
+    const schema = window.FINANCE_TABLE_SCHEMAS[tableId];
+    if (!schema) return;
+
+    try {
+        localStorage.removeItem('ihp_cols_' + tableId);
+    } catch (e) {}
+
+    const listEl = document.getElementById("financeColConfigList");
+    if (listEl) {
+        listEl.querySelectorAll("input[type='checkbox']").forEach(cb => {
+            cb.checked = true;
+        });
+    }
+
+    window.applyFinanceTableColumns(tableId);
+};
+
+window.openAddSupplierModal = function() {
+    const form = document.getElementById("partnerForm");
+    if (form) form.reset();
+    const idInput = document.getElementById("partnerIdInput");
+    if (idInput) idInput.value = "";
+    const roleSelect = document.getElementById("partnerRole");
+    if (roleSelect) roleSelect.value = "SUPPLIER";
+    const title = document.getElementById("partnerModalTitle");
+    if (title) title.textContent = "Thêm mới Nhà cung cấp";
+    openModal("partnerModal");
+};
+
+window.openAddCustomerModal = function() {
+    const form = document.getElementById("partnerForm");
+    if (form) form.reset();
+    const idInput = document.getElementById("partnerIdInput");
+    if (idInput) idInput.value = "";
+    const roleSelect = document.getElementById("partnerRole");
+    if (roleSelect) roleSelect.value = "CUSTOMER";
+    const title = document.getElementById("partnerModalTitle");
+    if (title) title.textContent = "Thêm mới Khách hàng";
+    openModal("partnerModal");
+};
+
+window.openAddSubcontractorModal = function() {
+    const form = document.getElementById("partnerForm");
+    if (form) form.reset();
+    const idInput = document.getElementById("partnerIdInput");
+    if (idInput) idInput.value = "";
+    const roleSelect = document.getElementById("partnerRole");
+    if (roleSelect) roleSelect.value = "SUBCONTRACTOR";
+    const title = document.getElementById("partnerModalTitle");
+    if (title) title.textContent = "Thêm mới Xưởng gia công";
+    openModal("partnerModal");
+};
+
 function renderFinance() {
     // Calc total balance from actual transactions
     const receipts = state.transactions.filter(t => t.type === "RECEIPT").reduce((sum, t) => sum + t.amount, 0);
@@ -16143,16 +16438,35 @@ function renderFinance() {
         window.renderSalesCommissions();
     }
 
-    // Ledger table
+    // Ledger table with Search & Filter & data-col
     const tableBody = document.querySelector("#financeTransactionsTable tbody");
     if (tableBody) {
         tableBody.innerHTML = "";
 
-        if (!state.transactions || state.transactions.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 36px 16px; font-size: 0.95rem;">Chưa có giao dịch thu chi nào. Sổ quỹ sẵn sàng ghi nhận giao dịch mới.</td></tr>`;
+        const searchInput = document.getElementById("financeSearchInput");
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+        const catFilter = document.getElementById("financeFilterCategory") ? document.getElementById("financeFilterCategory").value : "";
+
+        let txs = (state.transactions || []);
+        if (query) {
+            txs = txs.filter(t => {
+                const partner = (state.partners || []).find(p => p.id === t.partner_id);
+                const partnerName = partner ? partner.name.toLowerCase() : "";
+                const txNum = (t.tx_number || "").toLowerCase();
+                const creator = (t.created_by || "").toLowerCase();
+                const note = (t.note || "").toLowerCase();
+                return txNum.includes(query) || partnerName.includes(query) || creator.includes(query) || note.includes(query);
+            });
+        }
+        if (catFilter) {
+            txs = txs.filter(t => t.category === catFilter);
+        }
+
+        if (txs.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 36px 16px; font-size: 0.95rem;">Không tìm thấy giao dịch nào phù hợp với bộ lọc.</td></tr>`;
         } else {
-            state.transactions.forEach(t => {
-                const partner = state.partners.find(p => p.id === t.partner_id);
+            txs.forEach(t => {
+                const partner = (state.partners || []).find(p => p.id === t.partner_id);
                 const categories = {
                     CUSTOMER_DEPOSIT: "Thu cọc đơn in",
                     CUSTOMER_FINAL: "Thu nợ đơn in",
@@ -16164,21 +16478,25 @@ function renderFinance() {
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><strong>${t.tx_number}</strong></td>
-                    <td>${new Date(t.created_at).toLocaleString('vi-VN')}</td>
-                    <td><span class="badge ${t.type === 'RECEIPT' ? 'badge-success' : 'badge-danger'}">${categories[t.category] || t.category}</span></td>
-                    <td>${partner ? partner.name : 'Vãng lai'}</td>
-                    <td><strong class="${t.type === 'RECEIPT' ? 'text-success' : 'text-danger'}">${t.type === 'RECEIPT' ? '+' : '-'}${formatMoney(t.amount)}</strong></td>
-                    <td>
+                    <td data-col="tx_code"><strong>${escapeHtml(t.tx_number || '')}</strong></td>
+                    <td data-col="date">${t.created_at ? new Date(t.created_at).toLocaleString('vi-VN') : '-'}</td>
+                    <td data-col="category"><span class="badge ${t.type === 'RECEIPT' ? 'badge-success' : 'badge-danger'}">${categories[t.category] || t.category || ''}</span></td>
+                    <td data-col="partner">${partner ? escapeHtml(partner.name) : 'Vãng lai'}</td>
+                    <td data-col="amount" class="debt-money-cell"><strong class="${t.type === 'RECEIPT' ? 'text-success' : 'text-danger'}">${t.type === 'RECEIPT' ? '+' : '-'}${formatMoney(t.amount)}</strong></td>
+                    <td data-col="method">
                         ${t.payment_method === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}
                         ${t.bill_image ? `<a href="#" onclick="window.viewPaymentBill('${t.id}'); return false;" style="margin-left:6px; color:var(--accent);" title="Xem bill chuyển khoản"><i data-lucide="image" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i></a>` : ''}
                     </td>
-                    <td>${t.account_source === 'VCB' ? 'MBBank' : 'Két tiền'}</td>
-                    <td><small>${t.created_by}</small></td>
+                    <td data-col="fund">${t.account_source === 'VCB' ? 'MBBank' : 'Két tiền'}</td>
+                    <td data-col="creator"><small>${escapeHtml(t.created_by || '')}</small></td>
                 `;
                 tableBody.appendChild(row);
             });
         }
+        if (window.lucide) {
+            lucide.createIcons({ root: tableBody });
+        }
+        window.applyFinanceTableColumns("financeTransactionsTable");
     }
 
     // Render sub-tabs tables
@@ -16283,7 +16601,7 @@ window.openNewInternalTxModal = function() {
 };
 
 window.renderInternalTransactions = function() {
-    const internalTxs = state.transactions.filter(t => t.is_internal === true);
+    let internalTxs = (state.transactions || []).filter(t => t.is_internal === true);
 
     const totalReceipts = internalTxs.filter(t => t.type === "RECEIPT").reduce((sum, t) => sum + t.amount, 0);
     const totalPayments = internalTxs.filter(t => t.type === "PAYMENT").reduce((sum, t) => sum + t.amount, 0);
@@ -16297,26 +16615,46 @@ window.renderInternalTransactions = function() {
     if (lblPayments) lblPayments.textContent = formatMoney(totalPayments);
     if (lblBalance) lblBalance.textContent = formatMoney(balance);
 
+    const searchInput = document.getElementById("internalTxSearchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const typeFilter = document.getElementById("internalTxFilterType") ? document.getElementById("internalTxFilterType").value : "";
+
+    if (query) {
+        internalTxs = internalTxs.filter(t => 
+            (t.tx_number && t.tx_number.toLowerCase().includes(query)) ||
+            (t.category && t.category.toLowerCase().includes(query)) ||
+            (t.created_by && t.created_by.toLowerCase().includes(query)) ||
+            (t.note && t.note.toLowerCase().includes(query))
+        );
+    }
+    if (typeFilter) {
+        internalTxs = internalTxs.filter(t => t.type === typeFilter);
+    }
+
     const tableBody = document.querySelector("#internalTransactionsTable tbody");
     if (tableBody) {
         tableBody.innerHTML = "";
         if (internalTxs.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 20px;">Chưa có giao dịch thu chi nội bộ nào được ghi nhận.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 20px;">Không tìm thấy giao dịch nội bộ nào phù hợp với bộ lọc.</td></tr>`;
         } else {
             internalTxs.forEach(t => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${new Date(t.created_at).toLocaleString('vi-VN')}</td>
-                    <td><strong>${t.tx_number}</strong></td>
-                    <td><span class="badge ${t.type === 'RECEIPT' ? 'badge-success' : 'badge-danger'}">${t.type === 'RECEIPT' ? 'Thu nội bộ' : 'Chi nội bộ'}</span></td>
-                    <td>${t.category}</td>
-                    <td><strong class="${t.type === 'RECEIPT' ? 'text-success' : 'text-danger'}">${t.type === 'RECEIPT' ? '+' : '-'}${formatMoney(t.amount)}</strong></td>
-                    <td>${t.created_by}</td>
-                    <td>${t.note || ''}</td>
+                    <td data-col="date">${t.created_at ? new Date(t.created_at).toLocaleString('vi-VN') : '-'}</td>
+                    <td data-col="tx_code"><strong>${escapeHtml(t.tx_number || '')}</strong></td>
+                    <td data-col="type"><span class="badge ${t.type === 'RECEIPT' ? 'badge-success' : 'badge-danger'}">${t.type === 'RECEIPT' ? 'Thu nội bộ' : 'Chi nội bộ'}</span></td>
+                    <td data-col="category">${escapeHtml(t.category || '')}</td>
+                    <td data-col="amount" class="debt-money-cell"><strong class="${t.type === 'RECEIPT' ? 'text-success' : 'text-danger'}">${t.type === 'RECEIPT' ? '+' : '-'}${formatMoney(t.amount)}</strong></td>
+                    <td data-col="creator">${escapeHtml(t.created_by || '')}</td>
+                    <td data-col="note">${escapeHtml(t.note || '')}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
+        if (window.lucide) {
+            lucide.createIcons({ root: tableBody });
+        }
+        window.applyFinanceTableColumns("internalTransactionsTable");
     }
 };
 
@@ -16357,111 +16695,371 @@ function handleInternalTxSubmit(e) {
     alert(`Đã ghi nhận thành công giao dịch nội bộ ${txNumber} trị giá ${formatMoney(amount)}.`);
 }
 
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+if (!window.escapeHtml) window.escapeHtml = escapeHtml;
+
+window.parseVietnamPhones = function(rawStr) {
+    if (!rawStr || typeof rawStr !== 'string') return [];
+    let s = rawStr.trim();
+    if (!s || /^(sđt|sdt|null|none|chưa có|-|\.)$/i.test(s)) return [];
+
+    // 1. Clean float notation from Excel like 964682288.0 -> 0964682288
+    s = s.replace(/\b([35789]\d{8})\.0\b/g, '0$1')
+         .replace(/\b(1\d{9})\.0\b/g, '0$1');
+
+    // 2. Normalize standard delimiters: &, /, ;, \n, en-dash, em-dash, commas
+    s = s.replace(/[\r\n&;/–—,]+/g, ' | ');
+
+    // 3. Separate hyphen between phone chunks or words (e.g. 0983.19.89.86-39.330.938 or 18.81-0989)
+    s = s.replace(/(\d{2,4})\s*-\s*([0235789]\d|[A-Za-zÀ-ỹ])/g, '$1 | $2');
+
+    // 4. Clean extra spaces and scan segments
+    const chunks = s.split('|').map(c => c.trim()).filter(Boolean);
+    const results = [];
+
+    chunks.forEach(chunk => {
+        // Strip text like "máy lẻ: 402" or "ext 402" so it doesn't pollute phone digits
+        let working = chunk.replace(/(?:máy lẻ|ext)[\s:]*\d+/gi, '');
+
+        // Extract digits
+        const digits = working.replace(/\D/g, '');
+        if (digits.length < 6 || digits.length > 13) return;
+
+        // Extract label/note from text in this chunk (e.g. "Chị Thu Hà", "Nhà", "Ms. Nga")
+        let textPart = chunk.replace(/[\d\.\-\s\(\)]+/g, ' ').replace(/^[:\s\-–—/&]+|[:\s\-–—/&]+$/g, '').trim();
+        textPart = textPart.replace(/^(?:hotline|đt|sđt|tel|mobile|phone)[\s:]*/gi, '').trim();
+        const label = (textPart.length > 1 && textPart.length < 35) ? textPart : "";
+
+        // Standardize dial number
+        let dial = digits;
+        if (digits.startsWith('84')) {
+            dial = '0' + digits.substring(2);
+        } else if (digits.length === 9 && digits.startsWith('9')) {
+            dial = '0' + digits;
+        } else if (digits.length === 7 || digits.length === 8) {
+            dial = '024' + digits;
+        } else if (digits.startsWith('04')) {
+            dial = '024' + digits.substring(2);
+        }
+
+        // Format clean display
+        let formatted = dial;
+        if (/^(03|05|07|08|09)/.test(dial) && dial.length === 10) {
+            formatted = `${dial.slice(0, 4)} ${dial.slice(4, 7)} ${dial.slice(7)}`;
+        } else if (dial.startsWith('024') && dial.length === 11) {
+            formatted = `024 ${dial.slice(3, 7)} ${dial.slice(7)}`;
+        } else if (dial.length >= 10) {
+            formatted = `${dial.slice(0, 4)} ${dial.slice(4, 7)} ${dial.slice(7)}`;
+        }
+
+        results.push({
+            dial: dial,
+            display: formatted,
+            label: label
+        });
+    });
+
+    // Deduplicate by dial number
+    const dedup = [];
+    const seen = new Set();
+    results.forEach(r => {
+        if (!seen.has(r.dial)) {
+            seen.add(r.dial);
+            dedup.push(r);
+        }
+    });
+
+    return dedup;
+};
+
+window.formatPhoneListHtml = function(rawStr) {
+    const list = window.parseVietnamPhones(rawStr);
+    if (!list || list.length === 0) {
+        return `<span style="color:var(--text-secondary); font-style:italic; font-size:0.8rem;">---</span>`;
+    }
+
+    const chips = list.map(item => {
+        return `
+            <a href="tel:${item.dial}" class="phone-chip" title="Bấm gọi ngay: ${item.dial}" onclick="event.stopPropagation();">
+                <i data-lucide="phone-call"></i>
+                <span>${item.display}</span>
+            </a>
+        `;
+    }).join('');
+
+    return `<div class="phone-chip-group">${chips}</div>`;
+};
+
+window.viewPartnerCompanyDetails = function(partnerId) {
+    const partner = (state.partners || []).find(p => p.id === partnerId);
+    if (!partner) return;
+
+    let modal = document.getElementById("partnerCompanyDetailsModal");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.className = "modal";
+        modal.id = "partnerCompanyDetailsModal";
+        document.body.appendChild(modal);
+    }
+
+    const roleBadge = partner.role === 'SUPPLIER' ? '<span class="badge badge-warning" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a;">Nhà cung cấp</span>' : 
+                     (partner.role === 'CUSTOMER' ? '<span class="badge badge-primary" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">Khách hàng</span>' : 
+                     (partner.role === 'SUBCONTRACTOR' ? '<span class="badge badge-info" style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe;">Xưởng gia công</span>' : '<span class="badge badge-secondary">Đối tác</span>'));
+
+    const phonesHtml = window.formatPhoneListHtml(partner.phone);
+    const companyDisplayName = partner.company_name || partner.name || 'Chưa cập nhật tên công ty';
+
+    modal.innerHTML = `
+        <div class="modal-dialog" style="max-width: 650px;">
+            <div class="modal-content" style="border-radius:12px; overflow:hidden; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);">
+                <div class="modal-header" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-bottom: 1px solid var(--border-color); padding: 18px 24px;">
+                    <div style="display:flex; align-items:center; gap:14px;">
+                        <div style="width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.25rem; box-shadow:0 4px 6px -1px rgba(2, 132, 199, 0.3);">
+                            <i data-lucide="building-2"></i>
+                        </div>
+                        <div>
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <h2 style="margin:0; font-size:1.15rem; font-weight:700; color:var(--text);">${companyDisplayName}</h2>
+                                ${roleBadge}
+                            </div>
+                            <span style="font-size:0.8rem; color:var(--text-secondary); font-family:monospace;">Mã: ${partner.code || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <button class="btn-close" onclick="closeModal('partnerCompanyDetailsModal')"><i data-lucide="x"></i></button>
+                </div>
+                <div class="modal-body" style="padding:24px; font-size:0.9rem;">
+                    <div style="background:#fff; border:1px solid var(--border-color); border-radius:8px; overflow:hidden; margin-bottom:20px;">
+                        <div style="padding:10px 16px; background:#f8fafc; border-bottom:1px solid var(--border-color); font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px; font-size:0.85rem;">
+                            <i data-lucide="info" style="width:14px; height:14px;"></i> THÔNG TIN DOANH NGHIỆP & LIÊN HỆ
+                        </div>
+                        <div style="padding:16px; display:grid; grid-template-columns: 140px 1fr; row-gap:14px; column-gap:12px; align-items:center;">
+                            <div style="color:var(--text-secondary); font-weight:500;">Tên công ty:</div>
+                            <div style="font-weight:700; color:var(--text); font-size:0.95rem;">${partner.company_name || partner.name || '---'}</div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Người liên hệ:</div>
+                            <div style="font-weight:600; color:var(--text);">${partner.name || '---'}</div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Mã số thuế:</div>
+                            <div><code style="background:#f1f5f9; padding:2px 8px; border-radius:4px; font-weight:600; font-size:0.85rem; color:#0f172a;">${partner.tax_code || partner.tax_id || 'Chưa cập nhật'}</code></div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Điện thoại:</div>
+                            <div>${phonesHtml}</div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Email:</div>
+                            <div>${partner.email || partner.billing_email ? `<a href="mailto:${partner.email || partner.billing_email}" style="color:var(--accent); text-decoration:none; font-weight:500;">${partner.email || partner.billing_email}</a>` : '<span style="color:var(--text-secondary); font-style:italic;">Chưa có email</span>'}</div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Địa chỉ:</div>
+                            <div style="color:var(--text);">${partner.billing_address || partner.address || '<span style="color:var(--text-secondary); font-style:italic;">Chưa cập nhật địa chỉ</span>'}</div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Hạn mức công nợ:</div>
+                            <div style="font-weight:700; color:#b45309;">${formatMoney(partner.credit_limit || 0)}</div>
+
+                            <div style="color:var(--text-secondary); font-weight:500;">Ghi chú:</div>
+                            <div style="color:var(--text-secondary); font-style:italic;">${partner.note || partner.notes || 'Không có ghi chú'}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top:1px solid var(--border-color); padding-top:16px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('partnerCompanyDetailsModal')">Đóng</button>
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" class="btn btn-info" style="display:inline-flex; align-items:center; gap:6px; background:#0891b2; color:#fff;" onclick="closeModal('partnerCompanyDetailsModal'); ${partner.role === 'SUPPLIER' ? `viewSupplierPaymentHistory('${partner.id}')` : (partner.role === 'SUBCONTRACTOR' ? `viewSubcontractorPaymentHistory('${partner.id}')` : `viewCustomerPaymentHistory('${partner.id}')`)};">
+                                <i data-lucide="receipt" style="width:14px; height:14px;"></i> Lịch sử đơn hàng
+                            </button>
+                            <button type="button" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px;" onclick="closeModal('partnerCompanyDetailsModal'); window.openEditPartner('${partner.id}');">
+                                <i data-lucide="edit-3" style="width:14px; height:14px;"></i> Sửa thông tin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    if (window.lucide) {
+        lucide.createIcons({ root: modal });
+    }
+    openModal("partnerCompanyDetailsModal");
+};
+
 function renderCustomerDebts() {
     const tableBody = document.querySelector("#customerDebtsTable tbody");
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
-    const customers = state.partners.filter(p => p.role === "CUSTOMER" || p.role === "BOTH");
+    const searchInput = document.getElementById("customerDebtSearchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const statusFilter = document.getElementById("customerDebtFilterStatus") ? document.getElementById("customerDebtFilterStatus").value : "";
+
+    let customers = (state.partners || []).filter(p => (p.role === "CUSTOMER" || p.role === "BOTH") && p.id !== 'p_ncc_xls_2' && p.code !== 'NCC-VT-001' && p.phone !== 'SĐT' && p.name !== 'Tên Nhà Cung Cấp');
+
+    if (query) {
+        customers = customers.filter(p => 
+            (p.name && p.name.toLowerCase().includes(query)) ||
+            (p.code && p.code.toLowerCase().includes(query)) ||
+            (p.company_name && p.company_name.toLowerCase().includes(query)) ||
+            (p.phone && p.phone.toLowerCase().includes(query))
+        );
+    }
+
+    if (statusFilter) {
+        customers = customers.filter(p => {
+            const standardSales = (state.orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+            const onlineSales = (state.online_orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+            const totalSales = standardSales + onlineSales;
+            const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "RECEIPT").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+            const debt = Math.max(0, totalSales - paid);
+            const creditLimit = Number(p.credit_limit) || 0;
+
+            if (statusFilter === "DEBT_GT_0") return debt > 0;
+            if (statusFilter === "DEBT_ZERO") return debt <= 0;
+            if (statusFilter === "OVER_LIMIT") return debt > creditLimit && creditLimit > 0;
+            return true;
+        });
+    }
 
     if (customers.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Chưa có khách hàng nào trong hệ thống.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Không tìm thấy khách hàng nào phù hợp với bộ lọc.</td></tr>`;
+        window.applyFinanceTableColumns("customerDebtsTable");
         return;
     }
 
     customers.forEach(p => {
         // Calculate total sales from both standard orders and online orders
-        const standardSales = state.orders.filter(o => o.customer_id === p.id).reduce((sum, o) => sum + o.total_amount, 0);
-        const onlineSales = state.online_orders.filter(o => o.customer_id === p.id).reduce((sum, o) => sum + o.total_amount, 0);
+        const standardSales = (state.orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+        const onlineSales = (state.online_orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
         const totalSales = standardSales + onlineSales;
         
         // Payments received
-        const paid = state.transactions.filter(t => t.partner_id === p.id && t.type === "RECEIPT").reduce((sum, t) => sum + t.amount, 0);
+        const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "RECEIPT").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
         const debt = Math.max(0, totalSales - paid);
-        const creditLimit = p.credit_limit || 0;
+        const creditLimit = Number(p.credit_limit) || 0;
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><span class="debt-partner-code">${p.code || 'KH'}</span></td>
-            <td><span class="debt-partner-name">${p.name}</span></td>
-            <td><span class="debt-partner-phone">${p.phone || '-'}</span></td>
-            <td class="debt-money-cell">${formatMoney(totalSales)}</td>
-            <td class="debt-money-cell">${formatMoney(paid)}</td>
-            <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
-            <td class="debt-money-cell">${formatMoney(creditLimit)}</td>
-            <td>
-                <div class="card-actions-row">
-                    <button class="btn btn-success" style="white-space:nowrap;" onclick="collectCustomerDebt('${p.id}')">
-                        <i data-lucide="plus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Thu nợ
+            <td data-col="code"><span class="debt-partner-code">${escapeHtml(p.code || 'KH')}</span></td>
+            <td data-col="name">
+                <a href="javascript:void(0)" class="partner-name-link" onclick="viewCustomerPaymentHistory('${p.id}')" title="Bấm để xem lịch sử đơn hàng chi tiết">
+                    ${escapeHtml(p.name || 'Khách hàng')}
+                </a>
+            </td>
+            <td data-col="company">
+                <a href="javascript:void(0)" class="company-link" onclick="viewPartnerCompanyDetails('${p.id}')" title="Bấm để xem hồ sơ chi tiết công ty">
+                    ${escapeHtml(p.company_name || p.name || 'Xem chi tiết')}
+                </a>
+            </td>
+            <td data-col="phone">${formatPhoneListHtml(p.phone)}</td>
+            <td data-col="total_sales" class="debt-money-cell">${formatMoney(totalSales)}</td>
+            <td data-col="paid" class="debt-money-cell">${formatMoney(paid)}</td>
+            <td data-col="debt" class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
+            <td data-col="credit_limit" class="debt-money-cell">${formatMoney(creditLimit)}</td>
+            <td data-col="actions">
+                <div style="display:flex; gap:3px; align-items:center; justify-content:center;">
+                    <button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; background-color: var(--primary-light, #e0f2fe); color: var(--primary, #0284c7); border: none; display:inline-flex; align-items:center; gap:2px;" onclick="window.openEditPartner('${p.id}')" title="Sửa thông tin khách hàng">
+                        <i data-lucide="edit-3" style="width:11px; height:11px;"></i><span>Sửa</span>
                     </button>
-                    <button class="btn btn-info" style="white-space:nowrap; background:#0891b2; color:#fff;" onclick="viewCustomerPaymentHistory('${p.id}')">
-                        <i data-lucide="history" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Lịch sử trả
+                    <button class="btn btn-success" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; display:inline-flex; align-items:center; gap:2px;" onclick="collectCustomerDebt('${p.id}')" title="Lập phiếu thu nợ">
+                        <i data-lucide="plus-circle" style="width:11px; height:11px;"></i><span>Thu nợ</span>
+                    </button>
+                    <button class="btn btn-info" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; background:#0891b2; color:#fff; display:inline-flex; align-items:center; gap:2px;" onclick="viewCustomerPaymentHistory('${p.id}')" title="Xem lịch sử đơn hàng">
+                        <i data-lucide="history" style="width:11px; height:11px;"></i><span>Lịch sử</span>
                     </button>
                 </div>
             </td>
         `;
         tableBody.appendChild(row);
     });
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: tableBody });
+    }
+    window.applyFinanceTableColumns("customerDebtsTable");
 }
 
 window.viewCustomerPaymentHistory = function(partnerId) {
-    const customer = state.partners.find(p => p.id === partnerId);
+    const customer = (state.partners || []).find(p => p.id === partnerId);
     if (!customer) return;
     
-    // Create detailed history modal dynamically or load it
     let modal = document.getElementById("customerPaymentHistoryModal");
     if (!modal) {
-        // Create modal container dynamically and append to body
         modal = document.createElement("div");
         modal.className = "modal";
         modal.id = "customerPaymentHistoryModal";
         modal.innerHTML = `
-            <div class="modal-dialog" style="max-width: 800px;">
+            <div class="modal-dialog" style="max-width: 960px;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 id="historyModalTitle">Lịch Sử Thanh Toán & Chi Tiết Công Nợ</h2>
+                        <h2 id="historyModalTitle">Lịch Sử Giao Dịch & Chi Tiết Đơn Hàng</h2>
                         <button class="btn-close" onclick="closeModal('customerPaymentHistoryModal')"><i data-lucide="x"></i></button>
                     </div>
                     <div class="modal-body" style="padding:20px;">
-                        <div style="margin-bottom:15px; font-size:0.95rem; display:flex; justify-content:space-between;">
-                            <div>
-                                <p><strong>Khách hàng:</strong> <span id="historyCustomerName"></span></p>
-                                <p><strong>Số điện thoại:</strong> <span id="historyCustomerPhone"></span></p>
+                        <div style="background:var(--bg-secondary, #f8fafc); border-radius:8px; padding:16px; margin-bottom:20px; border:1px solid var(--border-color); display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                            <div style="min-width:280px;">
+                                <div style="font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:4px;">
+                                    <i data-lucide="user" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; color:#2563eb;"></i>
+                                    <span id="historyCustomerName"></span>
+                                </div>
+                                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:8px;">
+                                    <strong>Công ty:</strong> <span id="historyCustomerCompany"></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:0.85rem; color:var(--text-secondary);">Điện thoại:</strong>
+                                    <div id="historyCustomerPhone"></div>
+                                </div>
                             </div>
                             <div style="text-align:right;">
-                                <p><strong>Tổng công nợ hiện tại:</strong> <span id="historyCustomerTotalDebt" style="color:var(--danger); font-weight:bold; font-size:1.1rem;">0đ</span></p>
+                                <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">Tổng công nợ hiện tại:</div>
+                                <div id="historyCustomerTotalDebt" style="color:var(--danger, #ef4444); font-weight:800; font-size:1.35rem;">0đ</div>
+                                <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;" id="historyCustomerDebtLimit"></div>
                             </div>
                         </div>
                         
-                        <h4 style="margin: 15px 0 8px 0; color: var(--accent); font-size: 0.95rem;">1. Chi tiết công nợ từng đơn hàng</h4>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto; margin-bottom:20px; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="margin:0; color:var(--accent); font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="package" style="width:16px; height:16px;"></i> 1. Danh sách chi tiết từng đơn hàng
+                            </h4>
+                            <span id="historyOrdersCountBadge" style="font-size:0.78rem; background:rgba(37,99,235,0.1); color:#2563eb; padding:2px 8px; border-radius:12px; font-weight:600;"></span>
+                        </div>
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto; margin-bottom:20px; border: 1px solid var(--border-color); border-radius: 6px;">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Mã đơn</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Quy cách / Sản phẩm</th>
-                                        <th>Tổng tiền đơn</th>
-                                        <th>Đã thanh toán</th>
-                                        <th>Còn nợ</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Sản phẩm / Quy cách</th>
+                                        <th style="text-align:center;">Số lượng</th>
+                                        <th style="text-align:right;">Tổng tiền</th>
+                                        <th style="text-align:right;">Đã thanh toán</th>
+                                        <th style="text-align:right;">Còn nợ</th>
+                                        <th style="text-align:center;">Trạng thái</th>
+                                        <th style="text-align:center;">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody id="historyDebtOrdersTableBody">
-                                    <!-- Injected dynamically -->
                                 </tbody>
                             </table>
                         </div>
 
-                        <h4 style="margin: 0 0 8px 0; color: var(--accent); font-size: 0.95rem;">2. Lịch sử các phiếu thu thực tế</h4>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="margin:0; color:var(--accent); font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="receipt" style="width:16px; height:16px;"></i> 2. Lịch sử các phiếu thu thực tế
+                            </h4>
+                            <span id="historyReceiptsCountBadge" style="font-size:0.78rem; background:rgba(16,185,129,0.1); color:#059669; padding:2px 8px; border-radius:12px; font-weight:600;"></span>
+                        </div>
+                        <div class="table-responsive" style="max-height: 220px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px;">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Thời gian</th>
                                         <th>Số phiếu</th>
                                         <th>Hình thức</th>
-                                        <th>Số tiền thu</th>
+                                        <th style="text-align:right;">Số tiền thu</th>
                                         <th>Người thu</th>
                                         <th>Tham chiếu đơn</th>
                                     </tr>
@@ -16470,8 +17068,11 @@ window.viewCustomerPaymentHistory = function(partnerId) {
                                 </tbody>
                             </table>
                         </div>
-                        <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('customerPaymentHistoryModal')">Đóng</button>
+                            <button type="button" class="btn btn-success" style="display:inline-flex; align-items:center; gap:6px;" onclick="closeModal('customerPaymentHistoryModal'); collectCustomerDebt('${customer.id}');">
+                                <i data-lucide="plus-circle" style="width:14px; height:14px;"></i> Lập phiếu thu nợ
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -16481,12 +17082,29 @@ window.viewCustomerPaymentHistory = function(partnerId) {
     }
     
     document.getElementById("historyCustomerName").textContent = customer.name;
-    document.getElementById("historyCustomerPhone").textContent = customer.phone;
+    const companySpan = document.getElementById("historyCustomerCompany");
+    if (companySpan) {
+        companySpan.innerHTML = `<a href="javascript:void(0)" class="company-link" onclick="closeModal('customerPaymentHistoryModal'); viewPartnerCompanyDetails('${customer.id}')" title="Xem chi tiết công ty">${escapeHtml(customer.company_name || customer.name || 'Xem chi tiết')}</a>`;
+    }
+    const phoneContainer = document.getElementById("historyCustomerPhone");
+    if (phoneContainer) {
+        phoneContainer.innerHTML = formatPhoneListHtml(customer.phone);
+    }
+
+    const limitEl = document.getElementById("historyCustomerDebtLimit");
+    if (limitEl) {
+        limitEl.textContent = `Hạn mức nợ: ${formatMoney(customer.credit_limit || 0)}`;
+    }
 
     // Calc total debts and populate order-by-order detailed table
-    const standardOrders = state.orders.filter(o => o.customer_id === partnerId);
-    const onlineOrders = state.online_orders.filter(o => o.customer_id === partnerId);
-    const allOrders = [...standardOrders, ...onlineOrders].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    const standardOrders = (state.orders || []).filter(o => o.customer_id === partnerId);
+    const onlineOrders = (state.online_orders || []).filter(o => o.customer_id === partnerId);
+    const allOrders = [...standardOrders, ...onlineOrders].sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+    const ordersCountBadge = document.getElementById("historyOrdersCountBadge");
+    if (ordersCountBadge) {
+        ordersCountBadge.textContent = `${allOrders.length} đơn hàng`;
+    }
 
     const debtOrdersTbody = document.getElementById("historyDebtOrdersTableBody");
     debtOrdersTbody.innerHTML = "";
@@ -16494,27 +17112,52 @@ window.viewCustomerPaymentHistory = function(partnerId) {
     let calculatedTotalDebt = 0;
 
     if (allOrders.length === 0) {
-        debtOrdersTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Khách hàng chưa phát sinh đơn hàng nào.</td></tr>`;
+        debtOrdersTbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-secondary); padding:16px;">Khách hàng chưa phát sinh đơn hàng nào.</td></tr>`;
     } else {
         allOrders.forEach(order => {
-            // Find total amount paid for this specific order
-            const paidForOrder = state.transactions
+            const paidForOrder = (state.transactions || [])
                 .filter(t => t.reference_id === order.id && t.type === "RECEIPT")
-                .reduce((sum, t) => sum + t.amount, 0);
+                .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
 
-            const remainingDebt = Math.max(0, order.total_amount - paidForOrder);
+            const remainingDebt = Math.max(0, (Number(order.total_amount) || 0) - paidForOrder);
             calculatedTotalDebt += remainingDebt;
 
-            const orderSpecs = order.print_spec || (order.items ? order.items.map(i => i.sku).join(', ') : 'N/A');
+            let orderSpecs = order.product_name || order.print_spec || '';
+            if (!orderSpecs && order.items && order.items.length > 0) {
+                orderSpecs = order.items.map(i => i.product_name || i.sku || i.name || 'Sản phẩm in').join(', ');
+            }
+            if (!orderSpecs) orderSpecs = 'Đơn hàng in ấn';
+
+            let qty = order.quantity || order.total_quantity || 0;
+            if (!qty && order.items && order.items.length > 0) {
+                qty = order.items.reduce((s, it) => s + (Number(it.qty || it.quantity) || 0), 0);
+            }
+
+            let statusBadge = '';
+            if (remainingDebt <= 0) {
+                statusBadge = '<span class="badge" style="background:#ecfdf5; color:#059669; font-weight:600; padding:3px 8px; border-radius:12px; font-size:0.75rem;">Đã thanh toán</span>';
+            } else if (paidForOrder > 0) {
+                statusBadge = '<span class="badge" style="background:#fffbeb; color:#d97706; font-weight:600; padding:3px 8px; border-radius:12px; font-size:0.75rem;">Trả 1 phần</span>';
+            } else {
+                statusBadge = '<span class="badge" style="background:#fef2f2; color:#dc2626; font-weight:600; padding:3px 8px; border-radius:12px; font-size:0.75rem;">Chưa trả</span>';
+            }
+
+            const isOnline = !!order.source || String(order.id).startsWith('oo_');
+            const viewAction = isOnline 
+                ? `<button class="btn btn-secondary" style="padding:2px 8px; font-size:0.75rem;" onclick="closeModal('customerPaymentHistoryModal'); if(window.viewOnlineOrderDetail) viewOnlineOrderDetail('${order.id}');">Chi tiết</button>`
+                : `<button class="btn btn-secondary" style="padding:2px 8px; font-size:0.75rem;" onclick="closeModal('customerPaymentHistoryModal'); if(window.viewOrderDetail) viewOrderDetail('${order.id}');">Chi tiết</button>`;
 
             const orderRow = document.createElement("tr");
             orderRow.innerHTML = `
-                <td><span class="debt-partner-code">${order.order_number}</span></td>
-                <td><small>${new Date(order.created_at).toLocaleDateString('vi-VN')}</small></td>
-                <td><small class="text-secondary">${orderSpecs}</small></td>
-                <td class="debt-money-cell">${formatMoney(order.total_amount)}</td>
-                <td class="debt-money-cell text-success">${formatMoney(paidForOrder)}</td>
-                <td class="debt-money-cell"><span class="${remainingDebt > 0 ? 'debt-amount-due' : 'text-secondary'}">${formatMoney(remainingDebt)}</span></td>
+                <td><span class="debt-partner-code">${escapeHtml(order.order_number || 'N/A')}</span></td>
+                <td><small>${order.created_at ? new Date(order.created_at).toLocaleDateString('vi-VN') : '-'}</small></td>
+                <td><span style="font-size:0.85rem; font-weight:500;">${escapeHtml(orderSpecs)}</span></td>
+                <td style="text-align:center;">${qty ? formatNumber(qty) : '-'}</td>
+                <td class="debt-money-cell" style="text-align:right;"><strong>${formatMoney(order.total_amount)}</strong></td>
+                <td class="debt-money-cell text-success" style="text-align:right;">${formatMoney(paidForOrder)}</td>
+                <td class="debt-money-cell" style="text-align:right;"><span class="${remainingDebt > 0 ? 'debt-amount-due' : 'text-secondary'}">${formatMoney(remainingDebt)}</span></td>
+                <td style="text-align:center;">${statusBadge}</td>
+                <td style="text-align:center;">${viewAction}</td>
             `;
             debtOrdersTbody.appendChild(orderRow);
         });
@@ -16525,33 +17168,40 @@ window.viewCustomerPaymentHistory = function(partnerId) {
     const tbody = document.getElementById("historyTableBody");
     tbody.innerHTML = "";
     
-    const payments = state.transactions.filter(t => t.partner_id === partnerId && t.type === "RECEIPT")
-                                       .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    const payments = (state.transactions || [])
+        .filter(t => t.partner_id === partnerId && t.type === "RECEIPT")
+        .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
     
+    const receiptsCountBadge = document.getElementById("historyReceiptsCountBadge");
+    if (receiptsCountBadge) {
+        receiptsCountBadge.textContent = `${payments.length} phiếu thu`;
+    }
+
     if (payments.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Chưa có lịch sử thanh toán nào.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:16px;">Chưa có phiếu thu nào.</td></tr>`;
     } else {
         payments.forEach(tx => {
-            // Find order code
             let refCode = "N/A";
             if (tx.reference_id) {
-                const order = state.orders.find(o => o.id === tx.reference_id) || state.online_orders.find(o => o.id === tx.reference_id);
+                const order = (state.orders || []).find(o => o.id === tx.reference_id) || (state.online_orders || []).find(o => o.id === tx.reference_id);
                 if (order) refCode = order.order_number;
             }
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${new Date(tx.created_at).toLocaleString('vi-VN')}</td>
-                <td><strong>${tx.tx_number}</strong></td>
+                <td>${tx.created_at ? new Date(tx.created_at).toLocaleString('vi-VN') : '-'}</td>
+                <td><strong>${escapeHtml(tx.tx_number || 'PT')}</strong></td>
                 <td>${tx.payment_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản VCB'}</td>
-                <td><strong class="text-success">${formatMoney(tx.amount)}</strong></td>
-                <td>${tx.created_by || 'Kế toán'}</td>
-                <td><strong>${refCode}</strong></td>
+                <td style="text-align:right;"><strong class="text-success">+${formatMoney(tx.amount)}</strong></td>
+                <td>${escapeHtml(tx.created_by || 'Kế toán')}</td>
+                <td><strong>${escapeHtml(refCode)}</strong></td>
             `;
             tbody.appendChild(row);
         });
     }
     
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: modal });
+    }
     openModal("customerPaymentHistoryModal");
 };
 
@@ -16560,44 +17210,85 @@ function renderSupplierDebts() {
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
-    const suppliers = state.partners.filter(p => p.role === "SUPPLIER" || p.role === "BOTH");
+    const searchInput = document.getElementById("supplierDebtSearchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const statusFilter = document.getElementById("supplierDebtFilterStatus") ? document.getElementById("supplierDebtFilterStatus").value : "";
+
+    let suppliers = (state.partners || []).filter(p => (p.role === "SUPPLIER" || p.role === "BOTH") && p.id !== 'p_ncc_xls_2' && p.code !== 'NCC-VT-001' && p.phone !== 'SĐT' && p.name !== 'Tên Nhà Cung Cấp');
+
+    if (query) {
+        suppliers = suppliers.filter(p => 
+            (p.name && p.name.toLowerCase().includes(query)) ||
+            (p.code && p.code.toLowerCase().includes(query)) ||
+            (p.company_name && p.company_name.toLowerCase().includes(query)) ||
+            (p.phone && p.phone.toLowerCase().includes(query))
+        );
+    }
+
+    if (statusFilter) {
+        suppliers = suppliers.filter(p => {
+            const totalRestock = (state.restocks || []).filter(r => r.supplier_id === p.id).reduce((sum, r) => sum + (Number(r.total_amount) || 0), 0);
+            const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+            const debt = Math.max(0, totalRestock - paid);
+
+            if (statusFilter === "DEBT_GT_0") return debt > 0;
+            if (statusFilter === "DEBT_ZERO") return debt <= 0;
+            return true;
+        });
+    }
 
     if (suppliers.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Chưa có nhà cung cấp nào trong hệ thống.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Không tìm thấy nhà cung cấp nào phù hợp với bộ lọc.</td></tr>`;
+        window.applyFinanceTableColumns("supplierDebtsTable");
         return;
     }
 
     suppliers.forEach(p => {
-        const totalRestock = state.restocks.filter(r => r.supplier_id === p.id).reduce((sum, r) => sum + r.total_amount, 0);
-        const paid = state.transactions.filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY").reduce((sum, t) => sum + t.amount, 0);
+        const totalRestock = (state.restocks || []).filter(r => r.supplier_id === p.id).reduce((sum, r) => sum + (Number(r.total_amount) || 0), 0);
+        const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
         const debt = Math.max(0, totalRestock - paid);
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><span class="debt-partner-code">${p.code || 'NCC'}</span></td>
-            <td><span class="debt-partner-name">${p.name}</span></td>
-            <td><span class="debt-partner-phone">${p.phone || '-'}</span></td>
-            <td class="debt-money-cell">${formatMoney(totalRestock)}</td>
-            <td class="debt-money-cell">${formatMoney(paid)}</td>
-            <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
-            <td>
-                <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
-                    <button class="btn btn-danger" onclick="paySupplierDebt('${p.id}')">
-                        <i data-lucide="minus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Thanh toán nợ
+            <td data-col="code"><span class="debt-partner-code">${escapeHtml(p.code || 'NCC')}</span></td>
+            <td data-col="name">
+                <a href="javascript:void(0)" class="partner-name-link" onclick="viewSupplierPaymentHistory('${p.id}')" title="Bấm để xem lịch sử đơn nhập hàng chi tiết">
+                    ${escapeHtml(p.name || 'Nhà cung cấp')}
+                </a>
+            </td>
+            <td data-col="company">
+                <a href="javascript:void(0)" class="company-link" onclick="viewPartnerCompanyDetails('${p.id}')" title="Bấm để xem hồ sơ chi tiết công ty">
+                    ${escapeHtml(p.company_name || p.name || 'Xem chi tiết')}
+                </a>
+            </td>
+            <td data-col="phone">${formatPhoneListHtml(p.phone)}</td>
+            <td data-col="total_import" class="debt-money-cell">${formatMoney(totalRestock)}</td>
+            <td data-col="paid" class="debt-money-cell">${formatMoney(paid)}</td>
+            <td data-col="debt" class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
+            <td data-col="actions">
+                <div style="display: flex; gap: 3px; align-items: center; justify-content: center;">
+                    <button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; background-color: var(--primary-light, #e0f2fe); color: var(--primary, #0284c7); border: none; display:inline-flex; align-items:center; gap:2px;" onclick="window.openEditPartner('${p.id}')" title="Sửa thông tin nhà cung cấp">
+                        <i data-lucide="edit-3" style="width:11px; height:11px;"></i><span>Sửa</span>
                     </button>
-                    <button class="btn btn-secondary" style="background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSupplierPaymentHistory('${p.id}')" title="Xem lịch sử">
-                        <i data-lucide="eye" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Lịch sử
+                    <button class="btn btn-danger" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; display:inline-flex; align-items:center; gap:2px;" onclick="paySupplierDebt('${p.id}')" title="Lập phiếu thanh toán">
+                        <i data-lucide="minus-circle" style="width:11px; height:11px;"></i><span>Trả nợ</span>
+                    </button>
+                    <button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; background-color: var(--info-light); color: var(--info); border: none; display:inline-flex; align-items:center; gap:2px;" onclick="viewSupplierPaymentHistory('${p.id}')" title="Xem lịch sử">
+                        <i data-lucide="eye" style="width:11px; height:11px;"></i><span>Lịch sử</span>
                     </button>
                 </div>
             </td>
         `;
         tableBody.appendChild(row);
     });
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: tableBody });
+    }
+    window.applyFinanceTableColumns("supplierDebtsTable");
 }
 
 window.viewSupplierPaymentHistory = function(partnerId) {
-    const partner = state.partners.find(p => p.id === partnerId);
+    const partner = (state.partners || []).find(p => p.id === partnerId);
     if (!partner) return;
     
     let modal = document.getElementById("supplierPaymentHistoryModal");
@@ -16606,34 +17297,50 @@ window.viewSupplierPaymentHistory = function(partnerId) {
         modal.className = "modal";
         modal.id = "supplierPaymentHistoryModal";
         modal.innerHTML = `
-            <div class="modal-dialog" style="max-width: 800px;">
+            <div class="modal-dialog" style="max-width: 960px;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2>Lịch Sử Thanh Toán & Chi Tiết Công Nợ Nhà Cung Cấp</h2>
+                        <h2>Lịch Sử Đơn Hàng & Chi Tiết Công Nợ Nhà Cung Cấp</h2>
                         <button class="btn-close" onclick="closeModal('supplierPaymentHistoryModal')"><i data-lucide="x"></i></button>
                     </div>
                     <div class="modal-body" style="padding:20px;">
-                        <div style="margin-bottom:15px; font-size:0.95rem; display:flex; justify-content:space-between;">
-                            <div>
-                                <p><strong>Nhà cung cấp:</strong> <span id="historySupplierName"></span></p>
-                                <p><strong>Số điện thoại:</strong> <span id="historySupplierPhone"></span></p>
+                        <div style="background:var(--bg-secondary, #f8fafc); border-radius:8px; padding:16px; margin-bottom:20px; border:1px solid var(--border-color); display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                            <div style="min-width:280px;">
+                                <div style="font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:4px;">
+                                    <i data-lucide="truck" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; color:#d97706;"></i>
+                                    <span id="historySupplierName"></span>
+                                </div>
+                                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:8px;">
+                                    <strong>Công ty:</strong> <span id="historySupplierCompany"></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:0.85rem; color:var(--text-secondary);">Điện thoại:</strong>
+                                    <div id="historySupplierPhone"></div>
+                                </div>
                             </div>
                             <div style="text-align:right;">
-                                <p><strong>Tổng công nợ hiện tại:</strong> <span id="historySupplierTotalDebt" style="color:var(--danger); font-weight:bold; font-size:1.1rem;">0đ</span></p>
+                                <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">Tổng công nợ phải trả hiện tại:</div>
+                                <div id="historySupplierTotalDebt" style="color:var(--danger, #ef4444); font-weight:800; font-size:1.35rem;">0đ</div>
                             </div>
                         </div>
                         
-                        <h4 style="margin: 15px 0 8px 0; color: var(--accent); font-size: 0.95rem;">1. Chi tiết nhập hàng / công nợ từng đơn</h4>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto; margin-bottom:20px; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="margin:0; color:var(--accent); font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="boxes" style="width:16px; height:16px;"></i> 1. Chi tiết nhập hàng / công nợ từng đơn
+                            </h4>
+                            <span id="historySupplierRestocksBadge" style="font-size:0.78rem; background:rgba(217,119,6,0.1); color:#d97706; padding:2px 8px; border-radius:12px; font-weight:600;"></span>
+                        </div>
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto; margin-bottom:20px; border: 1px solid var(--border-color); border-radius: 6px;">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Mã đơn</th>
                                         <th>Ngày nhập</th>
                                         <th>Chi tiết vật tư</th>
-                                        <th>Tổng tiền</th>
-                                        <th>Đã trả</th>
-                                        <th>Còn nợ</th>
+                                        <th style="text-align:right;">Tổng tiền</th>
+                                        <th style="text-align:right;">Đã trả</th>
+                                        <th style="text-align:right;">Còn nợ</th>
+                                        <th style="text-align:center;">Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody id="historySupplierRestocksTableBody">
@@ -16641,15 +17348,20 @@ window.viewSupplierPaymentHistory = function(partnerId) {
                             </table>
                         </div>
 
-                        <h4 style="margin: 0 0 8px 0; color: var(--accent); font-size: 0.95rem;">2. Lịch sử các phiếu chi thực tế</h4>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="margin:0; color:var(--accent); font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="credit-card" style="width:16px; height:16px;"></i> 2. Lịch sử các phiếu chi thực tế
+                            </h4>
+                            <span id="historySupplierPaymentsBadge" style="font-size:0.78rem; background:rgba(239,68,68,0.1); color:#dc2626; padding:2px 8px; border-radius:12px; font-weight:600;"></span>
+                        </div>
+                        <div class="table-responsive" style="max-height: 220px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px;">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Thời gian</th>
                                         <th>Số phiếu</th>
                                         <th>Hình thức</th>
-                                        <th>Số tiền chi</th>
+                                        <th style="text-align:right;">Số tiền chi</th>
                                         <th>Người lập</th>
                                         <th>Tham chiếu đơn</th>
                                     </tr>
@@ -16658,8 +17370,11 @@ window.viewSupplierPaymentHistory = function(partnerId) {
                                 </tbody>
                             </table>
                         </div>
-                        <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('supplierPaymentHistoryModal')">Đóng</button>
+                            <button type="button" class="btn btn-danger" style="display:inline-flex; align-items:center; gap:6px;" onclick="closeModal('supplierPaymentHistoryModal'); paySupplierDebt('${partner.id}');">
+                                <i data-lucide="minus-circle" style="width:14px; height:14px;"></i> Lập phiếu thanh toán nợ
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -16669,34 +17384,57 @@ window.viewSupplierPaymentHistory = function(partnerId) {
     }
     
     document.getElementById("historySupplierName").textContent = partner.name;
-    document.getElementById("historySupplierPhone").textContent = partner.phone;
+    const companySpan = document.getElementById("historySupplierCompany");
+    if (companySpan) {
+        companySpan.innerHTML = `<a href="javascript:void(0)" class="company-link" onclick="closeModal('supplierPaymentHistoryModal'); viewPartnerCompanyDetails('${partner.id}')" title="Xem chi tiết công ty">${escapeHtml(partner.company_name || partner.name || 'Xem chi tiết')}</a>`;
+    }
+    const phoneContainer = document.getElementById("historySupplierPhone");
+    if (phoneContainer) {
+        phoneContainer.innerHTML = formatPhoneListHtml(partner.phone);
+    }
 
-    const restocks = state.restocks.filter(r => r.supplier_id === partnerId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    const restocks = (state.restocks || []).filter(r => r.supplier_id === partnerId).sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    
+    const restocksBadge = document.getElementById("historySupplierRestocksBadge");
+    if (restocksBadge) {
+        restocksBadge.textContent = `${restocks.length} đơn nhập`;
+    }
+
     const restocksTbody = document.getElementById("historySupplierRestocksTableBody");
     restocksTbody.innerHTML = "";
     
     let totalDebt = 0;
     
     if (restocks.length === 0) {
-        restocksTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Chưa có đơn nhập hàng nào.</td></tr>`;
+        restocksTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary); padding:16px;">Chưa có đơn nhập hàng nào.</td></tr>`;
     } else {
         restocks.forEach(r => {
-            const paidForRestock = state.transactions
+            const paidForRestock = (state.transactions || [])
                 .filter(t => t.reference_id === r.id && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY")
-                .reduce((sum, t) => sum + t.amount, 0);
-            const remaining = Math.max(0, r.total_amount - paidForRestock);
+                .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+            const remaining = Math.max(0, (Number(r.total_amount) || 0) - paidForRestock);
             totalDebt += remaining;
             
-            const details = r.items ? r.items.map(item => `${item.name || item.sku} (${item.qty} ${item.unit || ''})`).join(', ') : 'Nhập vật tư';
+            const details = r.items ? r.items.map(item => `${item.name || item.sku || 'Vật tư'} (${item.qty || 1} ${item.unit || ''})`).join(', ') : 'Nhập vật tư';
+
+            let statusBadge = '';
+            if (remaining <= 0) {
+                statusBadge = '<span class="badge" style="background:#ecfdf5; color:#059669; font-weight:600; padding:3px 8px; border-radius:12px; font-size:0.75rem;">Đã thanh toán</span>';
+            } else if (paidForRestock > 0) {
+                statusBadge = '<span class="badge" style="background:#fffbeb; color:#d97706; font-weight:600; padding:3px 8px; border-radius:12px; font-size:0.75rem;">Trả 1 phần</span>';
+            } else {
+                statusBadge = '<span class="badge" style="background:#fef2f2; color:#dc2626; font-weight:600; padding:3px 8px; border-radius:12px; font-size:0.75rem;">Chưa trả</span>';
+            }
 
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><strong>${r.restock_number || 'N/A'}</strong></td>
-                <td><small>${new Date(r.created_at).toLocaleDateString('vi-VN')}</small></td>
-                <td><small class="text-secondary">${details}</small></td>
-                <td><strong>${formatMoney(r.total_amount)}</strong></td>
-                <td><span class="text-success">${formatMoney(paidForRestock)}</span></td>
-                <td><strong class="${remaining > 0 ? 'text-danger' : 'text-secondary'}">${formatMoney(remaining)}</strong></td>
+                <td><span class="debt-partner-code">${escapeHtml(r.restock_number || 'N/A')}</span></td>
+                <td><small>${r.created_at ? new Date(r.created_at).toLocaleDateString('vi-VN') : '-'}</small></td>
+                <td><span style="font-size:0.85rem;">${escapeHtml(details)}</span></td>
+                <td style="text-align:right;"><strong>${formatMoney(r.total_amount)}</strong></td>
+                <td style="text-align:right;"><span class="text-success">${formatMoney(paidForRestock)}</span></td>
+                <td style="text-align:right;"><strong class="${remaining > 0 ? 'text-danger' : 'text-secondary'}">${formatMoney(remaining)}</strong></td>
+                <td style="text-align:center;">${statusBadge}</td>
             `;
             restocksTbody.appendChild(row);
         });
@@ -16707,33 +17445,40 @@ window.viewSupplierPaymentHistory = function(partnerId) {
     const paymentsTbody = document.getElementById("historySupplierPaymentsTableBody");
     paymentsTbody.innerHTML = "";
     
-    const txs = state.transactions
+    const txs = (state.transactions || [])
         .filter(t => t.partner_id === partnerId && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY")
-        .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+        .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+    const paymentsBadge = document.getElementById("historySupplierPaymentsBadge");
+    if (paymentsBadge) {
+        paymentsBadge.textContent = `${txs.length} phiếu chi`;
+    }
         
     if (txs.length === 0) {
-        paymentsTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Chưa có phiếu chi thanh toán nào.</td></tr>`;
+        paymentsTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:16px;">Chưa có phiếu chi thanh toán nào.</td></tr>`;
     } else {
         txs.forEach(tx => {
             let refCode = "N/A";
             if (tx.reference_id) {
-                const restock = state.restocks.find(r => r.id === tx.reference_id);
+                const restock = (state.restocks || []).find(r => r.id === tx.reference_id);
                 if (restock) refCode = restock.restock_number || 'N/A';
             }
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${new Date(tx.created_at).toLocaleString('vi-VN')}</td>
-                <td><strong>${tx.tx_number}</strong></td>
+                <td>${tx.created_at ? new Date(tx.created_at).toLocaleString('vi-VN') : '-'}</td>
+                <td><strong>${escapeHtml(tx.tx_number || 'PC')}</strong></td>
                 <td>${tx.payment_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản VCB'}</td>
-                <td><strong class="text-danger">-${formatMoney(tx.amount)}</strong></td>
-                <td>${tx.created_by || 'Kế toán'}</td>
-                <td><strong>${refCode}</strong></td>
+                <td style="text-align:right;"><strong class="text-danger">-${formatMoney(tx.amount)}</strong></td>
+                <td>${escapeHtml(tx.created_by || 'Kế toán')}</td>
+                <td><strong>${escapeHtml(refCode)}</strong></td>
             `;
             paymentsTbody.appendChild(row);
         });
     }
     
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: modal });
+    }
     openModal("supplierPaymentHistoryModal");
 };
 
@@ -16742,44 +17487,85 @@ function renderSubcontractorDebts() {
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
-    const subcontractors = state.partners.filter(p => p.role === "SUBCONTRACTOR");
+    const searchInput = document.getElementById("subcontractorDebtSearchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const statusFilter = document.getElementById("subcontractorDebtFilterStatus") ? document.getElementById("subcontractorDebtFilterStatus").value : "";
+
+    let subcontractors = (state.partners || []).filter(p => p.role === "SUBCONTRACTOR");
+
+    if (query) {
+        subcontractors = subcontractors.filter(p => 
+            (p.name && p.name.toLowerCase().includes(query)) ||
+            (p.code && p.code.toLowerCase().includes(query)) ||
+            (p.company_name && p.company_name.toLowerCase().includes(query)) ||
+            (p.phone && p.phone.toLowerCase().includes(query))
+        );
+    }
+
+    if (statusFilter) {
+        subcontractors = subcontractors.filter(p => {
+            const totalCost = (state.subcontracts || []).filter(s => s.subcontractor_id === p.id).reduce((sum, s) => sum + (Number(s.cost) || 0), 0);
+            const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+            const debt = Math.max(0, totalCost - paid);
+
+            if (statusFilter === "DEBT_GT_0") return debt > 0;
+            if (statusFilter === "DEBT_ZERO") return debt <= 0;
+            return true;
+        });
+    }
 
     if (subcontractors.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Chưa có xưởng gia công nào trong danh bạ đối tác.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Không tìm thấy xưởng gia công nào phù hợp với bộ lọc.</td></tr>`;
+        window.applyFinanceTableColumns("subcontractorDebtsTable");
         return;
     }
 
     subcontractors.forEach(p => {
-        const totalCost = state.subcontracts.filter(s => s.subcontractor_id === p.id).reduce((sum, s) => sum + s.cost, 0);
-        const paid = state.transactions.filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY").reduce((sum, t) => sum + t.amount, 0);
+        const totalCost = (state.subcontracts || []).filter(s => s.subcontractor_id === p.id).reduce((sum, s) => sum + (Number(s.cost) || 0), 0);
+        const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
         const debt = Math.max(0, totalCost - paid);
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><span class="debt-partner-code">${p.code || 'GC'}</span></td>
-            <td><span class="debt-partner-name">${p.name}</span></td>
-            <td><span class="debt-partner-phone">${p.phone || '-'}</span></td>
-            <td class="debt-money-cell">${formatMoney(totalCost)}</td>
-            <td class="debt-money-cell">${formatMoney(paid)}</td>
-            <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
-            <td>
-                <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
-                    <button class="btn btn-danger" onclick="paySubcontractorDebt('${p.id}')">
-                        <i data-lucide="minus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Trả tiền gia công
+            <td data-col="code"><span class="debt-partner-code">${escapeHtml(p.code || 'GC')}</span></td>
+            <td data-col="name">
+                <a href="javascript:void(0)" class="partner-name-link" onclick="viewSubcontractorPaymentHistory('${p.id}')" title="Bấm để xem lịch sử gia công chi tiết">
+                    ${escapeHtml(p.name || 'Xưởng gia công')}
+                </a>
+            </td>
+            <td data-col="company">
+                <a href="javascript:void(0)" class="company-link" onclick="viewPartnerCompanyDetails('${p.id}')" title="Bấm để xem hồ sơ chi tiết công ty">
+                    ${escapeHtml(p.company_name || p.name || 'Xem chi tiết')}
+                </a>
+            </td>
+            <td data-col="phone">${formatPhoneListHtml(p.phone)}</td>
+            <td data-col="total_cost" class="debt-money-cell">${formatMoney(totalCost)}</td>
+            <td data-col="paid" class="debt-money-cell">${formatMoney(paid)}</td>
+            <td data-col="debt" class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
+            <td data-col="actions">
+                <div style="display: flex; gap: 3px; align-items: center; justify-content: center;">
+                    <button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; background-color: var(--primary-light, #e0f2fe); color: var(--primary, #0284c7); border: none; display:inline-flex; align-items:center; gap:2px;" onclick="window.openEditPartner('${p.id}')" title="Sửa thông tin xưởng gia công">
+                        <i data-lucide="edit-3" style="width:11px; height:11px;"></i><span>Sửa</span>
                     </button>
-                    <button class="btn btn-secondary" style="background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSubcontractorPaymentHistory('${p.id}')" title="Xem lịch sử">
-                        <i data-lucide="eye" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Lịch sử
+                    <button class="btn btn-danger" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; display:inline-flex; align-items:center; gap:2px;" onclick="paySubcontractorDebt('${p.id}')" title="Trả tiền gia công">
+                        <i data-lucide="minus-circle" style="width:11px; height:11px;"></i><span>Trả tiền</span>
+                    </button>
+                    <button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem; white-space:nowrap; background-color: var(--info-light); color: var(--info); border: none; display:inline-flex; align-items:center; gap:2px;" onclick="viewSubcontractorPaymentHistory('${p.id}')" title="Xem lịch sử">
+                        <i data-lucide="eye" style="width:11px; height:11px;"></i><span>Lịch sử</span>
                     </button>
                 </div>
             </td>
         `;
         tableBody.appendChild(row);
     });
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: tableBody });
+    }
+    window.applyFinanceTableColumns("subcontractorDebtsTable");
 }
 
 window.viewSubcontractorPaymentHistory = function(partnerId) {
-    const partner = state.partners.find(p => p.id === partnerId);
+    const partner = (state.partners || []).find(p => p.id === partnerId);
     if (!partner) return;
     
     let modal = document.getElementById("subcontractorPaymentHistoryModal");
@@ -16788,34 +17574,49 @@ window.viewSubcontractorPaymentHistory = function(partnerId) {
         modal.className = "modal";
         modal.id = "subcontractorPaymentHistoryModal";
         modal.innerHTML = `
-            <div class="modal-dialog" style="max-width: 800px;">
+            <div class="modal-dialog" style="max-width: 960px;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2>Lịch Sử Thanh Toán & Chi Tiết Công Nợ Xưởng Gia Công</h2>
+                        <h2>Lịch Sử Gia Công & Chi Tiết Công Nợ Xưởng Gia Công</h2>
                         <button class="btn-close" onclick="closeModal('subcontractorPaymentHistoryModal')"><i data-lucide="x"></i></button>
                     </div>
                     <div class="modal-body" style="padding:20px;">
-                        <div style="margin-bottom:15px; font-size:0.95rem; display:flex; justify-content:space-between;">
-                            <div>
-                                <p><strong>Đơn vị gia công:</strong> <span id="historySubName"></span></p>
-                                <p><strong>Số điện thoại:</strong> <span id="historySubPhone"></span></p>
+                        <div style="background:var(--bg-secondary, #f8fafc); border-radius:8px; padding:16px; margin-bottom:20px; border:1px solid var(--border-color); display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                            <div style="min-width:280px;">
+                                <div style="font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:4px;">
+                                    <i data-lucide="scissors" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; color:#0891b2;"></i>
+                                    <span id="historySubName"></span>
+                                </div>
+                                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:8px;">
+                                    <strong>Công ty:</strong> <span id="historySubCompany"></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:0.85rem; color:var(--text-secondary);">Điện thoại:</strong>
+                                    <div id="historySubPhone"></div>
+                                </div>
                             </div>
                             <div style="text-align:right;">
-                                <p><strong>Tổng công nợ hiện tại:</strong> <span id="historySubTotalDebt" style="color:var(--danger); font-weight:bold; font-size:1.1rem;">0đ</span></p>
+                                <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">Tổng công nợ phải trả hiện tại:</div>
+                                <div id="historySubTotalDebt" style="color:var(--danger, #ef4444); font-weight:800; font-size:1.35rem;">0đ</div>
                             </div>
                         </div>
                         
-                        <h4 style="margin: 15px 0 8px 0; color: var(--accent); font-size: 0.95rem;">1. Chi tiết hợp đồng gia công / công nợ</h4>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto; margin-bottom:20px; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="margin:0; color:var(--accent); font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="file-text" style="width:16px; height:16px;"></i> 1. Chi tiết hợp đồng gia công / công nợ
+                            </h4>
+                            <span id="historySubContractsBadge" style="font-size:0.78rem; background:rgba(8,145,178,0.1); color:#0891b2; padding:2px 8px; border-radius:12px; font-weight:600;"></span>
+                        </div>
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto; margin-bottom:20px; border: 1px solid var(--border-color); border-radius: 6px;">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Mã hợp đồng</th>
                                         <th>Thời hạn</th>
                                         <th>Chi tiết công việc</th>
-                                        <th>Tổng tiền</th>
-                                        <th>Đã trả</th>
-                                        <th>Còn nợ</th>
+                                        <th style="text-align:right;">Tổng tiền</th>
+                                        <th style="text-align:right;">Đã trả</th>
+                                        <th style="text-align:right;">Còn nợ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="historySubcontractingTableBody">
@@ -16823,15 +17624,20 @@ window.viewSubcontractorPaymentHistory = function(partnerId) {
                             </table>
                         </div>
 
-                        <h4 style="margin: 0 0 8px 0; color: var(--accent); font-size: 0.95rem;">2. Lịch sử các phiếu chi thực tế</h4>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="margin:0; color:var(--accent); font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="credit-card" style="width:16px; height:16px;"></i> 2. Lịch sử các phiếu chi thực tế
+                            </h4>
+                            <span id="historySubPaymentsBadge" style="font-size:0.78rem; background:rgba(239,68,68,0.1); color:#dc2626; padding:2px 8px; border-radius:12px; font-weight:600;"></span>
+                        </div>
+                        <div class="table-responsive" style="max-height: 220px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px;">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Thời gian</th>
                                         <th>Số phiếu</th>
                                         <th>Hình thức</th>
-                                        <th>Số tiền chi</th>
+                                        <th style="text-align:right;">Số tiền chi</th>
                                         <th>Người lập</th>
                                         <th>Tham chiếu hợp đồng</th>
                                     </tr>
@@ -16840,8 +17646,11 @@ window.viewSubcontractorPaymentHistory = function(partnerId) {
                                 </tbody>
                             </table>
                         </div>
-                        <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('subcontractorPaymentHistoryModal')">Đóng</button>
+                            <button type="button" class="btn btn-danger" style="display:inline-flex; align-items:center; gap:6px;" onclick="closeModal('subcontractorPaymentHistoryModal'); paySubcontractorDebt('${partner.id}');">
+                                <i data-lucide="minus-circle" style="width:14px; height:14px;"></i> Lập phiếu thanh toán
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -16851,32 +17660,45 @@ window.viewSubcontractorPaymentHistory = function(partnerId) {
     }
     
     document.getElementById("historySubName").textContent = partner.name;
-    document.getElementById("historySubPhone").textContent = partner.phone;
+    const companySpan = document.getElementById("historySubCompany");
+    if (companySpan) {
+        companySpan.innerHTML = `<a href="javascript:void(0)" class="company-link" onclick="closeModal('subcontractorPaymentHistoryModal'); viewPartnerCompanyDetails('${partner.id}')" title="Xem chi tiết công ty">${escapeHtml(partner.company_name || partner.name || 'Xem chi tiết')}</a>`;
+    }
+    const phoneContainer = document.getElementById("historySubPhone");
+    if (phoneContainer) {
+        phoneContainer.innerHTML = formatPhoneListHtml(partner.phone);
+    }
 
-    const subcontracts = state.subcontracts.filter(s => s.subcontractor_id === partnerId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    const subcontracts = (state.subcontracts || []).filter(s => s.subcontractor_id === partnerId).sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    
+    const contractsBadge = document.getElementById("historySubContractsBadge");
+    if (contractsBadge) {
+        contractsBadge.textContent = `${subcontracts.length} hợp đồng`;
+    }
+
     const subsTbody = document.getElementById("historySubcontractingTableBody");
     subsTbody.innerHTML = "";
     
     let totalDebt = 0;
     
     if (subcontracts.length === 0) {
-        subsTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Chưa có hợp đồng gia công nào.</td></tr>`;
+        subsTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:16px;">Chưa có hợp đồng gia công nào.</td></tr>`;
     } else {
         subcontracts.forEach(s => {
-            const paidForSub = state.transactions
+            const paidForSub = (state.transactions || [])
                 .filter(t => t.reference_id === s.id && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY")
-                .reduce((sum, t) => sum + t.amount, 0);
-            const remaining = Math.max(0, s.cost - paidForSub);
+                .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+            const remaining = Math.max(0, (Number(s.cost) || 0) - paidForSub);
             totalDebt += remaining;
 
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><strong>${s.contract_number}</strong></td>
-                <td><small>${new Date(s.deadline).toLocaleDateString('vi-VN')}</small></td>
-                <td><small class="text-secondary">${s.work_detail}</small></td>
-                <td><strong>${formatMoney(s.cost)}</strong></td>
-                <td><span class="text-success">${formatMoney(paidForSub)}</span></td>
-                <td><strong class="${remaining > 0 ? 'text-danger' : 'text-secondary'}">${formatMoney(remaining)}</strong></td>
+                <td><span class="debt-partner-code">${escapeHtml(s.contract_number || 'N/A')}</span></td>
+                <td><small>${s.deadline ? new Date(s.deadline).toLocaleDateString('vi-VN') : '-'}</small></td>
+                <td><small class="text-secondary">${escapeHtml(s.work_detail || 'Gia công')}</small></td>
+                <td style="text-align:right;"><strong>${formatMoney(s.cost)}</strong></td>
+                <td style="text-align:right;"><span class="text-success">${formatMoney(paidForSub)}</span></td>
+                <td style="text-align:right;"><strong class="${remaining > 0 ? 'text-danger' : 'text-secondary'}">${formatMoney(remaining)}</strong></td>
             `;
             subsTbody.appendChild(row);
         });
@@ -16887,33 +17709,40 @@ window.viewSubcontractorPaymentHistory = function(partnerId) {
     const paymentsTbody = document.getElementById("historySubPaymentsTableBody");
     paymentsTbody.innerHTML = "";
     
-    const txs = state.transactions
+    const txs = (state.transactions || [])
         .filter(t => t.partner_id === partnerId && t.type === "PAYMENT" && t.category === "SUBCONTRACTOR_PAY")
-        .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+        .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+    const subPaymentsBadge = document.getElementById("historySubPaymentsBadge");
+    if (subPaymentsBadge) {
+        subPaymentsBadge.textContent = `${txs.length} phiếu chi`;
+    }
         
     if (txs.length === 0) {
-        paymentsTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Chưa có phiếu chi thanh toán nào.</td></tr>`;
+        paymentsTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:16px;">Chưa có phiếu chi thanh toán nào.</td></tr>`;
     } else {
         txs.forEach(tx => {
             let refCode = "N/A";
             if (tx.reference_id) {
-                const sub = state.subcontracts.find(s => s.id === tx.reference_id);
+                const sub = (state.subcontracts || []).find(s => s.id === tx.reference_id);
                 if (sub) refCode = sub.contract_number;
             }
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${new Date(tx.created_at).toLocaleString('vi-VN')}</td>
-                <td><strong>${tx.tx_number}</strong></td>
+                <td>${tx.created_at ? new Date(tx.created_at).toLocaleString('vi-VN') : '-'}</td>
+                <td><strong>${escapeHtml(tx.tx_number || 'PC')}</strong></td>
                 <td>${tx.payment_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản VCB'}</td>
-                <td><strong class="text-danger">-${formatMoney(tx.amount)}</strong></td>
-                <td>${tx.created_by || 'Kế toán'}</td>
-                <td><strong>${refCode}</strong></td>
+                <td style="text-align:right;"><strong class="text-danger">-${formatMoney(tx.amount)}</strong></td>
+                <td>${escapeHtml(tx.created_by || 'Kế toán')}</td>
+                <td><strong>${escapeHtml(refCode)}</strong></td>
             `;
             paymentsTbody.appendChild(row);
         });
     }
     
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: modal });
+    }
     openModal("subcontractorPaymentHistoryModal");
 };
 
@@ -17412,7 +18241,47 @@ function setupEventListeners() {
     document.getElementById("prodOrderFilterPayment")?.addEventListener("change", filterProdOrdersTable);
     document.getElementById("inventorySearchInput").addEventListener("input", filterInventoryTable);
     document.getElementById("subcontractSearchInput").addEventListener("input", filterSubcontractsTable);
-    document.getElementById("financeSearchInput").addEventListener("input", filterFinanceTable);
+    document.getElementById("financeSearchInput")?.addEventListener("input", () => {
+        if (typeof renderFinance === 'function') renderFinance();
+    });
+    document.getElementById("financeFilterCategory")?.addEventListener("change", () => {
+        if (typeof renderFinance === 'function') renderFinance();
+    });
+
+    document.getElementById("customerDebtSearchInput")?.addEventListener("input", () => {
+        if (typeof renderCustomerDebts === 'function') renderCustomerDebts();
+    });
+    document.getElementById("customerDebtFilterStatus")?.addEventListener("change", () => {
+        if (typeof renderCustomerDebts === 'function') renderCustomerDebts();
+    });
+
+    document.getElementById("supplierDebtSearchInput")?.addEventListener("input", () => {
+        if (typeof renderSupplierDebts === 'function') renderSupplierDebts();
+    });
+    document.getElementById("supplierDebtFilterStatus")?.addEventListener("change", () => {
+        if (typeof renderSupplierDebts === 'function') renderSupplierDebts();
+    });
+
+    document.getElementById("subcontractorDebtSearchInput")?.addEventListener("input", () => {
+        if (typeof renderSubcontractorDebts === 'function') renderSubcontractorDebts();
+    });
+    document.getElementById("subcontractorDebtFilterStatus")?.addEventListener("change", () => {
+        if (typeof renderSubcontractorDebts === 'function') renderSubcontractorDebts();
+    });
+
+    document.getElementById("salesCommSearchInput")?.addEventListener("input", () => {
+        if (window.renderSalesCommissions) window.renderSalesCommissions();
+    });
+    document.getElementById("salesCommFilterRole")?.addEventListener("change", () => {
+        if (window.renderSalesCommissions) window.renderSalesCommissions();
+    });
+
+    document.getElementById("internalTxSearchInput")?.addEventListener("input", () => {
+        if (window.renderInternalTransactions) window.renderInternalTransactions();
+    });
+    document.getElementById("internalTxFilterType")?.addEventListener("change", () => {
+        if (window.renderInternalTransactions) window.renderInternalTransactions();
+    });
 
     // Filter stock alerts
     let showOnlyAlerts = false;
@@ -29694,12 +30563,19 @@ window.renderSalesCommissions = function() {
     if (!tableBody) return;
     tableBody.innerHTML = "";
     
+    const searchInput = document.getElementById("salesCommSearchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const roleSelect = document.getElementById("salesCommFilterRole");
+    const selectedFilter = roleSelect ? roleSelect.value : (window.activeCommissionFilter || "ALL");
+
     const titleEl = document.getElementById("commissionSubtabTitle");
     if (titleEl) {
-        if (window.activeCommissionFilter === "SALESPERSON") {
+        if (selectedFilter === "SALESPERSON") {
             titleEl.textContent = "Thống kê Hoa hồng Nhân viên Kinh doanh (NVKD)";
-        } else if (window.activeCommissionFilter === "COLLABORATOR") {
+        } else if (selectedFilter === "COLLABORATOR") {
             titleEl.textContent = "Thống kê Hoa hồng Cộng tác viên (CTV)";
+        } else if (selectedFilter === "OWED_ONLY") {
+            titleEl.textContent = "Thống kê Nhân sự Còn nợ hoa hồng";
         } else {
             titleEl.textContent = "Thống kê Hoa hồng doanh số tổng hợp";
         }
@@ -29709,16 +30585,20 @@ window.renderSalesCommissions = function() {
     
     // Filter salespeople based on active filter role
     let filteredSalespersons = state.salespersons || [];
-    if (window.activeCommissionFilter === "SALESPERSON") {
+    if (selectedFilter === "SALESPERSON") {
         filteredSalespersons = filteredSalespersons.filter(s => s.role === "SALESPERSON");
-    } else if (window.activeCommissionFilter === "COLLABORATOR") {
+    } else if (selectedFilter === "COLLABORATOR") {
         filteredSalespersons = filteredSalespersons.filter(s => s.role === "COLLABORATOR");
     }
     
-    const names = filteredSalespersons.map(s => s.name);
+    let names = filteredSalespersons.map(s => s.name);
     // Include "Chưa phân công" only for general ALL views
-    if (window.activeCommissionFilter === "ALL") {
+    if (selectedFilter === "ALL") {
         names.push("Chưa phân công");
+    }
+
+    if (query) {
+        names = names.filter(n => n.toLowerCase().includes(query));
     }
     
     names.forEach(sp => {
@@ -29726,7 +30606,7 @@ window.renderSalesCommissions = function() {
     });
     
     // 1. Process regular production orders (state.orders)
-    state.orders.forEach(o => {
+    (state.orders || []).forEach(o => {
         const sp = o.salesperson || "Chưa phân công";
         if (stats[sp] !== undefined) {
             stats[sp].prodSales += o.total_amount || 0;
@@ -29735,7 +30615,7 @@ window.renderSalesCommissions = function() {
     });
     
     // 2. Process online sales orders (state.online_orders)
-    state.online_orders.forEach(o => {
+    (state.online_orders || []).forEach(o => {
         const sp = o.salesperson || "Chưa phân công";
         if (stats[sp] !== undefined) {
             stats[sp].onlineSales += o.total_amount || 0;
@@ -29747,40 +30627,47 @@ window.renderSalesCommissions = function() {
     let grandPaid = 0;
     
     // Calculate total commission payments for filtered salespeople
-    state.transactions.forEach(t => {
+    (state.transactions || []).forEach(t => {
         if (t.type === "PAYMENT" && t.category === "SALES_COMMISSION" && names.includes(t.partner_id)) {
             grandPaid += t.amount || 0;
         }
     });
     
     // Render rows
+    let renderedCount = 0;
     for (const sp in stats) {
         const s = stats[sp];
         const totalComm = s.onlineComm + s.prodComm;
-        grandAccrued += totalComm;
         
         // Paid for this specific salesperson
-        const paidComm = state.transactions
+        const paidComm = (state.transactions || [])
             .filter(t => t.partner_id === sp && t.type === "PAYMENT" && t.category === "SALES_COMMISSION")
             .reduce((sum, t) => sum + t.amount, 0);
         
         const owedComm = Math.max(0, totalComm - paidComm);
+
+        if (selectedFilter === "OWED_ONLY" && owedComm <= 0) {
+            continue;
+        }
+
+        grandAccrued += totalComm;
+        renderedCount++;
         
         const isUnassigned = sp === "Chưa phân công";
         
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${sp}</strong></td>
-            <td>${formatMoney(s.onlineSales)}</td>
-            <td><strong style="color:var(--success);">${formatMoney(s.onlineComm)}</strong></td>
-            <td>${formatMoney(s.prodSales)}</td>
-            <td><strong style="color:var(--success);">${formatMoney(s.prodComm)}</strong></td>
-            <td>
+            <td data-col="salesperson"><strong>${escapeHtml(sp)}</strong></td>
+            <td data-col="online_sales" class="debt-money-cell">${formatMoney(s.onlineSales)}</td>
+            <td data-col="online_comm" class="debt-money-cell"><strong style="color:var(--success);">${formatMoney(s.onlineComm)}</strong></td>
+            <td data-col="prod_sales" class="debt-money-cell">${formatMoney(s.prodSales)}</td>
+            <td data-col="prod_comm" class="debt-money-cell"><strong style="color:var(--success);">${formatMoney(s.prodComm)}</strong></td>
+            <td data-col="total_comm" class="debt-money-cell">
                 <div><strong class="accent-color" style="font-size:1.05rem;">${formatMoney(totalComm)}</strong></div>
                 <small class="text-muted" style="display:block; font-size:0.75rem;">Còn nợ: ${formatMoney(owedComm)}</small>
             </td>
-            <td>
-                <div style="display:flex; gap:6px;">
+            <td data-col="actions">
+                <div style="display:flex; gap:6px; justify-content:center;">
                     <button class="btn btn-secondary btn-sm" style="padding: 2px 6px; font-size: 0.75rem; background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSalesCommissionDetails('${sp}')">Chi tiết đơn</button>
                     <button class="btn btn-danger btn-sm" style="padding: 2px 6px; font-size: 0.75rem;" onclick="paySalesCommission('${sp}')" ${owedComm <= 0 || isUnassigned ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>Chi trả</button>
                     <button class="btn btn-secondary btn-sm" style="padding: 2px 6px; font-size: 0.75rem;" onclick="viewSalesCommissionPaymentHistory('${sp}')" ${isUnassigned ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>Lịch sử</button>
@@ -29789,6 +30676,10 @@ window.renderSalesCommissions = function() {
         `;
         tableBody.appendChild(row);
     }
+
+    if (renderedCount === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Không tìm thấy nhân sự nào phù hợp với bộ lọc.</td></tr>`;
+    }
     
     const grandOwed = Math.max(0, grandAccrued - grandPaid);
     
@@ -29796,7 +30687,10 @@ window.renderSalesCommissions = function() {
     if (document.getElementById("lblTotalCommissionPaid")) document.getElementById("lblTotalCommissionPaid").textContent = formatMoney(grandPaid);
     if (document.getElementById("lblTotalCommissionOwed")) document.getElementById("lblTotalCommissionOwed").textContent = formatMoney(grandOwed);
     
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons({ root: tableBody });
+    }
+    window.applyFinanceTableColumns("salesCommissionsTable");
 };
 
 window.viewSalesCommissionDetails = function(salesperson) {
