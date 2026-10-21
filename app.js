@@ -19355,69 +19355,133 @@ function updateCrmBadges() {
     if (badgeSubcontractor) badgeSubcontractor.textContent = subcontractorCount;
 }
 
+window.onCrmFilterTypeChange = function() {
+    const typeSelect = document.getElementById("crmFilterTypeSelect");
+    const filterType = typeSelect ? typeSelect.value : "all";
+    const container = document.getElementById("crmFilterValueContainer");
+    if (!container) return;
+
+    if (filterType === "all" || filterType === "code" || filterType === "phone") {
+        let placeholder = "Tìm theo Mã, Tên, SĐT, Địa chỉ, Khu vực, NVKD...";
+        if (filterType === "code") placeholder = "Gõ Mã khách hàng để tìm...";
+        if (filterType === "phone") placeholder = "Gõ Số điện thoại để tìm...";
+
+        container.innerHTML = `
+            <div class="search-box" style="width: 100%; position: relative;">
+                <i data-lucide="search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-muted); pointer-events: none;"></i>
+                <input type="text" id="crmSearchInput" class="form-input" style="padding-left: 36px; width: 100%; height: 38px; font-size: 0.85rem;" placeholder="${placeholder}" oninput="renderCRM()">
+            </div>
+        `;
+        if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        document.getElementById("crmSearchInput")?.focus();
+    } else if (filterType === "region") {
+        const regions = new Set();
+        (state.partners || []).forEach(p => { if (p.region) regions.add(p.region); });
+        let opts = '<option value="">-- Tất cả khu vực --</option>';
+        Array.from(regions).sort().forEach(r => {
+            opts += `<option value="${r}">${r}</option>`;
+        });
+        container.innerHTML = `
+            <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
+                ${opts}
+            </select>
+        `;
+    } else if (filterType === "sales_staff") {
+        const staffs = new Set();
+        (state.partners || []).forEach(p => { if (p.sales_staff) staffs.add(p.sales_staff); });
+        let opts = '<option value="">-- Tất cả NVKD --</option>';
+        Array.from(staffs).sort().forEach(s => {
+            opts += `<option value="${s}">${s}</option>`;
+        });
+        container.innerHTML = `
+            <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
+                ${opts}
+            </select>
+        `;
+    } else if (filterType === "sales_channel") {
+        const channels = new Set();
+        (state.partners || []).forEach(p => { if (p.sales_channel) channels.add(p.sales_channel); });
+        let opts = '<option value="">-- Tất cả Kênh bán --</option>';
+        Array.from(channels).sort().forEach(c => {
+            opts += `<option value="${c}">${c}</option>`;
+        });
+        container.innerHTML = `
+            <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
+                ${opts}
+            </select>
+        `;
+    } else if (filterType === "customer_type") {
+        container.innerHTML = `
+            <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
+                <option value="">-- Tất cả loại khách hàng --</option>
+                <option value="RETAIL">Khách lẻ</option>
+                <option value="WHOLESALE">Khách sỉ</option>
+            </select>
+        `;
+    } else if (filterType === "status") {
+        container.innerHTML = `
+            <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
+                <option value="">-- Tất cả trạng thái --</option>
+                <option value="active">Đang làm việc</option>
+                <option value="inactive">Tạm dừng</option>
+            </select>
+        `;
+    }
+
+    renderCRM();
+};
+
 function renderCRM() {
     updateCrmBadges();
 
-    // Populate filter dropdown options if not yet populated
-    const regionSelect = document.getElementById("crmRegionFilterSelect");
-    const staffSelect = document.getElementById("crmSalesStaffFilterSelect");
-    const channelSelect = document.getElementById("crmChannelFilterSelect");
+    const typeSelect = document.getElementById("crmFilterTypeSelect");
+    const filterType = typeSelect ? typeSelect.value : "all";
+    const searchInput = document.getElementById("crmSearchInput");
+    const filterSelect = document.getElementById("crmFilterValueSelect");
 
-    if (regionSelect && regionSelect.options.length <= 1) {
-        const regions = set = new Set();
-        state.partners.forEach(p => { if (p.region) regions.add(p.region); });
-        Array.from(regions).sort().forEach(r => {
-            regionSelect.innerHTML += `<option value="${r}">${r}</option>`;
-        });
-    }
-
-    if (staffSelect && staffSelect.options.length <= 1) {
-        const staffs = new Set();
-        state.partners.forEach(p => { if (p.sales_staff) staffs.add(p.sales_staff); });
-        Array.from(staffs).sort().forEach(s => {
-            staffSelect.innerHTML += `<option value="${s}">${s}</option>`;
-        });
-    }
-
-    if (channelSelect && channelSelect.options.length <= 1) {
-        const channels = new Set();
-        state.partners.forEach(p => { if (p.sales_channel) channels.add(p.sales_channel); });
-        Array.from(channels).sort().forEach(c => {
-            channelSelect.innerHTML += `<option value="${c}">${c}</option>`;
-        });
-    }
-
-    const query = (document.getElementById("crmSearchInput") ? document.getElementById("crmSearchInput").value : "").toLowerCase().trim();
+    const query = (searchInput ? searchInput.value : "").toLowerCase().trim();
+    const selectVal = (filterSelect ? filterSelect.value : "").trim();
     const roleFilter = typeof activeCrmRoleFilter !== 'undefined' ? activeCrmRoleFilter : "all";
-    const regFilter = regionSelect ? regionSelect.value : "";
-    const staffFilter = staffSelect ? staffSelect.value : "";
-    const channelFilter = channelSelect ? channelSelect.value : "";
-    const custTypeSelect = document.getElementById("crmCustomerTypeFilterSelect");
-    const custTypeFilter = custTypeSelect ? custTypeSelect.value : "";
 
-    const filteredPartners = state.partners.filter(p => {
-        const q = query;
-        const matchesQuery = !q || (p.name || '').toLowerCase().includes(q) ||
-                                   (p.code || '').toLowerCase().includes(q) ||
-                                   (p.phone || '').includes(q) ||
-                                   (p.address || '').toLowerCase().includes(q) ||
-                                   (p.region || '').toLowerCase().includes(q) ||
-                                   (p.ward || '').toLowerCase().includes(q) ||
-                                   (p.sales_staff || '').toLowerCase().includes(q) ||
-                                   (p.sales_channel || '').toLowerCase().includes(q) ||
-                                   (p.note || '').toLowerCase().includes(q);
-
+    const filteredPartners = (state.partners || []).filter(p => {
         const matchesRole = roleFilter === "all" || p.role === roleFilter || (p.role === "BOTH" && (roleFilter === "CUSTOMER" || roleFilter === "SUPPLIER"));
-        const matchesRegion = !regFilter || p.region === regFilter;
-        const matchesStaff = !staffFilter || p.sales_staff === staffFilter;
-        const matchesChannel = !channelFilter || p.sales_channel === channelFilter;
-        
-        const isCustWholesale = (p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI");
-        const matchesCustType = !custTypeFilter || 
-            (custTypeFilter === "WHOLESALE" && isCustWholesale) ||
-            (custTypeFilter === "RETAIL" && !isCustWholesale);
+        if (!matchesRole) return false;
 
-        return matchesQuery && matchesRole && matchesRegion && matchesStaff && matchesChannel && matchesCustType;
+        if (filterType === "all") {
+            if (!query) return true;
+            return (p.name || '').toLowerCase().includes(query) ||
+                   (p.code || '').toLowerCase().includes(query) ||
+                   (p.phone || '').includes(query) ||
+                   (p.address || '').toLowerCase().includes(query) ||
+                   (p.region || '').toLowerCase().includes(query) ||
+                   (p.ward || '').toLowerCase().includes(query) ||
+                   (p.sales_staff || '').toLowerCase().includes(query) ||
+                   (p.sales_channel || '').toLowerCase().includes(query) ||
+                   (p.note || '').toLowerCase().includes(query);
+        } else if (filterType === "code") {
+            if (!query) return true;
+            return (p.code || '').toLowerCase().includes(query);
+        } else if (filterType === "phone") {
+            if (!query) return true;
+            return (p.phone || '').includes(query);
+        } else if (filterType === "region") {
+            if (!selectVal) return true;
+            return p.region === selectVal;
+        } else if (filterType === "sales_staff") {
+            if (!selectVal) return true;
+            return p.sales_staff === selectVal;
+        } else if (filterType === "sales_channel") {
+            if (!selectVal) return true;
+            return p.sales_channel === selectVal;
+        } else if (filterType === "customer_type") {
+            if (!selectVal) return true;
+            const isCustWholesale = (p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI");
+            return selectVal === "WHOLESALE" ? isCustWholesale : !isCustWholesale;
+        } else if (filterType === "status") {
+            if (!selectVal) return true;
+            return selectVal === "active" ? (p.status !== false) : (p.status === false);
+        }
+        return true;
     });
 
     const tableBody = document.querySelector("#crmTable tbody");

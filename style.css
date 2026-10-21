@@ -1242,6 +1242,39 @@ body {
     gap: 16px;
 }
 
+/* CRM 2-Box Dynamic Filter (Ô 1: Tiêu chí lọc, Ô 2: Dữ liệu liên kết / Ô tìm kiếm) */
+.crm-two-box-filter {
+    display: flex !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+}
+
+@media (max-width: 768px) {
+    .crm-two-box-filter {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .crm-two-box-filter .crm-filter-col-1 {
+        flex: 0 0 145px !important;
+        min-width: 0 !important;
+    }
+    .crm-two-box-filter .crm-filter-col-2 {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+    }
+    .crm-two-box-filter .filter-actions {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 4px !important;
+    }
+    .crm-two-box-filter .filter-actions button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
 .search-box {
     position: relative;
     width: 350px;
