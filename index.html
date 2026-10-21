@@ -66,7 +66,7 @@
     <!-- html2pdf.js for Clean A4 PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261022_full_vat8_v40">
+    <link rel="stylesheet" href="/style.css?v=20261022_export_polish_v41">
 
     <script>
 
@@ -11650,7 +11650,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261022_full_vat8_v40"></script>
+    <script src="/app.js?v=20261022_export_polish_v41"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -12101,12 +12101,7 @@
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:12px;">
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Họ tên người nhận hàng: <span style="color:#ef4444;">*</span></label>
-                                <div style="display:flex; gap:6px;">
-                                    <input type="text" id="exportReceiverName" class="form-control" placeholder="Tên người nhận hàng" style="height:34px; font-size:0.85rem; font-weight:700; color:#0f172a;">
-                                    <select id="exportReceiverSelect" onchange="window.handleStockExportReceiverChange(this.value)" class="form-select" style="width:115px; height:34px; font-size:0.78rem;" title="Chọn từ danh sách Đối tác / Khách hàng CSDL">
-                                        <option value="">-- Chọn ĐT --</option>
-                                    </select>
-                                </div>
+                                <input type="text" id="exportReceiverName" class="form-control" placeholder="Tên người nhận (tự động điền theo đơn)" style="height:34px; font-size:0.85rem; font-weight:700; color:#0f172a;">
                             </div>
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Tên công ty / Đơn vị nhận:</label>
@@ -12126,11 +12121,12 @@
                             </div>
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:#047857; display:block; margin-bottom:3px;">Lái xe & Biển số xe vận chuyển (BX):</label>
-                                <div style="display:flex; gap:6px;">
-                                    <select id="exportDriverVehicleSelect" onchange="window.handleStockExportDriverChange(this.value)" class="form-select" style="height:34px; font-size:0.82rem; font-weight:600; flex:1;">
-                                        <option value="">-- Chọn lái xe & BX từ CSDL --</option>
+                                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                    <input type="text" id="exportDriverName" class="form-control" placeholder="Tên lái xe" style="flex:1; min-width:110px; height:34px; font-size:0.85rem; font-weight:700; color:#0f172a;">
+                                    <input type="text" id="exportVehiclePlate" class="form-control" placeholder="Biển số xe" style="width:115px; height:34px; font-size:0.85rem; font-weight:700; color:#047857; border:1.5px solid #108f53; background:#ecfdf5;">
+                                    <select id="exportDriverVehicleSelect" onchange="window.handleStockExportDriverChange(this.value)" class="form-select" style="width:100%; height:28px; font-size:0.75rem; font-weight:600; margin-top:2px; background:#f8fafc;" title="Chọn nhanh lái xe & BX có sẵn trong CSDL">
+                                        <option value="">-- Chọn nhanh từ CSDL Lái xe --</option>
                                     </select>
-                                    <input type="text" id="exportVehiclePlate" class="form-control" placeholder="Biển số xe" style="width:130px; height:34px; font-size:0.85rem; font-weight:700; color:#047857; border:1.5px solid #108f53; background:#ecfdf5;">
                                 </div>
                             </div>
                             <div>

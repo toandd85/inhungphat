@@ -39414,17 +39414,7 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
         });
     }
 
-    // 4. Nạp danh sách Khách hàng / Đối tác vào dropdown người nhận
-    const recSelect = document.getElementById("exportReceiverSelect");
-    if (recSelect) {
-        recSelect.innerHTML = '<option value="">-- Chọn từ Khách hàng --</option>';
-        const partners = state.partners || [];
-        partners.forEach(p => {
-            if (p.name) {
-                recSelect.innerHTML += `<option value="${p.name}" data-company="${p.company || p.name || ''}" data-phone="${p.phone || p.hotline || ''}" data-address="${p.address || ''}">${p.name} ${p.phone ? '(' + p.phone + ')' : ''}</option>`;
-            }
-        });
-    }
+    // Bỏ qua exportReceiverSelect vì tên người nhận đã tự động lấy từ đơn hàng
 
     const tbody = document.getElementById("stockExportItemsTableBody");
     if (tbody) tbody.innerHTML = "";
@@ -39460,6 +39450,9 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
         document.getElementById("exportReceiverCompany").value = rec.receiver_company || "";
         document.getElementById("exportReceiverPhone").value = rec.receiver_phone || "";
         document.getElementById("exportReceiverAddress").value = rec.receiver_address || "";
+        
+        const driverNameInput = document.getElementById("exportDriverName");
+        if (driverNameInput) driverNameInput.value = rec.driver_name || "";
         document.getElementById("exportVehiclePlate").value = rec.vehicle_plate || "";
         if (drvSelect && rec.driver_code) drvSelect.value = rec.driver_code;
         document.getElementById("exportReason").value = rec.reason || "Xuất giao hàng thành phẩm theo đơn";
@@ -39494,7 +39487,12 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
         document.getElementById("exportReceiverCompany").value = "";
         document.getElementById("exportReceiverPhone").value = "";
         document.getElementById("exportReceiverAddress").value = "";
-        document.getElementById("exportVehiclePlate").value = "29H-67323";
+        
+        const drivers = state.master_categories?.driver_vehicle_list?.items || DEFAULT_MASTER_CATEGORIES.driver_vehicle_list.items || [];
+        const defaultDrv = drivers[0] || {};
+        const driverNameInput = document.getElementById("exportDriverName");
+        if (driverNameInput) driverNameInput.value = defaultDrv.name || "Bùi Văn Nam";
+        document.getElementById("exportVehiclePlate").value = defaultDrv.plate || "29H-67323";
         if (drvSelect && drvSelect.options.length > 1) drvSelect.selectedIndex = 1;
         document.getElementById("exportReason").value = "Xuất giao hàng thành phẩm theo đơn";
         
@@ -39608,7 +39606,7 @@ window.handleStockExportOrderChange = function(orderNumber) {
             order_qty: reqQty,
             remaining_qty: remainingToDeliver,
             unit_price: itemPrice,
-            note: `Theo đơn ${order.order_number || order.id}`
+            note: "" // Bỏ trống ghi chú theo yêu cầu
         });
     });
 
@@ -39636,20 +39634,27 @@ window.handleStockExportOrderChange = function(orderNumber) {
 // Xử lý khi chọn Lái xe & Biển số xe
 window.handleStockExportDriverChange = function(driverCode) {
     const plateInput = document.getElementById("exportVehiclePlate");
-    if (!plateInput) return;
+    const nameInput = document.getElementById("exportDriverName");
+    if (!driverCode) return;
 
     if (driverCode === "KHAC") {
-        plateInput.value = "";
-        plateInput.readOnly = false;
-        plateInput.placeholder = "Nhập biển số xe";
-        plateInput.focus();
+        if (nameInput) {
+            nameInput.value = "";
+            nameInput.placeholder = "Nhập họ tên lái xe";
+            nameInput.focus();
+        }
+        if (plateInput) {
+            plateInput.value = "";
+            plateInput.placeholder = "Nhập biển số xe";
+        }
         return;
     }
 
     const drivers = state.master_categories?.driver_vehicle_list?.items || DEFAULT_MASTER_CATEGORIES.driver_vehicle_list.items || [];
     const drv = drivers.find(d => d.code === driverCode);
     if (drv) {
-        plateInput.value = drv.plate || drv.code;
+        if (nameInput) nameInput.value = drv.name || drv.code || "";
+        if (plateInput) plateInput.value = drv.plate || drv.code || "";
     }
 };
 
@@ -40011,7 +40016,7 @@ window.submitStockExport = function(andPrint = false) {
     
     const drvSelect = document.getElementById("exportDriverVehicleSelect");
     const driverCode = drvSelect?.value || "";
-    const driverName = drvSelect?.options[drvSelect.selectedIndex]?.getAttribute("data-name") || "";
+    const driverName = document.getElementById("exportDriverName")?.value.trim() || drvSelect?.options[drvSelect.selectedIndex]?.getAttribute("data-name") || "";
     const vehiclePlate = document.getElementById("exportVehiclePlate")?.value.trim() || "";
     
     const whSelect = document.getElementById("exportWarehouseSelect");
@@ -40207,8 +40212,16 @@ window.openStockExportPrintModal = function(exportId) {
     const totalAmount = rec.total_amount !== undefined ? Number(rec.total_amount) : (subtotal + vatAmount);
     const amountInWords = rec.amount_in_words || (totalAmount > 0 && typeof window.docSoThanhChu === 'function' ? window.docSoThanhChu(totalAmount) : "Không đồng");
 
+    const driverHtml = rec.driver_name 
+        ? `Lái xe: <strong>${rec.driver_name}</strong> &nbsp; ` 
+        : "";
+
     const bxHtml = rec.vehicle_plate 
         ? `<span class="mau-02-vt-bx-highlight">BX: ${rec.vehicle_plate}</span>` 
+        : "";
+
+    const transportHtml = (driverHtml || bxHtml) 
+        ? `<div>${driverHtml}${bxHtml}</div>` 
         : "";
 
     const phoneHtml = rec.receiver_phone 
@@ -40250,7 +40263,7 @@ window.openStockExportPrintModal = function(exportId) {
             </div>
             <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
                 <div><strong>Địa chỉ (bộ phận) nhận:</strong> ${rec.receiver_address || "......................................."}</div>
-                <div>${bxHtml}</div>
+                ${transportHtml}
             </div>
             <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
                 <div><strong>Lý do xuất kho:</strong> ${rec.reason || "Xuất giao hàng thành phẩm theo đơn"}</div>
