@@ -985,13 +985,9 @@ body {
 #departmentListTable th, #departmentListTable td,
 #crmOrdersLogTable th, #crmOrdersLogTable td,
 #crmFinanceLogTable th, #crmFinanceLogTable td,
-#crmDebtOrdersTable th, #crmDebtOrdersTable td,
 #crmInstallmentHistoryTable th, #crmInstallmentHistoryTable td,
 #crmContractsLogTable th, #crmContractsLogTable td,
 #financeTransactionsTable th, #financeTransactionsTable td,
-#customerDebtsTable th, #customerDebtsTable td,
-#supplierDebtsTable th, #supplierDebtsTable td,
-#subcontractorDebtsTable th, #subcontractorDebtsTable td,
 #salesCommissionsTable th, #salesCommissionsTable td,
 #internalTransactionsTable th, #internalTransactionsTable td,
 #internalFinanceTable th, #internalFinanceTable td {
@@ -1028,6 +1024,200 @@ body {
 #subcontractorDebtsTable th:last-child, #subcontractorDebtsTable td:last-child,
 #salesCommissionsTable th:last-child, #salesCommissionsTable td:last-child {
     text-align: center !important;
+}
+
+/* ==========================================================================
+   BẢNG CÔNG NỢ KHÁCH HÀNG & ĐỐI TÁC (TINH CHỈNH FONT CHỮ VỪA VẶN, THANH LỊCH)
+   ========================================================================== */
+#customerDebtsTable,
+#supplierDebtsTable,
+#subcontractorDebtsTable,
+#crmDebtOrdersTable,
+#customerPaymentHistoryModal .table,
+#supplierPaymentHistoryModal .table,
+#subcontractorPaymentHistoryModal .table {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 0.8125rem !important;
+    letter-spacing: -0.01em;
+    width: 100% !important;
+    min-width: 100% !important;
+}
+
+#customerDebtsTable th,
+#supplierDebtsTable th,
+#subcontractorDebtsTable th,
+#crmDebtOrdersTable th,
+#customerPaymentHistoryModal .table th,
+#supplierPaymentHistoryModal .table th,
+#subcontractorPaymentHistoryModal .table th {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.03em !important;
+    text-transform: uppercase !important;
+    color: #475569 !important;
+    background-color: #f8fafc !important;
+    padding: 8px 12px !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+#customerDebtsTable td,
+#supplierDebtsTable td,
+#subcontractorDebtsTable td,
+#crmDebtOrdersTable td,
+#customerPaymentHistoryModal .table td,
+#supplierPaymentHistoryModal .table td,
+#subcontractorPaymentHistoryModal .table td {
+    font-size: 0.8125rem !important;
+    font-weight: 400 !important;
+    color: #1e293b !important;
+    padding: 7px 12px !important;
+    line-height: 1.4 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+#customerDebtsTable strong,
+#supplierDebtsTable strong,
+#subcontractorDebtsTable strong,
+#crmDebtOrdersTable strong {
+    font-weight: 600 !important;
+}
+
+/* Mã khách hàng / đối tác */
+.debt-partner-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #1d4ed8 !important;
+    background-color: #eff6ff !important;
+    border: 1px solid #bfdbfe !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    letter-spacing: 0.02em !important;
+}
+
+/* Tên khách hàng / đối tác */
+.debt-partner-name {
+    font-weight: 600 !important;
+    font-size: 0.825rem !important;
+    color: #0f172a !important;
+}
+
+/* Số điện thoại */
+.debt-partner-phone {
+    font-size: 0.775rem !important;
+    color: #64748b !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+/* Ô tiền tệ tabular-nums căn phải */
+.debt-money-cell {
+    font-variant-numeric: tabular-nums !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.01em !important;
+    text-align: right !important;
+}
+
+/* Tiền nợ còn lại nổi bật */
+.debt-amount-due {
+    color: #dc2626 !important;
+    font-weight: 700 !important;
+    font-size: 0.835rem !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+.debt-amount-zero {
+    color: #16a34a !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+/* Nút thao tác trong bảng công nợ */
+#customerDebtsTable .card-actions-row .btn,
+#supplierDebtsTable .btn,
+#subcontractorDebtsTable .btn {
+    font-size: 0.725rem !important;
+    padding: 3px 8px !important;
+    border-radius: 5px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+}
+
+/* Dark mode */
+:root[data-theme="dark"] #customerDebtsTable th,
+:root[data-theme="dark"] #supplierDebtsTable th,
+:root[data-theme="dark"] #subcontractorDebtsTable th,
+:root[data-theme="dark"] #crmDebtOrdersTable th {
+    background-color: #1e293b !important;
+    color: #94a3b8 !important;
+    border-bottom-color: #334155 !important;
+    border-right-color: #334155 !important;
+}
+
+:root[data-theme="dark"] #customerDebtsTable td,
+:root[data-theme="dark"] #supplierDebtsTable td,
+:root[data-theme="dark"] #subcontractorDebtsTable td,
+:root[data-theme="dark"] #crmDebtOrdersTable td {
+    color: #f1f5f9 !important;
+    background-color: #0f172a !important;
+    border-bottom-color: #334155 !important;
+    border-right-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .debt-partner-name {
+    color: #f8fafc !important;
+}
+
+:root[data-theme="dark"] .debt-partner-code {
+    background-color: #1e293b !important;
+    color: #60a5fa !important;
+    border-color: #3b82f6 !important;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+    #customerDebtsTable th,
+    #supplierDebtsTable th,
+    #subcontractorDebtsTable th,
+    #crmDebtOrdersTable th {
+        font-size: 0.7rem !important;
+        padding: 6px 8px !important;
+        letter-spacing: 0 !important;
+    }
+    #customerDebtsTable td,
+    #supplierDebtsTable td,
+    #subcontractorDebtsTable td,
+    #crmDebtOrdersTable td {
+        font-size: 0.76rem !important;
+        padding: 6px 8px !important;
+    }
+    .debt-partner-name {
+        font-size: 0.775rem !important;
+    }
+    .debt-partner-code {
+        font-size: 0.7rem !important;
+        padding: 1px 4px !important;
+    }
+    .debt-money-cell {
+        font-size: 0.76rem !important;
+    }
+    .debt-amount-due {
+        font-size: 0.785rem !important;
+    }
+    #customerDebtsTable .card-actions-row .btn,
+    #supplierDebtsTable .btn,
+    #subcontractorDebtsTable .btn {
+        font-size: 0.685rem !important;
+        padding: 3px 6px !important;
+    }
 }
 
 #crmTable .card-actions-row,

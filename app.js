@@ -16336,6 +16336,11 @@ function renderCustomerDebts() {
 
     const customers = state.partners.filter(p => p.role === "CUSTOMER" || p.role === "BOTH");
 
+    if (customers.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Chưa có khách hàng nào trong hệ thống.</td></tr>`;
+        return;
+    }
+
     customers.forEach(p => {
         // Calculate total sales from both standard orders and online orders
         const standardSales = state.orders.filter(o => o.customer_id === p.id).reduce((sum, o) => sum + o.total_amount, 0);
@@ -16349,19 +16354,19 @@ function renderCustomerDebts() {
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${p.code}</strong></td>
-            <td><strong>${p.name}</strong></td>
-            <td>${p.phone}</td>
-            <td>${formatMoney(totalSales)}</td>
-            <td>${formatMoney(paid)}</td>
-            <td><strong class="${debt > 0 ? 'text-danger font-bold' : 'text-success'}">${formatMoney(debt)}</strong></td>
-            <td>${formatMoney(creditLimit)}</td>
+            <td><span class="debt-partner-code">${p.code || 'KH'}</span></td>
+            <td><span class="debt-partner-name">${p.name}</span></td>
+            <td><span class="debt-partner-phone">${p.phone || '-'}</span></td>
+            <td class="debt-money-cell">${formatMoney(totalSales)}</td>
+            <td class="debt-money-cell">${formatMoney(paid)}</td>
+            <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
+            <td class="debt-money-cell">${formatMoney(creditLimit)}</td>
             <td>
                 <div class="card-actions-row">
-                    <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem; white-space:nowrap;" onclick="collectCustomerDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                    <button class="btn btn-success" style="white-space:nowrap;" onclick="collectCustomerDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                         <i data-lucide="plus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Thu nợ
                     </button>
-                    <button class="btn btn-info" style="padding: 4px 8px; font-size: 0.75rem; white-space:nowrap; background:#0891b2; color:#fff;" onclick="viewCustomerPaymentHistory('${p.id}')">
+                    <button class="btn btn-info" style="white-space:nowrap; background:#0891b2; color:#fff;" onclick="viewCustomerPaymentHistory('${p.id}')">
                         <i data-lucide="history" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Lịch sử trả
                     </button>
                 </div>
@@ -16476,12 +16481,12 @@ window.viewCustomerPaymentHistory = function(partnerId) {
 
             const orderRow = document.createElement("tr");
             orderRow.innerHTML = `
-                <td><strong>${order.order_number}</strong></td>
+                <td><span class="debt-partner-code">${order.order_number}</span></td>
                 <td><small>${new Date(order.created_at).toLocaleDateString('vi-VN')}</small></td>
                 <td><small class="text-secondary">${orderSpecs}</small></td>
-                <td><strong>${formatMoney(order.total_amount)}</strong></td>
-                <td><span class="text-success">${formatMoney(paidForOrder)}</span></td>
-                <td><strong class="${remainingDebt > 0 ? 'text-danger' : 'text-secondary'}">${formatMoney(remainingDebt)}</strong></td>
+                <td class="debt-money-cell">${formatMoney(order.total_amount)}</td>
+                <td class="debt-money-cell text-success">${formatMoney(paidForOrder)}</td>
+                <td class="debt-money-cell"><span class="${remainingDebt > 0 ? 'debt-amount-due' : 'text-secondary'}">${formatMoney(remainingDebt)}</span></td>
             `;
             debtOrdersTbody.appendChild(orderRow);
         });
@@ -16529,6 +16534,11 @@ function renderSupplierDebts() {
 
     const suppliers = state.partners.filter(p => p.role === "SUPPLIER" || p.role === "BOTH");
 
+    if (suppliers.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Chưa có nhà cung cấp nào trong hệ thống.</td></tr>`;
+        return;
+    }
+
     suppliers.forEach(p => {
         const totalRestock = state.restocks.filter(r => r.supplier_id === p.id).reduce((sum, r) => sum + r.total_amount, 0);
         const paid = state.transactions.filter(t => t.partner_id === p.id && t.type === "PAYMENT" && t.category === "SUPPLIER_PAY").reduce((sum, t) => sum + t.amount, 0);
@@ -16536,18 +16546,18 @@ function renderSupplierDebts() {
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${p.code}</strong></td>
-            <td><strong>${p.name}</strong></td>
-            <td>${p.phone}</td>
-            <td>${formatMoney(totalRestock)}</td>
-            <td>${formatMoney(paid)}</td>
-            <td><strong class="${debt > 0 ? 'text-warning font-bold' : 'text-success'}">${formatMoney(debt)}</strong></td>
+            <td><span class="debt-partner-code">${p.code || 'NCC'}</span></td>
+            <td><span class="debt-partner-name">${p.name}</span></td>
+            <td><span class="debt-partner-phone">${p.phone || '-'}</span></td>
+            <td class="debt-money-cell">${formatMoney(totalRestock)}</td>
+            <td class="debt-money-cell">${formatMoney(paid)}</td>
+            <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
             <td>
-                <div style="display: flex; gap: 6px; align-items: center;">
-                    <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="paySupplierDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
+                    <button class="btn btn-danger" onclick="paySupplierDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                         <i data-lucide="minus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Thanh toán nợ
                     </button>
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSupplierPaymentHistory('${p.id}')" title="Xem lịch sử">
+                    <button class="btn btn-secondary" style="background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSupplierPaymentHistory('${p.id}')" title="Xem lịch sử">
                         <i data-lucide="eye" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Lịch sử
                     </button>
                 </div>
@@ -16707,7 +16717,7 @@ function renderSubcontractorDebts() {
     const subcontractors = state.partners.filter(p => p.role === "SUBCONTRACTOR");
 
     if (subcontractors.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 28px 16px; font-size: 0.95rem;">Chưa có xưởng gia công nào trong danh bạ đối tác.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 24px 16px; font-size: 0.825rem;">Chưa có xưởng gia công nào trong danh bạ đối tác.</td></tr>`;
         return;
     }
 
@@ -16718,18 +16728,18 @@ function renderSubcontractorDebts() {
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td><strong>${p.code}</strong></td>
-            <td><strong>${p.name}</strong></td>
-            <td>${p.phone}</td>
-            <td>${formatMoney(totalCost)}</td>
-            <td>${formatMoney(paid)}</td>
-            <td><strong class="${debt > 0 ? 'text-warning font-bold' : 'text-success'}">${formatMoney(debt)}</strong></td>
+            <td><span class="debt-partner-code">${p.code || 'GC'}</span></td>
+            <td><span class="debt-partner-name">${p.name}</span></td>
+            <td><span class="debt-partner-phone">${p.phone || '-'}</span></td>
+            <td class="debt-money-cell">${formatMoney(totalCost)}</td>
+            <td class="debt-money-cell">${formatMoney(paid)}</td>
+            <td class="debt-money-cell"><span class="${debt > 0 ? 'debt-amount-due text-warning' : 'debt-amount-zero'}">${formatMoney(debt)}</span></td>
             <td>
-                <div style="display: flex; gap: 6px; align-items: center;">
-                    <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="paySubcontractorDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
+                    <button class="btn btn-danger" onclick="paySubcontractorDebt('${p.id}')" ${debt === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                         <i data-lucide="minus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Trả tiền gia công
                     </button>
-                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSubcontractorPaymentHistory('${p.id}')" title="Xem lịch sử">
+                    <button class="btn btn-secondary" style="background-color: var(--info-light); color: var(--info); border: none;" onclick="viewSubcontractorPaymentHistory('${p.id}')" title="Xem lịch sử">
                         <i data-lucide="eye" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>Lịch sử
                     </button>
                 </div>
