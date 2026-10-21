@@ -14302,6 +14302,32 @@ window.switchFinanceSubTab = function(subtabId, updateUrl = true) {
     const targetPane = document.getElementById(`finSubtab-${subtabId}`);
     if (targetPane) targetPane.classList.add("active");
 
+    // Dynamically update page title to match the exact menu item
+    const titleEl = document.getElementById("financeTabTitle");
+    if (titleEl) {
+        let label = "💰 Sổ quỹ thu chi";
+        if (subtabId === "customer-debt") {
+            label = "👥 Công nợ khách hàng";
+        } else if (subtabId === "supplier-debt") {
+            label = "🚚 Công nợ nhà cung cấp";
+        } else if (subtabId === "subcontractor-debt") {
+            label = "🏭 Công nợ Xưởng gia công";
+        } else if (subtabId === "sales-commission") {
+            if (window.activeCommissionFilter === "SALESPERSON") {
+                label = "🎖️ Hoa hồng Nhân viên Kinh doanh";
+            } else if (window.activeCommissionFilter === "COLLABORATOR") {
+                label = "🤝 Hoa hồng Cộng tác viên";
+            } else {
+                label = "🎖️ Hoa hồng nhân viên/CTV";
+            }
+        } else if (subtabId === "internal-finance") {
+            label = "🏛️ Thu chi nội bộ";
+        } else if (subtabId === "ledger") {
+            label = "💰 Sổ quỹ thu chi";
+        }
+        titleEl.innerHTML = label;
+    }
+
     if (subtabId === "sales-commission" && window.renderSalesCommissions) {
         window.renderSalesCommissions();
     }
@@ -29436,6 +29462,7 @@ window.activeCommissionFilter = "ALL";
 
 window.switchCommissionView = function(role) {
     window.activeCommissionFilter = role;
+    if (typeof switchTab === 'function') switchTab('finance');
     window.switchFinanceSubTab('sales-commission');
 };
 
