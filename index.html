@@ -66,7 +66,7 @@
     <!-- html2pdf.js for Clean A4 PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261022_voucher_mau02vt_v38">
+    <link rel="stylesheet" href="/style.css?v=20261022_voucher_advanced_v39">
 
     <script>
 
@@ -2530,11 +2530,11 @@
                             </div>
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.85rem; font-weight:600; margin-bottom:8px;">
-                                    <span>Tổng giá trị xuất kho</span>
-                                    <i data-lucide="circle-dollar-sign" style="width:18px; height:18px; color:#10b981;"></i>
+                                    <span>Phiếu đã hoàn thành</span>
+                                    <i data-lucide="check-check" style="width:18px; height:18px; color:#108f53;"></i>
                                 </div>
-                                <div id="kpiExportTotalAmount" style="font-size:1.6rem; font-weight:800; color:#10b981;">0đ</div>
-                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Theo giá trị phiếu xuất</div>
+                                <div id="kpiExportCompletedCount" style="font-size:1.6rem; font-weight:800; color:#108f53;">0</div>
+                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Xuất kho thành công</div>
                             </div>
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.85rem; font-weight:600; margin-bottom:8px;">
@@ -2549,16 +2549,22 @@
                         <!-- Actions Bar & Filters -->
                         <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
                             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                                <div class="search-box" style="width:260px;">
+                                <div class="search-box" style="width:240px;">
                                     <i data-lucide="search"></i>
                                     <input type="text" placeholder="Tìm số phiếu, khách nhận, BX, SKU..." id="onlineExportSearchInput" oninput="window.renderOnlineExportGoods()">
                                 </div>
-                                <select class="form-select" id="onlineExportSignedFilter" style="width:200px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineExportGoods()">
+                                <select class="form-select" id="onlineExportStatusFilter" style="width:175px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineExportGoods()">
+                                    <option value="all">-- Tất cả trạng thái --</option>
+                                    <option value="COMPLETED">✓ Đã xuất (Hoàn thành)</option>
+                                    <option value="PARTIAL">⚡ Giao 1 phần</option>
+                                    <option value="DRAFT">📝 Chờ xuất kho</option>
+                                </select>
+                                <select class="form-select" id="onlineExportSignedFilter" style="width:180px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineExportGoods()">
                                     <option value="all">-- Tất cả chứng từ --</option>
                                     <option value="signed">📸 Đã có ảnh ký nhận</option>
                                     <option value="unsigned">⚠️ Chưa có ảnh ký nhận</option>
                                 </select>
-                                <select class="form-select" id="onlineExportPeriodFilter" style="width:160px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineExportGoods()">
+                                <select class="form-select" id="onlineExportPeriodFilter" style="width:150px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderOnlineExportGoods()">
                                     <option value="all">Tất cả thời gian</option>
                                     <option value="today">Hôm nay</option>
                                     <option value="this_week">Tuần này</option>
@@ -2572,7 +2578,7 @@
                                     <i data-lucide="file-spreadsheet"></i>
                                     <span>Xuất Excel</span>
                                 </button>
-                                <button class="btn btn-primary" onclick="window.openStockExportModal()" style="display:flex; align-items:center; gap:6px; background:linear-gradient(135deg, #ea580c 0%, #c2410c 100%); border:none; font-weight:700; box-shadow:0 2px 6px rgba(234, 88, 12, 0.35);" title="Tạo phiếu xuất kho chuẩn Mẫu 02-VT">
+                                <button class="btn btn-primary" onclick="window.openStockExportModal()" style="display:flex; align-items:center; gap:6px; background:linear-gradient(135deg, #108f53 0%, #065f46 100%); border:none; font-weight:700; box-shadow:0 2px 6px rgba(16, 143, 83, 0.35);" title="Tạo phiếu xuất kho chuẩn Mẫu 02-VT">
                                     <i data-lucide="plus-circle"></i>
                                     <span>+ Tạo phiếu xuất kho (Mẫu 02-VT)</span>
                                 </button>
@@ -2586,12 +2592,12 @@
                                     <tr>
                                         <th>Thời gian</th>
                                         <th>Số phiếu</th>
-                                        <th>Người nhận / Khách hàng</th>
-                                        <th>Địa chỉ / Bến xe (BX)</th>
-                                        <th>Lý do xuất kho</th>
+                                        <th>Người nhận & Hotline</th>
+                                        <th>Công ty / Đơn hàng</th>
+                                        <th>Lái xe & Biển số xe (BX)</th>
                                         <th style="text-align:right;">SL mặt hàng</th>
                                         <th style="text-align:right;">Tổng SL thực xuất</th>
-                                        <th style="text-align:right;">Tổng thành tiền</th>
+                                        <th style="text-align:center;">Trạng thái</th>
                                         <th style="text-align:center;">Ảnh ký nhận (Mobile)</th>
                                         <th style="text-align:center;">Thao tác</th>
                                     </tr>
@@ -11587,7 +11593,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261022_voucher_mau02vt_v38"></script>
+    <script src="/app.js?v=20261022_voucher_advanced_v39"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
@@ -11951,20 +11957,55 @@
 
                 <!-- Modal Body -->
                 <div class="modal-body" style="padding:20px; max-height:80vh; overflow-y:auto; background:var(--bg-main);">
-                    <!-- Header Info Box (Đơn vị & Chứng từ) -->
+                    
+                    <!-- BƯỚC 1: CHỌN ĐƠN HÀNG XUẤT KHO & TRẠNG THÁI -->
+                    <div style="background:linear-gradient(135deg, rgba(16,143,83,0.08) 0%, rgba(6,95,70,0.05) 100%); border:1.5px solid #108f53; border-radius:10px; padding:14px 16px; margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                            <label style="font-size:0.85rem; font-weight:800; color:#064e3b; display:flex; align-items:center; gap:6px; margin:0;">
+                                <i data-lucide="shopping-bag" style="width:18px; height:18px; color:#108f53;"></i>
+                                <span>1. CHỌN ĐƠN HÀNG ĐÃ TẠO (CHƯA GIAO HOẶC GIAO 1 PHẦN): <span style="color:#ef4444;">*</span></span>
+                            </label>
+                            <span id="exportOrderDeliveryStatusBadge" class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-size:0.75rem; font-weight:700; display:none;">Chưa giao</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+                            <div>
+                                <label style="font-size:0.75rem; font-weight:700; color:#064e3b; display:block; margin-bottom:3px;">Chọn từ danh sách đơn hàng đã xác nhận:</label>
+                                <select id="exportOrderSelect" onchange="window.handleStockExportOrderChange(this.value)" class="form-select" style="height:36px; font-size:0.85rem; font-weight:700; border-color:#108f53; color:#065f46;">
+                                    <option value="">-- Chọn đơn hàng để tự động trích xuất thông tin & hàng hóa --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size:0.75rem; font-weight:700; color:#064e3b; display:block; margin-bottom:3px;">Trạng thái phiếu xuất kho:</label>
+                                <select id="exportStatusSelect" class="form-select" style="height:36px; font-size:0.85rem; font-weight:700; color:#065f46; border-color:#108f53;">
+                                    <option value="COMPLETED">✓ Đã xuất kho (Hoàn thành giao)</option>
+                                    <option value="PARTIAL">⚡ Xuất / Giao một phần</option>
+                                    <option value="DRAFT">📝 Mới tạo / Chờ xuất kho</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="exportOrderSummaryAlert" style="display:none; margin-top:10px; padding:8px 12px; background:#ffffff; border-radius:6px; border:1px dashed #108f53; font-size:0.82rem; color:#064e3b; line-height:1.45;">
+                            <!-- Injected dynamically when order is selected -->
+                        </div>
+                    </div>
+
+                    <!-- BƯỚC 2: THÔNG TIN ĐƠN VỊ XUẤT & CHỨNG TỪ (HOTLINE & SỐ PXK TỰ TĂNG) -->
                     <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; margin-bottom:16px;">
+                        <h4 style="margin:0 0 12px 0; font-size:0.88rem; font-weight:800; color:#108f53; display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="file-text" style="width:16px; height:16px;"></i>
+                            <span>2. THÔNG TIN ĐƠN VỊ XUẤT & CHỨNG TỪ (SỐ PHIẾU TỰ TĂNG KHÔNG SỬA)</span>
+                        </h4>
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:12px;">
                             <div>
-                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Đơn vị xuất:</label>
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Đơn vị xuất kho:</label>
                                 <input type="text" id="exportUnitName" class="form-control" value="Công ty Cổ phần In Lạc Hồng" style="height:34px; font-size:0.85rem; font-weight:600;">
                             </div>
                             <div>
-                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Bộ phận:</label>
-                                <input type="text" id="exportDepartment" class="form-control" value="Bộ phận Kinh doanh / Kho hàng" style="height:34px; font-size:0.85rem;">
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Hotline liên hệ:</label>
+                                <input type="text" id="exportUnitPhone" class="form-control" value="0907.86.1111 - 024.3733.1111" style="height:34px; font-size:0.85rem; font-weight:700; color:#108f53;">
                             </div>
                             <div>
-                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Số phiếu xuất:</label>
-                                <input type="text" id="exportVoucherNo" class="form-control" style="height:34px; font-size:0.85rem; font-weight:700; color:#ea580c;">
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Số phiếu xuất (Tự tăng):</label>
+                                <input type="text" id="exportVoucherNo" class="form-control" readonly style="height:34px; font-size:0.88rem; font-weight:800; color:#108f53; background:#f1f5f9; cursor:not-allowed;" title="Số phiếu xuất tự động sinh và tự tăng, không được chỉnh sửa">
                             </div>
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Ngày xuất kho:</label>
@@ -11972,7 +12013,11 @@
                             </div>
                         </div>
 
-                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+                            <div>
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Bộ phận:</label>
+                                <input type="text" id="exportDepartment" class="form-control" value="Bộ phận Kinh doanh / Kho hàng" style="height:34px; font-size:0.85rem;">
+                            </div>
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Mã ĐV SDNS:</label>
                                 <input type="text" id="exportSdnsCode" class="form-control" placeholder="Để trống nếu không có" style="height:34px; font-size:0.85rem;">
@@ -11988,40 +12033,65 @@
                         </div>
                     </div>
 
-                    <!-- Receiver & Transport Info Box -->
+                    <!-- BƯỚC 3: THÔNG TIN NGƯỜI NHẬN, CÔNG TY & XE VẬN CHUYỂN -->
                     <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; margin-bottom:16px;">
-                        <h4 style="margin:0 0 12px 0; font-size:0.9rem; font-weight:800; color:#ea580c; display:flex; align-items:center; gap:6px;">
+                        <h4 style="margin:0 0 12px 0; font-size:0.88rem; font-weight:800; color:#108f53; display:flex; align-items:center; gap:6px;">
                             <i data-lucide="truck" style="width:16px; height:16px;"></i>
-                            <span>THÔNG TIN NGƯỜI NHẬN & XE VẬN CHUYỂN (BX)</span>
+                            <span>3. THÔNG TIN NGƯỜI NHẬN, CÔNG TY, LÁI XE & KHO HÀNG (TRÍCH XUẤT CSDL)</span>
                         </h4>
+                        
+                        <!-- Row 1: Người nhận, Tên công ty, Hotline liên hệ -->
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:12px;">
                             <div>
-                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Họ tên người nhận hàng / Khách hàng: <span style="color:#ef4444;">*</span></label>
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Họ tên người nhận hàng: <span style="color:#ef4444;">*</span></label>
                                 <div style="display:flex; gap:6px;">
-                                    <input type="text" id="exportReceiverName" class="form-control" placeholder="Nhập tên hoặc chọn khách hàng" style="height:34px; font-size:0.85rem; font-weight:600;">
-                                    <select id="exportReceiverSelect" onchange="window.handleStockExportReceiverChange(this.value)" class="form-select" style="width:120px; height:34px; font-size:0.8rem;">
+                                    <input type="text" id="exportReceiverName" class="form-control" placeholder="Tên người nhận hàng" style="height:34px; font-size:0.85rem; font-weight:700; color:#0f172a;">
+                                    <select id="exportReceiverSelect" onchange="window.handleStockExportReceiverChange(this.value)" class="form-select" style="width:115px; height:34px; font-size:0.78rem;" title="Chọn từ danh sách Đối tác / Khách hàng CSDL">
                                         <option value="">-- Chọn ĐT --</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
-                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Địa chỉ (bộ phận) nhận:</label>
-                                <input type="text" id="exportReceiverAddress" class="form-control" placeholder="Địa chỉ giao hàng" style="height:34px; font-size:0.85rem;">
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Tên công ty / Đơn vị nhận:</label>
+                                <input type="text" id="exportReceiverCompany" class="form-control" placeholder="Tên công ty hoặc tổ chức" style="height:34px; font-size:0.85rem;">
                             </div>
                             <div>
-                                <label style="font-size:0.75rem; font-weight:800; color:#c2410c; display:block; margin-bottom:3px;">Bến xe / Biển số xe vận chuyển (BX):</label>
-                                <input type="text" id="exportVehiclePlate" class="form-control" placeholder="Ví dụ: BX: 29H-67323" style="height:34px; font-size:0.88rem; font-weight:700; color:#c2410c; border:1.5px solid #ea580c; background:rgba(234,88,12,0.04);">
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Số điện thoại / Hotline người nhận:</label>
+                                <input type="text" id="exportReceiverPhone" class="form-control" placeholder="Ví dụ: 0912.345.678" style="height:34px; font-size:0.85rem; font-weight:600;">
                             </div>
                         </div>
 
+                        <!-- Row 2: Địa chỉ nhận, Lái xe & Biển số xe, Xuất tại kho -->
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:12px;">
+                            <div>
+                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Địa chỉ (bộ phận) nhận hàng:</label>
+                                <input type="text" id="exportReceiverAddress" class="form-control" placeholder="Địa chỉ giao hàng chi tiết" style="height:34px; font-size:0.85rem;">
+                            </div>
+                            <div>
+                                <label style="font-size:0.75rem; font-weight:700; color:#047857; display:block; margin-bottom:3px;">Lái xe & Biển số xe vận chuyển (BX):</label>
+                                <div style="display:flex; gap:6px;">
+                                    <select id="exportDriverVehicleSelect" onchange="window.handleStockExportDriverChange(this.value)" class="form-select" style="height:34px; font-size:0.82rem; font-weight:600; flex:1;">
+                                        <option value="">-- Chọn lái xe & BX từ CSDL --</option>
+                                    </select>
+                                    <input type="text" id="exportVehiclePlate" class="form-control" placeholder="Biển số xe" style="width:130px; height:34px; font-size:0.85rem; font-weight:700; color:#047857; border:1.5px solid #108f53; background:#ecfdf5;">
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-size:0.75rem; font-weight:700; color:#047857; display:block; margin-bottom:3px;">Xuất tại kho (Cấu hình CSDL):</label>
+                                <div style="display:flex; gap:6px;">
+                                    <select id="exportWarehouseSelect" onchange="window.handleStockExportWarehouseChange(this.value)" class="form-select" style="height:34px; font-size:0.82rem; font-weight:600; flex:1;">
+                                        <option value="">-- Chọn kho từ CSDL --</option>
+                                    </select>
+                                    <input type="text" id="exportWarehouseLocation" class="form-control" placeholder="Tên kho xuất" style="display:none;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Lý do & Địa điểm -->
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Lý do xuất kho:</label>
                                 <input type="text" id="exportReason" class="form-control" value="Xuất giao hàng thành phẩm theo đơn" style="height:34px; font-size:0.85rem;">
-                            </div>
-                            <div>
-                                <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Xuất tại kho:</label>
-                                <input type="text" id="exportWarehouseLocation" class="form-control" value="Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội" style="height:34px; font-size:0.85rem;">
                             </div>
                             <div>
                                 <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:3px;">Địa điểm xuất / giao:</label>

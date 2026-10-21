@@ -10593,6 +10593,33 @@ const DEFAULT_MASTER_CATEGORIES = {
             { id: "box_3", code: "KHAY", name: "Khay", desc: "Khay định hình, khay chia ngăn, khay nhung, phụ kiện khay", order: 3, status: "ACTIVE" }
         ]
     },
+    warehouse_list: {
+        key: "warehouse_list",
+        module: "sales",
+        moduleName: "Bán hàng & Vận chuyển",
+        name: "Danh mục Kho hàng xuất nhập",
+        desc: "Cấu hình danh sách các kho hàng thành phẩm, nguyên vật liệu và địa chỉ xuất",
+        icon: "archive",
+        items: [
+            { id: "wh_1", code: "KHO-14PL", name: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội", desc: "Kho chính thành phẩm bao bì - Hotline: 0907.86.1111", address: "14 Pháo Đài Láng, Đống Đa, Hà Nội", phone: "0907.86.1111", order: 1, status: "ACTIVE" },
+            { id: "wh_2", code: "KHO-DP", name: "Kho Xưởng Đan Phượng - Cụm CN Song Phượng", desc: "Kho sản xuất & gia công hộp - SĐT: 0907.86.2222", address: "Cụm CN Song Phượng, Đan Phượng, Hà Nội", phone: "0907.86.2222", order: 2, status: "ACTIVE" },
+            { id: "wh_3", code: "KHO-LB", name: "Kho Long Biên - Khu CN Đài Tư", desc: "Kho trung chuyển & vận tải - SĐT: 0907.86.3333", address: "Khu CN Đài Tư, Long Biên, Hà Nội", phone: "0907.86.3333", order: 3, status: "ACTIVE" }
+        ]
+    },
+    driver_vehicle_list: {
+        key: "driver_vehicle_list",
+        module: "sales",
+        moduleName: "Bán hàng & Vận chuyển",
+        name: "Đội ngũ Lái xe & Biển số xe",
+        desc: "Quản lý danh sách tài xế vận chuyển, số điện thoại và biển số xe giao hàng",
+        icon: "truck",
+        items: [
+            { id: "drv_1", code: "29H-67323", name: "Nguyễn Văn Hùng (29H-67323)", desc: "Xe tải 1.5 tấn - SĐT: 0983.123.456", plate: "29H-67323", phone: "0983.123.456", order: 1, status: "ACTIVE" },
+            { id: "drv_2", code: "29C-88219", name: "Trần Quốc Tuấn (29C-88219)", desc: "Xe tải 2.5 tấn - SĐT: 0912.456.789", plate: "29C-88219", phone: "0912.456.789", order: 2, status: "ACTIVE" },
+            { id: "drv_3", code: "29D-51280", name: "Lê Hoàng Long (29D-51280)", desc: "Xe van 850kg - SĐT: 0978.654.321", plate: "29D-51280", phone: "0978.654.321", order: 3, status: "ACTIVE" },
+            { id: "drv_4", code: "29A-34195", name: "Đỗ Trọng Nghĩa (29A-34195)", desc: "Xe bán tải giao nhanh - SĐT: 0965.888.999", plate: "29A-34195", phone: "0965.888.999", order: 4, status: "ACTIVE" }
+        ]
+    },
 
     // 4. TÀI CHÍNH & SỔ QUỸ (FINANCE & CASHFLOW)
     fin_income_category: {
@@ -38524,7 +38551,25 @@ window.handleGoodsImportCategoryChange = function(cat) {
 window.currentExportVoucherPhoto = null;
 window.editingStockExportId = null;
 
-// Render danh sách phiếu xuất kho
+// Sinh mã số Phiếu xuất kho tự tăng (Chuẩn PXK-YYYYMMDD-001, PXK-YYYYMMDD-002, ...)
+window.generateNextStockExportVoucherNo = function() {
+    const today = new Date();
+    const ymd = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+    const records = state.online_export_records || [];
+    
+    let maxSeq = 0;
+    records.forEach(r => {
+        const vNo = r.voucher_no || "";
+        if (vNo.startsWith(`PXK-${ymd}-`)) {
+            const parts = vNo.split("-");
+            const num = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(num) && num > maxSeq) maxSeq = num;
+        }
+    });
+    return `PXK-${ymd}-${String(maxSeq + 1).padStart(3, '0')}`;
+};
+
+// Render danh sách phiếu xuất kho (Có trạng thái, Lái xe & BX, Đơn hàng, SĐT)
 window.renderOnlineExportGoods = function() {
     const tableBody = document.querySelector("#onlineExportRecordsTable tbody");
     if (!tableBody) return;
@@ -38535,27 +38580,28 @@ window.renderOnlineExportGoods = function() {
     // 1. Cập nhật KPIs
     let totalCount = records.length;
     let totalQty = 0;
-    let totalAmount = 0;
+    let completedCount = 0;
     let signedCount = 0;
 
     records.forEach(r => {
         totalQty += Number(r.total_real_qty || 0);
-        totalAmount += Number(r.total_amount || 0);
+        if (r.status === 'COMPLETED' || !r.status) completedCount++;
         if (r.signed_photo_url) signedCount++;
     });
 
     const kpiCountEl = document.getElementById("kpiExportTotalCount");
     const kpiQtyEl = document.getElementById("kpiExportTotalQty");
-    const kpiAmountEl = document.getElementById("kpiExportTotalAmount");
+    const kpiCompletedEl = document.getElementById("kpiExportCompletedCount");
     const kpiSignedEl = document.getElementById("kpiExportSignedCount");
 
     if (kpiCountEl) kpiCountEl.textContent = totalCount.toLocaleString('vi-VN');
     if (kpiQtyEl) kpiQtyEl.textContent = totalQty.toLocaleString('vi-VN');
-    if (kpiAmountEl) kpiAmountEl.textContent = totalAmount.toLocaleString('vi-VN') + "đ";
+    if (kpiCompletedEl) kpiCompletedEl.textContent = completedCount.toLocaleString('vi-VN');
     if (kpiSignedEl) kpiSignedEl.textContent = signedCount.toLocaleString('vi-VN');
 
     // 2. Filters
     const query = (document.getElementById("onlineExportSearchInput")?.value || "").toLowerCase().trim();
+    const statusFilter = document.getElementById("onlineExportStatusFilter")?.value || "all";
     const signedFilter = document.getElementById("onlineExportSignedFilter")?.value || "all";
     const period = document.getElementById("onlineExportPeriodFilter")?.value || "all";
 
@@ -38564,6 +38610,11 @@ window.renderOnlineExportGoods = function() {
 
     const filtered = records.filter(r => {
         if (!r) return false;
+
+        if (statusFilter !== "all") {
+            const rStat = r.status || "COMPLETED";
+            if (rStat !== statusFilter) return false;
+        }
 
         if (signedFilter === "signed" && !r.signed_photo_url) return false;
         if (signedFilter === "unsigned" && r.signed_photo_url) return false;
@@ -38587,10 +38638,13 @@ window.renderOnlineExportGoods = function() {
         if (query) {
             const vNo = (r.voucher_no || r.id || "").toLowerCase();
             const rec = (r.receiver_name || "").toLowerCase();
+            const comp = (r.receiver_company || "").toLowerCase();
+            const phone = (r.receiver_phone || "").toLowerCase();
+            const ordNo = (r.order_number || "").toLowerCase();
             const plate = (r.vehicle_plate || "").toLowerCase();
             const reason = (r.reason || "").toLowerCase();
             const hasSku = (r.items || []).some(i => (i.sku || "").toLowerCase().includes(query) || (i.name || "").toLowerCase().includes(query));
-            if (!vNo.includes(query) && !rec.includes(query) && !plate.includes(query) && !reason.includes(query) && !hasSku) {
+            if (!vNo.includes(query) && !rec.includes(query) && !comp.includes(query) && !phone.includes(query) && !ordNo.includes(query) && !plate.includes(query) && !reason.includes(query) && !hasSku) {
                 return false;
             }
         }
@@ -38615,7 +38669,6 @@ window.renderOnlineExportGoods = function() {
     filtered.forEach(r => {
         const dateDisplay = r.date ? new Date(r.date).toLocaleDateString('vi-VN') : new Date(r.created_at).toLocaleDateString('vi-VN');
         const itemCount = (r.items || []).length;
-        const totalAmountStr = Number(r.total_amount || 0).toLocaleString('vi-VN') + "đ";
         const totalQtyStr = Number(r.total_real_qty || 0).toLocaleString('vi-VN');
 
         let photoCell = "";
@@ -38636,30 +38689,45 @@ window.renderOnlineExportGoods = function() {
         }
 
         const vehicleBadge = r.vehicle_plate 
-            ? `<span style="display:inline-block; font-size:0.78rem; font-weight:800; color:#c2410c; background:rgba(234,88,12,0.1); padding:2px 6px; border-radius:4px; margin-top:2px;">${r.vehicle_plate}</span>`
+            ? `<span style="display:inline-block; font-size:0.78rem; font-weight:800; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:2px 6px; border-radius:4px;">${r.vehicle_plate}</span>`
             : "";
+
+        // Trạng thái phiếu xuất kho
+        const statusVal = r.status || "COMPLETED";
+        let statusBadge = "";
+        if (statusVal === "COMPLETED") {
+            statusBadge = `<span class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-weight:700;">✓ Hoàn thành</span>`;
+        } else if (statusVal === "PARTIAL") {
+            statusBadge = `<span class="badge" style="background:#fffbeb; color:#b45309; border:1px solid #fde68a; font-weight:700;">⚡ Giao 1 phần</span>`;
+        } else if (statusVal === "DRAFT") {
+            statusBadge = `<span class="badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; font-weight:700;">📝 Chờ xuất</span>`;
+        } else {
+            statusBadge = `<span class="badge" style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; font-weight:700;">✕ Đã hủy</span>`;
+        }
 
         html += `
             <tr>
                 <td style="font-size:0.82rem; white-space:nowrap;">${dateDisplay}</td>
-                <td style="font-weight:700; color:#ea580c; white-space:nowrap;">
-                    <a href="javascript:void(0)" onclick="window.openStockExportPrintModal('${r.id}')" style="color:#ea580c; text-decoration:underline;">
+                <td style="font-weight:700; color:#108f53; white-space:nowrap;">
+                    <a href="javascript:void(0)" onclick="window.openStockExportPrintModal('${r.id}')" style="color:#108f53; text-decoration:underline;">
                         ${r.voucher_no}
                     </a>
                 </td>
                 <td>
-                    <strong>${r.receiver_name}</strong>
-                    <div style="font-size:0.75rem; color:var(--text-secondary);">${r.receiver_address || ""}</div>
+                    <strong style="color:var(--text-primary); font-size:0.88rem;">${r.receiver_name}</strong>
+                    ${r.receiver_phone ? `<div style="font-size:0.78rem; color:#047857; font-weight:600;"><i data-lucide="phone" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${r.receiver_phone}</div>` : ''}
+                </td>
+                <td>
+                    <div style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">${r.receiver_company || r.receiver_address || "Khách lẻ"}</div>
+                    ${r.order_number ? `<div style="font-size:0.75rem; color:#0284c7; font-weight:700;">📦 Đơn: ${r.order_number}</div>` : ''}
                 </td>
                 <td>
                     ${vehicleBadge}
-                </td>
-                <td style="font-size:0.82rem; color:var(--text-secondary); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                    ${r.reason || "Xuất giao hàng"}
+                    ${r.driver_name ? `<div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">${r.driver_name}</div>` : ''}
                 </td>
                 <td style="text-align:right; font-weight:600;">${itemCount} SP</td>
-                <td style="text-align:right; font-weight:800; color:#ea580c;">${totalQtyStr}</td>
-                <td style="text-align:right; font-weight:800; color:#10b981;">${totalAmountStr}</td>
+                <td style="text-align:right; font-weight:800; color:#108f53; font-size:0.95rem;">${totalQtyStr}</td>
+                <td style="text-align:center;">${statusBadge}</td>
                 <td style="text-align:center;">${photoCell}</td>
                 <td style="text-align:center; white-space:nowrap;">
                     <div style="display:inline-flex; gap:4px;">
@@ -38700,13 +38768,59 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
             : "TẠO PHIẾU XUẤT KHO (MẪU SỐ 02 - VT)";
     }
 
-    // Load partners into receiver select
+    // 1. Nạp danh sách đơn hàng đã tạo thành công và chưa giao / giao 1 phần vào dropdown
+    const ordSelect = document.getElementById("exportOrderSelect");
+    if (ordSelect) {
+        ordSelect.innerHTML = '<option value="">-- Chọn đơn hàng để tự động trích xuất thông tin & hàng hóa --</option>';
+        const allOrders = [...(state.online_orders || []), ...(state.orders || [])];
+        const addedOrderIds = new Set();
+
+        allOrders.forEach(o => {
+            if (!o || addedOrderIds.has(o.id || o.order_number)) return;
+            addedOrderIds.add(o.id || o.order_number);
+
+            const isDelivered = o.delivery_status === 'DELIVERED';
+            // Chỉ hiển thị đơn chưa giao hoặc giao 1 phần (hoặc đơn hiện tại khi ở chế độ EDIT)
+            if (!isDelivered || (mode === 'EDIT' && exportId)) {
+                const statusBadge = o.delivery_status === 'PARTIAL' ? '⚡ Giao 1 phần' : (isDelivered ? '✓ Đã giao đủ' : 'Chưa giao');
+                const ordNo = o.order_number || o.id;
+                const custName = o.customer_name || 'Khách lẻ';
+                const spCount = (o.items || []).length;
+                ordSelect.innerHTML += `<option value="${ordNo}" data-id="${o.id}">${ordNo} - ${custName} (${spCount} SP - ${statusBadge})</option>`;
+            }
+        });
+    }
+
+    // 2. Nạp Lái xe & Biển số xe từ CSDL Danh mục dùng chung
+    const drvSelect = document.getElementById("exportDriverVehicleSelect");
+    if (drvSelect) {
+        drvSelect.innerHTML = '<option value="">-- Chọn Lái xe & Biển số từ CSDL --</option>';
+        const drivers = state.master_categories?.driver_vehicle_list?.items || DEFAULT_MASTER_CATEGORIES.driver_vehicle_list.items || [];
+        drivers.filter(d => d.status === 'ACTIVE').forEach(d => {
+            drvSelect.innerHTML += `<option value="${d.code}" data-name="${d.name}" data-plate="${d.plate || d.code}" data-phone="${d.phone || ''}">${d.name}</option>`;
+        });
+        drvSelect.innerHTML += '<option value="KHAC">-- Khác / Nhập xe ngoài --</option>';
+    }
+
+    // 3. Nạp Danh sách Kho hàng từ CSDL Danh mục dùng chung
+    const whSelect = document.getElementById("exportWarehouseSelect");
+    if (whSelect) {
+        whSelect.innerHTML = '<option value="">-- Chọn Kho hàng từ CSDL --</option>';
+        const warehouses = state.master_categories?.warehouse_list?.items || DEFAULT_MASTER_CATEGORIES.warehouse_list.items || [];
+        warehouses.filter(w => w.status === 'ACTIVE').forEach(w => {
+            whSelect.innerHTML += `<option value="${w.code}" data-name="${w.name}" data-address="${w.address || ''}">${w.name}</option>`;
+        });
+    }
+
+    // 4. Nạp danh sách Khách hàng / Đối tác vào dropdown người nhận
     const recSelect = document.getElementById("exportReceiverSelect");
     if (recSelect) {
         recSelect.innerHTML = '<option value="">-- Chọn từ Khách hàng --</option>';
         const partners = state.partners || [];
         partners.forEach(p => {
-            if (p.name) recSelect.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+            if (p.name) {
+                recSelect.innerHTML += `<option value="${p.name}" data-company="${p.company || p.name || ''}" data-phone="${p.phone || p.hotline || ''}" data-address="${p.address || ''}">${p.name} ${p.phone ? '(' + p.phone + ')' : ''}</option>`;
+            }
         });
     }
 
@@ -38716,8 +38830,12 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
     const previewArea = document.getElementById("exportSignedPhotoPreviewArea");
     if (previewArea) previewArea.style.display = "none";
 
-    const creatorInput = document.getElementById("exportSignerCreator");
-    if (creatorInput) creatorInput.value = "";
+    const orderAlert = document.getElementById("exportOrderSummaryAlert");
+    if (orderAlert) orderAlert.style.display = "none";
+
+    // Số phiếu xuất kho: Luôn ở chế độ readonly
+    const voucherInput = document.getElementById("exportVoucherNo");
+    if (voucherInput) voucherInput.readOnly = true;
 
     if (mode === 'EDIT' && exportId) {
         const rec = (state.online_export_records || []).find(r => r.id === exportId);
@@ -38726,19 +38844,26 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
             return;
         }
 
+        if (ordSelect && rec.order_number) ordSelect.value = rec.order_number;
+        document.getElementById("exportStatusSelect").value = rec.status || "COMPLETED";
         document.getElementById("exportUnitName").value = rec.unit_name || "Công ty Cổ phần In Lạc Hồng";
+        document.getElementById("exportUnitPhone").value = rec.unit_phone || "0907.86.1111 - 024.3733.1111";
         document.getElementById("exportDepartment").value = rec.department || "Bộ phận Kinh doanh / Kho hàng";
-        document.getElementById("exportVoucherNo").value = rec.voucher_no || rec.id;
+        voucherInput.value = rec.voucher_no || rec.id;
         document.getElementById("exportVoucherDate").value = rec.date || (rec.created_at ? rec.created_at.slice(0, 10) : "");
         document.getElementById("exportSdnsCode").value = rec.sdns_code || "";
         document.getElementById("exportDebitAcc").value = rec.debit_acc || "632";
         document.getElementById("exportCreditAcc").value = rec.credit_acc || "156";
         document.getElementById("exportReceiverName").value = rec.receiver_name || "";
+        document.getElementById("exportReceiverCompany").value = rec.receiver_company || "";
+        document.getElementById("exportReceiverPhone").value = rec.receiver_phone || "";
         document.getElementById("exportReceiverAddress").value = rec.receiver_address || "";
         document.getElementById("exportVehiclePlate").value = rec.vehicle_plate || "";
-        document.getElementById("exportReason").value = rec.reason || "";
+        if (drvSelect && rec.driver_code) drvSelect.value = rec.driver_code;
+        document.getElementById("exportReason").value = rec.reason || "Xuất giao hàng thành phẩm theo đơn";
         document.getElementById("exportWarehouseLocation").value = rec.warehouse_location || "";
-        document.getElementById("exportDestination").value = rec.destination || "";
+        if (whSelect && rec.warehouse_code) whSelect.value = rec.warehouse_code;
+        document.getElementById("exportDestination").value = rec.destination || "Hà Nội";
         document.getElementById("exportAttachedDocs").value = rec.attached_docs || "";
         document.getElementById("exportSignerCreator").value = rec.signer_creator || "";
         document.getElementById("exportSignerReceiver").value = rec.signer_receiver || "";
@@ -38759,16 +38884,24 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
             if (previewArea) previewArea.style.display = "block";
         }
     } else {
-        // Mode ADD: generate voucher no
-        const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        const randomNum = String(Math.floor(100 + Math.random() * 900));
-        document.getElementById("exportVoucherNo").value = `PXK-${todayStr}-${randomNum}`;
+        // Mode ADD: Số phiếu xuất kho TỰ ĐỘNG SINH VÀ TỰ TĂNG, KHÔNG ĐƯỢC SỬA
+        voucherInput.value = window.generateNextStockExportVoucherNo();
+        document.getElementById("exportStatusSelect").value = "COMPLETED";
         document.getElementById("exportVoucherDate").value = new Date().toISOString().slice(0, 10);
         document.getElementById("exportReceiverName").value = "";
-        document.getElementById("exportReceiverAddress").value = "Hà Nội";
-        document.getElementById("exportVehiclePlate").value = "BX: 29H-67323";
+        document.getElementById("exportReceiverCompany").value = "";
+        document.getElementById("exportReceiverPhone").value = "";
+        document.getElementById("exportReceiverAddress").value = "";
+        document.getElementById("exportVehiclePlate").value = "29H-67323";
+        if (drvSelect && drvSelect.options.length > 1) drvSelect.selectedIndex = 1;
         document.getElementById("exportReason").value = "Xuất giao hàng thành phẩm theo đơn";
-        document.getElementById("exportWarehouseLocation").value = "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội";
+        
+        // Mặc định chọn kho đầu tiên trong danh mục cấu hình
+        if (whSelect && whSelect.options.length > 1) {
+            whSelect.selectedIndex = 1;
+            const opt = whSelect.options[1];
+            document.getElementById("exportWarehouseLocation").value = opt.getAttribute("data-address") || opt.getAttribute("data-name") || opt.text;
+        }
         document.getElementById("exportDestination").value = "Hà Nội";
         document.getElementById("exportAttachedDocs").value = "";
         document.getElementById("exportSignerCreator").value = "";
@@ -38777,9 +38910,8 @@ window.openStockExportModal = function(mode = 'ADD', exportId = null) {
         document.getElementById("exportSignerAccountant").value = "";
         document.getElementById("exportSignerDirector").value = "";
 
-        // Thêm 2 dòng hàng mẫu hoặc trống
-        window.addStockExportRow({ sku: "SIZE-B", name: "2B H36-02 Đỏ", req_qty_note: "30 b x 8", real_qty: 240, note: "Thùng nguyên niêm phong" });
-        window.addStockExportRow({ sku: "SIZE-A", name: "TP-40 H36-01 Vàng", req_qty_note: "32 T x 10", real_qty: 320, note: "" });
+        // Mặc định BỎ NHẬP SẴN: Bắt đầu bảng trống để người dùng chọn Đơn hàng hoặc tự thêm dòng
+        // Bảng hoàn toàn sạch sẽ, không có dòng hàng giả định
     }
 
     window.recalcStockExportTotals();
@@ -38795,7 +38927,136 @@ window.closeStockExportModal = function() {
     if (modal) modal.classList.remove("active");
 };
 
-// Thêm dòng hàng hóa xuất kho (Mẫu 02 - VT: Ghi chú thay thế Đơn giá & Thành tiền)
+// Xử lý khi chọn đơn hàng: Tự động trích xuất thông tin khách, địa chỉ, hotline, cty và nạp hàng hóa
+window.handleStockExportOrderChange = function(orderNumber) {
+    if (!orderNumber) {
+        const orderAlert = document.getElementById("exportOrderSummaryAlert");
+        if (orderAlert) orderAlert.style.display = "none";
+        return;
+    }
+
+    const allOrders = [...(state.online_orders || []), ...(state.orders || [])];
+    const order = allOrders.find(o => (o.order_number === orderNumber || o.id === orderNumber));
+    if (!order) return;
+
+    // 1. Tự động trích xuất Tên người nhận, Hotline, Công ty, Địa chỉ từ CSDL
+    const nameInput = document.getElementById("exportReceiverName");
+    const compInput = document.getElementById("exportReceiverCompany");
+    const phoneInput = document.getElementById("exportReceiverPhone");
+    const addrInput = document.getElementById("exportReceiverAddress");
+    const docsInput = document.getElementById("exportAttachedDocs");
+
+    if (nameInput) nameInput.value = order.customer_name || "";
+    if (phoneInput) phoneInput.value = order.customer_phone || "";
+    if (addrInput) addrInput.value = order.delivery_address || order.shipping_address || "";
+    if (docsInput) docsInput.value = `Đơn hàng số ${order.order_number || order.id}`;
+
+    // Tra cứu đối tác để lấy tên công ty
+    const partners = state.partners || [];
+    const partner = partners.find(p => p.id === order.customer_id || p.name === order.customer_name);
+    if (partner) {
+        if (compInput) compInput.value = partner.company || partner.name || "";
+        if (phoneInput && !phoneInput.value) phoneInput.value = partner.phone || partner.hotline || "";
+        if (addrInput && !addrInput.value) addrInput.value = partner.address || "";
+    } else {
+        if (compInput) compInput.value = order.customer_name || "";
+    }
+
+    // 2. Nạp hàng hóa từ đơn hàng và tính toán số lượng đã giao trước đó
+    const tbody = document.getElementById("stockExportItemsTableBody");
+    if (tbody) tbody.innerHTML = "";
+
+    const orderItems = order.items || [];
+    let totalOrderQty = 0;
+    let totalDeliveredPreviously = 0;
+    let totalRemainingQty = 0;
+
+    orderItems.forEach(it => {
+        const reqQty = Number(it.quantity || it.qty || 0);
+        totalOrderQty += reqQty;
+
+        // Tính số lượng SKU này đã xuất trong các phiếu xuất kho trước của đơn này
+        let deliveredSoFar = 0;
+        (state.online_export_records || []).forEach(r => {
+            if (r.order_number === order.order_number || r.order_id === order.id) {
+                (r.items || []).forEach(pastItem => {
+                    if ((pastItem.sku && pastItem.sku === it.sku) || (pastItem.name === it.name)) {
+                        deliveredSoFar += Number(pastItem.real_qty || 0);
+                    }
+                });
+            }
+        });
+
+        totalDeliveredPreviously += deliveredSoFar;
+        const remainingToDeliver = Math.max(0, reqQty - deliveredSoFar);
+        totalRemainingQty += remainingToDeliver;
+
+        window.addStockExportRow({
+            name: it.name,
+            sku: it.sku || "",
+            unit: it.unit || "Cái",
+            req_qty: reqQty,
+            real_qty: remainingToDeliver, // Mặc định xuất hết phần còn lại
+            order_qty: reqQty,
+            remaining_qty: remainingToDeliver,
+            note: `Theo đơn ${order.order_number || order.id}`
+        });
+    });
+
+    // 3. Hiển thị banner tóm tắt thông tin đơn hàng
+    const orderAlert = document.getElementById("exportOrderSummaryAlert");
+    if (orderAlert) {
+        orderAlert.style.display = "block";
+        orderAlert.innerHTML = `
+            <div style="font-weight:700; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                <span>📦 Đơn: <strong>${order.order_number || order.id}</strong> | Khách: <strong>${order.customer_name || 'Khách lẻ'}</strong></span>
+                <span style="color:#047857;">Tổng đơn: <strong>${totalOrderQty.toLocaleString('vi-VN')}</strong> | Đã xuất trước: <strong>${totalDeliveredPreviously.toLocaleString('vi-VN')}</strong> | Cần xuất: <strong>${totalRemainingQty.toLocaleString('vi-VN')}</strong></span>
+            </div>
+        `;
+    }
+
+    // Tự động gợi ý trạng thái xuất kho
+    const statusSelect = document.getElementById("exportStatusSelect");
+    if (statusSelect) {
+        statusSelect.value = (totalRemainingQty >= totalOrderQty) ? "COMPLETED" : "PARTIAL";
+    }
+
+    window.recalcStockExportTotals();
+};
+
+// Xử lý khi chọn Lái xe & Biển số xe
+window.handleStockExportDriverChange = function(driverCode) {
+    const plateInput = document.getElementById("exportVehiclePlate");
+    if (!plateInput) return;
+
+    if (driverCode === "KHAC") {
+        plateInput.value = "";
+        plateInput.readOnly = false;
+        plateInput.placeholder = "Nhập biển số xe";
+        plateInput.focus();
+        return;
+    }
+
+    const drivers = state.master_categories?.driver_vehicle_list?.items || DEFAULT_MASTER_CATEGORIES.driver_vehicle_list.items || [];
+    const drv = drivers.find(d => d.code === driverCode);
+    if (drv) {
+        plateInput.value = drv.plate || drv.code;
+    }
+};
+
+// Xử lý khi chọn Kho hàng xuất
+window.handleStockExportWarehouseChange = function(whCode) {
+    const locInput = document.getElementById("exportWarehouseLocation");
+    if (!locInput) return;
+
+    const warehouses = state.master_categories?.warehouse_list?.items || DEFAULT_MASTER_CATEGORIES.warehouse_list.items || [];
+    const wh = warehouses.find(w => w.code === whCode);
+    if (wh) {
+        locInput.value = wh.address || wh.name;
+    }
+};
+
+// Thêm dòng hàng hóa xuất kho (Chỉ cho phép nhập số theo các trường liên quan đến số lượng)
 window.addStockExportRow = function(item = {}) {
     const tbody = document.getElementById("stockExportItemsTableBody");
     if (!tbody) return;
@@ -38809,8 +39070,11 @@ window.addStockExportRow = function(item = {}) {
         prodOptions += `<option value="${p.sku}" data-name="${p.name}" data-unit="${p.unit || 'Cái'}" data-stock="${p.stock_qty || 0}" ${isSel}>${p.sku} - ${p.name} (Tồn: ${p.stock_qty})</option>`;
     });
 
+    const orderQty = (item.order_qty !== undefined) ? item.order_qty : (item.req_qty || 0);
+
     const tr = document.createElement("tr");
     tr.className = "stock-export-row";
+    tr.setAttribute("data-order-qty", orderQty);
     tr.innerHTML = `
         <td style="text-align:center; font-weight:bold;" class="row-stt">${rowIdx}</td>
         <td>
@@ -38825,19 +39089,20 @@ window.addStockExportRow = function(item = {}) {
             <input type="text" class="form-control row-item-sku" value="${item.sku || ''}" placeholder="Mã SKU" style="height:32px; font-size:0.82rem; text-align:center;">
         </td>
         <td>
-            <input type="text" class="form-control row-item-unit" value="${item.unit || 'Hộp'}" placeholder="ĐVT" style="height:32px; font-size:0.82rem; text-align:center;">
+            <input type="text" class="form-control row-item-unit" value="${item.unit || 'Cái'}" placeholder="ĐVT" style="height:32px; font-size:0.82rem; text-align:center;">
         </td>
         <td>
-            <input type="text" class="form-control row-item-req" value="${item.req_qty_note || ''}" placeholder="VD: 30 b x 8" style="height:32px; font-size:0.82rem; text-align:right;">
+            <input type="number" min="0" step="1" inputmode="numeric" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control row-item-req" value="${item.req_qty !== undefined ? item.req_qty : ''}" placeholder="SL Yêu cầu" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.85rem; text-align:right;">
         </td>
         <td>
-            <input type="number" min="1" class="form-control row-item-real" value="${item.real_qty || 0}" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.85rem; font-weight:bold; text-align:right; color:#108f53;">
+            <input type="number" min="0" step="1" inputmode="numeric" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control row-item-real" value="${item.real_qty !== undefined ? item.real_qty : 0}" oninput="window.recalcStockExportTotals()" style="height:32px; font-size:0.88rem; font-weight:bold; text-align:right; color:#108f53;">
+            <div class="row-qty-warning-box" style="font-size:0.75rem; font-weight:700; text-align:right; margin-top:2px;"></div>
         </td>
         <td>
-            <input type="text" class="form-control row-item-note" value="${item.note || ''}" placeholder="Ghi chú quy cách, kiện..." style="height:32px; font-size:0.82rem;">
+            <input type="text" class="form-control row-item-note" value="${item.note || ''}" placeholder="Ghi chú quy cách, số kiện..." style="height:32px; font-size:0.82rem;">
         </td>
         <td style="text-align:center;">
-            <button type="button" onclick="window.removeStockExportRow(this)" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:4px;">
+            <button type="button" onclick="window.removeStockExportRow(this)" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:4px;" title="Xóa dòng">
                 <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
             </button>
         </td>
@@ -38885,23 +39150,44 @@ window.handleStockExportRowProductSelect = function(selectEl) {
 window.handleStockExportReceiverChange = function(receiverName) {
     if (!receiverName) return;
     const nameInput = document.getElementById("exportReceiverName");
+    const compInput = document.getElementById("exportReceiverCompany");
+    const phoneInput = document.getElementById("exportReceiverPhone");
     const addressInput = document.getElementById("exportReceiverAddress");
 
     if (nameInput) nameInput.value = receiverName;
 
     const p = (state.partners || []).find(part => part.name === receiverName);
-    if (p && p.address && addressInput) {
-        addressInput.value = p.address;
+    if (p) {
+        if (compInput) compInput.value = p.company || p.name || "";
+        if (phoneInput) phoneInput.value = p.phone || p.hotline || "";
+        if (addressInput && p.address) addressInput.value = p.address;
     }
 };
 
+// Tính toán tổng số lượng và hiển thị cảnh báo Vượt / Thiếu so với đơn hàng
 window.recalcStockExportTotals = function() {
     const rows = document.querySelectorAll("#stockExportItemsTableBody tr.stock-export-row");
     let totalRealQty = 0;
 
     rows.forEach(r => {
         const realQty = Math.max(0, parseInt(r.querySelector(".row-item-real")?.value) || 0);
+        const orderQty = parseInt(r.getAttribute("data-order-qty")) || parseInt(r.querySelector(".row-item-req")?.value) || 0;
         totalRealQty += realQty;
+
+        const warnBox = r.querySelector(".row-qty-warning-box");
+        if (warnBox) {
+            if (orderQty > 0) {
+                if (realQty > orderQty) {
+                    warnBox.innerHTML = `<span style="color:#dc2626;">⚠️ Vượt đơn (+${(realQty - orderQty).toLocaleString('vi-VN')})</span>`;
+                } else if (realQty < orderQty) {
+                    warnBox.innerHTML = `<span style="color:#d97706;">⚡ Thiếu (-${(orderQty - realQty).toLocaleString('vi-VN')})</span>`;
+                } else {
+                    warnBox.innerHTML = `<span style="color:#059669;">✓ Đúng SL đơn</span>`;
+                }
+            } else {
+                warnBox.innerHTML = "";
+            }
+        }
     });
 
     const sumQtyEl = document.getElementById("exportSummaryTotalQty");
@@ -38957,7 +39243,7 @@ window.previewExportSignedPhoto = function() {
     window.openStockExportPhotoLightbox(window.currentExportVoucherPhoto, voucherNo);
 };
 
-// Lưu phiếu xuất kho
+// Lưu phiếu xuất kho & Cập nhật trạng thái đơn hàng
 window.submitStockExport = function(andPrint = false) {
     const receiverName = document.getElementById("exportReceiverName")?.value.trim();
     if (!receiverName) {
@@ -38975,6 +39261,7 @@ window.submitStockExport = function(andPrint = false) {
     const items = [];
     let totalRealQty = 0;
     let stockWarnings = [];
+    let orderQtyDiffWarnings = [];
 
     rows.forEach(r => {
         const name = r.querySelector(".row-item-name")?.value.trim() || "Hàng hóa";
@@ -38982,6 +39269,7 @@ window.submitStockExport = function(andPrint = false) {
         const unit = r.querySelector(".row-item-unit")?.value.trim() || "Cái";
         const reqQtyNote = r.querySelector(".row-item-req")?.value.trim() || "";
         const realQty = Math.max(0, parseInt(r.querySelector(".row-item-real")?.value) || 0);
+        const orderQty = parseInt(r.getAttribute("data-order-qty")) || parseInt(reqQtyNote) || 0;
         const note = r.querySelector(".row-item-note")?.value.trim() || "";
 
         if (realQty > 0) {
@@ -38990,10 +39278,20 @@ window.submitStockExport = function(andPrint = false) {
                 sku,
                 unit,
                 req_qty_note: reqQtyNote,
+                order_qty: orderQty,
                 real_qty: realQty,
                 note: note
             });
             totalRealQty += realQty;
+
+            // Kiểm tra cảnh báo chênh lệch với số lượng đơn hàng
+            if (orderQty > 0) {
+                if (realQty > orderQty) {
+                    orderQtyDiffWarnings.push(`- ${name}: Thực xuất ${realQty} VƯỢT QUÁ số lượng trong đơn (${orderQty})`);
+                } else if (realQty < orderQty) {
+                    orderQtyDiffWarnings.push(`- ${name}: Thực xuất ${realQty} THIẾU so với đơn (${orderQty})`);
+                }
+            }
 
             // Kiểm tra tồn kho
             if (sku) {
@@ -39010,22 +39308,47 @@ window.submitStockExport = function(andPrint = false) {
         return;
     }
 
+    // Hiển thị cảnh báo nếu số lượng xuất lệch với đơn hàng
+    if (orderQtyDiffWarnings.length > 0) {
+        const diffMsg = "CẢNH BÁO CHÊNH LỆCH SỐ LƯỢNG VỚI ĐƠN HÀNG:\n\n" + orderQtyDiffWarnings.join("\n") + "\n\nBạn có chắc chắn muốn lưu phiếu xuất với số lượng này không?";
+        if (!confirm(diffMsg)) return;
+    }
+
+    // Hiển thị cảnh báo nếu tồn kho không đủ
     if (stockWarnings.length > 0) {
-        const confirmMsg = "CẢNH BÁO TỒN KHO:\n" + stockWarnings.join("\n") + "\n\nBạn có muốn tiếp tục xuất kho không (tồn kho có thể bị âm)?";
+        const confirmMsg = "CẢNH BÁO TỒN KHO:\n\n" + stockWarnings.join("\n") + "\n\nBạn có muốn tiếp tục xuất kho không (tồn kho có thể bị âm)?";
         if (!confirm(confirmMsg)) return;
     }
 
-    const voucherNo = document.getElementById("exportVoucherNo")?.value.trim() || `PXK-${Date.now()}`;
+    // Số phiếu xuất kho: Luôn tự tăng và giữ nguyên
+    const voucherNo = document.getElementById("exportVoucherNo")?.value.trim() || window.generateNextStockExportVoucherNo();
+    const orderSelect = document.getElementById("exportOrderSelect");
+    const orderNumber = orderSelect?.value || "";
+    const statusVal = document.getElementById("exportStatusSelect")?.value || "COMPLETED";
+
     const date = document.getElementById("exportVoucherDate")?.value || new Date().toISOString().slice(0, 10);
     const unitName = document.getElementById("exportUnitName")?.value.trim() || "Công ty Cổ phần In Lạc Hồng";
+    const unitPhone = document.getElementById("exportUnitPhone")?.value.trim() || "0907.86.1111 - 024.3733.1111";
     const department = document.getElementById("exportDepartment")?.value.trim() || "Bộ phận Kinh doanh / Kho hàng";
     const sdnsCode = document.getElementById("exportSdnsCode")?.value.trim() || "";
     const debitAcc = document.getElementById("exportDebitAcc")?.value.trim() || "632";
     const creditAcc = document.getElementById("exportCreditAcc")?.value.trim() || "156";
+    
+    const receiverCompany = document.getElementById("exportReceiverCompany")?.value.trim() || "";
+    const receiverPhone = document.getElementById("exportReceiverPhone")?.value.trim() || "";
     const receiverAddress = document.getElementById("exportReceiverAddress")?.value.trim() || "";
+    
+    const drvSelect = document.getElementById("exportDriverVehicleSelect");
+    const driverCode = drvSelect?.value || "";
+    const driverName = drvSelect?.options[drvSelect.selectedIndex]?.getAttribute("data-name") || "";
     const vehiclePlate = document.getElementById("exportVehiclePlate")?.value.trim() || "";
+    
+    const whSelect = document.getElementById("exportWarehouseSelect");
+    const warehouseCode = whSelect?.value || "";
+    const warehouseName = whSelect?.options[whSelect.selectedIndex]?.getAttribute("data-name") || "";
+    const warehouseLocation = document.getElementById("exportWarehouseLocation")?.value.trim() || warehouseName;
+
     const reason = document.getElementById("exportReason")?.value.trim() || "Xuất giao hàng thành phẩm theo đơn";
-    const warehouseLocation = document.getElementById("exportWarehouseLocation")?.value.trim() || "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội";
     const destination = document.getElementById("exportDestination")?.value.trim() || "Hà Nội";
     const attachedDocs = document.getElementById("exportAttachedDocs")?.value.trim() || "";
     const signerCreator = document.getElementById("exportSignerCreator")?.value.trim() || "";
@@ -39039,18 +39362,27 @@ window.submitStockExport = function(andPrint = false) {
     const exportRecord = {
         id: recordId,
         voucher_no: voucherNo,
+        order_number: orderNumber,
+        status: statusVal,
         created_at: new Date().toISOString(),
         date: date,
         unit_name: unitName,
+        unit_phone: unitPhone,
         department: department,
         sdns_code: sdnsCode,
         debit_acc: debitAcc,
         credit_acc: creditAcc,
         receiver_name: receiverName,
+        receiver_company: receiverCompany,
+        receiver_phone: receiverPhone,
         receiver_address: receiverAddress,
+        driver_code: driverCode,
+        driver_name: driverName,
         vehicle_plate: vehiclePlate,
-        reason: reason,
+        warehouse_code: warehouseCode,
+        warehouse_name: warehouseName,
         warehouse_location: warehouseLocation,
+        reason: reason,
         destination: destination,
         items: items,
         total_real_qty: totalRealQty,
@@ -39096,6 +39428,21 @@ window.submitStockExport = function(andPrint = false) {
         }
     }
 
+    // 4. Cập nhật trạng thái giao hàng cho Đơn hàng tương ứng
+    if (orderNumber) {
+        const allOrders = [...(state.online_orders || []), ...(state.orders || [])];
+        const linkedOrder = allOrders.find(o => o.order_number === orderNumber || o.id === orderNumber);
+        if (linkedOrder) {
+            if (statusVal === "PARTIAL") {
+                linkedOrder.delivery_status = "PARTIAL";
+            } else if (statusVal === "COMPLETED") {
+                linkedOrder.delivery_status = "DELIVERED";
+            }
+            state.updateState("online_orders", state.online_orders);
+            state.updateState("orders", state.orders);
+        }
+    }
+
     state.updateState("online_products", state.online_products);
     state.updateState("online_stock_logs", state.online_stock_logs);
     state.updateState("online_export_records", state.online_export_records);
@@ -39109,11 +39456,12 @@ window.submitStockExport = function(andPrint = false) {
     if (andPrint) {
         window.openStockExportPrintModal(recordId);
     } else {
-        alert(`✅ ĐÃ LƯU PHIẾU XUẤT KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nNgười nhận: ${receiverName}\n${vehiclePlate ? 'Biển số xe: ' + vehiclePlate + '\n' : ''}Tổng thực xuất: ${totalRealQty.toLocaleString('vi-VN')} chiếc/bộ\n\nTồn kho đã được tự động trừ.`);
+        const statusText = statusVal === 'COMPLETED' ? 'Đã hoàn thành' : (statusVal === 'PARTIAL' ? 'Giao một phần' : 'Chờ xuất');
+        alert(`✅ ĐÃ LƯU PHIẾU XUẤT KHO THÀNH CÔNG!\n\nSố phiếu: ${voucherNo}\nTrạng thái: ${statusText}\nNgười nhận: ${receiverName} ${receiverPhone ? '(' + receiverPhone + ')' : ''}\n${vehiclePlate ? 'Biển số xe (BX): ' + vehiclePlate + '\n' : ''}Tổng thực xuất: ${totalRealQty.toLocaleString('vi-VN')} chiếc/bộ\n\nTồn kho và trạng thái đơn hàng đã được cập nhật.`);
     }
 };
 
-// Mở modal in ấn Mẫu số 02 - VT (Chuẩn 1 trang A4, In Lạc Hồng theme, bỏ ảnh đính kèm, bỏ subcol row)
+// Mở modal in ấn Mẫu số 02 - VT (Chuẩn 1 trang A4, In Lạc Hồng theme, Hotline & CSDL)
 window.openStockExportPrintModal = function(exportId) {
     const rec = (state.online_export_records || []).find(r => r.id === exportId);
     if (!rec) {
@@ -39134,7 +39482,7 @@ window.openStockExportPrintModal = function(exportId) {
     // Render bảng hàng hóa: STT, Sản phẩm / Hàng hóa, Mã số, ĐVT, Yêu cầu, Thực xuất, Ghi chú
     let rowsHtml = "";
     (rec.items || []).forEach((it, idx) => {
-        const reqStr = it.req_qty_note || (it.real_qty ? it.real_qty.toLocaleString('vi-VN') : "");
+        const reqStr = it.req_qty_note || (it.order_qty ? it.order_qty.toLocaleString('vi-VN') : (it.real_qty ? it.real_qty.toLocaleString('vi-VN') : ""));
         const realStr = it.real_qty ? it.real_qty.toLocaleString('vi-VN') : "0";
         const noteStr = it.note || "";
 
@@ -39171,10 +39519,19 @@ window.openStockExportPrintModal = function(exportId) {
         ? `<span class="mau-02-vt-bx-highlight">BX: ${rec.vehicle_plate}</span>` 
         : "";
 
+    const phoneHtml = rec.receiver_phone 
+        ? ` &nbsp; (Hotline/ĐT: <strong>${rec.receiver_phone}</strong>)` 
+        : "";
+
+    const companyHtml = rec.receiver_company 
+        ? `<div><strong>Đơn vị / Công ty:</strong> ${rec.receiver_company}</div>` 
+        : "";
+
     printContent.innerHTML = `
         <div class="mau-02-vt-header">
             <div class="mau-02-vt-header-left">
                 <strong>Đơn vị:</strong> ${rec.unit_name || "Công ty Cổ phần In Lạc Hồng"}<br>
+                <strong>Hotline:</strong> ${rec.unit_phone || "0907.86.1111 - 024.3733.1111"}<br>
                 <strong>Bộ phận:</strong> ${rec.department || "Bộ phận Kinh doanh / Kho hàng"}<br>
                 <strong>Mã đơn vị SDNS:</strong> ${rec.sdns_code || "......................."}
             </div>
@@ -39194,14 +39551,18 @@ window.openStockExportPrintModal = function(exportId) {
 
         <div class="mau-02-vt-meta-lines">
             <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
-                <div><strong>Họ tên người nhận hàng:</strong> ${rec.receiver_name}</div>
-                <div><strong>Địa chỉ (bộ phận):</strong> ${rec.receiver_address || "......................................."} &nbsp; ${bxHtml}</div>
+                <div><strong>Họ tên người nhận hàng:</strong> ${rec.receiver_name}${phoneHtml}</div>
+                <div>${companyHtml}</div>
+            </div>
+            <div class="mau-02-vt-meta-row" style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                <div><strong>Địa chỉ (bộ phận) nhận:</strong> ${rec.receiver_address || "......................................."}</div>
+                <div>${bxHtml}</div>
             </div>
             <div class="mau-02-vt-meta-row">
                 <strong>Lý do xuất kho:</strong> ${rec.reason || "......................................................................................................................."}
             </div>
             <div class="mau-02-vt-meta-row">
-                <strong>Xuất tại kho:</strong> ${rec.warehouse_location || "......................................."} &nbsp;&nbsp;&nbsp;&nbsp; <strong>địa điểm:</strong> ${rec.destination || "......................................."}
+                <strong>Xuất tại kho:</strong> ${rec.warehouse_location || rec.warehouse_name || "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội"} &nbsp;&nbsp;&nbsp;&nbsp; <strong>địa điểm:</strong> ${rec.destination || "......................................."}
             </div>
         </div>
 
