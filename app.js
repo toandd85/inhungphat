@@ -10094,9 +10094,32 @@ const DEFAULT_PARTNERS = [
     "note": "Chuyển khoản tài khoản chị liên"
   },
   {
+    "id": "p_ncc_decal_nguyen_xien",
+    "code": "NCC-TH-001",
+    "name": "Decal Nguyễn Xiển",
+    "contact_person": "Phụ trách Decal Nguyễn Xiển",
+    "company_name": "Nhà cung cấp Thương hiệu Decal Nguyễn Xiển",
+    "business_type": "ENTERPRISE",
+    "customer_type": "SUPPLIER",
+    "tax_code": "0106889922",
+    "billing_address": "Nguyễn Xiển, Thanh Xuân, Hà Nội",
+    "billing_email": "decalnguyenxien@supplier.vn",
+    "shipping_address": "Nguyễn Xiển, Thanh Xuân, Hà Nội",
+    "address": "Nguyễn Xiển, Thanh Xuân, Hà Nội",
+    "region": "Thành phố Hà Nội",
+    "ward": "Phường Khương Đình",
+    "phone": "0912345678",
+    "email": "decalnguyenxien@supplier.vn",
+    "role": "SUPPLIER",
+    "status": true,
+    "credit_limit": 100000000,
+    "note": "Nhà cung cấp thương hiệu Decal"
+  },
+  {
     "id": "p_ncc_lac_hong",
-    "code": "NCC-LACHONG",
-    "name": "In Lạc Hồng",
+    "code": "NCC-TH-002",
+    "name": "Lạc Hồng",
+    "contact_person": "Đại Hùng",
     "company_name": "Công ty Cổ phần In Lạc Hồng",
     "business_type": "ENTERPRISE",
     "customer_type": "SUPPLIER",
@@ -10115,37 +10138,10 @@ const DEFAULT_PARTNERS = [
     "ward": "Xã Tân Triều",
     "phone": "0987654321",
     "email": "xuongin@inlachong.vn",
-    "role": "SUPPLIER",
+    "role": "BOTH",
     "status": true,
-    "credit_limit": 500000000,
-    "note": "Xưởng in và gia công Lạc Hồng - NCC chính thức"
-  },
-  {
-    "id": "p_ncc_tuan_dung",
-    "code": "NCC-TUANDUNG",
-    "name": "Tuấn Dung",
-    "company_name": "Công ty Cổ phần In Tuấn Dung",
-    "business_type": "ENTERPRISE",
-    "customer_type": "SUPPLIER",
-    "legal_representative": "Anh Tuấn",
-    "representative_position": "Giám đốc điều hành",
-    "tax_code": "0105432198",
-    "bank_name": "Techcombank (Kỹ Thương Việt Nam)",
-    "bank_account_no": "19033456789012",
-    "bank_account_holder": "CÔNG TY CỔ PHẦN IN TUẤN DUNG",
-    "bank_branch": "Đống Đa, Hà Nội",
-    "billing_address": "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
-    "billing_email": "tuandung@supplier.vn",
-    "shipping_address": "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
-    "address": "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
-    "region": "Thành phố Hà Nội",
-    "ward": "Phường Trung Liệt",
-    "phone": "0934567890",
-    "email": "tuandung@supplier.vn",
-    "role": "SUPPLIER",
-    "status": true,
-    "credit_limit": 200000000,
-    "note": "Nhà cung cấp thương hiệu Hộp Tuấn Dung"
+    "credit_limit": 100000000,
+    "note": "Xưởng in và gia công Lạc Hồng"
   }
 ];
 
@@ -11625,20 +11621,26 @@ class AppState {
     constructor() {
         this.partners = this.load("partners", DEFAULT_PARTNERS);
 
-        // Đảm bảo lọc sạch toàn bộ nhà cung cấp, CHỈ GIỮ LẠI IN LẠC HỒNG VÀ TUẤN DUNG
+        // Đảm bảo lọc sạch toàn bộ nhà cung cấp, CHỈ GIỮ LẠI NCC-TH-001 (Decal Nguyễn Xiển) VÀ NCC-TH-002 (Lạc Hồng)
+        if (!localStorage.getItem("ihp_clean_suppliers_20261022_strict_v4")) {
+            localStorage.removeItem("ihp_partners");
+            localStorage.removeItem("partners");
+            this.partners = this.load("partners", DEFAULT_PARTNERS);
+            localStorage.setItem("ihp_clean_suppliers_20261022_strict_v4", "true");
+        }
+
         if (Array.isArray(this.partners)) {
-            const isAllowedSupplier = (p) => {
+            const isTargetSupplier = (p) => {
                 if (!p) return false;
-                const n = (p.name || '').toLowerCase();
-                const c = (p.code || '').toLowerCase();
-                const comp = (p.company_name || '').toLowerCase();
-                return n.includes('lạc hồng') || c.includes('lachong') || comp.includes('lạc hồng') ||
-                       n.includes('tuấn dung') || c.includes('tuandung') || comp.includes('tuấn dung');
+                const c = (p.code || '').trim().toUpperCase();
+                const id = (p.id || '').trim();
+                return c === 'NCC-TH-001' || id === 'p_ncc_decal_nguyen_xien' ||
+                       c === 'NCC-TH-002' || id === 'p_ncc_lac_hong' || c === 'NCC-LACHONG';
             };
 
             let cleanedPartners = [];
-            let seenLacHong = false;
-            let seenTuanDung = false;
+            let seenTH001 = false;
+            let seenTH002 = false;
 
             for (const p of this.partners) {
                 if (!p) continue;
@@ -11647,25 +11649,50 @@ class AppState {
                     continue;
                 }
 
-                const isSup = (p.role === 'SUPPLIER' || p.role === 'BOTH' || p.customer_type === 'SUPPLIER' || p.customer_type === 'NCC');
+                const isSup = (p.role === 'SUPPLIER' || p.role === 'BOTH' || p.customer_type === 'SUPPLIER' || p.customer_type === 'NCC' || String(p.code || '').startsWith('NCC'));
 
                 if (isSup) {
-                    if (isAllowedSupplier(p)) {
+                    if (isTargetSupplier(p)) {
+                        const c = (p.code || '').trim().toUpperCase();
+                        const id = (p.id || '').trim();
                         const n = (p.name || '').toLowerCase();
-                        const c = (p.code || '').toLowerCase();
-                        const isLH = n.includes('lạc hồng') || c.includes('lachong');
-                        const isTD = n.includes('tuấn dung') || c.includes('tuandung');
 
-                        if (isLH) {
-                            if (!seenLacHong) {
-                                seenLacHong = true;
+                        if (c === 'NCC-TH-001' || id === 'p_ncc_decal_nguyen_xien' || n.includes('nguyễn xiển') || n.includes('decal')) {
+                            if (!seenTH001) {
+                                seenTH001 = true;
+                                p.id = "p_ncc_decal_nguyen_xien";
+                                p.code = "NCC-TH-001";
+                                p.name = "Decal Nguyễn Xiển";
+                                p.company_name = "Nhà cung cấp Thương hiệu Decal Nguyễn Xiển";
+                                p.business_type = "ENTERPRISE";
+                                p.customer_type = "SUPPLIER";
+                                p.contact_person = "Phụ trách Decal Nguyễn Xiển";
+                                p.tax_code = "0106889922";
+                                p.billing_address = "Nguyễn Xiển, Thanh Xuân, Hà Nội";
+                                p.billing_email = "decalnguyenxien@supplier.vn";
+                                p.shipping_address = "Nguyễn Xiển, Thanh Xuân, Hà Nội";
+                                p.address = "Nguyễn Xiển, Thanh Xuân, Hà Nội";
+                                p.region = "Thành phố Hà Nội";
+                                p.ward = "Phường Khương Đình";
+                                p.phone = "0912345678";
+                                p.email = "decalnguyenxien@supplier.vn";
+                                p.role = "SUPPLIER";
+                                p.status = true;
+                                p.credit_limit = 100000000;
+                                p.note = "Nhà cung cấp thương hiệu Decal";
+                                cleanedPartners.push(p);
+                            }
+                        } else if (c === 'NCC-TH-002' || id === 'p_ncc_lac_hong' || c === 'NCC-LACHONG' || n.includes('lạc hồng')) {
+                            if (!seenTH002) {
+                                seenTH002 = true;
                                 p.id = "p_ncc_lac_hong";
-                                p.code = "NCC-LACHONG";
-                                p.name = "In Lạc Hồng";
+                                p.code = "NCC-TH-002";
+                                p.name = "Lạc Hồng";
                                 p.company_name = "Công ty Cổ phần In Lạc Hồng";
                                 p.business_type = "ENTERPRISE";
                                 p.customer_type = "SUPPLIER";
                                 p.legal_representative = "Đại Hùng";
+                                p.contact_person = "Đại Hùng";
                                 p.representative_position = "Giám đốc";
                                 p.tax_code = "0106123456";
                                 p.bank_name = "Vietcombank (Ngoại Thương Việt Nam)";
@@ -11680,40 +11707,10 @@ class AppState {
                                 p.ward = "Xã Tân Triều";
                                 p.phone = "0987654321";
                                 p.email = "xuongin@inlachong.vn";
-                                p.role = "SUPPLIER";
+                                p.role = "BOTH";
                                 p.status = true;
-                                p.credit_limit = 500000000;
-                                p.note = "Xưởng in và gia công Lạc Hồng - NCC chính thức";
-                                cleanedPartners.push(p);
-                            }
-                        } else if (isTD) {
-                            if (!seenTuanDung) {
-                                seenTuanDung = true;
-                                p.id = "p_ncc_tuan_dung";
-                                p.code = "NCC-TUANDUNG";
-                                p.name = "Tuấn Dung";
-                                p.company_name = "Công ty Cổ phần In Tuấn Dung";
-                                p.business_type = "ENTERPRISE";
-                                p.customer_type = "SUPPLIER";
-                                p.legal_representative = "Anh Tuấn";
-                                p.representative_position = "Giám đốc điều hành";
-                                p.tax_code = "0105432198";
-                                p.bank_name = "Techcombank (Kỹ Thương Việt Nam)";
-                                p.bank_account_no = "19033456789012";
-                                p.bank_account_holder = "CÔNG TY CỔ PHẦN IN TUẤN DUNG";
-                                p.bank_branch = "Đống Đa, Hà Nội";
-                                p.billing_address = "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
-                                p.billing_email = "tuandung@supplier.vn";
-                                p.shipping_address = "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
-                                p.address = "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
-                                p.region = "Thành phố Hà Nội";
-                                p.ward = "Phường Trung Liệt";
-                                p.phone = "0934567890";
-                                p.email = "tuandung@supplier.vn";
-                                p.role = "SUPPLIER";
-                                p.status = true;
-                                p.credit_limit = 200000000;
-                                p.note = "Nhà cung cấp thương hiệu Hộp Tuấn Dung";
+                                p.credit_limit = 100000000;
+                                p.note = "Xưởng in và gia công Lạc Hồng";
                                 cleanedPartners.push(p);
                             }
                         }
@@ -11725,26 +11722,47 @@ class AppState {
                                 p.customer_type = 'DIRECT';
                             }
                             cleanedPartners.push(p);
-                        } else if (p.role === 'SUPPLIER') {
-                            // Xoá hoàn toàn nhà cung cấp không thuộc danh sách cho phép
-                        } else {
-                            if (p.customer_type === 'SUPPLIER' || p.customer_type === 'NCC') {
-                                p.customer_type = 'DIRECT';
-                            }
-                            cleanedPartners.push(p);
                         }
+                        // Xoá hoàn toàn tất cả các nhà cung cấp khác
                     }
                 } else {
                     cleanedPartners.push(p);
                 }
             }
 
-            // Đảm bảo luôn có In Lạc Hồng
-            if (!seenLacHong) {
+            // Đảm bảo luôn có NCC-TH-001
+            if (!seenTH001) {
+                cleanedPartners.push({
+                    id: "p_ncc_decal_nguyen_xien",
+                    code: "NCC-TH-001",
+                    name: "Decal Nguyễn Xiển",
+                    contact_person: "Phụ trách Decal Nguyễn Xiển",
+                    company_name: "Nhà cung cấp Thương hiệu Decal Nguyễn Xiển",
+                    business_type: "ENTERPRISE",
+                    customer_type: "SUPPLIER",
+                    tax_code: "0106889922",
+                    billing_address: "Nguyễn Xiển, Thanh Xuân, Hà Nội",
+                    billing_email: "decalnguyenxien@supplier.vn",
+                    shipping_address: "Nguyễn Xiển, Thanh Xuân, Hà Nội",
+                    address: "Nguyễn Xiển, Thanh Xuân, Hà Nội",
+                    region: "Thành phố Hà Nội",
+                    ward: "Phường Khương Đình",
+                    phone: "0912345678",
+                    email: "decalnguyenxien@supplier.vn",
+                    role: "SUPPLIER",
+                    status: true,
+                    credit_limit: 100000000,
+                    note: "Nhà cung cấp thương hiệu Decal"
+                });
+            }
+
+            // Đảm bảo luôn có NCC-TH-002
+            if (!seenTH002) {
                 cleanedPartners.push({
                     id: "p_ncc_lac_hong",
-                    code: "NCC-LACHONG",
-                    name: "In Lạc Hồng",
+                    code: "NCC-TH-002",
+                    name: "Lạc Hồng",
+                    contact_person: "Đại Hùng",
                     company_name: "Công ty Cổ phần In Lạc Hồng",
                     business_type: "ENTERPRISE",
                     customer_type: "SUPPLIER",
@@ -11763,47 +11781,16 @@ class AppState {
                     ward: "Xã Tân Triều",
                     phone: "0987654321",
                     email: "xuongin@inlachong.vn",
-                    role: "SUPPLIER",
+                    role: "BOTH",
                     status: true,
-                    credit_limit: 500000000,
-                    note: "Xưởng in và gia công Lạc Hồng - NCC chính thức"
-                });
-            }
-
-            // Đảm bảo luôn có Tuấn Dung
-            if (!seenTuanDung) {
-                cleanedPartners.push({
-                    id: "p_ncc_tuan_dung",
-                    code: "NCC-TUANDUNG",
-                    name: "Tuấn Dung",
-                    company_name: "Công ty Cổ phần In Tuấn Dung",
-                    business_type: "ENTERPRISE",
-                    customer_type: "SUPPLIER",
-                    legal_representative: "Anh Tuấn",
-                    representative_position: "Giám đốc điều hành",
-                    tax_code: "0105432198",
-                    bank_name: "Techcombank (Kỹ Thương Việt Nam)",
-                    bank_account_no: "19033456789012",
-                    bank_account_holder: "CÔNG TY CỔ PHẦN IN TUẤN DUNG",
-                    bank_branch: "Đống Đa, Hà Nội",
-                    billing_address: "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
-                    billing_email: "tuandung@supplier.vn",
-                    shipping_address: "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
-                    address: "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội",
-                    region: "Thành phố Hà Nội",
-                    ward: "Phường Trung Liệt",
-                    phone: "0934567890",
-                    email: "tuandung@supplier.vn",
-                    role: "SUPPLIER",
-                    status: true,
-                    credit_limit: 200000000,
-                    note: "Nhà cung cấp thương hiệu Hộp Tuấn Dung"
+                    credit_limit: 100000000,
+                    note: "Xưởng in và gia công Lạc Hồng"
                 });
             }
 
             this.partners = cleanedPartners;
             this.save("partners", cleanedPartners);
-            localStorage.setItem("ihp_clean_suppliers_20261022_strict_v2", "true");
+            localStorage.setItem("ihp_clean_suppliers_20261022_strict_v4", "true");
         }
         this.materials = this.load("materials", DEFAULT_MATERIALS);
         this.orders = this.load("orders", []);
