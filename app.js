@@ -22484,7 +22484,8 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
     document.querySelectorAll(".online-subtab-pane").forEach(pane => {
         pane.style.display = "none";
     });
-    const targetPane = document.getElementById(`subtab-${subtab}`);
+    const effectivePaneId = subtab === "online-shipping-report" ? "subtab-online-warehouse-report" : `subtab-${subtab}`;
+    const targetPane = document.getElementById(effectivePaneId);
     if (targetPane) {
         targetPane.style.display = "block";
     }
@@ -22522,7 +22523,15 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
     } else if (subtab === "online-warehouse-report") {
         if (window.renderWarehouseReport) window.renderWarehouseReport();
     } else if (subtab === "online-shipping-report") {
+        if (window.renderWarehouseReport) window.renderWarehouseReport();
+        if (window.switchWhReportModel) window.switchWhReportModel('shipping');
         if (window.renderShippingReport) window.renderShippingReport();
+        setTimeout(() => {
+            const shipSec = document.getElementById("subtab-online-shipping-report");
+            if (shipSec) {
+                shipSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 120);
     } else if (subtab === "online-import-goods") {
         if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
     } else if (subtab === "online-export-goods") {
@@ -41569,8 +41578,10 @@ window.renderProductsReport = function() {
     const granText = granularity === "daily" ? "Theo Ngày" : granularity === "weekly" ? "Theo Tuần" : granularity === "monthly" ? "Theo Tháng" : "Theo Năm";
     const badge1 = document.getElementById("chart1TimeBadge");
     const badge2 = document.getElementById("chart2TimeBadge");
+    const badge6 = document.getElementById("prodChart6TimeBadge");
     if (badge1) badge1.textContent = granText;
     if (badge2) badge2.textContent = granText;
+    if (badge6) badge6.textContent = granText;
 
     const chartLabels = intervals.map(iv => iv.label);
 
@@ -42012,9 +42023,97 @@ window.renderProductsReport = function() {
         if (fMarginEl) fMarginEl.textContent = `${overallMargin}%`;
     }
 
+    // Render Model 6 Combo Line/Bar Chart for Product Report
+    _createOrUpdateProdChart("prodChartRevenueCostCombo", {
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Doanh thu bán',
+                    data: intervals.map(iv => Math.round(iv.revenue)),
+                    backgroundColor: 'rgba(16, 143, 83, 0.82)',
+                    borderColor: '#108f53',
+                    borderWidth: 1.5,
+                    borderRadius: 4,
+                    order: 2
+                },
+                {
+                    type: 'bar',
+                    label: 'Giá vốn hàng bán',
+                    data: intervals.map(iv => Math.round(iv.cost)),
+                    backgroundColor: 'rgba(100, 116, 139, 0.75)',
+                    borderColor: '#64748b',
+                    borderWidth: 1.5,
+                    borderRadius: 4,
+                    order: 3
+                },
+                {
+                    type: 'line',
+                    label: 'Lợi nhuận gộp',
+                    data: intervals.map(iv => Math.round(iv.profit)),
+                    borderColor: '#7c3aed',
+                    backgroundColor: 'rgba(124, 58, 237, 0.12)',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#7c3aed',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    tension: 0.32,
+                    fill: false,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${formatMoney(context.parsed.y)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 },
+                        callback: val => formatMoney(val)
+                    }
+                }
+            }
+        }
+    });
+
     // Refresh icons
     if (window.lucide && typeof lucide.createIcons === 'function') {
         lucide.createIcons();
+    }
+};
+
+// Ẩn / Hiện bảng số liệu chi tiết Mẫu 6 Báo cáo Hàng hóa
+window.toggleProdModel6Table = function() {
+    const wrap = document.getElementById("prodModel6TableWrapper");
+    const txt = document.getElementById("prodModel6ToggleTableText");
+    if (!wrap) return;
+    if (wrap.style.display === "none" || wrap.style.display === "") {
+        wrap.style.display = "block";
+        if (txt) txt.textContent = "Ẩn bảng số liệu";
+    } else {
+        wrap.style.display = "none";
+        if (txt) txt.textContent = "Xem bảng số liệu";
     }
 };
 
@@ -42244,11 +42343,31 @@ window.switchWhReportModel = function(modelId) {
         }
     });
 
+    // Ẩn/hiện phần Báo cáo Vận chuyển
+    const shipSec = document.getElementById("subtab-online-shipping-report");
+    if (shipSec) {
+        if (modelId === "all" || modelId === "shipping") {
+            shipSec.style.display = "";
+            if (modelId === "shipping") {
+                setTimeout(() => {
+                    shipSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        } else {
+            shipSec.style.display = "none";
+        }
+    }
+
     // Tự động căn chỉnh và resize biểu đồ khớp chuẩn 100% khung hình mobile
     setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
         if (window._whCharts) {
             Object.values(window._whCharts).forEach(c => {
+                try { if (c && typeof c.resize === 'function') c.resize(); } catch(e){}
+            });
+        }
+        if (window._shipCharts) {
+            Object.values(window._shipCharts).forEach(c => {
                 try { if (c && typeof c.resize === 'function') c.resize(); } catch(e){}
             });
         }
@@ -42681,8 +42800,10 @@ window.renderWarehouseReport = function() {
     const granText = granularity === "daily" ? "Theo Ngày" : granularity === "weekly" ? "Theo Tuần" : granularity === "monthly" ? "Theo Tháng" : "Theo Năm";
     const badge1 = document.getElementById("whChart1TimeBadge");
     const badge2 = document.getElementById("whChart2TimeBadge");
+    const badge6 = document.getElementById("whChart6TimeBadge");
     if (badge1) badge1.textContent = granText;
     if (badge2) badge2.textContent = granText;
+    if (badge6) badge6.textContent = granText;
 
     const chartLabels = intervals.map(iv => iv.label);
 
@@ -43115,9 +43236,180 @@ window.renderWarehouseReport = function() {
         if (fStockValEl) fStockValEl.textContent = formatMoney(Math.round(currentTotalStockCost));
     }
 
+    // Cache intervals for metric toggling and render Model 6 Combo Line/Bar Chart
+    window._whLastIntervals = intervals;
+    window._whLastChartLabels = chartLabels;
+    _renderWhModel6Chart(intervals, chartLabels);
+
+    // Đồng thời cập nhật Báo cáo Vận chuyển & Giao hàng ở bên dưới
+    if (window.renderShippingReport) {
+        window.renderShippingReport();
+    }
+
     // Refresh icons
     if (window.lucide && typeof lucide.createIcons === 'function') {
         lucide.createIcons();
+    }
+};
+
+// ==========================================================================
+// HÀM VẼ BIỂU ĐỒ ĐƯỜNG/CỘT MẪU 6 (CÂN ĐỐI NHẬP - XUẤT - TỒN THEO THỜI GIAN)
+// ==========================================================================
+function _renderWhModel6Chart(intervals, chartLabels) {
+    if (!intervals || !chartLabels) return;
+    const isDark = document.body.classList.contains("dark-mode") || document.documentElement.getAttribute("data-theme") === "dark";
+    const textColor = isDark ? "#cbd5e1" : "#475569";
+    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+    const metric = window._whModel6Metric || 'qty';
+
+    const btnQty = document.getElementById("btnWhM6Qty");
+    const btnVal = document.getElementById("btnWhM6Val");
+    const legImp = document.getElementById("whM6LegImp");
+    const legExp = document.getElementById("whM6LegExp");
+    const legStock = document.getElementById("whM6LegStock");
+
+    if (btnQty && btnVal) {
+        if (metric === 'qty') {
+            btnQty.style.background = "#0284c7";
+            btnQty.style.color = "#ffffff";
+            btnQty.style.fontWeight = "700";
+            btnVal.style.background = "transparent";
+            btnVal.style.color = "var(--text-secondary)";
+            btnVal.style.fontWeight = "600";
+        } else {
+            btnVal.style.background = "#0284c7";
+            btnVal.style.color = "#ffffff";
+            btnVal.style.fontWeight = "700";
+            btnQty.style.background = "transparent";
+            btnQty.style.color = "var(--text-secondary)";
+            btnQty.style.fontWeight = "600";
+        }
+    }
+
+    let impData, expData, stockData;
+    let impLabel, expLabel, stockLabel;
+
+    if (metric === 'val') {
+        impData = intervals.map(iv => Math.round(iv.importVal));
+        expData = intervals.map(iv => Math.round(iv.exportVal));
+        stockData = intervals.map(iv => Math.round(iv.runningStockVal));
+        impLabel = 'Tiền Nhập kho (VAT)';
+        expLabel = 'Tiền Xuất kho (VAT)';
+        stockLabel = 'Giá trị Tồn cuối kỳ';
+        if (legImp) legImp.textContent = 'Cột: Tiền Nhập kho (VAT)';
+        if (legExp) legExp.textContent = 'Cột: Tiền Xuất kho (VAT)';
+        if (legStock) legStock.textContent = 'Đường: Giá trị tồn cuối kỳ';
+    } else {
+        impData = intervals.map(iv => iv.importQty);
+        expData = intervals.map(iv => iv.exportQty);
+        stockData = intervals.map(iv => iv.runningStockQty);
+        impLabel = 'SL Nhập kho';
+        expLabel = 'SL Xuất kho';
+        stockLabel = 'Tồn kho thực tế cuối kỳ';
+        if (legImp) legImp.textContent = 'Cột: SL Nhập kho';
+        if (legExp) legExp.textContent = 'Cột: SL Xuất kho';
+        if (legStock) legStock.textContent = 'Đường: Tồn kho thực tế cuối kỳ';
+    }
+
+    _createOrUpdateWhChart("whChartBalanceCombo", {
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: impLabel,
+                    data: impData,
+                    backgroundColor: 'rgba(2, 132, 199, 0.82)',
+                    borderColor: '#0284c7',
+                    borderWidth: 1.5,
+                    borderRadius: 4,
+                    order: 2
+                },
+                {
+                    type: 'bar',
+                    label: expLabel,
+                    data: expData,
+                    backgroundColor: 'rgba(234, 88, 12, 0.82)',
+                    borderColor: '#ea580c',
+                    borderWidth: 1.5,
+                    borderRadius: 4,
+                    order: 3
+                },
+                {
+                    type: 'line',
+                    label: stockLabel,
+                    data: stockData,
+                    borderColor: '#108f53',
+                    backgroundColor: 'rgba(16, 143, 83, 0.12)',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#108f53',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    tension: 0.32,
+                    fill: false,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            if (metric === 'val') {
+                                return `${context.dataset.label}: ${formatMoney(context.parsed.y)}`;
+                            } else {
+                                return `${context.dataset.label}: ${context.parsed.y.toLocaleString('vi-VN')} cái/hộp`;
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 },
+                        callback: val => metric === 'val' ? formatMoney(val) : val.toLocaleString('vi-VN')
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Chuyển đổi metric Sản lượng / Giá trị trong Mẫu 6
+window.setWhModel6Metric = function(m) {
+    window._whModel6Metric = m;
+    if (window._whLastIntervals && window._whLastChartLabels) {
+        _renderWhModel6Chart(window._whLastIntervals, window._whLastChartLabels);
+    } else {
+        window.renderWarehouseReport();
+    }
+};
+
+// Ẩn / Hiện bảng số liệu chi tiết Mẫu 6
+window.toggleWhModel6Table = function() {
+    const wrap = document.getElementById("whModel6TableWrapper");
+    const txt = document.getElementById("whModel6ToggleTableText");
+    if (!wrap) return;
+    if (wrap.style.display === "none" || wrap.style.display === "") {
+        wrap.style.display = "block";
+        if (txt) txt.textContent = "Ẩn bảng số liệu";
+    } else {
+        wrap.style.display = "none";
+        if (txt) txt.textContent = "Xem bảng số liệu";
     }
 };
 

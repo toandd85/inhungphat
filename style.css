@@ -9354,7 +9354,8 @@ select.form-select, .form-select {
     }
 
     #prodReportTimePresets,
-    #whReportTimePresets {
+    #whReportTimePresets,
+    #shipReportTimePresets {
         display: flex !important;
         flex-wrap: nowrap !important;
         overflow-x: auto !important;
@@ -9364,7 +9365,8 @@ select.form-select, .form-select {
     }
 
     #prodReportTimePresets button,
-    #whReportTimePresets button {
+    #whReportTimePresets button,
+    #shipReportTimePresets button {
         white-space: nowrap !important;
         flex-shrink: 0 !important;
     }
