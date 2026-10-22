@@ -9185,5 +9185,173 @@ select.form-select, .form-select {
     }
 }
 
+/* ==========================================================================
+   MOBILE-FIRST UI/UX OPTIMIZATIONS FOR REPORTS (HÀNG HÓA, KHO VẬN, VẬN CHUYỂN)
+   ========================================================================== */
 
+/* Universal report chart grid layout */
+.report-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+    gap: 18px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
 
+/* Report cards & chart canvas boundaries */
+.prod-report-card,
+.wh-report-card,
+.ship-report-model-pane .card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+.prod-report-card canvas,
+.wh-report-card canvas,
+.ship-report-model-pane canvas {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Model Switcher: Desktop tabs vs Mobile droplist */
+.report-model-select-wrapper {
+    display: none;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.report-model-tabs-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.report-model-tabs-bar button {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+.mobile-report-droplist-card {
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.mobile-report-droplist-card:focus-within {
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2) !important;
+}
+
+.mobile-report-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: none !important;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+/* Mobile viewport adjustments (<= 768px) */
+@media (max-width: 768px) {
+    /* 1. Switch to droplist on mobile */
+    .report-model-tabs-bar {
+        display: none !important;
+    }
+
+    .report-model-select-wrapper {
+        display: block !important;
+    }
+
+    /* 2. Fit all report charts into viewport cleanly (1 column, full width) */
+    .report-charts-grid {
+        grid-template-columns: 100% !important;
+        gap: 14px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* 3. Compact padding on report cards for mobile screen efficiency */
+    .prod-report-card,
+    .wh-report-card,
+    #subtab-online-products-report .card,
+    #subtab-online-warehouse-report .card,
+    #subtab-online-shipping-report .card {
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* 4. Chart height & canvas safety */
+    .prod-report-card > div[style*="position:relative"],
+    .wh-report-card > div[style*="position:relative"] {
+        height: 250px !important;
+        min-height: 250px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    /* 5. Header wrapping on mobile */
+    .prod-report-card > div:first-child,
+    .wh-report-card > div:first-child {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    .prod-report-card h4,
+    .wh-report-card h4 {
+        font-size: 0.88rem !important;
+        line-height: 1.35 !important;
+    }
+
+    /* 6. Filter Controls on mobile */
+    #subtab-online-products-report .card select.form-select,
+    #subtab-online-warehouse-report .card select.form-select {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    #prodReportCustomDateWrapper,
+    #whReportCustomDateWrapper {
+        width: 100% !important;
+        display: flex !important;
+        gap: 6px !important;
+    }
+
+    #prodReportCustomDateWrapper input[type="date"],
+    #whReportCustomDateWrapper input[type="date"] {
+        flex: 1 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    #prodReportTimePresets,
+    #whReportTimePresets {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 4px !important;
+        width: 100% !important;
+    }
+
+    #prodReportTimePresets button,
+    #whReportTimePresets button {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* 7. Responsive scroll for tables */
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

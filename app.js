@@ -11085,69 +11085,324 @@ const DEFAULT_ONLINE_STOCK_LOGS = [
 
 const DEFAULT_ONLINE_EXPORT_RECORDS = [
     {
+        id: "PXK-20261016-001",
+        voucher_no: "PXK-20261016-001",
+        created_at: "2026-10-16T08:30:00Z",
+        date: "2026-10-16",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Nguyễn Văn Hùng",
+        driver_phone: "0983.123.456",
+        vehicle_plate: "29H-67323",
+        vehicle_type: "Xe tải 1.5 tấn",
+        receiver_name: "Anh Hoàng - Kho Đống Đa",
+        receiver_company: "Cty CP Bao Bì Hà Nội",
+        receiver_phone: "0988.223.344",
+        receiver_address: "128 Tây Sơn, Đống Đa, Hà Nội",
+        reason: "Xuất giao hộp quà tặng Tết theo đơn",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            { sku: "S36", name: "Hộp quà Tết S36", unit: "Hộp", real_qty: 300, price: 85000, total: 25500000 },
+            { sku: "P33", name: "Hộp quà Tết P33", unit: "Hộp", real_qty: 250, price: 68000, total: 17000000 }
+        ],
+        total_real_qty: 550,
+        total_amount: 42500000,
+        amount_in_words: "Bốn mươi hai triệu năm trăm nghìn đồng",
+        attached_docs: "Hóa đơn HD-202610-011",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261017-001",
+        voucher_no: "PXK-20261017-001",
+        created_at: "2026-10-17T09:15:00Z",
+        date: "2026-10-17",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Trần Quốc Tuấn",
+        driver_phone: "0912.456.789",
+        vehicle_plate: "29C-88219",
+        vehicle_type: "Xe tải 2.5 tấn",
+        receiver_name: "Chị Minh - Kế toán",
+        receiver_company: "Xưởng Bánh Mứt Kẹo Thăng Long",
+        receiver_phone: "0912.334.556",
+        receiver_address: "Cụm CN Từ Liêm, Hà Nội",
+        reason: "Xuất giao lô hộp bánh mứt kẹo vụ Tết",
+        warehouse_location: "Kho Xưởng Đan Phượng - Cụm CN Song Phượng",
+        destination: "Hà Nội",
+        items: [
+            { sku: "G36", name: "Hộp quà Tết G36", unit: "Hộp", real_qty: 500, price: 78000, total: 39000000 },
+            { sku: "G07", name: "Hộp quà Tết G07", unit: "Hộp", real_qty: 380, price: 77000, total: 29260000 }
+        ],
+        total_real_qty: 880,
+        total_amount: 68260000,
+        amount_in_words: "Sáu mươi tám triệu hai trăm sáu mươi nghìn đồng",
+        attached_docs: "Hợp đồng kinh tế HĐ-TL-2026",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261018-001",
+        voucher_no: "PXK-20261018-001",
+        created_at: "2026-10-18T10:00:00Z",
+        date: "2026-10-18",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Lê Hoàng Long",
+        driver_phone: "0978.654.321",
+        vehicle_plate: "29D-51280",
+        vehicle_type: "Xe van 850kg",
+        receiver_name: "A. Thắng - Quản lý",
+        receiver_company: "Showroom Trà Sen Tây Hồ",
+        receiver_phone: "0904.556.778",
+        receiver_address: "68 Quảng Bá, Tây Hồ, Hà Nội",
+        reason: "Giao hộp quà trà sen cao cấp",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            { sku: "M36", name: "Hộp quà Tết M36", unit: "Hộp", real_qty: 200, price: 92000, total: 18400000 },
+            { sku: "H36", name: "Hộp quà Tết H36", unit: "Hộp", real_qty: 140, price: 88000, total: 12320000 }
+        ],
+        total_real_qty: 340,
+        total_amount: 30720000,
+        amount_in_words: "Ba mươi triệu bảy trăm hai mươi nghìn đồng",
+        attached_docs: "Đơn SO-TS-1810",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261019-001",
+        voucher_no: "PXK-20261019-001",
+        created_at: "2026-10-19T08:45:00Z",
+        date: "2026-10-19",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Đỗ Trọng Nghĩa",
+        driver_phone: "0965.888.999",
+        vehicle_plate: "29A-34195",
+        vehicle_type: "Xe bán tải giao nhanh",
+        receiver_name: "Chị Hạnh",
+        receiver_company: "Đại lý Yến Sào Khánh Hòa HN",
+        receiver_phone: "0977.889.900",
+        receiver_address: "210 Xã Đàn, Đống Đa, Hà Nội",
+        reason: "Xuất khay định hình và hộp yến sào",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            { sku: "S38", name: "Hộp quà Tết S38", unit: "Hộp", real_qty: 160, price: 95000, total: 15200000 },
+            { sku: "T40", name: "Hộp quà Tết T40", unit: "Hộp", real_qty: 100, price: 82000, total: 8200000 }
+        ],
+        total_real_qty: 260,
+        total_amount: 23400000,
+        amount_in_words: "Hai mươi ba triệu bốn trăm nghìn đồng",
+        attached_docs: "Phiếu giao nhận số 045",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261019-002",
+        voucher_no: "PXK-20261019-002",
+        created_at: "2026-10-19T14:20:00Z",
+        date: "2026-10-19",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Nhà xe Thái Thương",
+        driver_phone: "0945.566.368",
+        vehicle_plate: "Xe khách gửi tỉnh",
+        vehicle_type: "Xe khách liên tỉnh",
+        receiver_name: "A. Hải - Hải Phòng",
+        receiver_company: "Đại lý Hộp Quà HP",
+        receiver_phone: "0936.778.899",
+        receiver_address: "Bến xe Vĩnh Niệm, Lê Chân, Hải Phòng",
+        reason: "Gửi xe khách tuyến Hà Nội - Hải Phòng",
+        warehouse_location: "Kho Long Biên - Khu CN Đài Tư",
+        destination: "Hải Phòng",
+        items: [
+            { sku: "SIZE-B-RED", name: "2B H36-02 Đỏ", unit: "Hộp", real_qty: 350, price: 75000, total: 26250000 },
+            { sku: "TP-40-GOLD", name: "TP-40 H36-01 Vàng", unit: "Hộp", real_qty: 250, price: 80000, total: 20000000 }
+        ],
+        total_real_qty: 600,
+        total_amount: 46250000,
+        amount_in_words: "Bốn mươi sáu triệu hai trăm năm mươi nghìn đồng",
+        attached_docs: "Biên lai gửi xe số TT-882",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261020-001",
+        voucher_no: "PXK-20261020-001",
+        created_at: "2026-10-20T08:00:00Z",
+        date: "2026-10-20",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Trần Quốc Tuấn",
+        driver_phone: "0912.456.789",
+        vehicle_plate: "29C-88219",
+        vehicle_type: "Xe tải 2.5 tấn",
+        receiver_name: "Kho Tổng Dược Phẩm",
+        receiver_company: "Tập đoàn Dược Phẩm Quốc Tế",
+        receiver_phone: "0982.112.233",
+        receiver_address: "Khu CN Tiên Sơn, Bắc Ninh",
+        reason: "Giao vỏ hộp thực phẩm bảo vệ sức khỏe",
+        warehouse_location: "Kho Xưởng Đan Phượng - Cụm CN Song Phượng",
+        destination: "Bắc Ninh",
+        items: [
+            { sku: "TD04C", name: "Hộp TD04C", unit: "Chiếc", real_qty: 600, price: 58000, total: 34800000 },
+            { sku: "TD08C", name: "Hộp TD08C", unit: "Chiếc", real_qty: 500, price: 65000, total: 32500000 }
+        ],
+        total_real_qty: 1100,
+        total_amount: 67300000,
+        amount_in_words: "Sáu mươi bảy triệu ba trăm nghìn đồng",
+        attached_docs: "HĐ 2026-DP-88",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261020-002",
+        voucher_no: "PXK-20261020-002",
+        created_at: "2026-10-20T15:30:00Z",
+        date: "2026-10-20",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Lê Hoàng Long",
+        driver_phone: "0978.654.321",
+        vehicle_plate: "29D-51280",
+        vehicle_type: "Xe van 850kg",
+        receiver_name: "A. Tuấn Anh",
+        receiver_company: "Shop Rượu Ngoại 1982",
+        receiver_phone: "0903.445.566",
+        receiver_address: "45 Hai Bà Trưng, Hoàn Kiếm, Hà Nội",
+        reason: "Xuất hộp rượu cao cấp",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            { sku: "SIZE-A", name: "Hộp quà Tết Size A (42 x 36 x 10.5 cm)", unit: "Bộ", real_qty: 190, price: 80000, total: 15200000 }
+        ],
+        total_real_qty: 190,
+        total_amount: 15200000,
+        amount_in_words: "Mười lăm triệu hai trăm nghìn đồng",
+        attached_docs: "Đơn bán lẻ RN-1020",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
         id: "PXK-20261021-001",
         voucher_no: "PXK-20261021-001",
         created_at: "2026-10-21T10:15:00Z",
         date: "2026-10-21",
         unit_name: "Công ty Cổ phần In Lạc Hồng",
         department: "Bộ phận Kinh doanh / Kho hàng",
-        sdns_code: "",
-        debit_acc: "632",
-        credit_acc: "156",
-        receiver_name: "Công ty Lạc Hồng",
-        receiver_address: "Hà Nội",
-        vehicle_plate: "BX: 29H-67323",
+        driver_name: "Nguyễn Văn Hùng",
+        driver_phone: "0983.123.456",
+        vehicle_plate: "29H-67323",
+        vehicle_type: "Xe tải 1.5 tấn",
+        receiver_name: "Công ty Lạc Hồng (Hà Nội)",
+        receiver_company: "Cty Lạc Hồng",
+        receiver_phone: "0907.86.1111",
+        receiver_address: "14 Pháo Đài Láng, Hà Nội",
         reason: "Xuất giao hàng thành phẩm theo đơn",
         warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
         destination: "Hà Nội",
         items: [
-            {
-                sku: "SIZE-B-RED",
-                name: "2B H36-02 Đỏ",
-                unit: "Hộp",
-                req_qty_note: "30 b x 8",
-                real_qty: 240,
-                price: 75000,
-                total: 18000000
-            },
-            {
-                sku: "TP-40-GOLD",
-                name: "TP-40 H36-01 Vàng",
-                unit: "Hộp",
-                req_qty_note: "32 T x 10",
-                real_qty: 320,
-                price: 80000,
-                total: 25600000
-            },
-            {
-                sku: "SIZE-A",
-                name: "Hộp quà Tết Size A (42 x 36 x 10.5 cm)",
-                unit: "Bộ",
-                req_qty_note: "12 T x 5",
-                real_qty: 60,
-                price: 80000,
-                total: 4800000
-            },
-            {
-                sku: "BAG-01",
-                name: "Túi giấy cao cấp",
-                unit: "Chiếc",
-                req_qty_note: "2 T x 10",
-                real_qty: 20,
-                price: 15000,
-                total: 300000
-            }
+            { sku: "SIZE-B-RED", name: "2B H36-02 Đỏ", unit: "Hộp", real_qty: 240, price: 75000, total: 18000000 },
+            { sku: "TP-40-GOLD", name: "TP-40 H36-01 Vàng", unit: "Hộp", real_qty: 320, price: 80000, total: 25600000 },
+            { sku: "SIZE-A", name: "Hộp quà Tết Size A (42 x 36 x 10.5 cm)", unit: "Bộ", real_qty: 60, price: 80000, total: 4800000 },
+            { sku: "BAG-01", name: "Túi giấy cao cấp", unit: "Chiếc", real_qty: 20, price: 15000, total: 300000 }
         ],
         total_real_qty: 640,
         total_amount: 48700000,
         amount_in_words: "Bốn mươi tám triệu bảy trăm nghìn đồng",
         attached_docs: "Hóa đơn số 002345, Đơn hàng SO-ON-202610-0082",
-        signer_creator: "Trang",
-        signer_receiver: "Huy",
-        signer_storekeeper: "Trần Thị Trang",
-        signer_accountant: "Nguyễn Thị Mai",
-        signer_director: "Giám đốc điều hành",
+        status: "COMPLETED",
         signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261021-002",
+        voucher_no: "PXK-20261021-002",
+        created_at: "2026-10-21T16:00:00Z",
+        date: "2026-10-21",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Đối tác AhaMove",
+        driver_phone: "0901.234.567",
+        vehicle_plate: "AhaMove (29-G1)",
+        vehicle_type: "Xe máy giao hỏa tốc",
+        receiver_name: "Chị Lan - Hoàn Kiếm",
+        receiver_company: "Khách lẻ đặt gấp",
+        receiver_phone: "0944.556.677",
+        receiver_address: "12 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội",
+        reason: "Giao hỏa tốc mẫu hộp quà sự kiện",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            { sku: "S36", name: "Hộp quà Tết S36", unit: "Hộp", real_qty: 50, price: 85000, total: 4250000 },
+            { sku: "P33", name: "Hộp quà Tết P33", unit: "Hộp", real_qty: 40, price: 68000, total: 2720000 }
+        ],
+        total_real_qty: 90,
+        total_amount: 6970000,
+        amount_in_words: "Sáu triệu chín trăm bảy mươi nghìn đồng",
+        attached_docs: "Mã vận đơn AHA-29188",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261022-001",
+        voucher_no: "PXK-20261022-001",
+        created_at: "2026-10-22T08:30:00Z",
+        date: "2026-10-22",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Đỗ Trọng Nghĩa",
+        driver_phone: "0965.888.999",
+        vehicle_plate: "29A-34195",
+        vehicle_type: "Xe bán tải giao nhanh",
+        receiver_name: "Ban Quản lý Ecopark",
+        receiver_company: "Tập đoàn Ecopark",
+        receiver_phone: "0989.123.789",
+        receiver_address: "Khu đô thị Ecopark, Văn Giang, Hưng Yên",
+        reason: "Xuất hộp quà tri ân cư dân Ecopark",
+        warehouse_location: "Kho Long Biên - Khu CN Đài Tư",
+        destination: "Hưng Yên",
+        items: [
+            { sku: "G36", name: "Hộp quà Tết G36", unit: "Hộp", real_qty: 180, price: 78000, total: 14040000 },
+            { sku: "M36", name: "Hộp quà Tết M36", unit: "Hộp", real_qty: 130, price: 92000, total: 11960000 }
+        ],
+        total_real_qty: 310,
+        total_amount: 26000000,
+        amount_in_words: "Hai mươi sáu triệu đồng chẵn",
+        attached_docs: "Đơn SO-ECO-1022",
+        status: "COMPLETED",
+        signed_photo_url: "assets/sample_phieu_xuat_kho.png"
+    },
+    {
+        id: "PXK-20261022-002",
+        voucher_no: "PXK-20261022-002",
+        created_at: "2026-10-22T10:00:00Z",
+        date: "2026-10-22",
+        unit_name: "Công ty Cổ phần In Lạc Hồng",
+        department: "Bộ phận Kinh doanh / Kho hàng",
+        driver_name: "Nguyễn Văn Hùng",
+        driver_phone: "0983.123.456",
+        vehicle_plate: "29H-67323",
+        vehicle_type: "Xe tải 1.5 tấn",
+        receiver_name: "A. Minh Khang",
+        receiver_company: "Cty Bao Bì & In Ấn Minh Khang",
+        receiver_phone: "0915.667.889",
+        receiver_address: "389 Cầu Giấy, Hà Nội",
+        reason: "Xuất giao đơn hàng gấp theo tiến độ",
+        warehouse_location: "Kho In Lạc Hồng - 14 Pháo Đài Láng, Hà Nội",
+        destination: "Hà Nội",
+        items: [
+            { sku: "SIZE-B-RED", name: "2B H36-02 Đỏ", unit: "Hộp", real_qty: 250, price: 75000, total: 18750000 },
+            { sku: "TP-40-GOLD", name: "TP-40 H36-01 Vàng", unit: "Hộp", real_qty: 200, price: 80000, total: 16000000 }
+        ],
+        total_real_qty: 450,
+        total_amount: 34750000,
+        amount_in_words: "Ba mươi tư triệu bảy trăm năm mươi nghìn đồng",
+        attached_docs: "Đơn SO-MK-2210",
+        status: "SHIPPING",
+        signed_photo_url: ""
     }
 ];
 
@@ -11370,23 +11625,123 @@ class AppState {
     constructor() {
         this.partners = this.load("partners", DEFAULT_PARTNERS);
 
-        // Đảm bảo lọc sạch toàn bộ nhà cung cấp cũ, chỉ giữ lại In Lạc Hồng và Tuấn Dung
+        // Đảm bảo lọc sạch toàn bộ nhà cung cấp, CHỈ GIỮ LẠI IN LẠC HỒNG VÀ TUẤN DUNG
         if (Array.isArray(this.partners)) {
-            const isAllowedPartner = (p) => {
-                if (p.role !== 'SUPPLIER') return true;
+            const isAllowedSupplier = (p) => {
+                if (!p) return false;
                 const n = (p.name || '').toLowerCase();
                 const c = (p.code || '').toLowerCase();
                 const comp = (p.company_name || '').toLowerCase();
                 return n.includes('lạc hồng') || c.includes('lachong') || comp.includes('lạc hồng') ||
                        n.includes('tuấn dung') || c.includes('tuandung') || comp.includes('tuấn dung');
             };
-            const beforeCount = this.partners.length;
-            let filteredPartners = this.partners.filter(isAllowedPartner);
 
-            // Đảm bảo luôn có In Lạc Hồng với đầy đủ thông tin chuẩn doanh nghiệp
-            let lacHong = filteredPartners.find(p => (p.name || '').toLowerCase().includes('lạc hồng') || (p.code || '').toLowerCase().includes('lachong'));
-            if (!lacHong) {
-                filteredPartners.push({
+            let cleanedPartners = [];
+            let seenLacHong = false;
+            let seenTuanDung = false;
+
+            for (const p of this.partners) {
+                if (!p) continue;
+                // Bỏ qua các bản ghi rác từ file import cũ hoặc mã trùng lặp
+                if (p.id === 'p_ncc_xls_2' || p.code === 'NCC-VT-001' || p.name === 'Tên Nhà Cung Cấp' || p.phone === 'SĐT' || p.id === 'p_sup_lachong' || p.code === 'NCC_LACHONG') {
+                    continue;
+                }
+
+                const isSup = (p.role === 'SUPPLIER' || p.role === 'BOTH' || p.customer_type === 'SUPPLIER' || p.customer_type === 'NCC');
+
+                if (isSup) {
+                    if (isAllowedSupplier(p)) {
+                        const n = (p.name || '').toLowerCase();
+                        const c = (p.code || '').toLowerCase();
+                        const isLH = n.includes('lạc hồng') || c.includes('lachong');
+                        const isTD = n.includes('tuấn dung') || c.includes('tuandung');
+
+                        if (isLH) {
+                            if (!seenLacHong) {
+                                seenLacHong = true;
+                                p.id = "p_ncc_lac_hong";
+                                p.code = "NCC-LACHONG";
+                                p.name = "In Lạc Hồng";
+                                p.company_name = "Công ty Cổ phần In Lạc Hồng";
+                                p.business_type = "ENTERPRISE";
+                                p.customer_type = "SUPPLIER";
+                                p.legal_representative = "Đại Hùng";
+                                p.representative_position = "Giám đốc";
+                                p.tax_code = "0106123456";
+                                p.bank_name = "Vietcombank (Ngoại Thương Việt Nam)";
+                                p.bank_account_no = "0011004567899";
+                                p.bank_account_holder = "CÔNG TY CỔ PHẦN IN LẠC HỒNG";
+                                p.bank_branch = "Sở Giao Dịch Hà Nội";
+                                p.billing_address = "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội";
+                                p.billing_email = "xuongin@inlachong.vn";
+                                p.shipping_address = "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội";
+                                p.address = "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội";
+                                p.region = "Thành phố Hà Nội";
+                                p.ward = "Xã Tân Triều";
+                                p.phone = "0987654321";
+                                p.email = "xuongin@inlachong.vn";
+                                p.role = "SUPPLIER";
+                                p.status = true;
+                                p.credit_limit = 500000000;
+                                p.note = "Xưởng in và gia công Lạc Hồng - NCC chính thức";
+                                cleanedPartners.push(p);
+                            }
+                        } else if (isTD) {
+                            if (!seenTuanDung) {
+                                seenTuanDung = true;
+                                p.id = "p_ncc_tuan_dung";
+                                p.code = "NCC-TUANDUNG";
+                                p.name = "Tuấn Dung";
+                                p.company_name = "Công ty Cổ phần In Tuấn Dung";
+                                p.business_type = "ENTERPRISE";
+                                p.customer_type = "SUPPLIER";
+                                p.legal_representative = "Anh Tuấn";
+                                p.representative_position = "Giám đốc điều hành";
+                                p.tax_code = "0105432198";
+                                p.bank_name = "Techcombank (Kỹ Thương Việt Nam)";
+                                p.bank_account_no = "19033456789012";
+                                p.bank_account_holder = "CÔNG TY CỔ PHẦN IN TUẤN DUNG";
+                                p.bank_branch = "Đống Đa, Hà Nội";
+                                p.billing_address = "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
+                                p.billing_email = "tuandung@supplier.vn";
+                                p.shipping_address = "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
+                                p.address = "Nhà số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
+                                p.region = "Thành phố Hà Nội";
+                                p.ward = "Phường Trung Liệt";
+                                p.phone = "0934567890";
+                                p.email = "tuandung@supplier.vn";
+                                p.role = "SUPPLIER";
+                                p.status = true;
+                                p.credit_limit = 200000000;
+                                p.note = "Nhà cung cấp thương hiệu Hộp Tuấn Dung";
+                                cleanedPartners.push(p);
+                            }
+                        }
+                    } else {
+                        // Nhà cung cấp khác: chuyển thành CUSTOMER nếu role là BOTH, hoặc xoá hoàn toàn nếu chỉ là SUPPLIER
+                        if (p.role === 'BOTH') {
+                            p.role = 'CUSTOMER';
+                            if (p.customer_type === 'SUPPLIER' || p.customer_type === 'NCC') {
+                                p.customer_type = 'DIRECT';
+                            }
+                            cleanedPartners.push(p);
+                        } else if (p.role === 'SUPPLIER') {
+                            // Xoá hoàn toàn nhà cung cấp không thuộc danh sách cho phép
+                        } else {
+                            if (p.customer_type === 'SUPPLIER' || p.customer_type === 'NCC') {
+                                p.customer_type = 'DIRECT';
+                            }
+                            cleanedPartners.push(p);
+                        }
+                    }
+                } else {
+                    cleanedPartners.push(p);
+                }
+            }
+
+            // Đảm bảo luôn có In Lạc Hồng
+            if (!seenLacHong) {
+                cleanedPartners.push({
                     id: "p_ncc_lac_hong",
                     code: "NCC-LACHONG",
                     name: "In Lạc Hồng",
@@ -11402,7 +11757,7 @@ class AppState {
                     bank_branch: "Sở Giao Dịch Hà Nội",
                     billing_address: "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
                     billing_email: "xuongin@inlachong.vn",
-                    shipping_address: "Kho xưởng: Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
+                    shipping_address: "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
                     address: "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội",
                     region: "Thành phố Hà Nội",
                     ward: "Xã Tân Triều",
@@ -11413,25 +11768,11 @@ class AppState {
                     credit_limit: 500000000,
                     note: "Xưởng in và gia công Lạc Hồng - NCC chính thức"
                 });
-            } else {
-                lacHong.role = "SUPPLIER";
-                lacHong.customer_type = "SUPPLIER";
-                lacHong.business_type = "ENTERPRISE";
-                lacHong.company_name = lacHong.company_name || "Công ty Cổ phần In Lạc Hồng";
-                lacHong.tax_code = lacHong.tax_code || "0106123456";
-                lacHong.legal_representative = lacHong.legal_representative || "Đại Hùng";
-                lacHong.representative_position = lacHong.representative_position || "Giám đốc";
-                lacHong.bank_name = lacHong.bank_name || "Vietcombank (Ngoại Thương Việt Nam)";
-                lacHong.bank_account_no = lacHong.bank_account_no || "0011004567899";
-                lacHong.bank_account_holder = lacHong.bank_account_holder || "CÔNG TY CỔ PHẦN IN LẠC HỒNG";
-                lacHong.bank_branch = lacHong.bank_branch || "Sở Giao Dịch Hà Nội";
-                lacHong.shipping_address = lacHong.shipping_address || lacHong.address || "Cụm Công Nghiệp Triều Khúc, Tân Triều, Thanh Trì, Hà Nội";
             }
 
-            // Đảm bảo luôn có Tuấn Dung với đầy đủ thông tin chuẩn doanh nghiệp
-            let tuanDung = filteredPartners.find(p => (p.name || '').toLowerCase().includes('tuấn dung') || (p.code || '').toLowerCase().includes('tuandung'));
-            if (!tuanDung) {
-                filteredPartners.push({
+            // Đảm bảo luôn có Tuấn Dung
+            if (!seenTuanDung) {
+                cleanedPartners.push({
                     id: "p_ncc_tuan_dung",
                     code: "NCC-TUANDUNG",
                     name: "Tuấn Dung",
@@ -11458,26 +11799,11 @@ class AppState {
                     credit_limit: 200000000,
                     note: "Nhà cung cấp thương hiệu Hộp Tuấn Dung"
                 });
-            } else {
-                tuanDung.role = "SUPPLIER";
-                tuanDung.customer_type = "SUPPLIER";
-                tuanDung.business_type = "ENTERPRISE";
-                tuanDung.company_name = tuanDung.company_name || "Công ty Cổ phần In Tuấn Dung";
-                tuanDung.tax_code = tuanDung.tax_code || "0105432198";
-                tuanDung.legal_representative = tuanDung.legal_representative || "Anh Tuấn";
-                tuanDung.representative_position = tuanDung.representative_position || "Giám đốc điều hành";
-                tuanDung.bank_name = tuanDung.bank_name || "Techcombank (Kỹ Thương Việt Nam)";
-                tuanDung.bank_account_no = tuanDung.bank_account_no || "19033456789012";
-                tuanDung.bank_account_holder = tuanDung.bank_account_holder || "CÔNG TY CỔ PHẦN IN TUẤN DUNG";
-                tuanDung.bank_branch = tuanDung.bank_branch || "Đống Đa, Hà Nội";
-                tuanDung.shipping_address = tuanDung.shipping_address || tuanDung.address || "Kho hàng: Số 10 ngõ 185 Đặng Tiến Đông, Đống Đa, Hà Nội";
             }
 
-            if (filteredPartners.length !== beforeCount || !localStorage.getItem("ihp_clean_suppliers_20261021_v1")) {
-                this.partners = filteredPartners;
-                this.save("partners", filteredPartners);
-                localStorage.setItem("ihp_clean_suppliers_20261021_v1", "true");
-            }
+            this.partners = cleanedPartners;
+            this.save("partners", cleanedPartners);
+            localStorage.setItem("ihp_clean_suppliers_20261022_strict_v2", "true");
         }
         this.materials = this.load("materials", DEFAULT_MATERIALS);
         this.orders = this.load("orders", []);
@@ -11529,20 +11855,7 @@ class AppState {
             localStorage.setItem("ihp_tet_2027_stock_logs_v1", "true");
         }
 
-        // Ensure "In Lạc Hồng" supplier is present in partners list
-        if (Array.isArray(this.partners) && !this.partners.some(p => p && (p.name === "In Lạc Hồng" || p.name === "Công ty Cổ phần In Lạc Hồng"))) {
-            this.partners.push({
-                id: "p_sup_lachong",
-                code: "NCC_LACHONG",
-                name: "In Lạc Hồng",
-                company_name: "Công ty Cổ phần In Lạc Hồng",
-                role: "SUPPLIER",
-                phone: "0907.861.111",
-                address: "Số 14 Pháo Đài Láng, P. Láng, TP. Hà Nội",
-                created_at: new Date().toISOString()
-            });
-            this.save("partners", this.partners);
-        }
+        // In Lạc Hồng and Tuấn Dung are already initialized canonical suppliers above
         this.online_import_records = this.load("online_import_records", DEFAULT_ONLINE_IMPORT_RECORDS);
         if (!this.online_import_records || this.online_import_records.length === 0) {
             this.online_import_records = DEFAULT_ONLINE_IMPORT_RECORDS;
@@ -11584,7 +11897,7 @@ class AppState {
         this.online_inventory_checks = this.load("online_inventory_checks", []);
         this.online_internal_exits = this.load("online_internal_exits", []);
         this.online_export_records = this.load("online_export_records", null);
-        if (!this.online_export_records || this.online_export_records.length === 0) {
+        if (!this.online_export_records || this.online_export_records.length <= 1) {
             this.online_export_records = DEFAULT_ONLINE_EXPORT_RECORDS;
             this.save("online_export_records", this.online_export_records);
         }
@@ -12372,6 +12685,7 @@ window.ROUTE_DEFINITIONS = [
 
     // Phân hệ 2: Kho hàng
     { slug: 'bao-cao-kho-hang', tabId: 'online-sales', subtab: 'online-warehouse-report', title: 'Báo cáo Kho hàng | In Lạc Hồng', aliases: ['online-warehouse-report', 'bao-cao-kho'] },
+    { slug: 'bao-cao-van-chuyen', tabId: 'online-sales', subtab: 'online-shipping-report', title: 'Báo cáo Vận chuyển & Đội xe giao hàng | In Lạc Hồng', aliases: ['online-shipping-report', 'bao-cao-giao-hang', 'bao-cao-lai-xe', 'bao-cao-xe'] },
     { slug: 'nhap-kho', tabId: 'online-sales', subtab: 'online-import-goods', title: 'Nhập kho hàng hóa (POS) | In Lạc Hồng', aliases: ['nhap-kho-hang-hoa', 'nhap-hang-hoa', 'online-import-goods'] },
     { slug: 'xuat-kho', tabId: 'online-sales', subtab: 'online-export-goods', title: 'Xuất kho hàng hóa (Mẫu số 02 - VT) | In Lạc Hồng', aliases: ['xuat-kho-hang-hoa', 'online-export-goods', 'xuat-kho-noi-bo'] },
     { slug: 'ton-kho', tabId: 'online-sales', subtab: 'online-stock', title: 'Kho hàng & Danh sách Tồn kho | In Lạc Hồng', aliases: ['kho-hang', 'danh-sach-ton-kho', 'online-stock', 'ton-kho-hang-hoa', 'kho'] },
@@ -15184,7 +15498,16 @@ function renderSupplierDebts() {
     const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
     const statusFilter = document.getElementById("supplierDebtFilterStatus") ? document.getElementById("supplierDebtFilterStatus").value : "";
 
-    let suppliers = (state.partners || []).filter(p => (p.role === "SUPPLIER" || p.role === "BOTH") && p.id !== 'p_ncc_xls_2' && p.code !== 'NCC-VT-001' && p.phone !== 'SĐT' && p.name !== 'Tên Nhà Cung Cấp');
+    const isAllowedSupplier = (p) => {
+        if (!p) return false;
+        const n = (p.name || '').toLowerCase();
+        const c = (p.code || '').toLowerCase();
+        const comp = (p.company_name || '').toLowerCase();
+        return n.includes('lạc hồng') || c.includes('lachong') || comp.includes('lạc hồng') ||
+               n.includes('tuấn dung') || c.includes('tuandung') || comp.includes('tuấn dung');
+    };
+
+    let suppliers = (state.partners || []).filter(p => (p.role === "SUPPLIER" || p.role === "BOTH") && isAllowedSupplier(p));
 
     if (query) {
         suppliers = suppliers.filter(p => 
@@ -22178,6 +22501,7 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         else if (subtab === "online-products") label = "📦 Danh sách Hàng hóa";
         else if (subtab === "online-prices" || subtab === "online-pricing") label = "🏷️ Thiết lập Giá";
         else if (subtab === "online-warehouse-report") label = "📊 Báo cáo Kho hàng";
+        else if (subtab === "online-shipping-report") label = "🚚 Báo cáo Vận chuyển (Lái xe / Xe)";
         else if (subtab === "online-import-goods") label = "📥 Nhập kho hàng hóa (POS)";
         else if (subtab === "online-export-goods") label = "📤 Quản lý Xuất kho hàng hóa (Mẫu số 02 - VT)";
         else if (subtab === "online-stock") label = "📦 Kho hàng & Danh sách Tồn kho";
@@ -22197,6 +22521,8 @@ window.switchOnlineSalesSubTab = function(subtab, updateUrl = true) {
         renderOnlineProducts();
     } else if (subtab === "online-warehouse-report") {
         if (window.renderWarehouseReport) window.renderWarehouseReport();
+    } else if (subtab === "online-shipping-report") {
+        if (window.renderShippingReport) window.renderShippingReport();
     } else if (subtab === "online-import-goods") {
         if (window.renderOnlineImportGoods) window.renderOnlineImportGoods();
     } else if (subtab === "online-export-goods") {
@@ -40613,18 +40939,249 @@ window.exportOnlineExportRecordsToExcel = function() {
 // ==========================================================================
 // PHÂN HỆ 1: BÁO CÁO HÀNG HÓA (PRODUCTS REPORT)
 // ==========================================================================
-window.renderProductsReport = function() {
-    const tableBody = document.querySelector("#productsReportTable tbody");
-    if (!tableBody) return;
-    tableBody.innerHTML = "";
+// ==========================================================================
+// PHÂN HỆ 1: BÁO CÁO HÀNG HÓA (BIỂU ĐỒ TRỰC QUAN THEO NGÀY / THÁNG / NĂM)
+// ==========================================================================
 
+window._prodReportState = window._prodReportState || {
+    timePreset: 'this_month',
+    dateFrom: '',
+    dateTo: '',
+    topMode: 'qty',
+    structureMode: 'category',
+    activeModel: 'all'
+};
+window._prodCharts = window._prodCharts || {};
+
+// Đặt khoảng thời gian nhanh (Hôm nay, 7 ngày, Tháng này, Tháng trước, Năm nay, Tất cả)
+window.setProdReportTimePeriod = function(preset) {
+    window._prodReportState.timePreset = preset;
+    document.querySelectorAll(".prod-time-btn").forEach(btn => {
+        if (btn.getAttribute("data-period") === preset) {
+            btn.classList.add("active");
+            btn.classList.add("btn-primary");
+            btn.classList.remove("btn-secondary");
+            btn.style.background = "#d97706";
+            btn.style.borderColor = "#d97706";
+        } else {
+            btn.classList.remove("active");
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-secondary");
+            btn.style.background = "";
+            btn.style.borderColor = "";
+        }
+    });
+
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const toDateStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    if (preset === 'today') {
+        const todayStr = toDateStr(now);
+        window._prodReportState.dateFrom = todayStr;
+        window._prodReportState.dateTo = todayStr;
+    } else if (preset === '7days') {
+        const d7 = new Date();
+        d7.setDate(now.getDate() - 6);
+        window._prodReportState.dateFrom = toDateStr(d7);
+        window._prodReportState.dateTo = toDateStr(now);
+    } else if (preset === 'this_month') {
+        const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        window._prodReportState.dateFrom = toDateStr(startMonth);
+        window._prodReportState.dateTo = toDateStr(endMonth);
+    } else if (preset === 'last_month') {
+        const startLast = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const endLast = new Date(now.getFullYear(), now.getMonth(), 0);
+        window._prodReportState.dateFrom = toDateStr(startLast);
+        window._prodReportState.dateTo = toDateStr(endLast);
+    } else if (preset === 'this_year') {
+        const startYear = new Date(now.getFullYear(), 0, 1);
+        const endYear = new Date(now.getFullYear(), 11, 31);
+        window._prodReportState.dateFrom = toDateStr(startYear);
+        window._prodReportState.dateTo = toDateStr(endYear);
+    } else if (preset === 'all') {
+        window._prodReportState.dateFrom = '2026-01-01';
+        window._prodReportState.dateTo = toDateStr(now);
+    }
+
+    const dfInput = document.getElementById("prodReportDateFrom");
+    const dtInput = document.getElementById("prodReportDateTo");
+    if (dfInput) dfInput.value = window._prodReportState.dateFrom;
+    if (dtInput) dtInput.value = window._prodReportState.dateTo;
+
+    window.renderProductsReport();
+};
+
+window.onProdReportDateRangeChange = function() {
+    const dfInput = document.getElementById("prodReportDateFrom");
+    const dtInput = document.getElementById("prodReportDateTo");
+    if (dfInput && dtInput) {
+        window._prodReportState.dateFrom = dfInput.value;
+        window._prodReportState.dateTo = dtInput.value;
+        window._prodReportState.timePreset = 'custom';
+        document.querySelectorAll(".prod-time-btn").forEach(btn => {
+            if (btn.getAttribute("data-period") === 'custom') {
+                btn.classList.add("active");
+                btn.classList.add("btn-primary");
+                btn.classList.remove("btn-secondary");
+                btn.style.background = "#d97706";
+                btn.style.borderColor = "#d97706";
+            } else {
+                btn.classList.remove("active");
+                btn.classList.remove("btn-primary");
+                btn.classList.add("btn-secondary");
+                btn.style.background = "";
+                btn.style.borderColor = "";
+            }
+        });
+    }
+    window.renderProductsReport();
+};
+
+// Chuyển đổi chế độ xem Top 10 Bán chạy (Số lượng / Doanh số / Lợi nhuận)
+window.setProdTopMode = function(mode) {
+    window._prodReportState.topMode = mode;
+    document.querySelectorAll(".prod-top-mode-btn").forEach(btn => {
+        if (btn.getAttribute("data-mode") === mode) {
+            btn.classList.add("active");
+            btn.style.background = mode === 'qty' ? 'rgba(217,119,6,0.15)' : mode === 'revenue' ? 'rgba(16,143,83,0.15)' : 'rgba(124,58,237,0.15)';
+            btn.style.color = mode === 'qty' ? '#d97706' : mode === 'revenue' ? '#108f53' : '#7c3aed';
+            btn.style.fontWeight = '700';
+            btn.style.border = 'none';
+        } else {
+            btn.classList.remove("active");
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '600';
+            btn.style.border = '';
+        }
+    });
+    window.renderProductsReport();
+};
+
+// Chuyển đổi cơ cấu (Loại hộp / Nhà cung cấp)
+window.setProdStructureMode = function(mode) {
+    window._prodReportState.structureMode = mode;
+    document.querySelectorAll(".prod-structure-mode-btn").forEach(btn => {
+        if (btn.getAttribute("data-mode") === mode) {
+            btn.classList.add("active");
+            btn.style.background = 'rgba(139,92,246,0.15)';
+            btn.style.color = '#8b5cf6';
+            btn.style.fontWeight = '700';
+            btn.style.border = 'none';
+        } else {
+            btn.classList.remove("active");
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '600';
+            btn.style.border = '';
+        }
+    });
+    window.renderProductsReport();
+};
+
+// Chuyển tab Mẫu báo cáo
+window.switchProdReportModel = function(modelId) {
+    window._prodReportState.activeModel = modelId;
+
+    // Đồng bộ nút tab trên desktop
+    document.querySelectorAll(".prod-tab-model").forEach(tab => {
+        if (tab.getAttribute("data-model") === modelId) {
+            tab.classList.add("active");
+            tab.style.background = "var(--accent)";
+            tab.style.color = "#fff";
+            tab.style.border = "none";
+        } else {
+            tab.classList.remove("active");
+            tab.style.background = "";
+            tab.style.color = "";
+            tab.style.border = "";
+        }
+    });
+
+    // Đồng bộ dropdown select trên mobile
+    const sel = document.getElementById("prodReportModelSelect");
+    if (sel && sel.value !== modelId) {
+        sel.value = modelId;
+    }
+
+    // Ẩn/hiện card theo mẫu được chọn
+    document.querySelectorAll(".prod-report-card").forEach(card => {
+        const cardModel = card.getAttribute("data-card");
+        if (modelId === "all" || cardModel === modelId) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    // Tự động căn chỉnh và resize biểu đồ khớp chuẩn 100% khung hình mobile
+    setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        if (window._prodCharts) {
+            Object.values(window._prodCharts).forEach(c => {
+                try { if (c && typeof c.resize === 'function') c.resize(); } catch(e){}
+            });
+        }
+    }, 60);
+};
+
+// Đặt lại toàn bộ bộ lọc về mặc định
+window.resetProdReportFilters = function() {
+    const sInput = document.getElementById("prodReportSearchInput");
+    if (sInput) sInput.value = "";
+    const supSelect = document.getElementById("prodReportSupplierFilter");
+    if (supSelect) supSelect.value = "";
+    const catSelect = document.getElementById("prodReportCategoryFilter");
+    if (catSelect) catSelect.value = "";
+    const gran = document.getElementById("prodReportGranularity");
+    if (gran) gran.value = "daily";
+    window.setProdReportTimePeriod("this_month");
+};
+
+// In Báo cáo
+window.printProductsReport = function() {
+    window.print();
+};
+
+// Hàm tạo hoặc cập nhật Chart.js an toàn
+function _createOrUpdateProdChart(canvasId, config) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+    if (window._prodCharts[canvasId]) {
+        try {
+            window._prodCharts[canvasId].destroy();
+        } catch (e) {
+            console.warn("Chart destroy warning:", e);
+        }
+        delete window._prodCharts[canvasId];
+    }
+    if (typeof Chart === 'undefined') {
+        return null;
+    }
+    try {
+        const ctx = canvas.getContext('2d');
+        const chart = new Chart(ctx, config);
+        window._prodCharts[canvasId] = chart;
+        return chart;
+    } catch (err) {
+        console.error("Error creating chart on " + canvasId, err);
+        return null;
+    }
+}
+
+// ==========================================================================
+// HÀM RENDER CHÍNH: BÁO CÁO HÀNG HÓA (BIỂU ĐỒ & THỜI GIAN)
+// ==========================================================================
+window.renderProductsReport = function() {
     const products = state.online_products || [];
 
-    // 1. Populate Filter Dropdowns
+    // 1. Khởi tạo dropdown Nhà cung cấp và Loại hộp nếu chưa có
     const supSelect = document.getElementById("prodReportSupplierFilter");
     if (supSelect && supSelect.options.length <= 1) {
         const uniqueSups = new Set();
-        (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH").forEach(s => uniqueSups.add(s.name));
+        (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "BOTH").forEach(s => uniqueSups.add(s.name));
         products.forEach(p => {
             if (p.supplier) uniqueSups.add(p.supplier);
             if (p.brand) uniqueSups.add(p.brand);
@@ -40646,189 +41203,1118 @@ window.renderProductsReport = function() {
         });
     }
 
-    // 2. Filter Products
+    // 2. Khởi tạo giá trị ngày nếu chưa có
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const toDateStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    if (!window._prodReportState.dateFrom || !window._prodReportState.dateTo) {
+        const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        window._prodReportState.dateFrom = toDateStr(startMonth);
+        window._prodReportState.dateTo = toDateStr(endMonth);
+        const dfInput = document.getElementById("prodReportDateFrom");
+        const dtInput = document.getElementById("prodReportDateTo");
+        if (dfInput) dfInput.value = window._prodReportState.dateFrom;
+        if (dtInput) dtInput.value = window._prodReportState.dateTo;
+    }
+
+    // 3. Đọc các bộ lọc người dùng
     const searchVal = (document.getElementById("prodReportSearchInput")?.value || "").toLowerCase().trim();
     const supVal = document.getElementById("prodReportSupplierFilter")?.value || "";
     const catVal = document.getElementById("prodReportCategoryFilter")?.value || "";
-    const stockVal = document.getElementById("prodReportStockFilter")?.value || "";
+    const granularity = document.getElementById("prodReportGranularity")?.value || "daily";
 
-    const filtered = products.filter(p => {
+    const dateFromStr = window._prodReportState.dateFrom;
+    const dateToStr = window._prodReportState.dateTo;
+    const dateFrom = new Date(dateFromStr + "T00:00:00");
+    const dateTo = new Date(dateToStr + "T23:59:59");
+
+    // Lọc danh mục sản phẩm theo Nhà cung cấp, Loại hộp và Từ khóa
+    const filteredProducts = products.filter(p => {
         if (searchVal) {
             const match = `${p.sku || ''} ${p.name || ''} ${p.supplier || ''} ${p.brand || ''} ${p.box_type || ''}`.toLowerCase();
             if (!match.includes(searchVal)) return false;
         }
         if (supVal && (p.supplier !== supVal && p.brand !== supVal)) return false;
         if (catVal && (p.box_type !== catVal && p.category !== catVal)) return false;
-        const qty = Number(p.stock_qty || 0);
-        if (stockVal === "in_stock" && qty <= 0) return false;
-        if (stockVal === "low_stock" && (qty <= 0 || qty > 10)) return false;
-        if (stockVal === "out_of_stock" && qty > 0) return false;
         return true;
     });
 
-    // 3. Compute Totals & Render Rows
-    let totalSKU = filtered.length;
-    let sumCostValue = 0;
-    let sumRetailValue = 0;
-    let sumTotalStock = 0;
+    const filteredSkuSet = new Set(filteredProducts.map(p => p.sku));
+    const prodMap = {};
+    products.forEach(p => { if (p && p.sku) prodMap[p.sku] = p; });
 
-    if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không tìm thấy hàng hóa nào phù hợp với bộ lọc</td></tr>`;
-    } else {
-        filtered.forEach((p, idx) => {
-            const cost = Number(p.cost_price || p.import_price || 0);
-            const retail = Number(p.price || p.retail_price || 0);
-            const stock = Number(p.stock_qty || 0);
-            const diff = retail - cost;
-            const itemCostVal = stock * cost;
-            const itemRetailVal = stock * retail;
+    // 4. Thu thập toàn bộ các giao dịch Xuất kho / Nhập kho / Đơn hàng trong khoảng thời gian
+    const rawOrders = state.online_orders || [];
+    const exportRecords = state.online_export_records || [];
+    const stockLogs = state.online_stock_logs || [];
+    const importRecords = state.online_import_records || [];
+    const importVouchers = state.online_import_vouchers || [];
 
-            sumCostValue += itemCostVal;
-            sumRetailValue += itemRetailVal;
-            sumTotalStock += stock;
+    // Tổng hợp sản phẩm bán theo SKU (phục vụ Top 10)
+    const skuSalesMap = {};
+    filteredProducts.forEach(p => {
+        skuSalesMap[p.sku] = {
+            sku: p.sku,
+            name: p.name,
+            box_type: p.box_type || p.category || 'Hộp cao cấp',
+            supplier: p.supplier || p.brand || 'In Lạc Hồng',
+            cost: Number(p.cost_price || p.import_price || 0),
+            price: Number(p.price || p.retail_price || 0),
+            stock: Number(p.stock_qty || 0),
+            image: p.image || '',
+            soldQty: 0,
+            revenue: 0,
+            costVal: 0,
+            profit: 0
+        };
+    });
 
-            let badgeHtml = '';
-            if (stock <= 0) {
-                badgeHtml = `<span class="badge" style="background:#fee2e2; color:#ef4444; font-weight:700;">Hết hàng</span>`;
-            } else if (stock <= 10) {
-                badgeHtml = `<span class="badge" style="background:#fef3c7; color:#d97706; font-weight:700;">Sắp hết (${stock})</span>`;
-            } else {
-                badgeHtml = `<span class="badge" style="background:#dcfce7; color:#108f53; font-weight:700;">Còn hàng (${stock})</span>`;
+    // 5. Tạo danh sách các khoảng thời gian (Intervals) theo Granularity
+    const intervals = [];
+    if (granularity === "daily") {
+        let cur = new Date(dateFrom);
+        while (cur <= dateTo) {
+            const k = toDateStr(cur);
+            intervals.push({
+                key: k,
+                label: `${cur.getDate()}/${cur.getMonth() + 1}`,
+                startDate: new Date(k + "T00:00:00"),
+                endDate: new Date(k + "T23:59:59"),
+                importQty: 0,
+                exportQty: 0,
+                revenue: 0,
+                cost: 0,
+                profit: 0,
+                orderCount: 0
+            });
+            cur.setDate(cur.getDate() + 1);
+        }
+    } else if (granularity === "weekly") {
+        let cur = new Date(dateFrom);
+        let weekIdx = 1;
+        while (cur <= dateTo) {
+            const wStart = new Date(cur);
+            const wEnd = new Date(cur);
+            wEnd.setDate(wEnd.getDate() + 6);
+            if (wEnd > dateTo) wEnd.setTime(dateTo.getTime());
+
+            const k = `W${weekIdx}_${toDateStr(wStart)}`;
+            intervals.push({
+                key: k,
+                label: `Tuần ${weekIdx} (${wStart.getDate()}/${wStart.getMonth()+1})`,
+                startDate: new Date(toDateStr(wStart) + "T00:00:00"),
+                endDate: new Date(toDateStr(wEnd) + "T23:59:59"),
+                importQty: 0,
+                exportQty: 0,
+                revenue: 0,
+                cost: 0,
+                profit: 0,
+                orderCount: 0
+            });
+            weekIdx++;
+            cur.setDate(cur.getDate() + 7);
+        }
+    } else if (granularity === "monthly") {
+        let cur = new Date(dateFrom.getFullYear(), dateFrom.getMonth(), 1);
+        const endMonthLimit = new Date(dateTo.getFullYear(), dateTo.getMonth(), 1);
+        while (cur <= endMonthLimit) {
+            const mKey = `${cur.getFullYear()}-${pad(cur.getMonth() + 1)}`;
+            const mStart = new Date(cur.getFullYear(), cur.getMonth(), 1);
+            const mEnd = new Date(cur.getFullYear(), cur.getMonth() + 1, 0, 23, 59, 59);
+            intervals.push({
+                key: mKey,
+                label: `Tháng ${cur.getMonth() + 1}/${cur.getFullYear()}`,
+                startDate: mStart,
+                endDate: mEnd,
+                importQty: 0,
+                exportQty: 0,
+                revenue: 0,
+                cost: 0,
+                profit: 0,
+                orderCount: 0
+            });
+            cur.setMonth(cur.getMonth() + 1);
+        }
+    } else if (granularity === "yearly") {
+        const startY = dateFrom.getFullYear();
+        const endY = dateTo.getFullYear();
+        for (let y = startY; y <= endY; y++) {
+            intervals.push({
+                key: String(y),
+                label: `Năm ${y}`,
+                startDate: new Date(y, 0, 1),
+                endDate: new Date(y, 11, 31, 23, 59, 59),
+                importQty: 0,
+                exportQty: 0,
+                revenue: 0,
+                cost: 0,
+                profit: 0,
+                orderCount: 0
+            });
+        }
+    }
+
+    // Hàm phụ trợ tìm interval phù hợp cho một thời điểm
+    const findInterval = (dateObj) => {
+        if (!dateObj || isNaN(dateObj.getTime())) return null;
+        return intervals.find(iv => dateObj >= iv.startDate && dateObj <= iv.endDate);
+    };
+
+    // 6. Tích lũy số liệu từ Đơn hàng bán (Online Orders)
+    let totalCompletedOrders = 0;
+    let totalRevenue = 0;
+    let totalCost = 0;
+    let totalExportQty = 0;
+    let totalImportQty = 0;
+
+    rawOrders.forEach(o => {
+        if (!o || o.status === 'CANCELLED' || o.payment_status === 'DRAFT') return;
+        const oDate = new Date(o.created_at || o.date || Date.now());
+        const iv = findInterval(oDate);
+        if (!iv) return;
+
+        let orderHasFilteredItems = false;
+        let orderExportQty = 0;
+        let orderRev = 0;
+        let orderCost = 0;
+
+        if (Array.isArray(o.items) && o.items.length > 0) {
+            o.items.forEach(it => {
+                if (filteredSkuSet.has(it.sku)) {
+                    orderHasFilteredItems = true;
+                    const q = Number(it.qty || 0);
+                    const prod = prodMap[it.sku];
+                    const price = Number(it.price || (prod ? (prod.price || prod.retail_price) : 0));
+                    const cost = Number(it.cost_price || (prod ? (prod.cost_price || prod.import_price) : 0));
+                    const rev = q * price;
+                    const c = q * cost;
+
+                    orderExportQty += q;
+                    orderRev += rev;
+                    orderCost += c;
+
+                    if (skuSalesMap[it.sku]) {
+                        skuSalesMap[it.sku].soldQty += q;
+                        skuSalesMap[it.sku].revenue += rev;
+                        skuSalesMap[it.sku].costVal += c;
+                        skuSalesMap[it.sku].profit += (rev - c);
+                    }
+                }
+            });
+        } else {
+            // Đơn hàng không có chi tiết items tách lẻ: lấy tổng đơn nếu không lọc SKU cụ thể
+            if (!supVal && !catVal && !searchVal) {
+                orderHasFilteredItems = true;
+                orderRev = Number(o.total_amount || 0);
+                orderCost = orderRev * 0.72; // Ước tính giá vốn 72%
+                orderExportQty = Number(o.quantity || 1);
             }
+        }
 
-            const imgHtml = p.image 
-                ? `<img src="${p.image}" alt="${p.sku}" style="width:36px; height:36px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);">`
-                : `<div style="width:36px; height:36px; border-radius:6px; background:var(--bg-hover); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:0.75rem;"><i data-lucide="package" style="width:18px; height:18px;"></i></div>`;
+        if (orderHasFilteredItems) {
+            iv.orderCount++;
+            iv.exportQty += orderExportQty;
+            iv.revenue += orderRev;
+            iv.cost += orderCost;
+            iv.profit += (orderRev - orderCost);
+
+            totalCompletedOrders++;
+            totalRevenue += orderRev;
+            totalCost += orderCost;
+            totalExportQty += orderExportQty;
+        }
+    });
+
+    // 7. Tích lũy số liệu từ Phiếu Xuất kho thành phẩm (Export Records)
+    exportRecords.forEach(exp => {
+        const expDate = new Date(exp.date || exp.created_at || Date.now());
+        const iv = findInterval(expDate);
+        if (!iv) return;
+
+        (exp.items || []).forEach(it => {
+            if (filteredSkuSet.has(it.sku)) {
+                const q = Number(it.real_qty || it.qty || 0);
+                const prod = prodMap[it.sku];
+                const price = Number(it.price || (prod ? prod.price : 0));
+                const cost = Number(prod ? (prod.cost_price || prod.import_price) : price * 0.7);
+                const rev = Number(it.total || (q * price));
+                const c = q * cost;
+
+                // Nếu chưa tính qua đơn hàng
+                if (rawOrders.length === 0) {
+                    iv.exportQty += q;
+                    iv.revenue += rev;
+                    iv.cost += c;
+                    iv.profit += (rev - c);
+                    iv.orderCount++;
+
+                    totalRevenue += rev;
+                    totalCost += c;
+                    totalExportQty += q;
+                    totalCompletedOrders++;
+
+                    if (skuSalesMap[it.sku]) {
+                        skuSalesMap[it.sku].soldQty += q;
+                        skuSalesMap[it.sku].revenue += rev;
+                        skuSalesMap[it.sku].costVal += c;
+                        skuSalesMap[it.sku].profit += (rev - c);
+                    }
+                }
+            }
+        });
+    });
+
+    // 8. Tích lũy số liệu Nhập kho (Import Records / Vouchers / Logs)
+    const processedImportBatches = new Set();
+    importRecords.forEach(imp => {
+        const impDate = new Date(imp.created_at || Date.now());
+        const iv = findInterval(impDate);
+        if (!iv) return;
+        if (filteredSkuSet.has(imp.sku)) {
+            const q = Number(imp.real_qty || imp.quantity || imp.qty || 0);
+            iv.importQty += q;
+            totalImportQty += q;
+            processedImportBatches.add(imp.id || imp.batch_id);
+        }
+    });
+
+    importVouchers.forEach(v => {
+        const vDate = new Date(v.created_at || v.date || Date.now());
+        const iv = findInterval(vDate);
+        if (!iv) return;
+        (v.items || []).forEach(it => {
+            if (filteredSkuSet.has(it.sku) && !processedImportBatches.has(v.id)) {
+                const q = Number(it.real_qty || it.qty || 0);
+                iv.importQty += q;
+                totalImportQty += q;
+            }
+        });
+    });
+
+    stockLogs.forEach(log => {
+        const logDate = new Date(log.created_at || Date.now());
+        const iv = findInterval(logDate);
+        if (!iv) return;
+        if (filteredSkuSet.has(log.sku)) {
+            const q = Math.abs(Number(log.qty || 0));
+            if (log.type === 'IMPORT' && importRecords.length === 0) {
+                iv.importQty += q;
+                totalImportQty += q;
+            } else if (log.type === 'EXPORT' && rawOrders.length === 0 && exportRecords.length === 0) {
+                iv.exportQty += q;
+                totalExportQty += q;
+                const prod = prodMap[log.sku];
+                const price = Number(prod ? prod.price : 0);
+                const cost = Number(prod ? prod.cost_price : 0);
+                const rev = q * price;
+                const c = q * cost;
+                iv.revenue += rev;
+                iv.cost += c;
+                iv.profit += (rev - c);
+                totalRevenue += rev;
+                totalCost += c;
+
+                if (skuSalesMap[log.sku]) {
+                    skuSalesMap[log.sku].soldQty += q;
+                    skuSalesMap[log.sku].revenue += rev;
+                    skuSalesMap[log.sku].costVal += c;
+                    skuSalesMap[log.sku].profit += (rev - c);
+                }
+            }
+        }
+    });
+
+    // Tính toán Tồn kho hiện tại và Lũy kế cho từng interval
+    let currentTotalStock = filteredProducts.reduce((sum, p) => sum + Number(p.stock_qty || 0), 0);
+    let currentTotalStockCost = filteredProducts.reduce((sum, p) => sum + (Number(p.stock_qty || 0) * Number(p.cost_price || p.import_price || 0)), 0);
+
+    // Tính đường xu hướng tồn kho cho từng interval
+    let runningStock = currentTotalStock;
+    for (let i = intervals.length - 1; i >= 0; i--) {
+        const iv = intervals[i];
+        iv.estimatedStock = Math.max(0, runningStock);
+        runningStock = runningStock - iv.importQty + iv.exportQty;
+    }
+
+    // 9. Cập nhật 4 Card KPIs tổng quan
+    const grossProfit = totalRevenue - totalCost;
+    const profitMargin = totalRevenue > 0 ? ((grossProfit / totalRevenue) * 100).toFixed(1) : "0.0";
+
+    const kpiRev = document.getElementById("kpiProdReportRevenue");
+    const kpiOrders = document.getElementById("kpiProdReportOrderCount");
+    const kpiProfit = document.getElementById("kpiProdReportGrossProfit");
+    const kpiMargin = document.getElementById("kpiProdReportMargin");
+    const kpiVol = document.getElementById("kpiProdReportVolume");
+    const kpiVolSub = document.getElementById("kpiProdReportVolumeSub");
+    const kpiCost = document.getElementById("kpiProdReportTotalCost");
+    const kpiSKU = document.getElementById("kpiProdReportSKUCount");
+
+    if (kpiRev) kpiRev.textContent = formatMoney(totalRevenue);
+    if (kpiOrders) kpiOrders.textContent = `${totalCompletedOrders.toLocaleString('vi-VN')} đơn hàng hoàn thành`;
+    if (kpiProfit) kpiProfit.textContent = formatMoney(grossProfit);
+    if (kpiMargin) kpiMargin.textContent = `Tỷ suất lợi nhuận: ${profitMargin}%`;
+    if (kpiVol) kpiVol.textContent = `${totalExportQty.toLocaleString('vi-VN')} / ${totalImportQty.toLocaleString('vi-VN')}`;
+    if (kpiVolSub) kpiVolSub.textContent = `Xuất: ${totalExportQty.toLocaleString('vi-VN')} | Nhập: ${totalImportQty.toLocaleString('vi-VN')} cái`;
+    if (kpiCost) kpiCost.textContent = formatMoney(currentTotalStockCost);
+    if (kpiSKU) kpiSKU.textContent = `${filteredProducts.length} SKU đang kinh doanh`;
+
+    // 10. Thiết lập Style và Theme cho Chart.js
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const textColor = isDark ? "#cbd5e1" : "#475569";
+    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+
+    // Update time badges on cards
+    const granText = granularity === "daily" ? "Theo Ngày" : granularity === "weekly" ? "Theo Tuần" : granularity === "monthly" ? "Theo Tháng" : "Theo Năm";
+    const badge1 = document.getElementById("chart1TimeBadge");
+    const badge2 = document.getElementById("chart2TimeBadge");
+    if (badge1) badge1.textContent = granText;
+    if (badge2) badge2.textContent = granText;
+
+    const chartLabels = intervals.map(iv => iv.label);
+
+    // =========================================================================
+    // MẪU 1: BIỂU ĐỒ BIẾN ĐỘNG XUẤT - NHẬP - TỒN (MIXED BAR & LINE)
+    // =========================================================================
+    const movementImports = intervals.map(iv => iv.importQty);
+    const movementExports = intervals.map(iv => iv.exportQty);
+    const movementStock = intervals.map(iv => iv.estimatedStock);
+
+    _createOrUpdateProdChart("prodChartMovement", {
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Nhập kho',
+                    data: movementImports,
+                    backgroundColor: 'rgba(2, 132, 199, 0.8)',
+                    borderColor: '#0284c7',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'bar',
+                    label: 'Xuất bán',
+                    data: movementExports,
+                    backgroundColor: 'rgba(16, 143, 83, 0.8)',
+                    borderColor: '#108f53',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Tồn kho lũy kế',
+                    data: movementStock,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 2.5,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#f59e0b',
+                    tension: 0.3,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y.toLocaleString('vi-VN')} cái`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: window.innerWidth < 600 ? 9 : 11 }, maxRotation: 45 }
+                },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: { display: window.innerWidth > 600, text: 'Xuất / Nhập (cái)', color: textColor, font: { size: 10 } },
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: window.innerWidth < 600 ? 9 : 10 } }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: { display: window.innerWidth > 600, text: 'Tồn kho (cái)', color: '#f59e0b', font: { size: 10 } },
+                    grid: { drawOnChartArea: false },
+                    ticks: { color: '#f59e0b', font: { size: window.innerWidth < 600 ? 9 : 10 } }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MẪU 2: BIỂU ĐỒ DOANH THU & LỢI NHUẬN GỘP THEO THỜI GIAN
+    // =========================================================================
+    const revData = intervals.map(iv => iv.revenue);
+    const costData = intervals.map(iv => iv.cost);
+    const profitData = intervals.map(iv => iv.profit);
+
+    _createOrUpdateProdChart("prodChartRevenue", {
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Doanh thu',
+                    data: revData,
+                    backgroundColor: 'rgba(16, 143, 83, 0.75)',
+                    borderColor: '#108f53',
+                    borderWidth: 1,
+                    borderRadius: 4
+                },
+                {
+                    type: 'bar',
+                    label: 'Giá vốn (COGS)',
+                    data: costData,
+                    backgroundColor: 'rgba(148, 163, 184, 0.6)',
+                    borderColor: '#94a3b8',
+                    borderWidth: 1,
+                    borderRadius: 4
+                },
+                {
+                    type: 'line',
+                    label: 'Lợi nhuận gộp',
+                    data: profitData,
+                    borderColor: '#7c3aed',
+                    backgroundColor: 'rgba(124, 58, 237, 0.12)',
+                    borderWidth: 2.5,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#7c3aed',
+                    tension: 0.35,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${formatMoney(context.parsed.y)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 },
+                        callback: val => formatMoney(val)
+                    }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MẪU 3: TOP 10 HÀNG HÓA BÁN CHẠY NHẤT (HORIZONTAL BAR)
+    // =========================================================================
+    const topMode = window._prodReportState.topMode || 'qty';
+    const allSalesList = Object.values(skuSalesMap);
+
+    // Sắp xếp theo chế độ được chọn
+    allSalesList.sort((a, b) => {
+        if (topMode === 'qty') return b.soldQty - a.soldQty;
+        if (topMode === 'revenue') return b.revenue - a.revenue;
+        return b.profit - a.profit;
+    });
+
+    const top10 = allSalesList.slice(0, 10);
+    const topLabels = top10.map(p => {
+        const shortName = p.name.length > 20 ? p.name.substring(0, 18) + '...' : p.name;
+        return `${p.sku} - ${shortName}`;
+    });
+    const topValues = top10.map(p => topMode === 'qty' ? p.soldQty : topMode === 'revenue' ? p.revenue : p.profit);
+
+    const barColor = topMode === 'qty' ? 'rgba(217, 119, 6, 0.8)' : topMode === 'revenue' ? 'rgba(16, 143, 83, 0.8)' : 'rgba(124, 58, 237, 0.8)';
+    const borderColor = topMode === 'qty' ? '#d97706' : topMode === 'revenue' ? '#108f53' : '#7c3aed';
+
+    _createOrUpdateProdChart("prodChartTopSellers", {
+        type: 'bar',
+        data: {
+            labels: topLabels,
+            datasets: [{
+                label: topMode === 'qty' ? 'Số lượng bán (cái)' : topMode === 'revenue' ? 'Doanh số bán (đ)' : 'Lợi nhuận gộp (đ)',
+                data: topValues,
+                backgroundColor: barColor,
+                borderColor: borderColor,
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const val = context.parsed.x;
+                            return topMode === 'qty' ? `Đã bán: ${val.toLocaleString('vi-VN')} cái` : `Giá trị: ${formatMoney(val)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 },
+                        callback: val => topMode === 'qty' ? val.toLocaleString('vi-VN') : formatMoney(val)
+                    }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { color: textColor, font: { size: 10 } }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MẪU 4: CƠ CẤU HÀNG HÓA THEO DANH MỤC & NHÀ CUNG CẤP (DOUGHNUT)
+    // =========================================================================
+    const structureMode = window._prodReportState.structureMode || 'category';
+    const structMap = {};
+
+    filteredProducts.forEach(p => {
+        let key = 'Khác';
+        if (structureMode === 'category') {
+            key = p.box_type || p.category || 'Hộp khác';
+        } else {
+            key = p.supplier || p.brand || 'In Lạc Hồng';
+        }
+        if (!structMap[key]) structMap[key] = { label: key, count: 0, stockValue: 0, revenue: 0 };
+        structMap[key].count++;
+        const cost = Number(p.cost_price || p.import_price || 0);
+        const stock = Number(p.stock_qty || 0);
+        structMap[key].stockValue += (cost * stock);
+
+        if (skuSalesMap[p.sku]) {
+            structMap[key].revenue += skuSalesMap[p.sku].revenue;
+        }
+    });
+
+    const structList = Object.values(structMap);
+    const structLabels = structList.map(s => s.label);
+    const structValues = structList.map(s => s.revenue > 0 ? s.revenue : s.stockValue);
+
+    const palette = ['#0284c7', '#d97706', '#108f53', '#8b5cf6', '#ec4899', '#f97316', '#06b6d4', '#64748b'];
+
+    _createOrUpdateProdChart("prodChartStructure", {
+        type: 'doughnut',
+        data: {
+            labels: structLabels,
+            datasets: [{
+                data: structValues,
+                backgroundColor: palette.slice(0, structLabels.length),
+                borderWidth: 2,
+                borderColor: isDark ? '#1e293b' : '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '62%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: textColor, font: { size: 11 }, padding: 12 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const val = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                            return `${context.label}: ${formatMoney(val)} (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const structSummaryEl = document.getElementById("prodStructureSummaryText");
+    if (structSummaryEl) {
+        structSummaryEl.textContent = structureMode === 'category' ? `Phân bổ doanh thu & tồn kho theo ${structLabels.length} loại hộp` : `Phân bổ theo ${structLabels.length} nhà cung cấp hợp tác`;
+    }
+
+    // =========================================================================
+    // MẪU 5: PHÂN TÍCH TRẠNG THÁI TỒN KHO & CẢNH BÁO (HEALTH DOUGHNUT)
+    // =========================================================================
+    let countInStock = 0;
+    let countLowStock = 0;
+    let countOutOfStock = 0;
+    let countSlowMoving = 0;
+
+    filteredProducts.forEach(p => {
+        const qty = Number(p.stock_qty || 0);
+        const sold = skuSalesMap[p.sku] ? skuSalesMap[p.sku].soldQty : 0;
+        if (qty <= 0) {
+            countOutOfStock++;
+        } else if (qty <= 10) {
+            countLowStock++;
+        } else if (qty >= 50 && sold === 0) {
+            countSlowMoving++;
+        } else {
+            countInStock++;
+        }
+    });
+
+    _createOrUpdateProdChart("prodChartStockHealth", {
+        type: 'doughnut',
+        data: {
+            labels: ['Đủ hàng an toàn', 'Sắp hết hàng (<=10)', 'Hết hàng (0)', 'Tồn đọng/Chậm'],
+            datasets: [{
+                data: [countInStock, countLowStock, countOutOfStock, countSlowMoving],
+                backgroundColor: ['#108f53', '#f59e0b', '#ef4444', '#94a3b8'],
+                borderWidth: 2,
+                borderColor: isDark ? '#1e293b' : '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.parsed} SKU`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const legendEl = document.getElementById("prodStockHealthLegend");
+    if (legendEl) {
+        legendEl.innerHTML = `
+            <div style="background:rgba(16,143,83,0.1); color:#108f53; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                An toàn: <strong>${countInStock}</strong>
+            </div>
+            <div style="background:rgba(245,158,11,0.1); color:#d97706; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Sắp hết: <strong>${countLowStock}</strong>
+            </div>
+            <div style="background:rgba(239,68,68,0.1); color:#ef4444; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Hết hàng: <strong>${countOutOfStock}</strong>
+            </div>
+            <div style="background:rgba(148,163,184,0.1); color:#64748b; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Chậm bán: <strong>${countSlowMoving}</strong>
+            </div>
+        `;
+    }
+
+    // Nhận định thông minh (Smart Insights)
+    const insightsEl = document.getElementById("prodReportSmartInsights");
+    if (insightsEl) {
+        const bestSeller = top10[0];
+        insightsEl.innerHTML = `
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; line-height:1.4;">
+                <i data-lucide="check-circle-2" style="width:16px; height:16px; color:#108f53; flex-shrink:0; margin-top:2px;"></i>
+                <span>Sản phẩm dẫn đầu doanh số: <strong>${bestSeller ? bestSeller.name : 'N/A'}</strong> (Mã: <code>${bestSeller ? bestSeller.sku : '-'}</code>) đạt <strong>${bestSeller ? formatMoney(bestSeller.revenue) : '0đ'}</strong>.</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; line-height:1.4;">
+                <i data-lucide="trending-up" style="width:16px; height:16px; color:#7c3aed; flex-shrink:0; margin-top:2px;"></i>
+                <span>Tỷ suất lợi nhuận gộp toàn ngành hàng đạt <strong>${profitMargin}%</strong> (Lãi gộp: <strong>${formatMoney(grossProfit)}</strong>).</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; line-height:1.4;">
+                <i data-lucide="${countLowStock + countOutOfStock > 0 ? 'alert-triangle' : 'shield-check'}" style="width:16px; height:16px; color:${countLowStock + countOutOfStock > 0 ? '#f59e0b' : '#108f53'}; flex-shrink:0; margin-top:2px;"></i>
+                <span>Tồn kho: <strong>${countLowStock}</strong> mã sắp hết hàng, <strong>${countOutOfStock}</strong> mã đã hết hàng cần đặt xưởng sản xuất kịp tiến độ.</span>
+            </div>
+        `;
+    }
+
+    // =========================================================================
+    // MẪU 6: BẢNG TỔNG HỢP SỐ LIỆU KINH DOANH THEO THỜI GIAN
+    // =========================================================================
+    const timeTbody = document.querySelector("#prodReportTimeTable tbody");
+    if (timeTbody) {
+        timeTbody.innerHTML = "";
+        let footOrders = 0;
+        let footImport = 0;
+        let footExport = 0;
+        let footRev = 0;
+        let footCost = 0;
+        let footProfit = 0;
+
+        intervals.forEach(iv => {
+            footOrders += iv.orderCount;
+            footImport += iv.importQty;
+            footExport += iv.exportQty;
+            footRev += iv.revenue;
+            footCost += iv.cost;
+            footProfit += iv.profit;
+
+            const margin = iv.revenue > 0 ? ((iv.profit / iv.revenue) * 100).toFixed(1) : "0.0";
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td style="text-align:center; color:var(--text-secondary); font-weight:600;">${idx + 1}</td>
-                <td>
-                    <span style="font-family:monospace; font-weight:700; color:var(--accent); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')" title="Bấm để xem/sửa hàng hóa">${p.sku || '-'}</span>
-                </td>
-                <td style="text-align:center;">${imgHtml}</td>
-                <td>
-                    <div style="font-weight:600; color:var(--text-primary); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')">${p.name}</div>
-                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">NCC: ${p.supplier || p.brand || 'Chưa gán'}</div>
-                </td>
-                <td><span style="font-size:0.8rem; background:rgba(0,0,0,0.04); padding:3px 8px; border-radius:4px; font-weight:500;">${p.box_type || p.category || '-'}</span></td>
-                <td style="text-align:center; font-size:0.85rem;">${p.unit || 'cái'}</td>
-                <td style="text-align:right; font-weight:600; color:#0284c7;">${formatMoney(cost)}</td>
-                <td style="text-align:right; font-weight:700; color:#108f53;">${formatMoney(retail)}</td>
-                <td style="text-align:right; font-weight:600; color:${diff >= 0 ? '#108f53' : '#ef4444'};">
-                    ${diff >= 0 ? '+' : ''}${formatMoney(diff)}
-                </td>
-                <td style="text-align:center; font-weight:700; font-size:0.95rem;">${stock.toLocaleString('vi-VN')}</td>
-                <td style="text-align:right; font-weight:700; color:#0284c7;">${formatMoney(itemCostVal)}</td>
-                <td style="text-align:center;">${badgeHtml}</td>
+                <td style="font-weight:600; color:var(--text-primary);">${iv.label}</td>
+                <td style="text-align:center;">${iv.orderCount.toLocaleString('vi-VN')}</td>
+                <td style="text-align:center; color:#0284c7; font-weight:600;">${iv.importQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:center; color:#108f53; font-weight:700;">${iv.exportQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:600; color:#108f53;">${formatMoney(iv.revenue)}</td>
+                <td style="text-align:right; color:var(--text-secondary);">${formatMoney(iv.cost)}</td>
+                <td style="text-align:right; font-weight:700; color:#7c3aed;">${formatMoney(iv.profit)}</td>
+                <td style="text-align:center;"><span class="badge" style="background:rgba(124,58,237,0.1); color:#7c3aed; font-weight:700;">${margin}%</span></td>
             `;
-            tableBody.appendChild(tr);
+            timeTbody.appendChild(tr);
         });
+
+        const overallMargin = footRev > 0 ? ((footProfit / footRev) * 100).toFixed(1) : "0.0";
+        const fOrdersEl = document.getElementById("prodTimeFootOrders");
+        const fImpEl = document.getElementById("prodTimeFootImport");
+        const fExpEl = document.getElementById("prodTimeFootExport");
+        const fRevEl = document.getElementById("prodTimeFootRevenue");
+        const fCostEl = document.getElementById("prodTimeFootCost");
+        const fProfEl = document.getElementById("prodTimeFootProfit");
+        const fMarginEl = document.getElementById("prodTimeFootMargin");
+
+        if (fOrdersEl) fOrdersEl.textContent = footOrders.toLocaleString('vi-VN');
+        if (fImpEl) fImpEl.textContent = footImport.toLocaleString('vi-VN');
+        if (fExpEl) fExpEl.textContent = footExport.toLocaleString('vi-VN');
+        if (fRevEl) fRevEl.textContent = formatMoney(footRev);
+        if (fCostEl) fCostEl.textContent = formatMoney(footCost);
+        if (fProfEl) fProfEl.textContent = formatMoney(footProfit);
+        if (fMarginEl) fMarginEl.textContent = `${overallMargin}%`;
     }
 
-    // 4. Update KPIs
-    const kpiSKU = document.getElementById("kpiProdReportTotalSKU");
-    const kpiCost = document.getElementById("kpiProdReportTotalCost");
-    const kpiRetail = document.getElementById("kpiProdReportTotalRetail");
-    const kpiProfit = document.getElementById("kpiProdReportProfitEst");
-
-    if (kpiSKU) kpiSKU.textContent = totalSKU.toLocaleString('vi-VN');
-    if (kpiCost) kpiCost.textContent = formatMoney(sumCostValue);
-    if (kpiRetail) kpiRetail.textContent = formatMoney(sumRetailValue);
-    if (kpiProfit) kpiProfit.textContent = formatMoney(sumRetailValue - sumCostValue);
-
-    // 5. Update Footer
-    const footStock = document.getElementById("prodReportFootStock");
-    const footVal = document.getElementById("prodReportFootTotalValue");
-    if (footStock) footStock.textContent = sumTotalStock.toLocaleString('vi-VN');
-    if (footVal) footVal.textContent = formatMoney(sumCostValue);
-
+    // Refresh icons
     if (window.lucide && typeof lucide.createIcons === 'function') {
         lucide.createIcons();
     }
 };
 
-// Xuất Excel Báo cáo Hàng hóa
+// ==========================================================================
+// XUẤT EXCEL BÁO CÁO HÀNG HÓA TOÀN DIỆN
+// ==========================================================================
 window.exportProductsReportToExcel = function() {
     if (typeof XLSX === "undefined") {
         alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
         return;
     }
-    const products = state.online_products || [];
-    if (products.length === 0) {
-        alert("Chưa có hàng hóa nào để xuất!");
-        return;
+    const wb = XLSX.utils.book_new();
+    const today = new Date().toISOString().slice(0, 10);
+
+    // Sheet 1: Bảng số liệu kinh doanh theo thời gian
+    const tableEl = document.getElementById("prodReportTimeTable");
+    if (tableEl) {
+        const ws1 = XLSX.utils.table_to_sheet(tableEl);
+        XLSX.utils.book_append_sheet(wb, ws1, "Bao_Cao_Theo_Thoi_Gian");
     }
 
-    const exportRows = products.map((p, idx) => {
+    // Sheet 2: Danh mục tồn kho hiện tại
+    const products = state.online_products || [];
+    const prodRows = products.map((p, idx) => {
         const cost = Number(p.cost_price || p.import_price || 0);
         const retail = Number(p.price || p.retail_price || 0);
         const stock = Number(p.stock_qty || 0);
-        const diff = retail - cost;
-        const costVal = stock * cost;
-        const retailVal = stock * retail;
-        let status = "Đủ hàng";
-        if (stock <= 0) status = "Hết hàng";
-        else if (stock <= 10) status = "Sắp hết hàng";
-
         return {
             "STT": idx + 1,
             "Mã SKU": p.sku || "",
             "Tên hàng hóa": p.name || "",
             "Loại hộp": p.box_type || p.category || "",
             "Nhà cung cấp": p.supplier || p.brand || "",
-            "Đơn vị tính": p.unit || "cái",
+            "ĐVT": p.unit || "cái",
             "Giá vốn (đ)": cost,
             "Giá bán lẻ (đ)": retail,
-            "Chênh lệch lãi (đ)": diff,
+            "Lãi gộp/cái (đ)": retail - cost,
             "Tồn kho thực tế": stock,
-            "Tổng giá trị tồn (Giá vốn)": costVal,
-            "Tổng giá trị niêm yết (Bán lẻ)": retailVal,
-            "Trạng thái": status
+            "Giá trị tồn theo vốn (đ)": stock * cost
         };
     });
+    const ws2 = XLSX.utils.json_to_sheet(prodRows);
+    XLSX.utils.book_append_sheet(wb, ws2, "Ton_Kho_Hien_Tai");
 
-    const ws = XLSX.utils.json_to_sheet(exportRows);
-    ws['!cols'] = [
-        { wch: 6 },
-        { wch: 14 },
-        { wch: 32 },
-        { wch: 18 },
-        { wch: 22 },
-        { wch: 10 },
-        { wch: 14 },
-        { wch: 14 },
-        { wch: 16 },
-        { wch: 14 },
-        { wch: 22 },
-        { wch: 22 },
-        { wch: 16 }
-    ];
+    XLSX.writeFile(wb, `Bao_Cao_Phan_Tich_Hang_Hoa_InLacHong_${today}.xlsx`);
+};
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Bao_Cao_Hang_Hoa");
-    const today = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `Bao_Cao_Hang_Hoa_InLacHong_${today}.xlsx`);
+window.exportProductsTimeTableToExcel = function() {
+    window.exportProductsReportToExcel();
 };
 
 // ==========================================================================
-// PHÂN HỆ 2: BÁO CÁO KHO HÀNG (WAREHOUSE REPORT)
+// ==========================================================================
+// PHÂN HỆ 2: BÁO CÁO KHO HÀNG (BIỂU ĐỒ TRỰC QUAN THEO NGÀY / THÁNG / NĂM)
+// ==========================================================================
+
+window._whReportState = window._whReportState || {
+    timePreset: 'this_month',
+    dateFrom: '',
+    dateTo: '',
+    topMode: 'stock_val',
+    structureMode: 'category',
+    activeModel: 'all'
+};
+window._whCharts = window._whCharts || {};
+
+// Đặt khoảng thời gian nhanh (Hôm nay, 7 ngày, Tháng này, Tháng trước, Năm nay, Tất cả)
+window.setWhReportTimePeriod = function(preset) {
+    window._whReportState.timePreset = preset;
+    document.querySelectorAll(".wh-time-btn").forEach(btn => {
+        if (btn.getAttribute("data-period") === preset) {
+            btn.classList.add("active");
+            btn.classList.add("btn-primary");
+            btn.classList.remove("btn-secondary");
+            btn.style.background = "#0284c7";
+            btn.style.borderColor = "#0284c7";
+        } else {
+            btn.classList.remove("active");
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-secondary");
+            btn.style.background = "";
+            btn.style.borderColor = "";
+        }
+    });
+
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const toDateStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    if (preset === 'today') {
+        const todayStr = toDateStr(now);
+        window._whReportState.dateFrom = todayStr;
+        window._whReportState.dateTo = todayStr;
+    } else if (preset === '7days') {
+        const d7 = new Date();
+        d7.setDate(now.getDate() - 6);
+        window._whReportState.dateFrom = toDateStr(d7);
+        window._whReportState.dateTo = toDateStr(now);
+    } else if (preset === 'this_month') {
+        const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        window._whReportState.dateFrom = toDateStr(startMonth);
+        window._whReportState.dateTo = toDateStr(endMonth);
+    } else if (preset === 'last_month') {
+        const startLast = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const endLast = new Date(now.getFullYear(), now.getMonth(), 0);
+        window._whReportState.dateFrom = toDateStr(startLast);
+        window._whReportState.dateTo = toDateStr(endLast);
+    } else if (preset === 'this_year') {
+        const startYear = new Date(now.getFullYear(), 0, 1);
+        const endYear = new Date(now.getFullYear(), 11, 31);
+        window._whReportState.dateFrom = toDateStr(startYear);
+        window._whReportState.dateTo = toDateStr(endYear);
+    } else if (preset === 'all') {
+        window._whReportState.dateFrom = '2026-01-01';
+        window._whReportState.dateTo = toDateStr(now);
+    }
+
+    const dfInput = document.getElementById("whReportDateFrom");
+    const dtInput = document.getElementById("whReportDateTo");
+    if (dfInput) dfInput.value = window._whReportState.dateFrom;
+    if (dtInput) dtInput.value = window._whReportState.dateTo;
+
+    window.renderWarehouseReport();
+};
+
+window.onWhReportDateRangeChange = function() {
+    const dfInput = document.getElementById("whReportDateFrom");
+    const dtInput = document.getElementById("whReportDateTo");
+    if (dfInput && dtInput) {
+        window._whReportState.dateFrom = dfInput.value;
+        window._whReportState.dateTo = dtInput.value;
+        window._whReportState.timePreset = 'custom';
+        document.querySelectorAll(".wh-time-btn").forEach(btn => {
+            if (btn.getAttribute("data-period") === 'custom') {
+                btn.classList.add("active");
+                btn.classList.add("btn-primary");
+                btn.classList.remove("btn-secondary");
+                btn.style.background = "#0284c7";
+                btn.style.borderColor = "#0284c7";
+            } else {
+                btn.classList.remove("active");
+                btn.classList.remove("btn-primary");
+                btn.classList.add("btn-secondary");
+                btn.style.background = "";
+                btn.style.borderColor = "";
+            }
+        });
+    }
+    window.renderWarehouseReport();
+};
+
+// Chuyển đổi chế độ xem Top 10 Kho (Giá trị tồn / SL xuất / Tiền xuất)
+window.setWhTopMode = function(mode) {
+    window._whReportState.topMode = mode;
+    document.querySelectorAll(".wh-top-mode-btn").forEach(btn => {
+        if (btn.getAttribute("data-mode") === mode) {
+            btn.classList.add("active");
+            btn.style.background = mode === 'stock_val' ? 'rgba(217,119,6,0.15)' : mode === 'exp_qty' ? 'rgba(2,132,199,0.15)' : 'rgba(234,88,12,0.15)';
+            btn.style.color = mode === 'stock_val' ? '#d97706' : mode === 'exp_qty' ? '#0284c7' : '#ea580c';
+            btn.style.fontWeight = '700';
+            btn.style.border = 'none';
+        } else {
+            btn.classList.remove("active");
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '600';
+            btn.style.border = '';
+        }
+    });
+    window.renderWarehouseReport();
+};
+
+// Chuyển đổi cơ cấu kho (Loại hộp / Nhà cung cấp)
+window.setWhStructureMode = function(mode) {
+    window._whReportState.structureMode = mode;
+    document.querySelectorAll(".wh-structure-mode-btn").forEach(btn => {
+        if (btn.getAttribute("data-mode") === mode) {
+            btn.classList.add("active");
+            btn.style.background = 'rgba(139,92,246,0.15)';
+            btn.style.color = '#8b5cf6';
+            btn.style.fontWeight = '700';
+            btn.style.border = 'none';
+        } else {
+            btn.classList.remove("active");
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '600';
+            btn.style.border = '';
+        }
+    });
+    window.renderWarehouseReport();
+};
+
+// Chuyển tab Mẫu báo cáo kho
+window.switchWhReportModel = function(modelId) {
+    window._whReportState.activeModel = modelId;
+
+    // Đồng bộ nút tab trên desktop
+    document.querySelectorAll(".wh-tab-model").forEach(tab => {
+        if (tab.getAttribute("data-model") === modelId) {
+            tab.classList.add("active");
+            tab.style.background = "#0284c7";
+            tab.style.color = "#fff";
+            tab.style.border = "none";
+        } else {
+            tab.classList.remove("active");
+            tab.style.background = "";
+            tab.style.color = "";
+            tab.style.border = "";
+        }
+    });
+
+    // Đồng bộ dropdown select trên mobile
+    const sel = document.getElementById("whReportModelSelect");
+    if (sel && sel.value !== modelId) {
+        sel.value = modelId;
+    }
+
+    // Ẩn/hiện card theo mẫu được chọn
+    document.querySelectorAll(".wh-report-card").forEach(card => {
+        const cardModel = card.getAttribute("data-card");
+        if (modelId === "all" || cardModel === modelId) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    // Tự động căn chỉnh và resize biểu đồ khớp chuẩn 100% khung hình mobile
+    setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        if (window._whCharts) {
+            Object.values(window._whCharts).forEach(c => {
+                try { if (c && typeof c.resize === 'function') c.resize(); } catch(e){}
+            });
+        }
+    }, 60);
+};
+
+// Đặt lại toàn bộ bộ lọc kho về mặc định
+window.resetWhReportFilters = function() {
+    const sInput = document.getElementById("whReportSearchInput");
+    if (sInput) sInput.value = "";
+    const supSelect = document.getElementById("whReportSupplierFilter");
+    if (supSelect) supSelect.value = "";
+    const stockSelect = document.getElementById("whReportStockFilter");
+    if (stockSelect) stockSelect.value = "";
+    const gran = document.getElementById("whReportGranularity");
+    if (gran) gran.value = "daily";
+    window.setWhReportTimePeriod("this_month");
+};
+
+// In Báo cáo kho
+window.printWarehouseReport = function() {
+    window.print();
+};
+
+// Hàm tạo hoặc cập nhật Chart.js an toàn cho Kho
+function _createOrUpdateWhChart(canvasId, config) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+    if (window._whCharts[canvasId]) {
+        try {
+            window._whCharts[canvasId].destroy();
+        } catch (e) {
+            console.warn("Chart destroy warning:", e);
+        }
+        delete window._whCharts[canvasId];
+    }
+    if (typeof Chart === 'undefined') {
+        return null;
+    }
+    try {
+        const ctx = canvas.getContext('2d');
+        const chart = new Chart(ctx, config);
+        window._whCharts[canvasId] = chart;
+        return chart;
+    } catch (err) {
+        console.error("Error creating chart on " + canvasId, err);
+        return null;
+    }
+}
+
+// ==========================================================================
+// HÀM RENDER CHÍNH: BÁO CÁO KHO HÀNG (BIỂU ĐỒ & THỜI GIAN)
 // ==========================================================================
 window.renderWarehouseReport = function() {
-    const tableBody = document.querySelector("#warehouseReportTable tbody");
-    if (!tableBody) return;
-    tableBody.innerHTML = "";
-
     const products = state.online_products || [];
     const importVouchers = state.online_import_vouchers || [];
+    const importRecords = state.online_import_records || [];
     const exportRecords = state.online_export_records || [];
     const stockLogs = state.online_stock_logs || [];
+    const rawOrders = state.online_orders || [];
 
-    // 1. Populate Supplier Dropdown
+    // 1. Khởi tạo dropdown Nhà cung cấp nếu chưa có
     const supSelect = document.getElementById("whReportSupplierFilter");
     if (supSelect && supSelect.options.length <= 1) {
         const uniqueSups = new Set();
-        (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "SUBCONTRACTOR" || p.role === "BOTH").forEach(s => uniqueSups.add(s.name));
+        (state.partners || []).filter(p => p.role === "SUPPLIER" || p.role === "BOTH").forEach(s => uniqueSups.add(s.name));
         products.forEach(p => {
             if (p.supplier) uniqueSups.add(p.supplier);
             if (p.brand) uniqueSups.add(p.brand);
@@ -40838,37 +42324,35 @@ window.renderWarehouseReport = function() {
         });
     }
 
-    // 2. Pre-calculate Imports and Exports per SKU
-    const importStatsBySku = {};
-    importVouchers.forEach(v => {
-        (v.items || []).forEach(it => {
-            if (!it.sku) return;
-            if (!importStatsBySku[it.sku]) importStatsBySku[it.sku] = { qty: 0, amount: 0 };
-            const q = Number(it.qty || 0);
-            const cost = Number(it.cost_price || it.price || 0);
-            importStatsBySku[it.sku].qty += q;
-            importStatsBySku[it.sku].amount += (q * cost) * 1.08;
-        });
-    });
+    // 2. Khởi tạo giá trị ngày nếu chưa có
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const toDateStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-    const exportStatsBySku = {};
-    exportRecords.forEach(r => {
-        (r.items || []).forEach(it => {
-            if (!it.sku) return;
-            if (!exportStatsBySku[it.sku]) exportStatsBySku[it.sku] = { qty: 0, amount: 0 };
-            const q = Number(it.real_qty || it.qty || 0);
-            const pVal = Number(it.price || 0);
-            exportStatsBySku[it.sku].qty += q;
-            exportStatsBySku[it.sku].amount += (q * pVal) * 1.08;
-        });
-    });
+    if (!window._whReportState.dateFrom || !window._whReportState.dateTo) {
+        const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        window._whReportState.dateFrom = toDateStr(startMonth);
+        window._whReportState.dateTo = toDateStr(endMonth);
+        const dfInput = document.getElementById("whReportDateFrom");
+        const dtInput = document.getElementById("whReportDateTo");
+        if (dfInput) dfInput.value = window._whReportState.dateFrom;
+        if (dtInput) dtInput.value = window._whReportState.dateTo;
+    }
 
-    // 3. Filter Products
+    // 3. Đọc các bộ lọc người dùng
     const searchVal = (document.getElementById("whReportSearchInput")?.value || "").toLowerCase().trim();
     const supVal = document.getElementById("whReportSupplierFilter")?.value || "";
     const stockVal = document.getElementById("whReportStockFilter")?.value || "";
+    const granularity = document.getElementById("whReportGranularity")?.value || "daily";
 
-    const filtered = products.filter(p => {
+    const dateFromStr = window._whReportState.dateFrom;
+    const dateToStr = window._whReportState.dateTo;
+    const dateFrom = new Date(dateFromStr + "T00:00:00");
+    const dateTo = new Date(dateToStr + "T23:59:59");
+
+    // Lọc danh mục sản phẩm theo Nhà cung cấp, Từ khóa, Trạng thái tồn
+    const filteredProducts = products.filter(p => {
         if (searchVal) {
             const match = `${p.sku || ''} ${p.name || ''} ${p.supplier || ''} ${p.brand || ''}`.toLowerCase();
             if (!match.includes(searchVal)) return false;
@@ -40881,226 +42365,1748 @@ window.renderWarehouseReport = function() {
         return true;
     });
 
-    // 4. Compute Totals & Render Rows
-    let sumImportQty = 0;
-    let sumImportAmount = 0;
-    let sumExportQty = 0;
-    let sumExportAmount = 0;
-    let sumStockQty = 0;
-    let sumStockValue = 0;
+    const filteredSkuSet = new Set(filteredProducts.map(p => p.sku));
+    const prodMap = {};
+    products.forEach(p => { if (p && p.sku) prodMap[p.sku] = p; });
 
-    if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:32px; color:var(--text-secondary); font-style:italic;">Không có mặt hàng nào phù hợp với bộ lọc kho hàng</td></tr>`;
-    } else {
-        filtered.forEach((p, idx) => {
-            const sku = p.sku || '';
-            const cost = Number(p.cost_price || p.import_price || 0);
-            const stock = Number(p.stock_qty || 0);
-            const itemStockVal = stock * cost;
+    // Thu thập thống kê SKU (cho Top 10 và Cơ cấu kho)
+    const skuWhMap = {};
+    filteredProducts.forEach(p => {
+        const cost = Number(p.cost_price || p.import_price || 0);
+        const stock = Number(p.stock_qty || 0);
+        skuWhMap[p.sku] = {
+            sku: p.sku,
+            name: p.name,
+            box_type: p.box_type || p.category || 'Hộp cao cấp',
+            supplier: p.supplier || p.brand || 'In Lạc Hồng',
+            cost: cost,
+            price: Number(p.price || p.retail_price || 0),
+            stock: stock,
+            stockVal: stock * cost,
+            impQty: 0,
+            impVal: 0,
+            expQty: 0,
+            expVal: 0
+        };
+    });
 
-            // Import stats
-            let impQty = importStatsBySku[sku]?.qty || 0;
-            let impAmt = importStatsBySku[sku]?.amount || 0;
-            if (impQty === 0) {
-                const logs = stockLogs.filter(l => l.sku === sku && l.type === 'IMPORT');
-                impQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
-                impAmt = impQty * cost * 1.08;
+    // 4. Tạo danh sách các khoảng thời gian (Intervals) theo Granularity
+    const intervals = [];
+    if (granularity === "daily") {
+        let cur = new Date(dateFrom);
+        while (cur <= dateTo) {
+            const k = toDateStr(cur);
+            intervals.push({
+                key: k,
+                label: `${cur.getDate()}/${cur.getMonth() + 1}`,
+                startDate: new Date(k + "T00:00:00"),
+                endDate: new Date(k + "T23:59:59"),
+                importQty: 0,
+                importVal: 0,
+                importVouchersCount: 0,
+                exportQty: 0,
+                exportVal: 0,
+                exportVouchersCount: 0,
+                runningStockQty: 0,
+                runningStockVal: 0
+            });
+            cur.setDate(cur.getDate() + 1);
+        }
+    } else if (granularity === "weekly") {
+        let cur = new Date(dateFrom);
+        let weekIdx = 1;
+        while (cur <= dateTo) {
+            const wStart = new Date(cur);
+            const wEnd = new Date(cur);
+            wEnd.setDate(wEnd.getDate() + 6);
+            if (wEnd > dateTo) wEnd.setTime(dateTo.getTime());
+
+            const k = `W${weekIdx}_${toDateStr(wStart)}`;
+            intervals.push({
+                key: k,
+                label: `Tuần ${weekIdx} (${wStart.getDate()}/${wStart.getMonth()+1})`,
+                startDate: new Date(toDateStr(wStart) + "T00:00:00"),
+                endDate: new Date(toDateStr(wEnd) + "T23:59:59"),
+                importQty: 0,
+                importVal: 0,
+                importVouchersCount: 0,
+                exportQty: 0,
+                exportVal: 0,
+                exportVouchersCount: 0,
+                runningStockQty: 0,
+                runningStockVal: 0
+            });
+            weekIdx++;
+            cur.setDate(cur.getDate() + 7);
+        }
+    } else if (granularity === "monthly") {
+        let cur = new Date(dateFrom.getFullYear(), dateFrom.getMonth(), 1);
+        const endMonthLimit = new Date(dateTo.getFullYear(), dateTo.getMonth(), 1);
+        while (cur <= endMonthLimit) {
+            const mKey = `${cur.getFullYear()}-${pad(cur.getMonth() + 1)}`;
+            const mStart = new Date(cur.getFullYear(), cur.getMonth(), 1);
+            const mEnd = new Date(cur.getFullYear(), cur.getMonth() + 1, 0, 23, 59, 59);
+            intervals.push({
+                key: mKey,
+                label: `Tháng ${cur.getMonth() + 1}/${cur.getFullYear()}`,
+                startDate: mStart,
+                endDate: mEnd,
+                importQty: 0,
+                importVal: 0,
+                importVouchersCount: 0,
+                exportQty: 0,
+                exportVal: 0,
+                exportVouchersCount: 0,
+                runningStockQty: 0,
+                runningStockVal: 0
+            });
+            cur.setMonth(cur.getMonth() + 1);
+        }
+    } else if (granularity === "yearly") {
+        const startY = dateFrom.getFullYear();
+        const endY = dateTo.getFullYear();
+        for (let y = startY; y <= endY; y++) {
+            intervals.push({
+                key: String(y),
+                label: `Năm ${y}`,
+                startDate: new Date(y, 0, 1),
+                endDate: new Date(y, 11, 31, 23, 59, 59),
+                importQty: 0,
+                importVal: 0,
+                importVouchersCount: 0,
+                exportQty: 0,
+                exportVal: 0,
+                exportVouchersCount: 0,
+                runningStockQty: 0,
+                runningStockVal: 0
+            });
+        }
+    }
+
+    const findInterval = (dateObj) => {
+        if (!dateObj || isNaN(dateObj.getTime())) return null;
+        return intervals.find(iv => dateObj >= iv.startDate && dateObj <= iv.endDate);
+    };
+
+    // 5. Tích lũy số liệu Nhập kho (Phiếu nhập kho, Lô nhập kho, Logs)
+    let totalImportVouchers = 0;
+    let totalImportQty = 0;
+    let totalImportVal = 0;
+
+    const countedImportIds = new Set();
+    importVouchers.forEach(v => {
+        const vDate = new Date(v.created_at || v.date || Date.now());
+        const iv = findInterval(vDate);
+        if (!iv) return;
+
+        let voucherHasItem = false;
+        let vQty = 0;
+        let vVal = 0;
+
+        (v.items || []).forEach(it => {
+            if (filteredSkuSet.has(it.sku)) {
+                voucherHasItem = true;
+                const q = Number(it.real_qty || it.qty || 0);
+                const cost = Number(it.cost_price || it.price || 0);
+                const val = q * cost * 1.08;
+                vQty += q;
+                vVal += val;
+
+                if (skuWhMap[it.sku]) {
+                    skuWhMap[it.sku].impQty += q;
+                    skuWhMap[it.sku].impVal += val;
+                }
             }
+        });
 
-            // Export stats
-            let expQty = exportStatsBySku[sku]?.qty || 0;
-            let expAmt = exportStatsBySku[sku]?.amount || 0;
-            if (expQty === 0) {
-                const logs = stockLogs.filter(l => l.sku === sku && l.type === 'EXPORT');
-                expQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
-                const retailPrice = Number(p.price || p.retail_price || 0);
-                expAmt = expQty * retailPrice * 1.08;
+        if (voucherHasItem) {
+            iv.importVouchersCount++;
+            iv.importQty += vQty;
+            iv.importVal += vVal;
+            totalImportVouchers++;
+            totalImportQty += vQty;
+            totalImportVal += vVal;
+            countedImportIds.add(v.id);
+        }
+    });
+
+    importRecords.forEach(imp => {
+        if (countedImportIds.has(imp.id) || countedImportIds.has(imp.batch_id)) return;
+        const impDate = new Date(imp.created_at || Date.now());
+        const iv = findInterval(impDate);
+        if (!iv) return;
+
+        if (filteredSkuSet.has(imp.sku)) {
+            const q = Number(imp.real_qty || imp.quantity || imp.qty || 0);
+            const prod = prodMap[imp.sku];
+            const cost = Number(imp.cost_price || (prod ? (prod.cost_price || prod.import_price) : 0));
+            const val = q * cost * 1.08;
+
+            iv.importVouchersCount++;
+            iv.importQty += q;
+            iv.importVal += val;
+            totalImportVouchers++;
+            totalImportQty += q;
+            totalImportVal += val;
+            countedImportIds.add(imp.id);
+
+            if (skuWhMap[imp.sku]) {
+                skuWhMap[imp.sku].impQty += q;
+                skuWhMap[imp.sku].impVal += val;
             }
+        }
+    });
 
-            sumImportQty += impQty;
-            sumImportAmount += impAmt;
-            sumExportQty += expQty;
-            sumExportAmount += expAmt;
-            sumStockQty += stock;
-            sumStockValue += itemStockVal;
+    // 6. Tích lũy số liệu Xuất kho (Phiếu xuất kho & Đơn bán hoàn thành)
+    let totalExportVouchers = 0;
+    let totalExportQty = 0;
+    let totalExportVal = 0;
 
-            let badgeHtml = '';
-            if (stock <= 0) {
-                badgeHtml = `<span class="badge" style="background:#fee2e2; color:#ef4444; font-weight:700;">Hết hàng</span>`;
-            } else if (stock <= 10) {
-                badgeHtml = `<span class="badge" style="background:#fef3c7; color:#d97706; font-weight:700;">Sắp hết (${stock})</span>`;
-            } else {
-                badgeHtml = `<span class="badge" style="background:#dcfce7; color:#108f53; font-weight:700;">Đủ hàng (${stock})</span>`;
+    const countedExportIds = new Set();
+    exportRecords.forEach(exp => {
+        const expDate = new Date(exp.date || exp.created_at || Date.now());
+        const iv = findInterval(expDate);
+        if (!iv) return;
+
+        let expHasItem = false;
+        let eQty = 0;
+        let eVal = 0;
+
+        (exp.items || []).forEach(it => {
+            if (filteredSkuSet.has(it.sku)) {
+                expHasItem = true;
+                const q = Number(it.real_qty || it.qty || 0);
+                const pVal = Number(it.price || 0);
+                const val = (Number(it.total) || (q * pVal)) * 1.08;
+                eQty += q;
+                eVal += val;
+
+                if (skuWhMap[it.sku]) {
+                    skuWhMap[it.sku].expQty += q;
+                    skuWhMap[it.sku].expVal += val;
+                }
             }
+        });
+
+        if (expHasItem) {
+            iv.exportVouchersCount++;
+            iv.exportQty += eQty;
+            iv.exportVal += eVal;
+            totalExportVouchers++;
+            totalExportQty += eQty;
+            totalExportVal += eVal;
+            countedExportIds.add(exp.id);
+        }
+    });
+
+    rawOrders.forEach(o => {
+        if (!o || o.status === 'CANCELLED' || o.payment_status === 'DRAFT') return;
+        if (countedExportIds.has(o.id)) return;
+        const oDate = new Date(o.created_at || o.date || Date.now());
+        const iv = findInterval(oDate);
+        if (!iv) return;
+
+        let orderHasItem = false;
+        let oQty = 0;
+        let oVal = 0;
+
+        if (Array.isArray(o.items) && o.items.length > 0) {
+            o.items.forEach(it => {
+                if (filteredSkuSet.has(it.sku)) {
+                    orderHasItem = true;
+                    const q = Number(it.qty || 0);
+                    const prod = prodMap[it.sku];
+                    const price = Number(it.price || (prod ? prod.price : 0));
+                    const val = q * price * 1.08;
+                    oQty += q;
+                    oVal += val;
+
+                    if (skuWhMap[it.sku]) {
+                        skuWhMap[it.sku].expQty += q;
+                        skuWhMap[it.sku].expVal += val;
+                    }
+                }
+            });
+        }
+
+        if (orderHasItem) {
+            iv.exportVouchersCount++;
+            iv.exportQty += oQty;
+            iv.exportVal += oVal;
+            totalExportVouchers++;
+            totalExportQty += oQty;
+            totalExportVal += oVal;
+            countedExportIds.add(o.id);
+        }
+    });
+
+    // Tính toán Tồn kho hiện tại và Lũy kế cho từng interval
+    let currentTotalStockQty = filteredProducts.reduce((sum, p) => sum + Number(p.stock_qty || 0), 0);
+    let currentTotalStockCost = filteredProducts.reduce((sum, p) => sum + (Number(p.stock_qty || 0) * Number(p.cost_price || p.import_price || 0)), 0);
+
+    let runningQty = currentTotalStockQty;
+    let runningVal = currentTotalStockCost;
+    for (let i = intervals.length - 1; i >= 0; i--) {
+        const iv = intervals[i];
+        iv.runningStockQty = Math.max(0, runningQty);
+        iv.runningStockVal = Math.max(0, runningVal);
+        runningQty = runningQty - iv.importQty + iv.exportQty;
+        runningVal = runningVal - (iv.importVal / 1.08) + (iv.exportVal / 1.08);
+    }
+
+    // 7. Cập nhật 4 Card KPIs Kho hàng
+    const kpiImpEl = document.getElementById("kpiWhReportTotalImport");
+    const kpiImpCountEl = document.getElementById("kpiWhReportImportCount");
+    const kpiExpEl = document.getElementById("kpiWhReportTotalExport");
+    const kpiExpCountEl = document.getElementById("kpiWhReportExportCount");
+    const kpiValEl = document.getElementById("kpiWhReportTotalValue");
+    const kpiSKUEl = document.getElementById("kpiWhReportSKUCount");
+    const kpiQtyEl = document.getElementById("kpiWhReportTotalQty");
+    const kpiHealthSubEl = document.getElementById("kpiWhReportHealthSub");
+
+    if (kpiImpEl) kpiImpEl.textContent = formatMoney(Math.round(totalImportVal));
+    if (kpiImpCountEl) kpiImpCountEl.textContent = `${totalImportVouchers.toLocaleString('vi-VN')} phiếu nhập kho`;
+    if (kpiExpEl) kpiExpEl.textContent = formatMoney(Math.round(totalExportVal));
+    if (kpiExpCountEl) kpiExpCountEl.textContent = `${totalExportVouchers.toLocaleString('vi-VN')} phiếu xuất kho`;
+    if (kpiValEl) kpiValEl.textContent = formatMoney(Math.round(currentTotalStockCost));
+    if (kpiSKUEl) kpiSKUEl.textContent = `${filteredProducts.length} SKU đang lưu kho`;
+    if (kpiQtyEl) kpiQtyEl.textContent = currentTotalStockQty.toLocaleString('vi-VN');
+    if (kpiHealthSubEl) kpiHealthSubEl.textContent = `Tổng quy mô tồn kho thực tế`;
+
+    // 8. Thiết lập Style và Theme cho Chart.js
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const textColor = isDark ? "#cbd5e1" : "#475569";
+    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+
+    const granText = granularity === "daily" ? "Theo Ngày" : granularity === "weekly" ? "Theo Tuần" : granularity === "monthly" ? "Theo Tháng" : "Theo Năm";
+    const badge1 = document.getElementById("whChart1TimeBadge");
+    const badge2 = document.getElementById("whChart2TimeBadge");
+    if (badge1) badge1.textContent = granText;
+    if (badge2) badge2.textContent = granText;
+
+    const chartLabels = intervals.map(iv => iv.label);
+
+    // =========================================================================
+    // MẪU 1: BIỂU ĐỒ GIÁ TRỊ TIỀN NHẬP - XUẤT KHO THEO THỜI GIAN (VAT 8%)
+    // =========================================================================
+    const valImports = intervals.map(iv => Math.round(iv.importVal));
+    const valExports = intervals.map(iv => Math.round(iv.exportVal));
+    const valNetDiff = intervals.map(iv => Math.round(iv.importVal - iv.exportVal));
+
+    _createOrUpdateWhChart("whChartValueMovement", {
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Tiền Nhập kho (VAT)',
+                    data: valImports,
+                    backgroundColor: 'rgba(2, 132, 199, 0.8)',
+                    borderColor: '#0284c7',
+                    borderWidth: 1,
+                    borderRadius: 4
+                },
+                {
+                    type: 'bar',
+                    label: 'Tiền Xuất kho (VAT)',
+                    data: valExports,
+                    backgroundColor: 'rgba(234, 88, 12, 0.8)',
+                    borderColor: '#ea580c',
+                    borderWidth: 1,
+                    borderRadius: 4
+                },
+                {
+                    type: 'line',
+                    label: 'Chênh lệch luân chuyển',
+                    data: valNetDiff,
+                    borderColor: '#108f53',
+                    backgroundColor: 'rgba(16, 143, 83, 0.1)',
+                    borderWidth: 2.5,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#108f53',
+                    tension: 0.35,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${formatMoney(context.parsed.y)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 },
+                        callback: val => formatMoney(val)
+                    }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MẪU 2: BIỂU ĐỒ BIẾN ĐỘNG SẢN LƯỢNG NHẬP - XUẤT - TỒN KHO
+    // =========================================================================
+    const qtyImports = intervals.map(iv => iv.importQty);
+    const qtyExports = intervals.map(iv => iv.exportQty);
+    const qtyStock = intervals.map(iv => iv.runningStockQty);
+
+    _createOrUpdateWhChart("whChartQtyMovement", {
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'SL Nhập',
+                    data: qtyImports,
+                    backgroundColor: 'rgba(2, 132, 199, 0.8)',
+                    borderColor: '#0284c7',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'bar',
+                    label: 'SL Xuất',
+                    data: qtyExports,
+                    backgroundColor: 'rgba(234, 88, 12, 0.8)',
+                    borderColor: '#ea580c',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Tồn kho thực tế',
+                    data: qtyStock,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 2.5,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#f59e0b',
+                    tension: 0.3,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y.toLocaleString('vi-VN')} cái`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: window.innerWidth < 600 ? 9 : 11 }, maxRotation: 45 }
+                },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: { display: window.innerWidth > 600, text: 'Xuất / Nhập (cái)', color: textColor, font: { size: 10 } },
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, font: { size: window.innerWidth < 600 ? 9 : 10 } }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: { display: window.innerWidth > 600, text: 'Tồn kho (cái)', color: '#f59e0b', font: { size: 10 } },
+                    grid: { drawOnChartArea: false },
+                    ticks: { color: '#f59e0b', font: { size: window.innerWidth < 600 ? 9 : 10 } }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MẪU 3: TOP 10 MẶT HÀNG CHIẾM DỤNG VỐN & XUẤT KHO (HORIZONTAL BAR)
+    // =========================================================================
+    const topMode = window._whReportState.topMode || 'stock_val';
+    const allWhList = Object.values(skuWhMap);
+
+    allWhList.sort((a, b) => {
+        if (topMode === 'stock_val') return b.stockVal - a.stockVal;
+        if (topMode === 'exp_qty') return b.expQty - a.expQty;
+        return b.expVal - a.expVal;
+    });
+
+    const top10 = allWhList.slice(0, 10);
+    const topLabels = top10.map(p => {
+        const shortName = p.name.length > 20 ? p.name.substring(0, 18) + '...' : p.name;
+        return `${p.sku} - ${shortName}`;
+    });
+    const topValues = top10.map(p => topMode === 'stock_val' ? p.stockVal : topMode === 'exp_qty' ? p.expQty : p.expVal);
+
+    const barColor = topMode === 'stock_val' ? 'rgba(217, 119, 6, 0.8)' : topMode === 'exp_qty' ? 'rgba(2, 132, 199, 0.8)' : 'rgba(234, 88, 12, 0.8)';
+    const borderColor = topMode === 'stock_val' ? '#d97706' : topMode === 'exp_qty' ? '#0284c7' : '#ea580c';
+
+    _createOrUpdateWhChart("whChartTopStock", {
+        type: 'bar',
+        data: {
+            labels: topLabels,
+            datasets: [{
+                label: topMode === 'stock_val' ? 'Giá trị tồn kho (đ)' : topMode === 'exp_qty' ? 'Sản lượng xuất (cái)' : 'Tiền xuất kho VAT (đ)',
+                data: topValues,
+                backgroundColor: barColor,
+                borderColor: borderColor,
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const val = context.parsed.x;
+                            return topMode === 'exp_qty' ? `Đã xuất: ${val.toLocaleString('vi-VN')} cái` : `Giá trị: ${formatMoney(val)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 10 },
+                        callback: val => topMode === 'exp_qty' ? val.toLocaleString('vi-VN') : formatMoney(val)
+                    }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { color: textColor, font: { size: 10 } }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MẪU 4: CƠ CẤU GIÁ TRỊ LƯU KHO THEO LOẠI HỘP & NHÀ CUNG CẤP (DOUGHNUT)
+    // =========================================================================
+    const structureMode = window._whReportState.structureMode || 'category';
+    const structMap = {};
+
+    filteredProducts.forEach(p => {
+        let key = 'Khác';
+        if (structureMode === 'category') {
+            key = p.box_type || p.category || 'Hộp khác';
+        } else {
+            key = p.supplier || p.brand || 'In Lạc Hồng';
+        }
+        if (!structMap[key]) structMap[key] = { label: key, count: 0, stockValue: 0 };
+        structMap[key].count++;
+        const cost = Number(p.cost_price || p.import_price || 0);
+        const stock = Number(p.stock_qty || 0);
+        structMap[key].stockValue += (cost * stock);
+    });
+
+    const structList = Object.values(structMap);
+    const structLabels = structList.map(s => s.label);
+    const structValues = structList.map(s => s.stockValue);
+
+    const palette = ['#0284c7', '#d97706', '#108f53', '#8b5cf6', '#ec4899', '#f97316', '#06b6d4', '#64748b'];
+
+    _createOrUpdateWhChart("whChartStructure", {
+        type: 'doughnut',
+        data: {
+            labels: structLabels,
+            datasets: [{
+                data: structValues,
+                backgroundColor: palette.slice(0, structLabels.length),
+                borderWidth: 2,
+                borderColor: isDark ? '#1e293b' : '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '62%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: textColor, font: { size: 11 }, padding: 12 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const val = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                            return `${context.label}: ${formatMoney(val)} (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const structSummaryEl = document.getElementById("whStructureSummaryText");
+    if (structSummaryEl) {
+        structSummaryEl.textContent = structureMode === 'category' ? `Phân bổ giá trị kho theo ${structLabels.length} loại hộp` : `Phân bổ giá trị kho theo ${structLabels.length} nhà cung cấp hợp tác`;
+    }
+
+    // =========================================================================
+    // MẪU 5: CẢNH BÁO TỒN KHO & SỨC KHỎE LƯU KHO (HEALTH DOUGHNUT)
+    // =========================================================================
+    let countInStock = 0;
+    let countLowStock = 0;
+    let countOutOfStock = 0;
+    let countSlowMoving = 0;
+
+    filteredProducts.forEach(p => {
+        const qty = Number(p.stock_qty || 0);
+        const exp = skuWhMap[p.sku] ? skuWhMap[p.sku].expQty : 0;
+        if (qty <= 0) {
+            countOutOfStock++;
+        } else if (qty <= 10) {
+            countLowStock++;
+        } else if (qty >= 50 && exp === 0) {
+            countSlowMoving++;
+        } else {
+            countInStock++;
+        }
+    });
+
+    _createOrUpdateWhChart("whChartHealth", {
+        type: 'doughnut',
+        data: {
+            labels: ['Đủ hàng an toàn', 'Sắp hết hàng (<=10)', 'Hết hàng (0)', 'Tồn đọng/Chậm'],
+            datasets: [{
+                data: [countInStock, countLowStock, countOutOfStock, countSlowMoving],
+                backgroundColor: ['#108f53', '#f59e0b', '#ef4444', '#94a3b8'],
+                borderWidth: 2,
+                borderColor: isDark ? '#1e293b' : '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.parsed} SKU`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const legendEl = document.getElementById("whStockHealthLegend");
+    if (legendEl) {
+        legendEl.innerHTML = `
+            <div style="background:rgba(16,143,83,0.1); color:#108f53; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Đủ hàng: <strong>${countInStock}</strong>
+            </div>
+            <div style="background:rgba(245,158,11,0.1); color:#d97706; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Sắp hết: <strong>${countLowStock}</strong>
+            </div>
+            <div style="background:rgba(239,68,68,0.1); color:#ef4444; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Hết hàng: <strong>${countOutOfStock}</strong>
+            </div>
+            <div style="background:rgba(148,163,184,0.1); color:#64748b; padding:6px 10px; border-radius:8px; font-weight:600; text-align:center;">
+                Chậm bán: <strong>${countSlowMoving}</strong>
+            </div>
+        `;
+    }
+
+    // Nhận định kho vận thông minh (Smart Insights)
+    const insightsEl = document.getElementById("whReportSmartInsights");
+    if (insightsEl) {
+        const topStockItem = top10[0];
+        insightsEl.innerHTML = `
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; line-height:1.4;">
+                <i data-lucide="check-circle-2" style="width:16px; height:16px; color:#0284c7; flex-shrink:0; margin-top:2px;"></i>
+                <span>Mặt hàng chiếm dụng vốn kho lớn nhất: <strong>${topStockItem ? topStockItem.name : 'N/A'}</strong> (Mã: <code>${topStockItem ? topStockItem.sku : '-'}</code>) chiếm <strong>${topStockItem ? formatMoney(topStockItem.stockVal) : '0đ'}</strong>.</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; line-height:1.4;">
+                <i data-lucide="arrow-left-right" style="width:16px; height:16px; color:#108f53; flex-shrink:0; margin-top:2px;"></i>
+                <span>Tỷ lệ luân chuyển kho: Tổng xuất <strong>${totalExportQty.toLocaleString('vi-VN')}</strong> cái / Nhập <strong>${totalImportQty.toLocaleString('vi-VN')}</strong> cái (Chênh lệch: <strong>${(totalImportQty - totalExportQty).toLocaleString('vi-VN')}</strong> cái).</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; line-height:1.4;">
+                <i data-lucide="${countLowStock + countOutOfStock > 0 ? 'alert-triangle' : 'shield-check'}" style="width:16px; height:16px; color:${countLowStock + countOutOfStock > 0 ? '#f59e0b' : '#108f53'}; flex-shrink:0; margin-top:2px;"></i>
+                <span>Cảnh báo kho: Có <strong>${countLowStock}</strong> mã sắp hết hàng và <strong>${countOutOfStock}</strong> mã cạn kho cần lập phiếu nhập kho bổ sung ngay.</span>
+            </div>
+        `;
+    }
+
+    // =========================================================================
+    // MẪU 6: BẢNG CÂN ĐỐI NHẬP - XUẤT - TỒN THEO THỜI GIAN
+    // =========================================================================
+    const timeTbody = document.querySelector("#whReportTimeTable tbody");
+    if (timeTbody) {
+        timeTbody.innerHTML = "";
+        let footVouchers = 0;
+        let footImpQty = 0;
+        let footImpTot = 0;
+        let footExpQty = 0;
+        let footExpTot = 0;
+
+        intervals.forEach(iv => {
+            const vCount = iv.importVouchersCount + iv.exportVouchersCount;
+            footVouchers += vCount;
+            footImpQty += iv.importQty;
+            footImpTot += iv.importVal;
+            footExpQty += iv.exportQty;
+            footExpTot += iv.exportVal;
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td style="text-align:center; color:var(--text-secondary); font-weight:600;">${idx + 1}</td>
-                <td>
-                    <span style="font-family:monospace; font-weight:700; color:var(--accent); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')" title="Bấm để xem thông tin">${sku}</span>
-                </td>
-                <td>
-                    <div style="font-weight:600; color:var(--text-primary); cursor:pointer;" onclick="if(window.openEditOnlineProductModal) window.openEditOnlineProductModal('${p.id}')">${p.name}</div>
-                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">NCC: ${p.supplier || p.brand || 'Chưa gán'}</div>
-                </td>
-                <td style="text-align:center; font-size:0.85rem;">${p.unit || 'cái'}</td>
-                <td style="text-align:center; font-weight:700; color:#0284c7; background:rgba(2,132,199,0.03);">${impQty.toLocaleString('vi-VN')}</td>
-                <td style="text-align:right; font-weight:600; color:#0284c7; background:rgba(2,132,199,0.03);">${formatMoney(impAmt)}</td>
-                <td style="text-align:center; font-weight:700; color:#ea580c; background:rgba(234,88,12,0.03);">${expQty.toLocaleString('vi-VN')}</td>
-                <td style="text-align:right; font-weight:600; color:#ea580c; background:rgba(234,88,12,0.03);">${formatMoney(expAmt)}</td>
-                <td style="text-align:center; font-weight:800; font-size:1rem; color:#108f53; background:rgba(16,143,83,0.03);">${stock.toLocaleString('vi-VN')}</td>
-                <td style="text-align:right; font-weight:600; color:var(--text-primary);">${formatMoney(cost)}</td>
-                <td style="text-align:right; font-weight:800; color:#108f53; background:rgba(16,143,83,0.03);">${formatMoney(itemStockVal)}</td>
-                <td style="text-align:center;">${badgeHtml}</td>
+                <td style="font-weight:600; color:var(--text-primary);">${iv.label}</td>
+                <td style="text-align:center;">${vCount.toLocaleString('vi-VN')}</td>
+                <td style="text-align:center; color:#0284c7; font-weight:600;">${iv.importQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:600; color:#0284c7;">${formatMoney(Math.round(iv.importVal))}</td>
+                <td style="text-align:center; color:#ea580c; font-weight:700;">${iv.exportQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:600; color:#ea580c;">${formatMoney(Math.round(iv.exportVal))}</td>
+                <td style="text-align:center; font-weight:700; color:#108f53;">${iv.runningStockQty.toLocaleString('vi-VN')}</td>
+                <td style="text-align:right; font-weight:700; color:#108f53;">${formatMoney(Math.round(iv.runningStockVal))}</td>
             `;
-            tableBody.appendChild(tr);
+            timeTbody.appendChild(tr);
         });
+
+        const fVouchEl = document.getElementById("whTimeFootVouchers");
+        const fImpQtyEl = document.getElementById("whTimeFootImportQty");
+        const fImpTotEl = document.getElementById("whTimeFootImportTotal");
+        const fExpQtyEl = document.getElementById("whTimeFootExportQty");
+        const fExpTotEl = document.getElementById("whTimeFootExportTotal");
+        const fStockQtyEl = document.getElementById("whTimeFootStockQty");
+        const fStockValEl = document.getElementById("whTimeFootStockVal");
+
+        if (fVouchEl) fVouchEl.textContent = footVouchers.toLocaleString('vi-VN');
+        if (fImpQtyEl) fImpQtyEl.textContent = footImpQty.toLocaleString('vi-VN');
+        if (fImpTotEl) fImpTotEl.textContent = formatMoney(Math.round(footImpTot));
+        if (fExpQtyEl) fExpQtyEl.textContent = footExpQty.toLocaleString('vi-VN');
+        if (fExpTotEl) fExpTotEl.textContent = formatMoney(Math.round(footExpTot));
+        if (fStockQtyEl) fStockQtyEl.textContent = currentTotalStockQty.toLocaleString('vi-VN');
+        if (fStockValEl) fStockValEl.textContent = formatMoney(Math.round(currentTotalStockCost));
     }
 
-    // 5. Overall Grand KPIs (calculated across all vouchers/records)
-    let grandImportVal = 0;
-    importVouchers.forEach(v => {
-        grandImportVal += Number(v.total_payable || (v.subtotal ? v.subtotal * 1.08 : 0) || 0);
-    });
-    let grandExportVal = 0;
-    exportRecords.forEach(r => {
-        grandExportVal += Number(r.total_amount || (r.subtotal ? r.subtotal * 1.08 : 0) || 0);
-    });
-
-    const kpiVal = document.getElementById("kpiWhReportTotalValue");
-    const kpiQty = document.getElementById("kpiWhReportTotalQty");
-    const kpiImp = document.getElementById("kpiWhReportTotalImport");
-    const kpiExp = document.getElementById("kpiWhReportTotalExport");
-
-    if (kpiVal) kpiVal.textContent = formatMoney(sumStockValue);
-    if (kpiQty) kpiQty.textContent = sumStockQty.toLocaleString('vi-VN');
-    if (kpiImp) kpiImp.textContent = formatMoney(grandImportVal > 0 ? grandImportVal : sumImportAmount);
-    if (kpiExp) kpiExp.textContent = formatMoney(grandExportVal > 0 ? grandExportVal : sumExportAmount);
-
-    // 6. Update Table Footer
-    const footImpQty = document.getElementById("whReportFootImportQty");
-    const footImpTot = document.getElementById("whReportFootImportTotal");
-    const footExpQty = document.getElementById("whReportFootExportQty");
-    const footExpTot = document.getElementById("whReportFootExportTotal");
-    const footStockQ = document.getElementById("whReportFootStockQty");
-    const footTotVal = document.getElementById("whReportFootTotalValue");
-
-    if (footImpQty) footImpQty.textContent = sumImportQty.toLocaleString('vi-VN');
-    if (footImpTot) footImpTot.textContent = formatMoney(sumImportAmount);
-    if (footExpQty) footExpQty.textContent = sumExportQty.toLocaleString('vi-VN');
-    if (footExpTot) footExpTot.textContent = formatMoney(sumExportAmount);
-    if (footStockQ) footStockQ.textContent = sumStockQty.toLocaleString('vi-VN');
-    if (footTotVal) footTotVal.textContent = formatMoney(sumStockValue);
-
+    // Refresh icons
     if (window.lucide && typeof lucide.createIcons === 'function') {
         lucide.createIcons();
     }
 };
 
-// Xuất Excel Báo cáo Kho hàng (Nhập - Xuất - Tồn)
+// ==========================================================================
+// XUẤT EXCEL BÁO CÁO KHO HÀNG TOÀN DIỆN
+// ==========================================================================
 window.exportWarehouseReportToExcel = function() {
     if (typeof XLSX === "undefined") {
         alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
         return;
     }
+    const wb = XLSX.utils.book_new();
+    const today = new Date().toISOString().slice(0, 10);
+
+    // Sheet 1: Bảng cân đối Nhập - Xuất - Tồn theo thời gian
+    const tableEl = document.getElementById("whReportTimeTable");
+    if (tableEl) {
+        const ws1 = XLSX.utils.table_to_sheet(tableEl);
+        XLSX.utils.book_append_sheet(wb, ws1, "Can_Doi_Kho_Theo_Thoi_Gian");
+    }
+
+    // Sheet 2: Danh sách tồn kho thực tế hiện tại
     const products = state.online_products || [];
-    if (products.length === 0) {
-        alert("Chưa có dữ liệu hàng hóa trong kho để xuất!");
+    const prodRows = products.map((p, idx) => {
+        const cost = Number(p.cost_price || p.import_price || 0);
+        const stock = Number(p.stock_qty || 0);
+        return {
+            "STT": idx + 1,
+            "Mã SKU": p.sku || "",
+            "Tên hàng hóa": p.name || "",
+            "Loại hộp": p.box_type || p.category || "",
+            "Nhà cung cấp": p.supplier || p.brand || "",
+            "ĐVT": p.unit || "cái",
+            "Đơn giá vốn (đ)": cost,
+            "Tồn kho thực tế": stock,
+            "Giá trị tồn kho (đ)": stock * cost
+        };
+    });
+    const ws2 = XLSX.utils.json_to_sheet(prodRows);
+    XLSX.utils.book_append_sheet(wb, ws2, "Ton_Kho_Thuc_Te");
+
+    XLSX.writeFile(wb, `Bao_Cao_Kho_Hang_InLacHong_${today}.xlsx`);
+};
+
+window.exportWarehouseTimeTableToExcel = function() {
+    window.exportWarehouseReportToExcel();
+};
+
+// ==========================================================================
+// PHÂN HỆ: BÁO CÁO VẬN CHUYỂN & GIAO HÀNG (NGƯỜI / XE)
+// ==========================================================================
+window._shipReportState = {
+    dateFrom: "",
+    dateTo: "",
+    preset: "this_month",
+    granularity: "daily",
+    driver: "all",
+    vehicle: "all",
+    proof: "all",
+    activeModel: "shipModelTime"
+};
+
+window._shipReportCharts = {};
+
+function _createOrUpdateShipChart(canvasId, config) {
+    if (typeof Chart === "undefined") {
+        console.warn("Chart.js is not loaded yet.");
+        return null;
+    }
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+
+    if (window._shipReportCharts[canvasId]) {
+        try {
+            window._shipReportCharts[canvasId].destroy();
+        } catch (e) {
+            console.error("Error destroying chart " + canvasId, e);
+        }
+        window._shipReportCharts[canvasId] = null;
+    }
+
+    const isDark = document.body.classList.contains('dark') || 
+                   document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+    if (config.options && config.options.scales) {
+        Object.keys(config.options.scales).forEach(key => {
+            const scale = config.options.scales[key];
+            if (!scale.ticks) scale.ticks = {};
+            if (!scale.grid) scale.grid = {};
+            scale.ticks.color = textColor;
+            scale.grid.color = gridColor;
+        });
+    }
+
+    if (config.options && config.options.plugins && config.options.plugins.legend) {
+        if (!config.options.plugins.legend.labels) config.options.plugins.legend.labels = {};
+        config.options.plugins.legend.labels.color = textColor;
+    }
+
+    try {
+        const chart = new Chart(canvas, config);
+        window._shipReportCharts[canvasId] = chart;
+        return chart;
+    } catch (err) {
+        console.error("Error creating chart on " + canvasId, err);
+        return null;
+    }
+}
+
+// 1. Chuyển đổi Model hiển thị báo cáo vận chuyển
+window.switchShipReportModel = function(modelId, btnEl) {
+    window._shipReportState.activeModel = modelId;
+
+    document.querySelectorAll(".ship-report-model-pane").forEach(pane => {
+        pane.style.display = "none";
+    });
+    const target = document.getElementById(modelId);
+    if (target) target.style.display = "block";
+
+    document.querySelectorAll(".ship-model-tab-btn").forEach(btn => {
+        btn.classList.remove("active");
+        btn.style.color = "var(--text-secondary)";
+        btn.style.borderBottom = "3px solid transparent";
+    });
+    if (btnEl) {
+        btnEl.classList.add("active");
+        btnEl.style.color = "var(--text-primary)";
+        btnEl.style.borderBottom = "3px solid var(--accent)";
+    } else {
+        const matchingBtn = document.querySelector(`.ship-model-tab-btn[onclick*="${modelId}"]`);
+        if (matchingBtn) {
+            matchingBtn.classList.add("active");
+            matchingBtn.style.color = "var(--text-primary)";
+            matchingBtn.style.borderBottom = "3px solid var(--accent)";
+        }
+    }
+
+    // Đồng bộ dropdown select trên mobile
+    const sel = document.getElementById("shipReportModelSelect");
+    if (sel && sel.value !== modelId) {
+        sel.value = modelId;
+    }
+
+    window.renderShippingReport();
+
+    // Tự động căn chỉnh và resize biểu đồ khớp chuẩn 100% khung hình mobile
+    setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        if (window._shipReportCharts) {
+            Object.values(window._shipReportCharts).forEach(c => {
+                try { if (c && typeof c.resize === 'function') c.resize(); } catch(e){}
+            });
+        }
+    }, 60);
+};
+
+// 2. Thiết lập Preset thời gian
+window.setShipReportPreset = function(preset) {
+    window._shipReportState.preset = preset;
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const toDateStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    let start = "";
+    let end = toDateStr(now);
+
+    if (preset === "today") {
+        start = end;
+    } else if (preset === "7days") {
+        const d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        start = toDateStr(d);
+    } else if (preset === "this_month") {
+        start = toDateStr(new Date(now.getFullYear(), now.getMonth(), 1));
+        end = toDateStr(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    } else if (preset === "last_month") {
+        start = toDateStr(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+        end = toDateStr(new Date(now.getFullYear(), now.getMonth(), 0));
+    } else if (preset === "this_year") {
+        start = `${now.getFullYear()}-01-01`;
+        end = `${now.getFullYear()}-12-31`;
+    } else if (preset === "all") {
+        start = "2026-01-01";
+        end = "2026-12-31";
+    }
+
+    window._shipReportState.dateFrom = start;
+    window._shipReportState.dateTo = end;
+
+    const dfInput = document.getElementById("shipReportDateFrom");
+    const dtInput = document.getElementById("shipReportDateTo");
+    if (dfInput) dfInput.value = start;
+    if (dtInput) dtInput.value = end;
+
+    document.querySelectorAll(".ship-preset-btn").forEach(btn => {
+        if (btn.getAttribute("data-preset") === preset) {
+            btn.classList.add("active");
+            btn.style.background = "var(--accent)";
+            btn.style.color = "#fff";
+            btn.style.fontWeight = "700";
+        } else {
+            btn.classList.remove("active");
+            btn.style.background = "var(--bg-secondary)";
+            btn.style.color = "var(--text-secondary)";
+            btn.style.fontWeight = "normal";
+        }
+    });
+
+    window.renderShippingReport();
+};
+
+// 3. Hàm render chính: Báo cáo Vận chuyển & Giao hàng
+window.renderShippingReport = function() {
+    const records = state.online_export_records || [];
+    const masterDrivers = (state.master_categories?.driver_vehicle_list?.items || []).filter(i => i.status === 'ACTIVE');
+
+    // Khởi tạo ngày mặc định nếu chưa có
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const toDateStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    if (!window._shipReportState.dateFrom || !window._shipReportState.dateTo) {
+        window._shipReportState.dateFrom = toDateStr(new Date(now.getFullYear(), now.getMonth(), 1));
+        window._shipReportState.dateTo = toDateStr(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+        const dfInput = document.getElementById("shipReportDateFrom");
+        const dtInput = document.getElementById("shipReportDateTo");
+        if (dfInput) dfInput.value = window._shipReportState.dateFrom;
+        if (dtInput) dtInput.value = window._shipReportState.dateTo;
+    }
+
+    // Khởi tạo Dropdown Lái xe
+    const drvSelect = document.getElementById("shipReportDriverFilter");
+    if (drvSelect && drvSelect.options.length <= 1) {
+        const uniqueDrivers = new Set();
+        masterDrivers.forEach(d => {
+            const rawName = (d.name || "").replace(/\s*\(.*?\)/, '').trim();
+            if (rawName) uniqueDrivers.add(rawName);
+        });
+        records.forEach(r => {
+            if (r.driver_name) uniqueDrivers.add(r.driver_name.trim());
+        });
+        Array.from(uniqueDrivers).sort((a,b) => a.localeCompare(b, 'vi')).forEach(drv => {
+            drvSelect.innerHTML += `<option value="${drv}">${drv}</option>`;
+        });
+    }
+
+    // Khởi tạo Dropdown Xe / Biển số
+    const vehSelect = document.getElementById("shipReportVehicleFilter");
+    if (vehSelect && vehSelect.options.length <= 1) {
+        const uniqueVehicles = new Set();
+        masterDrivers.forEach(d => {
+            if (d.plate) uniqueVehicles.add(d.plate.trim());
+        });
+        records.forEach(r => {
+            const p = (r.vehicle_plate || "").replace(/^BX:\s*/i, '').trim();
+            if (p) uniqueVehicles.add(p);
+        });
+        Array.from(uniqueVehicles).sort().forEach(v => {
+            vehSelect.innerHTML += `<option value="${v}">${v}</option>`;
+        });
+    }
+
+    // Đọc bộ lọc
+    const dateFromStr = window._shipReportState.dateFrom;
+    const dateToStr = window._shipReportState.dateTo;
+    const dateFrom = new Date(dateFromStr + "T00:00:00");
+    const dateTo = new Date(dateToStr + "T23:59:59");
+    const driverFilter = document.getElementById("shipReportDriverFilter")?.value || "all";
+    const vehicleFilter = document.getElementById("shipReportVehicleFilter")?.value || "all";
+    const proofFilter = document.getElementById("shipReportProofFilter")?.value || "all";
+    const granularity = document.getElementById("shipReportGranularity")?.value || "daily";
+
+    // Lọc danh sách chuyến xe
+    const filteredRecords = records.filter(r => {
+        if (!r) return false;
+        const timeStr = r.created_at || r.date || "";
+        if (!timeStr) return false;
+        const rDate = new Date(timeStr);
+        if (isNaN(rDate.getTime())) return false;
+        if (rDate < dateFrom || rDate > dateTo) return false;
+
+        if (driverFilter !== "all") {
+            const dName = (r.driver_name || "").toLowerCase();
+            if (!dName.includes(driverFilter.toLowerCase())) return false;
+        }
+
+        if (vehicleFilter !== "all") {
+            const vPlate = (r.vehicle_plate || "").toLowerCase();
+            if (!vPlate.includes(vehicleFilter.toLowerCase())) return false;
+        }
+
+        if (proofFilter === "signed" && !r.signed_photo_url) return false;
+        if (proofFilter === "unsigned" && r.signed_photo_url) return false;
+
+        return true;
+    });
+
+    // Tính toán KPIs
+    let totalTrips = filteredRecords.length;
+    let totalQty = 0;
+    let totalValue = 0;
+    let signedCount = 0;
+    const driverStats = {};
+    const vehicleStats = {};
+    const carrierStats = {
+        internal: 0,
+        coach: 0,
+        instant: 0,
+        postal: 0
+    };
+
+    filteredRecords.forEach(r => {
+        const qty = Number(r.total_real_qty || 0);
+        totalQty += qty;
+
+        // Tính tiền có thuế VAT 8%
+        let val = Number(r.total_amount || 0);
+        if (!val || val === 0) {
+            (r.items || []).forEach(it => {
+                const p = Number(it.price || it.unit_price || 0);
+                const q = Number(it.real_qty || it.qty || 0);
+                val += p * q;
+            });
+            val = Math.round(val * 1.08);
+        }
+        totalValue += val;
+
+        if (r.signed_photo_url) signedCount++;
+
+        // Aggregation by Driver
+        const drvName = r.driver_name || "Chưa phân công";
+        if (!driverStats[drvName]) {
+            driverStats[drvName] = { trips: 0, qty: 0, value: 0, signed: 0 };
+        }
+        driverStats[drvName].trips++;
+        driverStats[drvName].qty += qty;
+        driverStats[drvName].value += val;
+        if (r.signed_photo_url) driverStats[drvName].signed++;
+
+        // Aggregation by Vehicle Plate
+        const plate = (r.vehicle_plate || "Xe chưa gán").replace(/^BX:\s*/i, '').trim();
+        if (!vehicleStats[plate]) {
+            vehicleStats[plate] = { trips: 0, qty: 0, value: 0 };
+        }
+        vehicleStats[plate].trips++;
+        vehicleStats[plate].qty += qty;
+        vehicleStats[plate].value += val;
+
+        // Carrier classification
+        const plateLow = plate.toLowerCase();
+        const drvLow = drvName.toLowerCase();
+        if (plateLow.includes("ahamove") || plateLow.includes("grab") || drvLow.includes("ahamove") || drvLow.includes("grab")) {
+            carrierStats.instant += qty;
+        } else if (plateLow.includes("xe khách") || drvLow.includes("thái thương") || drvLow.includes("nhà xe") || drvLow.includes("ngọc phát")) {
+            carrierStats.coach += qty;
+        } else if (plateLow.includes("ghtk") || plateLow.includes("viettel") || drvLow.includes("bưu cục")) {
+            carrierStats.postal += qty;
+        } else {
+            carrierStats.internal += qty;
+        }
+    });
+
+    const signedRate = totalTrips > 0 ? ((signedCount / totalTrips) * 100).toFixed(1) + "%" : "100%";
+
+    // Tìm Top Driver & Top Vehicle
+    let topDriverName = "-";
+    let maxDriverQty = -1;
+    Object.keys(driverStats).forEach(d => {
+        if (driverStats[d].qty > maxDriverQty) {
+            maxDriverQty = driverStats[d].qty;
+            topDriverName = `${d} (${driverStats[d].trips} chuyến - ${driverStats[d].qty.toLocaleString('vi-VN')} SP)`;
+        }
+    });
+
+    let topVehiclePlate = "-";
+    let maxVehicleQty = -1;
+    Object.keys(vehicleStats).forEach(v => {
+        if (vehicleStats[v].qty > maxVehicleQty) {
+            maxVehicleQty = vehicleStats[v].qty;
+            topVehiclePlate = `${v} (${vehicleStats[v].qty.toLocaleString('vi-VN')} SP - ${vehicleStats[v].trips} lượt)`;
+        }
+    });
+
+    // Cập nhật DOM KPIs
+    const elTrips = document.getElementById("kpiShipTotalTrips");
+    const elQty = document.getElementById("kpiShipTotalQty");
+    const elVal = document.getElementById("kpiShipTotalValue");
+    const elRate = document.getElementById("kpiShipSignedRate");
+    const elCount = document.getElementById("kpiShipSignedCount");
+    const elTopDrv = document.getElementById("kpiShipTopDriver");
+    const elTopVeh = document.getElementById("kpiShipTopVehicle");
+
+    if (elTrips) elTrips.textContent = totalTrips.toLocaleString('vi-VN') + " chuyến";
+    if (elQty) elQty.textContent = totalQty.toLocaleString('vi-VN') + " SP";
+    if (elVal) elVal.textContent = totalValue.toLocaleString('vi-VN') + " đ";
+    if (elRate) elRate.textContent = signedRate;
+    if (elCount) elCount.textContent = `${signedCount}/${totalTrips} chuyến có biên bản ký nhận`;
+    if (elTopDrv) elTopDrv.textContent = topDriverName;
+    if (elTopVeh) elTopVeh.textContent = topVehiclePlate;
+
+    // =========================================================================
+    // MODEL 1: BIỂU ĐỒ TẦN SUẤT & SẢN LƯỢNG THEO THỜI GIAN
+    // =========================================================================
+    const timeBuckets = {};
+    filteredRecords.forEach(r => {
+        const timeStr = r.created_at || r.date;
+        const d = new Date(timeStr);
+        let key = "";
+        if (granularity === "yearly") {
+            key = String(d.getFullYear());
+        } else if (granularity === "monthly") {
+            key = `T${d.getMonth() + 1}/${d.getFullYear()}`;
+        } else if (granularity === "weekly") {
+            const startOfWeek = new Date(d);
+            const day = startOfWeek.getDay() || 7;
+            startOfWeek.setDate(startOfWeek.getDate() - day + 1);
+            key = `Tuần ${pad(startOfWeek.getDate())}/${pad(startOfWeek.getMonth() + 1)}`;
+        } else {
+            key = `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
+        }
+
+        if (!timeBuckets[key]) {
+            timeBuckets[key] = { trips: 0, qty: 0, value: 0 };
+        }
+        timeBuckets[key].trips++;
+        timeBuckets[key].qty += Number(r.total_real_qty || 0);
+        timeBuckets[key].value += Number(r.total_amount || 0);
+    });
+
+    const timeLabels = Object.keys(timeBuckets);
+    const tripsData = timeLabels.map(k => timeBuckets[k].trips);
+    const qtyData = timeLabels.map(k => timeBuckets[k].qty);
+
+    _createOrUpdateShipChart("shipChartTimeMovement", {
+        type: 'bar',
+        data: {
+            labels: timeLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Số chuyến xe giao (Lượt)',
+                    data: tripsData,
+                    backgroundColor: 'rgba(2, 132, 199, 0.75)',
+                    borderColor: '#0284c7',
+                    borderWidth: 1.5,
+                    borderRadius: 5,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Sản lượng hàng vận chuyển (SP)',
+                    data: qtyData,
+                    borderColor: '#ea580c',
+                    backgroundColor: 'rgba(234, 88, 12, 0.15)',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ea580c',
+                    tension: 0.3,
+                    fill: false,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            if (ctx.dataset.type === 'line') {
+                                return ` Sản lượng: ${ctx.parsed.y.toLocaleString('vi-VN')} SP`;
+                            }
+                            return ` Số chuyến xe: ${ctx.parsed.y.toLocaleString('vi-VN')} chuyến`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: { display: true, text: 'Số chuyến xe' },
+                    ticks: { precision: 0 }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: { display: true, text: 'Sản lượng (SP)' },
+                    grid: { drawOnChartArea: false }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MODEL 2: BIỂU ĐỒ NĂNG SUẤT LÁI XE
+    // =========================================================================
+    const driverNames = Object.keys(driverStats).sort((a,b) => driverStats[b].qty - driverStats[a].qty);
+    const drvTripsData = driverNames.map(d => driverStats[d].trips);
+    const drvQtyData = driverNames.map(d => driverStats[d].qty);
+
+    _createOrUpdateShipChart("shipChartDriverComparison", {
+        type: 'bar',
+        data: {
+            labels: driverNames,
+            datasets: [
+                {
+                    label: 'Sản lượng hàng giao (SP)',
+                    data: drvQtyData,
+                    backgroundColor: 'rgba(16, 143, 83, 0.75)',
+                    borderColor: '#108f53',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Số chuyến giao (Lượt)',
+                    data: drvTripsData,
+                    backgroundColor: 'rgba(2, 132, 199, 0.75)',
+                    borderColor: '#0284c7',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            if (ctx.datasetIndex === 0) {
+                                return ` Sản lượng: ${ctx.parsed.y.toLocaleString('vi-VN')} SP`;
+                            }
+                            return ` Chuyến giao: ${ctx.parsed.y.toLocaleString('vi-VN')} chuyến`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: {
+                    type: 'linear',
+                    position: 'left',
+                    title: { display: true, text: 'Tổng sản lượng (SP)' }
+                },
+                y1: {
+                    type: 'linear',
+                    position: 'right',
+                    title: { display: true, text: 'Số chuyến xe' },
+                    grid: { drawOnChartArea: false },
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MODEL 3: HIỆU SUẤT & TẢI TRỌNG XE / BIỂN SỐ (HORIZONTAL BAR)
+    // =========================================================================
+    const vehiclePlates = Object.keys(vehicleStats).sort((a,b) => vehicleStats[b].qty - vehicleStats[a].qty);
+    const vehQtyData = vehiclePlates.map(v => vehicleStats[v].qty);
+
+    const vehicleColors = vehiclePlates.map((_, idx) => {
+        const colors = [
+            'rgba(234, 88, 12, 0.8)',
+            'rgba(2, 132, 199, 0.8)',
+            'rgba(16, 143, 83, 0.8)',
+            'rgba(139, 92, 246, 0.8)',
+            'rgba(217, 119, 6, 0.8)',
+            'rgba(14, 165, 233, 0.8)'
+        ];
+        return colors[idx % colors.length];
+    });
+
+    _createOrUpdateShipChart("shipChartVehiclePerformance", {
+        type: 'bar',
+        data: {
+            labels: vehiclePlates,
+            datasets: [
+                {
+                    axis: 'y',
+                    label: 'Tổng sản lượng luân chuyển (SP)',
+                    data: vehQtyData,
+                    backgroundColor: vehicleColors,
+                    borderRadius: 6
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const plate = vehiclePlates[ctx.dataIndex];
+                            const st = vehicleStats[plate];
+                            return ` Sản lượng: ${ctx.parsed.x.toLocaleString('vi-VN')} SP (${st.trips} chuyến - ${(st.value || 0).toLocaleString('vi-VN')}đ)`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Sản lượng hàng hóa chuyên chở (SP)' }
+                },
+                y: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MODEL 4: CƠ CẤU KÊNH GIAO NHẬN & TỶ LỆ KÝ NHẬN (DOUGHNUTS)
+    // =========================================================================
+    _createOrUpdateShipChart("shipChartCarrierStructure", {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Đội xe tải Lạc Hồng (Nội bộ)',
+                'Gửi xe khách liên tỉnh',
+                'Giao hỏa tốc (Ahamove/Grab)',
+                'Bưu cục (GHTK/ViettelPost)'
+            ],
+            datasets: [{
+                data: [
+                    carrierStats.internal || 0,
+                    carrierStats.coach || 0,
+                    carrierStats.instant || 0,
+                    carrierStats.postal || 0
+                ],
+                backgroundColor: [
+                    '#0284c7', // Xanh Lạc Hồng
+                    '#ea580c', // Cam xe khách
+                    '#108f53', // Xanh lá hỏa tốc
+                    '#8b5cf6'  // Tím bưu cục
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const total = ctx.dataset.data.reduce((a,b)=>a+b, 0) || 1;
+                            const val = ctx.raw || 0;
+                            const pct = ((val / total) * 100).toFixed(1);
+                            return ` ${ctx.label}: ${val.toLocaleString('vi-VN')} SP (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    _createOrUpdateShipChart("shipChartProofStatus", {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Đã chụp ảnh ký nhận (📸)',
+                'Chưa có ảnh ký nhận (⏳)'
+            ],
+            datasets: [{
+                data: [
+                    signedCount,
+                    totalTrips - signedCount
+                ],
+                backgroundColor: [
+                    '#108f53',
+                    '#f59e0b'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const total = totalTrips || 1;
+                            const val = ctx.raw || 0;
+                            const pct = ((val / total) * 100).toFixed(1);
+                            return ` ${ctx.label}: ${val} chuyến (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // =========================================================================
+    // MODEL 5: BẢNG NHẬT TRÌNH CHI TIẾT CHUYẾN XE
+    // =========================================================================
+    const tableBody = document.querySelector("#shipReportDetailTable tbody");
+    if (tableBody) {
+        if (filteredRecords.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="10" style="text-align:center; padding:36px; color:var(--text-secondary);">
+                        <i data-lucide="truck" style="width:40px; height:40px; margin-bottom:8px; opacity:0.4;"></i>
+                        <div style="font-weight:700; font-size:0.95rem;">Không có chuyến vận chuyển nào trong kỳ lựa chọn</div>
+                        <div style="font-size:0.8rem; margin-top:4px;">Vui lòng mở rộng khoảng thời gian hoặc thay đổi bộ lọc Lái xe / Biển số xe</div>
+                    </td>
+                </tr>
+            `;
+        } else {
+            let html = "";
+            let sumItems = 0;
+            let sumQty = 0;
+            let sumVal = 0;
+
+            filteredRecords.forEach(r => {
+                const timeStr = r.created_at || r.date || "";
+                const d = new Date(timeStr);
+                const dateDisplay = isNaN(d.getTime()) ? timeStr : `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                const itemCount = (r.items || []).length;
+                const rQty = Number(r.total_real_qty || 0);
+                
+                let rVal = Number(r.total_amount || 0);
+                if (!rVal || rVal === 0) {
+                    (r.items || []).forEach(it => {
+                        rVal += Number(it.price || it.unit_price || 0) * Number(it.real_qty || it.qty || 0);
+                    });
+                    rVal = Math.round(rVal * 1.08);
+                }
+
+                sumItems += itemCount;
+                sumQty += rQty;
+                sumVal += rVal;
+
+                // Ảnh ký nhận
+                let photoCell = "";
+                if (r.signed_photo_url) {
+                    photoCell = `
+                        <div style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="window.openStockExportPhotoLightbox('${r.signed_photo_url}', '${r.voucher_no || ''}')" title="Bấm để xem ảnh biên bản ký nhận bàn giao">
+                            <img src="${r.signed_photo_url}" style="width:32px; height:32px; object-fit:cover; border-radius:4px; border:1px solid #10b981; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                            <span style="font-size:0.75rem; font-weight:700; color:#059669; background:rgba(16,185,129,0.1); padding:2px 6px; border-radius:4px; white-space:nowrap;">📸 Đã ký</span>
+                        </div>
+                    `;
+                } else {
+                    photoCell = `
+                        <span style="font-size:0.75rem; font-weight:600; color:#d97706; background:rgba(217,119,6,0.1); padding:3px 8px; border-radius:4px; white-space:nowrap;">
+                            ⏳ Chờ ký
+                        </span>
+                    `;
+                }
+
+                // Trạng thái chuyến giao
+                const st = r.status || "COMPLETED";
+                let statusBadge = "";
+                if (st === "COMPLETED") {
+                    statusBadge = `<span class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-weight:700;">✓ Hoàn thành</span>`;
+                } else if (st === "SHIPPING") {
+                    statusBadge = `<span class="badge" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; font-weight:700;">🚚 Đang giao</span>`;
+                } else if (st === "PARTIAL") {
+                    statusBadge = `<span class="badge" style="background:#fffbeb; color:#b45309; border:1px solid #fde68a; font-weight:700;">⚡ Giao 1 phần</span>`;
+                } else {
+                    statusBadge = `<span class="badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; font-weight:700;">📝 Chờ xuất</span>`;
+                }
+
+                const plateClean = (r.vehicle_plate || "").replace(/^BX:\s*/i, '').trim();
+
+                html += `
+                    <tr>
+                        <td style="font-size:0.8rem; white-space:nowrap; color:var(--text-secondary);">${dateDisplay}</td>
+                        <td style="font-weight:700; white-space:nowrap;">
+                            <a href="javascript:void(0)" onclick="window.openStockExportPrintModal('${r.id}')" style="color:#108f53; text-decoration:underline;">
+                                ${r.voucher_no || r.id}
+                            </a>
+                        </td>
+                        <td>
+                            <strong style="color:var(--text-primary); font-size:0.85rem;">${r.driver_name || "Chưa gán"}</strong>
+                            ${r.driver_phone ? `<div style="font-size:0.75rem; color:#059669; font-weight:600;"><i data-lucide="phone" style="width:11px; height:11px; display:inline-block; vertical-align:middle;"></i> ${r.driver_phone}</div>` : ''}
+                        </td>
+                        <td>
+                            ${plateClean ? `<span style="display:inline-block; font-size:0.78rem; font-weight:800; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:2px 6px; border-radius:4px;">${plateClean}</span>` : '<span class="text-muted">-</span>'}
+                            ${r.vehicle_type ? `<div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">${r.vehicle_type}</div>` : ''}
+                        </td>
+                        <td>
+                            <div style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">${r.receiver_name || r.receiver_company || "Khách lẻ"}</div>
+                            <div style="font-size:0.75rem; color:var(--text-secondary); max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${r.receiver_address || ''}">
+                                📍 ${r.receiver_address || "Tại xưởng"}
+                            </div>
+                        </td>
+                        <td style="text-align:right; font-weight:600;">${itemCount} SP</td>
+                        <td style="text-align:right; font-weight:800; color:#ea580c; font-size:0.92rem;">${rQty.toLocaleString('vi-VN')}</td>
+                        <td style="text-align:right; font-weight:700; color:#108f53;">${rVal.toLocaleString('vi-VN')}đ</td>
+                        <td style="text-align:center;">${photoCell}</td>
+                        <td style="text-align:center;">${statusBadge}</td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = html;
+
+            const footItems = document.getElementById("shipTableFootItems");
+            const footQty = document.getElementById("shipTableFootQty");
+            const footVal = document.getElementById("shipTableFootValue");
+            const footProof = document.getElementById("shipTableFootProof");
+            const footStatus = document.getElementById("shipTableFootStatus");
+
+            if (footItems) footItems.textContent = sumItems.toLocaleString('vi-VN') + " SP";
+            if (footQty) footQty.textContent = sumQty.toLocaleString('vi-VN');
+            if (footVal) footVal.textContent = sumVal.toLocaleString('vi-VN') + "đ";
+            if (footProof) footProof.textContent = `${signedCount}/${totalTrips} đã ký`;
+            if (footStatus) footStatus.textContent = `${totalTrips} chuyến`;
+        }
+    }
+
+    // =========================================================================
+    // SMART LOGISTICS INSIGHTS
+    // =========================================================================
+    const insightsEl = document.getElementById("shipSmartInsightsContent");
+    if (insightsEl) {
+        if (totalTrips === 0) {
+            insightsEl.innerHTML = `<p style="margin:0;">Chưa ghi nhận chuyến vận chuyển nào trong kỳ thời gian này. Vui lòng tạo phiếu xuất kho để hệ thống phân tích năng suất.</p>`;
+        } else {
+            const unsignedCount = totalTrips - signedCount;
+            insightsEl.innerHTML = `
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+                    <div style="background:rgba(255,255,255,0.7); dark:background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:8px; border-left:3px solid #108f53;">
+                        <strong style="color:#108f53;">🏆 Lái xe năng suất cao nhất:</strong>
+                        <div style="margin-top:2px;">Tài xế <strong>${topDriverName}</strong> có khối lượng chuyên chở lớn nhất kỳ, đảm bảo tiến độ bàn giao cho khách hàng doanh nghiệp.</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.7); dark:background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:8px; border-left:3px solid #0284c7;">
+                        <strong style="color:#0284c7;">🚛 Xe hoạt động tần suất cao:</strong>
+                        <div style="margin-top:2px;">Phương tiện <strong>${topVehiclePlate}</strong> là nòng cốt luân chuyển hàng hóa. Khuyến nghị kiểm tra định kỳ dầu nhớt, lốp và đăng kiểm an toàn.</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.7); dark:background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:8px; border-left:3px solid ${unsignedCount > 0 ? '#ea580c' : '#108f53'};">
+                        <strong style="color:${unsignedCount > 0 ? '#ea580c' : '#108f53'};">📸 Quản lý Chứng từ & Ký nhận:</strong>
+                        <div style="margin-top:2px;">
+                            ${unsignedCount > 0 
+                                ? `Hiện có <strong>${unsignedCount} chuyến xe</strong> chưa tải ảnh biên bản bàn giao có chữ ký. Thủ kho cần đối soát để thu hồi chứng từ gốc.` 
+                                : `<strong>100% chuyến xe</strong> đã có ảnh biên bản bàn giao có chữ ký khách hàng. Dữ liệu chứng từ hoàn chỉnh.`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // Refresh Lucide icons
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+// 4. Xuất Excel Báo cáo Vận chuyển Toàn diện
+window.exportShippingReportToExcel = function() {
+    if (typeof XLSX === "undefined") {
+        alert("Thư viện Excel đang tải, vui lòng thử lại sau 2 giây.");
         return;
     }
 
-    const importVouchers = state.online_import_vouchers || [];
-    const exportRecords = state.online_export_records || [];
-    const stockLogs = state.online_stock_logs || [];
+    const records = state.online_export_records || [];
+    const dateFromStr = window._shipReportState.dateFrom;
+    const dateToStr = window._shipReportState.dateTo;
+    const dateFrom = new Date(dateFromStr + "T00:00:00");
+    const dateTo = new Date(dateToStr + "T23:59:59");
+    const driverFilter = document.getElementById("shipReportDriverFilter")?.value || "all";
+    const vehicleFilter = document.getElementById("shipReportVehicleFilter")?.value || "all";
+    const proofFilter = document.getElementById("shipReportProofFilter")?.value || "all";
 
-    const importStatsBySku = {};
-    importVouchers.forEach(v => {
-        (v.items || []).forEach(it => {
-            if (!it.sku) return;
-            if (!importStatsBySku[it.sku]) importStatsBySku[it.sku] = { qty: 0, amount: 0 };
-            const q = Number(it.qty || 0);
-            const cost = Number(it.cost_price || it.price || 0);
-            importStatsBySku[it.sku].qty += q;
-            importStatsBySku[it.sku].amount += (q * cost) * 1.08;
-        });
+    const filtered = records.filter(r => {
+        if (!r) return false;
+        const timeStr = r.created_at || r.date || "";
+        const rDate = new Date(timeStr);
+        if (isNaN(rDate.getTime())) return false;
+        if (rDate < dateFrom || rDate > dateTo) return false;
+        if (driverFilter !== "all" && !(r.driver_name || "").toLowerCase().includes(driverFilter.toLowerCase())) return false;
+        if (vehicleFilter !== "all" && !(r.vehicle_plate || "").toLowerCase().includes(vehicleFilter.toLowerCase())) return false;
+        if (proofFilter === "signed" && !r.signed_photo_url) return false;
+        if (proofFilter === "unsigned" && r.signed_photo_url) return false;
+        return true;
     });
 
-    const exportStatsBySku = {};
-    exportRecords.forEach(r => {
-        (r.items || []).forEach(it => {
-            if (!it.sku) return;
-            if (!exportStatsBySku[it.sku]) exportStatsBySku[it.sku] = { qty: 0, amount: 0 };
-            const q = Number(it.real_qty || it.qty || 0);
-            const pVal = Number(it.price || 0);
-            exportStatsBySku[it.sku].qty += q;
-            exportStatsBySku[it.sku].amount += (q * pVal) * 1.08;
-        });
-    });
+    const wb = XLSX.utils.book_new();
+    const today = new Date().toISOString().slice(0, 10);
 
-    const exportRows = products.map((p, idx) => {
-        const sku = p.sku || '';
-        const cost = Number(p.cost_price || p.import_price || 0);
-        const stock = Number(p.stock_qty || 0);
-        const stockVal = stock * cost;
-
-        let impQty = importStatsBySku[sku]?.qty || 0;
-        let impAmt = importStatsBySku[sku]?.amount || 0;
-        if (impQty === 0) {
-            const logs = stockLogs.filter(l => l.sku === sku && l.type === 'IMPORT');
-            impQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
-            impAmt = impQty * cost * 1.08;
+    // Sheet 1: Nhật trình chi tiết từng chuyến xe
+    const detailRows = filtered.map((r, idx) => {
+        let val = Number(r.total_amount || 0);
+        if (!val || val === 0) {
+            (r.items || []).forEach(it => {
+                val += Number(it.price || it.unit_price || 0) * Number(it.real_qty || it.qty || 0);
+            });
+            val = Math.round(val * 1.08);
         }
-
-        let expQty = exportStatsBySku[sku]?.qty || 0;
-        let expAmt = exportStatsBySku[sku]?.amount || 0;
-        if (expQty === 0) {
-            const logs = stockLogs.filter(l => l.sku === sku && l.type === 'EXPORT');
-            expQty = logs.reduce((s, l) => s + Math.abs(Number(l.qty || 0)), 0);
-            const retailPrice = Number(p.price || p.retail_price || 0);
-            expAmt = expQty * retailPrice * 1.08;
-        }
-
-        let status = "Đủ hàng";
-        if (stock <= 0) status = "Hết hàng";
-        else if (stock <= 10) status = "Sắp hết hàng";
-
         return {
             "STT": idx + 1,
-            "Mã SKU": sku,
-            "Tên hàng hóa": p.name || "",
-            "Đơn vị tính": p.unit || "cái",
-            "Nhà cung cấp": p.supplier || p.brand || "",
-            "Tổng Nhập (SL)": impQty,
-            "Tiền Nhập VAT 8% (đ)": Math.round(impAmt),
-            "Tổng Xuất (SL)": expQty,
-            "Tiền Xuất VAT 8% (đ)": Math.round(expAmt),
-            "Tồn kho thực tế": stock,
-            "Đơn giá vốn (đ)": cost,
-            "Tổng giá trị tồn kho (đ)": Math.round(stockVal),
-            "Trạng thái": status
+            "Thời gian": r.created_at || r.date || "",
+            "Số phiếu xuất": r.voucher_no || r.id,
+            "Lái xe / Người vận chuyển": r.driver_name || "",
+            "SĐT Lái xe": r.driver_phone || "",
+            "Biển số xe": (r.vehicle_plate || "").replace(/^BX:\s*/i, '').trim(),
+            "Loại phương tiện": r.vehicle_type || "",
+            "Người nhận / Công ty": r.receiver_company || r.receiver_name || "",
+            "Địa chỉ giao": r.receiver_address || "",
+            "Số lượng mặt hàng": (r.items || []).length,
+            "Tổng SL thực xuất (cái/bộ)": Number(r.total_real_qty || 0),
+            "Tổng giá trị tiền hàng gồm VAT 8% (đ)": val,
+            "Chứng từ ký nhận": r.signed_photo_url ? "Đã có ảnh ký" : "Chờ ký",
+            "Trạng thái": r.status || "COMPLETED"
         };
     });
 
-    const ws = XLSX.utils.json_to_sheet(exportRows);
-    ws['!cols'] = [
-        { wch: 6 },
-        { wch: 14 },
-        { wch: 32 },
-        { wch: 10 },
-        { wch: 22 },
-        { wch: 14 },
-        { wch: 20 },
-        { wch: 14 },
-        { wch: 20 },
-        { wch: 16 },
-        { wch: 16 },
-        { wch: 22 },
-        { wch: 16 }
-    ];
+    const ws1 = XLSX.utils.json_to_sheet(detailRows);
+    XLSX.utils.book_append_sheet(wb, ws1, "Nhat_Trinh_Van_Chuyen");
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Bao_Cao_Kho_Hang");
-    const today = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `Bao_Cao_Kho_Hang_Nhap_Xuat_Ton_${today}.xlsx`);
+    // Sheet 2: Tổng hợp theo Lái xe
+    const driverAgg = {};
+    filtered.forEach(r => {
+        const d = r.driver_name || "Chưa gán";
+        if (!driverAgg[d]) driverAgg[d] = { trips: 0, qty: 0, value: 0, signed: 0 };
+        driverAgg[d].trips++;
+        driverAgg[d].qty += Number(r.total_real_qty || 0);
+        let val = Number(r.total_amount || 0);
+        if (!val) {
+            (r.items || []).forEach(it => val += Number(it.price||0)*Number(it.real_qty||0));
+            val = Math.round(val * 1.08);
+        }
+        driverAgg[d].value += val;
+        if (r.signed_photo_url) driverAgg[d].signed++;
+    });
+
+    const drvRows = Object.keys(driverAgg).map((d, idx) => ({
+        "STT": idx + 1,
+        "Tên Lái xe": d,
+        "Số chuyến giao": driverAgg[d].trips,
+        "Tổng sản lượng (SP)": driverAgg[d].qty,
+        "Tổng giá trị hàng (đ)": driverAgg[d].value,
+        "Số chuyến đã ký": driverAgg[d].signed,
+        "Tỷ lệ ký nhận": ((driverAgg[d].signed / driverAgg[d].trips) * 100).toFixed(1) + "%"
+    }));
+    const ws2 = XLSX.utils.json_to_sheet(drvRows);
+    XLSX.utils.book_append_sheet(wb, ws2, "Tong_Hop_Lai_Xe");
+
+    // Sheet 3: Tổng hợp theo Phương tiện
+    const vehAgg = {};
+    filtered.forEach(r => {
+        const v = (r.vehicle_plate || "Chưa gán").replace(/^BX:\s*/i, '').trim();
+        if (!vehAgg[v]) vehAgg[v] = { trips: 0, qty: 0, value: 0 };
+        vehAgg[v].trips++;
+        vehAgg[v].qty += Number(r.total_real_qty || 0);
+        let val = Number(r.total_amount || 0);
+        if (!val) {
+            (r.items || []).forEach(it => val += Number(it.price||0)*Number(it.real_qty||0));
+            val = Math.round(val * 1.08);
+        }
+        vehAgg[v].value += val;
+    });
+
+    const vehRows = Object.keys(vehAgg).map((v, idx) => ({
+        "STT": idx + 1,
+        "Biển số phương tiện": v,
+        "Số chuyến xe": vehAgg[v].trips,
+        "Tổng sản lượng luân chuyển (SP)": vehAgg[v].qty,
+        "Tổng giá trị hàng phụ trách (đ)": vehAgg[v].value
+    }));
+    const ws3 = XLSX.utils.json_to_sheet(vehRows);
+    XLSX.utils.book_append_sheet(wb, ws3, "Tong_Hop_Phuong_Tien");
+
+    XLSX.writeFile(wb, `Bao_Cao_Van_Chuyen_InLacHong_${today}.xlsx`);
 };
+
+// 5. In Báo cáo Vận chuyển
+window.printShippingReport = function() {
+    window.print();
+};
+
 

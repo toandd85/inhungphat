@@ -66,6 +66,9 @@
     <!-- html2pdf.js for Clean A4 PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <!-- Chart.js for High-Performance Interactive Visual Reports -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
     <link rel="stylesheet" href="/style.css?v=20261022_split_modules_v42">
 
     <script>
@@ -325,6 +328,10 @@
                                 <a href="/bao-cao-kho-hang" class="menu-item submenu-item" data-slug="bao-cao-kho-hang" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="bar-chart-2" style="width: 13px; height: 13px;"></i>
                                     <span>Báo cáo kho hàng</span>
+                                </a>
+                                <a href="/bao-cao-van-chuyen" class="menu-item submenu-item" data-slug="bao-cao-van-chuyen" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
+                                    <i data-lucide="truck" style="width: 13px; height: 13px; color: #0284c7;"></i>
+                                    <span>Báo cáo vận chuyển (Lái xe / Xe)</span>
                                 </a>
                                 <a href="/nhap-kho" class="menu-item submenu-item" data-slug="nhap-kho" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
                                     <i data-lucide="arrow-down-to-dot" style="width: 13px; height: 13px; color: #0284c7;"></i>
@@ -685,6 +692,15 @@
                             <div class="hub-info">
                                 <h3>Báo cáo kho hàng</h3>
                                 <p>Tổng hợp Nhập - Xuất - Tồn & giá trị kho</p>
+                            </div>
+                        </div>
+                        <div class="hub-card" onclick="window.navigateTo('bao-cao-van-chuyen')">
+                            <div class="hub-icon gradient-5" style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);">
+                                <i data-lucide="truck"></i>
+                            </div>
+                            <div class="hub-info">
+                                <h3>Báo cáo vận chuyển</h3>
+                                <p>Năng suất giao hàng theo Lái xe & Xe vận chuyển</p>
                             </div>
                         </div>
                         <div class="hub-card" onclick="window.navigateTo('nhap-kho')">
@@ -1936,114 +1952,361 @@
 
                     </div>
 
-                    <!-- Sub-tab: Báo cáo Hàng hóa -->
+                    <!-- Sub-tab: Báo cáo Hàng hóa (Báo cáo trực quan theo Biểu đồ & Thời gian) -->
                     <div id="subtab-online-products-report" class="online-subtab-pane" style="display:none;">
-                        <!-- KPI Row -->
-                        <div class="online-kpis-grid" style="margin-bottom:16px;">
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(217,119,6,0.12); color:#d97706; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="package" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng mã hàng (SKU)</span>
-                                    <h4 id="kpiProdReportTotalSKU" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:var(--text-primary);">0</h4>
-                                </div>
-                            </div>
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(2,132,199,0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="coins" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị tồn (Giá vốn)</span>
-                                    <h4 id="kpiProdReportTotalCost" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#0284c7;">0đ</h4>
-                                </div>
-                            </div>
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(16,143,83,0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="badge-percent" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị niêm yết (Bán lẻ)</span>
-                                    <h4 id="kpiProdReportTotalRetail" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#108f53;">0đ</h4>
-                                </div>
-                            </div>
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(124,58,237,0.12); color:#7c3aed; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="trending-up" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Lợi nhuận dự kiến</span>
-                                    <h4 id="kpiProdReportProfitEst" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#7c3aed;">0đ</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions & Filters Bar -->
-                        <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; min-width:280px;">
-                                <div class="search-box" style="width:240px; max-width:100%;">
-                                    <i data-lucide="search"></i>
-                                    <input type="text" placeholder="Tìm theo SKU, tên hàng hóa..." id="prodReportSearchInput" oninput="window.renderProductsReport()">
-                                </div>
-                                <select class="form-select" id="prodReportSupplierFilter" style="width:200px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderProductsReport()">
-                                    <option value="">-- Tất cả Nhà cung cấp --</option>
-                                </select>
-                                <select class="form-select" id="prodReportCategoryFilter" style="width:180px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderProductsReport()">
-                                    <option value="">-- Tất cả Loại hộp --</option>
-                                </select>
-                                <select class="form-select" id="prodReportStockFilter" style="width:160px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderProductsReport()">
-                                    <option value="">-- Trạng thái tồn --</option>
-                                    <option value="in_stock">Còn hàng (> 0)</option>
-                                    <option value="low_stock">Sắp hết hàng (<= 10)</option>
-                                    <option value="out_of_stock">Hết hàng (= 0)</option>
-                                </select>
+                        <!-- Header & Action Row -->
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+                            <div>
+                                <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+                                    <i data-lucide="bar-chart-3" style="width:24px; height:24px; color:#d97706;"></i>
+                                    <span>Báo cáo & Phân tích Hàng hóa</span>
+                                    <span class="badge" style="background:rgba(217,119,6,0.12); color:#d97706; font-size:0.75rem; font-weight:700; border-radius:12px; padding:3px 10px;">Biểu đồ trực quan</span>
+                                </h3>
+                                <p style="margin:0; font-size:0.83rem; color:var(--text-secondary);">Phân tích biến động Xuất - Nhập - Tồn, Doanh thu, Lợi nhuận và Cơ cấu sản phẩm theo Ngày / Tháng / Năm</p>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                <button class="btn btn-secondary" onclick="window.exportProductsReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất báo cáo hàng hóa ra Excel">
-                                    <i data-lucide="file-spreadsheet"></i>
-                                    <span>Xuất Excel</span>
+                                <button class="btn btn-secondary" onclick="window.exportProductsReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất toàn bộ số liệu báo cáo phân tích ra file Excel">
+                                    <i data-lucide="file-spreadsheet" style="width:16px; height:16px; color:#108f53;"></i>
+                                    <span>Xuất Excel Báo cáo</span>
                                 </button>
-                                <button class="btn btn-primary" onclick="window.navigateTo('hang-hoa')" style="display:flex; align-items:center; gap:6px; background:#d97706; border:none; font-weight:600;" title="Xem danh mục chi tiết & quản lý hàng hóa">
-                                    <i data-lucide="list"></i>
-                                    <span>Danh sách hàng hóa</span>
+                                <button class="btn btn-secondary" onclick="window.printProductsReport()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="In báo cáo phân tích trực quan">
+                                    <i data-lucide="printer" style="width:16px; height:16px;"></i>
+                                    <span>In Báo cáo</span>
+                                </button>
+                                <button class="btn btn-primary" onclick="window.navigateTo('hang-hoa')" style="display:flex; align-items:center; gap:6px; background:#d97706; border:none; font-weight:600;" title="Xem danh mục chi tiết & quản lý danh sách hàng hóa">
+                                    <i data-lucide="boxes" style="width:16px; height:16px;"></i>
+                                    <span>Xem Danh mục Hàng hóa</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Data Table Container -->
-                        <div class="table-responsive" style="border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
-                            <table class="table" id="productsReportTable" style="margin-bottom:0;">
-                                <thead>
-                                    <tr>
-                                        <th style="width:50px; text-align:center;">STT</th>
-                                        <th style="min-width:110px;">Mã SKU</th>
-                                        <th style="width:60px; text-align:center;">Ảnh</th>
-                                        <th style="min-width:200px;">Tên hàng hóa</th>
-                                        <th style="min-width:140px;">Loại hộp</th>
-                                        <th style="width:70px; text-align:center;">ĐVT</th>
-                                        <th style="min-width:120px; text-align:right;">Giá vốn</th>
-                                        <th style="min-width:120px; text-align:right;">Giá bán lẻ</th>
-                                        <th style="min-width:120px; text-align:right;">Chênh lệch (Lãi)</th>
-                                        <th style="width:90px; text-align:center;">Tồn kho</th>
-                                        <th style="min-width:130px; text-align:right;">Giá trị tồn</th>
-                                        <th style="width:110px; text-align:center;">Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                                <tfoot>
-                                    <tr style="background:var(--bg-hover); font-weight:800;">
-                                        <td colspan="6" style="text-align:right;">TỔNG CỘNG:</td>
-                                        <td id="prodReportFootCost" style="text-align:right;">-</td>
-                                        <td id="prodReportFootRetail" style="text-align:right;">-</td>
-                                        <td id="prodReportFootDiff" style="text-align:right;">-</td>
-                                        <td id="prodReportFootStock" style="text-align:center; color:#0284c7;">0</td>
-                                        <td id="prodReportFootTotalValue" style="text-align:right; color:#108f53;">0đ</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <!-- Dynamic KPI Row -->
+                        <div class="online-kpis-grid" style="margin-bottom:16px;">
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(16,143,83,0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="badge-dollar-sign" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">DOANH THU XUẤT BÁN</span>
+                                    <h4 id="kpiProdReportRevenue" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#108f53;">0đ</h4>
+                                    <small id="kpiProdReportOrderCount" style="font-size:0.72rem; color:var(--text-secondary);">0 đơn hoàn thành</small>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(124,58,237,0.12); color:#7c3aed; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="trending-up" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">LỢI NHUẬN GỘP & TỶ SUẤT</span>
+                                    <h4 id="kpiProdReportGrossProfit" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#7c3aed;">0đ</h4>
+                                    <small id="kpiProdReportMargin" style="font-size:0.72rem; color:#7c3aed; font-weight:700;">Tỷ suất: 0%</small>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(2,132,199,0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-left-right" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">SẢN LƯỢNG XUẤT / NHẬP</span>
+                                    <h4 id="kpiProdReportVolume" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#0284c7;">0 / 0</h4>
+                                    <small id="kpiProdReportVolumeSub" style="font-size:0.72rem; color:var(--text-secondary);">Xuất / Nhập (cái/hộp)</small>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(217,119,6,0.12); color:#d97706; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="package" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">GIÁ TRỊ TỒN KHO HIỆN TẠI</span>
+                                    <h4 id="kpiProdReportTotalCost" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#d97706;">0đ</h4>
+                                    <small id="kpiProdReportSKUCount" style="font-size:0.72rem; color:var(--text-secondary);">0 SKU trong danh mục</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Controls Panel (Thời gian, Chu kỳ, Phân loại) -->
+                        <div class="card" style="border:1px solid var(--border-color); padding:16px 18px; border-radius:12px; background:var(--bg-card); margin-bottom:18px;">
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                <!-- Row 1: Time Range Presets & Granularity -->
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Mốc thời gian:</span>
+                                        <div class="btn-group" id="prodReportTimePresets" style="display:flex; gap:4px; flex-wrap:wrap;">
+                                            <button type="button" class="btn btn-secondary btn-sm prod-time-btn" data-period="today" onclick="window.setProdReportTimePeriod('today')">Hôm nay</button>
+                                            <button type="button" class="btn btn-secondary btn-sm prod-time-btn" data-period="7days" onclick="window.setProdReportTimePeriod('7days')">7 ngày qua</button>
+                                            <button type="button" class="btn btn-primary btn-sm prod-time-btn active" data-period="this_month" style="background:#d97706; border-color:#d97706;" onclick="window.setProdReportTimePeriod('this_month')">Tháng này</button>
+                                            <button type="button" class="btn btn-secondary btn-sm prod-time-btn" data-period="last_month" onclick="window.setProdReportTimePeriod('last_month')">Tháng trước</button>
+                                            <button type="button" class="btn btn-secondary btn-sm prod-time-btn" data-period="this_year" onclick="window.setProdReportTimePeriod('this_year')">Năm nay</button>
+                                            <button type="button" class="btn btn-secondary btn-sm prod-time-btn" data-period="all" onclick="window.setProdReportTimePeriod('all')">Tất cả</button>
+                                            <button type="button" class="btn btn-secondary btn-sm prod-time-btn" data-period="custom" onclick="window.setProdReportTimePeriod('custom')">Tùy chọn</button>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Xem theo chu kỳ:</span>
+                                        <select class="form-select" id="prodReportGranularity" style="width:130px; padding:5px 10px; font-size:0.82rem; height:32px; font-weight:600;" onchange="window.renderProductsReport()">
+                                            <option value="daily" selected>Theo Ngày</option>
+                                            <option value="weekly">Theo Tuần</option>
+                                            <option value="monthly">Theo Tháng</option>
+                                            <option value="yearly">Theo Năm</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Row 2: Custom Date Inputs & Dimension Filters -->
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:10px; border-top:1px dashed var(--border-color);">
+                                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                        <div id="prodReportCustomDateWrapper" style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:0.8rem; color:var(--text-secondary);">Từ:</span>
+                                            <input type="date" id="prodReportDateFrom" class="form-control" style="width:135px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.onProdReportDateRangeChange()">
+                                            <span style="font-size:0.8rem; color:var(--text-secondary);">Đến:</span>
+                                            <input type="date" id="prodReportDateTo" class="form-control" style="width:135px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.onProdReportDateRangeChange()">
+                                        </div>
+                                        <select class="form-select" id="prodReportSupplierFilter" style="width:190px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.renderProductsReport()">
+                                            <option value="">-- Tất cả Nhà cung cấp --</option>
+                                        </select>
+                                        <select class="form-select" id="prodReportCategoryFilter" style="width:180px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.renderProductsReport()">
+                                            <option value="">-- Tất cả Loại hộp --</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <div class="search-box" style="width:220px;">
+                                            <i data-lucide="search" style="width:14px; height:14px;"></i>
+                                            <input type="text" placeholder="Lọc theo SKU, tên hàng..." id="prodReportSearchInput" style="height:32px; font-size:0.82rem;" oninput="window.renderProductsReport()">
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" onclick="window.resetProdReportFilters()" title="Đặt lại bộ lọc mặc định" style="height:32px; padding:0 10px;">
+                                            <i data-lucide="rotate-ccw" style="width:13px; height:13px;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Droplist Selector (hiển thị trên mobile) -->
+                        <div class="report-model-select-wrapper">
+                            <div class="mobile-report-droplist-card" style="background:var(--bg-card); border:1.5px solid var(--accent); border-radius:12px; padding:10px 12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:14px;">
+                                <label for="prodReportModelSelect" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">
+                                    <span style="display:flex; align-items:center; gap:6px;">
+                                        <i data-lucide="layers" style="width:15px; height:15px; color:var(--accent);"></i>
+                                        <span>CHỌN MẪU BÁO CÁO:</span>
+                                    </span>
+                                    <span class="badge" style="background:rgba(217,119,6,0.12); color:var(--accent); font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:8px;">Chạm để chọn mẫu</span>
+                                </label>
+                                <div style="position:relative;">
+                                    <select id="prodReportModelSelect" class="form-select mobile-report-select" onchange="window.switchProdReportModel(this.value)" style="width:100%; height:42px; font-size:0.9rem; font-weight:700; color:var(--text-primary); background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:0 36px 0 12px; appearance:none; -webkit-appearance:none; cursor:pointer;">
+                                        <option value="all">📊 Tất cả 6 mẫu báo cáo (Tổng thể)</option>
+                                        <option value="model1">1️⃣ Mẫu 1: Biến động Xuất - Nhập - Tồn</option>
+                                        <option value="model2">2️⃣ Mẫu 2: Doanh thu & Lợi nhuận gộp</option>
+                                        <option value="model3">3️⃣ Mẫu 3: Top 10 Bán chạy nhất</option>
+                                        <option value="model4">4️⃣ Mẫu 4: Cơ cấu Danh mục & NCC</option>
+                                        <option value="model5">5️⃣ Mẫu 5: Phân tích Tồn kho & Cảnh báo</option>
+                                        <option value="model6">6️⃣ Mẫu 6: Bảng số liệu chi tiết</option>
+                                    </select>
+                                    <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--accent);">
+                                        <i data-lucide="chevron-down" style="width:18px; height:18px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desktop Report Model Tabs Selector (hiển thị trên desktop) -->
+                        <div class="report-model-tabs-bar">
+                            <button type="button" class="btn btn-sm prod-tab-model active" data-model="all" onclick="window.switchProdReportModel('all')" style="border-radius:20px; font-weight:600; padding:5px 14px; background:var(--accent); color:#fff; border:none; white-space:nowrap;">
+                                Tất cả mẫu báo cáo
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary prod-tab-model" data-model="model1" onclick="window.switchProdReportModel('model1')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                1. Biến động Xuất - Nhập - Tồn
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary prod-tab-model" data-model="model2" onclick="window.switchProdReportModel('model2')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                2. Doanh thu & Lợi nhuận
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary prod-tab-model" data-model="model3" onclick="window.switchProdReportModel('model3')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                3. Top 10 Bán chạy nhất
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary prod-tab-model" data-model="model4" onclick="window.switchProdReportModel('model4')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                4. Cơ cấu Danh mục & NCC
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary prod-tab-model" data-model="model5" onclick="window.switchProdReportModel('model5')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                5. Phân tích Tồn kho
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary prod-tab-model" data-model="model6" onclick="window.switchProdReportModel('model6')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                6. Bảng số liệu chi tiết
+                            </button>
+                        </div>
+
+                        <!-- Report Containers Grid -->
+                        <div id="prodReportModelsGrid" style="display:flex; flex-direction:column; gap:20px; width:100%; max-width:100%;">
+
+                            <!-- HÀNG 1: Biểu đồ chính Xuất Nhập Tồn & Doanh thu Lợi nhuận -->
+                            <div class="report-charts-grid">
+                                <!-- MẪU 1: Biến động Xuất - Nhập - Tồn theo thời gian -->
+                                <div class="card prod-report-card" data-card="model1" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#0284c7;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 1: Biến động Xuất - Nhập - Tồn theo thời gian</h4>
+                                        </div>
+                                        <span id="chart1TimeBadge" class="badge" style="background:rgba(2,132,199,0.1); color:#0284c7; font-size:0.75rem; font-weight:600; border-radius:8px;">Theo ngày</span>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="prodChartMovement"></canvas>
+                                    </div>
+                                    <div style="margin-top:12px; display:flex; justify-content:center; gap:18px; font-size:0.78rem; color:var(--text-secondary); flex-wrap:wrap;">
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#0284c7; border-radius:3px; display:inline-block;"></span> Nhập kho</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#108f53; border-radius:3px; display:inline-block;"></span> Xuất bán</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:16px; height:3px; background:#f59e0b; display:inline-block; border-radius:2px;"></span> Tồn kho ước tính</span>
+                                    </div>
+                                </div>
+
+                                <!-- MẪU 2: Doanh thu & Lợi nhuận hàng hóa theo thời gian -->
+                                <div class="card prod-report-card" data-card="model2" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#108f53;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 2: Doanh thu & Lợi nhuận gộp theo thời gian</h4>
+                                        </div>
+                                        <span id="chart2TimeBadge" class="badge" style="background:rgba(16,143,83,0.1); color:#108f53; font-size:0.75rem; font-weight:600; border-radius:8px;">Doanh số VNĐ</span>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="prodChartRevenue"></canvas>
+                                    </div>
+                                    <div style="margin-top:12px; display:flex; justify-content:center; gap:18px; font-size:0.78rem; color:var(--text-secondary); flex-wrap:wrap;">
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#108f53; border-radius:3px; display:inline-block;"></span> Doanh thu</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#94a3b8; border-radius:3px; display:inline-block;"></span> Giá vốn (COGS)</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:16px; height:3px; background:#7c3aed; display:inline-block; border-radius:2px;"></span> Lợi nhuận gộp</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- HÀNG 2: Top Hàng bán chạy & Phân tích Cơ cấu -->
+                            <div class="report-charts-grid">
+                                <!-- MẪU 3: Top 10 Hàng hóa bán chạy nhất -->
+                                <div class="card prod-report-card" data-card="model3" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#f59e0b;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 3: Top 10 Hàng hóa bán chạy nhất</h4>
+                                        </div>
+                                        <div class="btn-group" style="display:flex; gap:3px;">
+                                            <button type="button" class="btn btn-sm btn-secondary prod-top-mode-btn active" data-mode="qty" onclick="window.setProdTopMode('qty')" style="padding:2px 8px; font-size:0.75rem; background:rgba(217,119,6,0.15); color:#d97706; font-weight:700; border:none;">Số lượng</button>
+                                            <button type="button" class="btn btn-sm btn-secondary prod-top-mode-btn" data-mode="revenue" onclick="window.setProdTopMode('revenue')" style="padding:2px 8px; font-size:0.75rem; font-weight:600;">Doanh số</button>
+                                            <button type="button" class="btn btn-sm btn-secondary prod-top-mode-btn" data-mode="profit" onclick="window.setProdTopMode('profit')" style="padding:2px 8px; font-size:0.75rem; font-weight:600;">Lợi nhuận</button>
+                                        </div>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="prodChartTopSellers"></canvas>
+                                    </div>
+                                    <small style="margin-top:10px; text-align:center; color:var(--text-secondary); font-size:0.75rem;">Xếp hạng tự động theo chu kỳ thời gian đã chọn</small>
+                                </div>
+
+                                <!-- MẪU 4: Cơ cấu hàng hóa theo Danh mục & Nhà cung cấp -->
+                                <div class="card prod-report-card" data-card="model4" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#8b5cf6;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 4: Cơ cấu theo Danh mục & Nhà cung cấp</h4>
+                                        </div>
+                                        <div class="btn-group" style="display:flex; gap:3px;">
+                                            <button type="button" class="btn btn-sm btn-secondary prod-structure-mode-btn active" data-mode="category" onclick="window.setProdStructureMode('category')" style="padding:2px 8px; font-size:0.75rem; background:rgba(139,92,246,0.15); color:#8b5cf6; font-weight:700; border:none;">Loại hộp</button>
+                                            <button type="button" class="btn btn-sm btn-secondary prod-structure-mode-btn" data-mode="supplier" onclick="window.setProdStructureMode('supplier')" style="padding:2px 8px; font-size:0.75rem; font-weight:600;">Nhà cung cấp</button>
+                                        </div>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%; display:flex; align-items:center; justify-content:center;">
+                                        <canvas id="prodChartStructure"></canvas>
+                                    </div>
+                                    <small id="prodStructureSummaryText" style="margin-top:10px; text-align:center; color:var(--text-secondary); font-size:0.75rem;">Tỷ trọng cơ cấu danh mục hộp</small>
+                                </div>
+                            </div>
+
+                            <!-- HÀNG 3: Phân tích Tồn kho & Bảng số liệu chi tiết theo thời gian -->
+                            <div class="report-charts-grid">
+                                <!-- MẪU 5: Phân tích Trạng thái tồn kho & Tốc độ quay vòng -->
+                                <div class="card prod-report-card" data-card="model5" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#ec4899;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 5: Phân tích Trạng thái tồn kho & Cảnh báo</h4>
+                                        </div>
+                                        <span class="badge" style="background:rgba(236,72,153,0.1); color:#ec4899; font-size:0.75rem; font-weight:600; border-radius:8px;">Tỷ trọng SKU</span>
+                                    </div>
+                                    <div style="position:relative; height:240px; width:100%; display:flex; align-items:center; justify-content:center;">
+                                        <canvas id="prodChartStockHealth"></canvas>
+                                    </div>
+                                    <div id="prodStockHealthLegend" style="margin-top:10px; display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; font-size:0.75rem;">
+                                        <!-- Dynamic badges for stock health -->
+                                    </div>
+                                </div>
+
+                                <!-- Tiêu điểm nhanh & Khuyến nghị kinh doanh -->
+                                <div class="card" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                                            <i data-lucide="sparkles" style="width:18px; height:18px; color:#d97706;"></i>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Khuyến nghị & Nhận định kinh doanh</h4>
+                                        </div>
+                                        <div id="prodReportSmartInsights" style="display:flex; flex-direction:column; gap:10px;">
+                                            <!-- Dynamic insights -->
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border-color);">
+                                        <button class="btn btn-secondary btn-sm" onclick="window.navigateTo('nhap-kho-online')" style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600;">
+                                            <i data-lucide="package-plus" style="width:14px; height:14px; color:#0284c7;"></i>
+                                            <span>Nhập thêm hàng</span>
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" onclick="window.navigateTo('ban-hang-pos')" style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; background:#108f53; border:none; font-weight:600;">
+                                            <i data-lucide="shopping-cart" style="width:14px; height:14px;"></i>
+                                            <span>Tạo đơn bán</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MẪU 6: Bảng tổng hợp số liệu kinh doanh theo thời gian (Ngày / Tuần / Tháng / Năm) -->
+                            <div class="card prod-report-card" data-card="model6" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="width:10px; height:10px; border-radius:50%; background:#6366f1;"></div>
+                                        <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 6: Bảng tổng hợp số liệu kinh doanh theo chu kỳ thời gian</h4>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <button class="btn btn-secondary btn-sm" onclick="window.exportProductsTimeTableToExcel()" style="display:flex; align-items:center; gap:5px; font-weight:600; font-size:0.78rem;">
+                                            <i data-lucide="download" style="width:13px; height:13px;"></i>
+                                            <span>Xuất bảng thời gian</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" style="border:1px solid var(--border-color); border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+                                    <table class="table" id="prodReportTimeTable" style="margin-bottom:0; font-size:0.84rem;">
+                                        <thead>
+                                            <tr style="background:var(--bg-hover);">
+                                                <th style="min-width:120px;">Chu kỳ / Thời gian</th>
+                                                <th style="width:90px; text-align:center;">Số đơn</th>
+                                                <th style="width:110px; text-align:center;">SL Nhập</th>
+                                                <th style="width:110px; text-align:center;">SL Xuất</th>
+                                                <th style="min-width:130px; text-align:right;">Tổng Doanh thu</th>
+                                                <th style="min-width:130px; text-align:right;">Tổng Giá vốn</th>
+                                                <th style="min-width:130px; text-align:right;">Lợi nhuận gộp</th>
+                                                <th style="width:100px; text-align:center;">Tỷ suất lãi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamic rows by date interval -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="background:var(--bg-hover); font-weight:800;">
+                                                <td style="font-weight:800;">TỔNG CỘNG:</td>
+                                                <td id="prodTimeFootOrders" style="text-align:center;">0</td>
+                                                <td id="prodTimeFootImport" style="text-align:center; color:#0284c7;">0</td>
+                                                <td id="prodTimeFootExport" style="text-align:center; color:#108f53;">0</td>
+                                                <td id="prodTimeFootRevenue" style="text-align:right; color:#108f53;">0đ</td>
+                                                <td id="prodTimeFootCost" style="text-align:right; color:#94a3b8;">0đ</td>
+                                                <td id="prodTimeFootProfit" style="text-align:right; color:#7c3aed;">0đ</td>
+                                                <td id="prodTimeFootMargin" style="text-align:center; color:#7c3aed;">0%</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -2466,122 +2729,707 @@
 
                     </div>
 
-                    <!-- Sub-tab: Báo cáo Kho hàng -->
+                    <!-- Sub-tab: Báo cáo Kho hàng (Báo cáo trực quan theo Biểu đồ & Thời gian) -->
                     <div id="subtab-online-warehouse-report" class="online-subtab-pane" style="display:none;">
-                        <!-- KPI Row -->
-                        <div class="online-kpis-grid" style="margin-bottom:16px;">
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(16,143,83,0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="warehouse" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị kho (Giá vốn)</span>
-                                    <h4 id="kpiWhReportTotalValue" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#108f53;">0đ</h4>
-                                </div>
-                            </div>
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(2,132,199,0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="boxes" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng SL tồn thực tế</span>
-                                    <h4 id="kpiWhReportTotalQty" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#0284c7;">0</h4>
-                                </div>
-                            </div>
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(14,165,233,0.12); color:#0ea5e9; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="arrow-down-to-dot" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị Nhập (VAT 8%)</span>
-                                    <h4 id="kpiWhReportTotalImport" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#0ea5e9;">0đ</h4>
-                                </div>
-                            </div>
-                            <div class="kpi-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
-                                <div class="kpi-icon-wrapper" style="padding:8px; border-radius:8px; background:rgba(234,88,12,0.12); color:#ea580c; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="arrow-up-from-dot" style="width:20px; height:20px;"></i>
-                                </div>
-                                <div style="min-width:0; flex:1;">
-                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block;">Tổng giá trị Xuất (VAT 8%)</span>
-                                    <h4 id="kpiWhReportTotalExport" style="margin:2px 0 0 0; font-size:1.15rem; font-weight:800; color:#ea580c;">0đ</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions & Filters Bar -->
-                        <div class="actions-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; min-width:280px;">
-                                <div class="search-box" style="width:240px; max-width:100%;">
-                                    <i data-lucide="search"></i>
-                                    <input type="text" placeholder="Tìm theo SKU, tên hàng hóa..." id="whReportSearchInput" oninput="window.renderWarehouseReport()">
-                                </div>
-                                <select class="form-select" id="whReportSupplierFilter" style="width:200px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderWarehouseReport()">
-                                    <option value="">-- Tất cả Nhà cung cấp --</option>
-                                </select>
-                                <select class="form-select" id="whReportStockFilter" style="width:160px; padding:6px 10px; font-size:0.85rem;" onchange="window.renderWarehouseReport()">
-                                    <option value="">-- Trạng thái tồn --</option>
-                                    <option value="in_stock">Còn hàng (> 0)</option>
-                                    <option value="low_stock">Sắp hết hàng (<= 10)</option>
-                                    <option value="out_of_stock">Hết hàng (= 0)</option>
-                                </select>
+                        <!-- Header & Action Row -->
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+                            <div>
+                                <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+                                    <i data-lucide="warehouse" style="width:24px; height:24px; color:#0284c7;"></i>
+                                    <span>Báo cáo & Phân tích Kho hàng</span>
+                                    <span class="badge" style="background:rgba(2,132,199,0.12); color:#0284c7; font-size:0.75rem; font-weight:700; border-radius:12px; padding:3px 10px;">Biểu đồ trực quan</span>
+                                </h3>
+                                <p style="margin:0; font-size:0.83rem; color:var(--text-secondary);">Tổng hợp biến động Nhập - Xuất - Tồn, Dòng tiền kho, Giá trị chiếm dụng vốn và Cơ cấu lưu kho theo Ngày / Tháng / Năm</p>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                <button class="btn btn-secondary" onclick="window.exportWarehouseReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất báo cáo tổng hợp Nhập - Xuất - Tồn ra Excel">
-                                    <i data-lucide="file-spreadsheet"></i>
-                                    <span>Xuất Excel</span>
+                                <button class="btn btn-secondary" onclick="window.exportWarehouseReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất toàn bộ số liệu báo cáo kho ra file Excel">
+                                    <i data-lucide="file-spreadsheet" style="width:16px; height:16px; color:#108f53;"></i>
+                                    <span>Xuất Excel Báo cáo</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.printWarehouseReport()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="In báo cáo kho hàng">
+                                    <i data-lucide="printer" style="width:16px; height:16px;"></i>
+                                    <span>In Báo cáo</span>
                                 </button>
                                 <button class="btn btn-secondary" onclick="window.navigateTo('nhap-kho')" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Mở danh sách & tạo phiếu nhập kho">
-                                    <i data-lucide="arrow-down-to-dot"></i>
+                                    <i data-lucide="arrow-down-to-dot" style="width:16px; height:16px;"></i>
                                     <span>Nhập kho</span>
                                 </button>
                                 <button class="btn btn-secondary" onclick="window.navigateTo('xuat-kho')" style="display:flex; align-items:center; gap:6px; color:#ea580c; border-color:#ea580c; font-weight:600;" title="Mở danh sách & tạo phiếu xuất kho">
-                                    <i data-lucide="arrow-up-from-dot"></i>
+                                    <i data-lucide="arrow-up-from-dot" style="width:16px; height:16px;"></i>
                                     <span>Xuất kho</span>
                                 </button>
+                                <button class="btn btn-secondary" onclick="window.navigateTo('bao-cao-van-chuyen')" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Xem báo cáo năng suất người/xe vận chuyển hàng hóa">
+                                    <i data-lucide="truck" style="width:16px; height:16px;"></i>
+                                    <span>Báo cáo Vận chuyển</span>
+                                </button>
                                 <button class="btn btn-primary" onclick="window.navigateTo('ton-kho')" style="display:flex; align-items:center; gap:6px; background:#108f53; border:none; font-weight:600;" title="Xem danh sách tồn kho chi tiết">
-                                    <i data-lucide="boxes"></i>
-                                    <span>Danh sách tồn kho</span>
+                                    <i data-lucide="boxes" style="width:16px; height:16px;"></i>
+                                    <span>Xem Danh sách Tồn kho</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Data Table Container -->
-                        <div class="table-responsive" style="border:1px solid var(--border-color); border-radius:8px; overflow:hidden;">
-                            <table class="table" id="warehouseReportTable" style="margin-bottom:0;">
-                                <thead>
-                                    <tr>
-                                        <th style="width:50px; text-align:center;">STT</th>
-                                        <th style="min-width:110px;">Mã SKU</th>
-                                        <th style="min-width:200px;">Tên hàng hóa</th>
-                                        <th style="width:70px; text-align:center;">ĐVT</th>
-                                        <th style="min-width:100px; text-align:center; background:rgba(2,132,199,0.05); color:#0284c7;">Tổng Nhập (SL)</th>
-                                        <th style="min-width:130px; text-align:right; background:rgba(2,132,199,0.05); color:#0284c7;">Tiền Nhập (VAT 8%)</th>
-                                        <th style="min-width:100px; text-align:center; background:rgba(234,88,12,0.05); color:#ea580c;">Tổng Xuất (SL)</th>
-                                        <th style="min-width:130px; text-align:right; background:rgba(234,88,12,0.05); color:#ea580c;">Tiền Xuất (VAT 8%)</th>
-                                        <th style="min-width:100px; text-align:center; background:rgba(16,143,83,0.05); color:#108f53;">Tồn hiện tại</th>
-                                        <th style="min-width:120px; text-align:right;">Đơn giá vốn</th>
-                                        <th style="min-width:140px; text-align:right; background:rgba(16,143,83,0.05); color:#108f53;">Giá trị tồn kho</th>
-                                        <th style="width:110px; text-align:center;">Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                                <tfoot>
-                                    <tr style="background:var(--bg-hover); font-weight:800;">
-                                        <td colspan="4" style="text-align:right;">TỔNG CỘNG:</td>
-                                        <td id="whReportFootImportQty" style="text-align:center; color:#0284c7;">0</td>
-                                        <td id="whReportFootImportTotal" style="text-align:right; color:#0284c7;">0đ</td>
-                                        <td id="whReportFootExportQty" style="text-align:center; color:#ea580c;">0</td>
-                                        <td id="whReportFootExportTotal" style="text-align:right; color:#ea580c;">0đ</td>
-                                        <td id="whReportFootStockQty" style="text-align:center; color:#108f53;">0</td>
-                                        <td style="text-align:right;">-</td>
-                                        <td id="whReportFootTotalValue" style="text-align:right; color:#108f53;">0đ</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <!-- Dynamic KPI Row -->
+                        <div class="online-kpis-grid" style="margin-bottom:16px;">
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(2,132,199,0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-down-to-dot" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">TỔNG TIỀN NHẬP KHO (VAT)</span>
+                                    <h4 id="kpiWhReportTotalImport" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#0284c7;">0đ</h4>
+                                    <small id="kpiWhReportImportCount" style="font-size:0.72rem; color:var(--text-secondary);">0 phiếu nhập kho</small>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(234,88,12,0.12); color:#ea580c; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-up-from-dot" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">TỔNG TIỀN XUẤT KHO (VAT)</span>
+                                    <h4 id="kpiWhReportTotalExport" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#ea580c;">0đ</h4>
+                                    <small id="kpiWhReportExportCount" style="font-size:0.72rem; color:var(--text-secondary);">0 phiếu xuất kho</small>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(16,143,83,0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="wallet" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">GIÁ TRỊ TỒN KHO (GIÁ VỐN)</span>
+                                    <h4 id="kpiWhReportTotalValue" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#108f53;">0đ</h4>
+                                    <small id="kpiWhReportSKUCount" style="font-size:0.72rem; color:var(--text-secondary);">0 SKU trong kho</small>
+                                </div>
+                            </div>
+                            <div class="kpi-card" style="padding:14px 16px; display:flex; align-items:center; gap:12px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px;">
+                                <div class="kpi-icon-wrapper" style="padding:10px; border-radius:10px; background:rgba(217,119,6,0.12); color:#d97706; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="boxes" style="width:22px; height:22px;"></i>
+                                </div>
+                                <div style="min-width:0; flex:1;">
+                                    <span style="font-size:0.75rem; color:var(--text-secondary); display:block; font-weight:600;">TỔNG SL TỒN THỰC TẾ</span>
+                                    <h4 id="kpiWhReportTotalQty" style="margin:2px 0 0 0; font-size:1.2rem; font-weight:800; color:#d97706;">0</h4>
+                                    <small id="kpiWhReportHealthSub" style="font-size:0.72rem; color:var(--text-secondary);">cái/hộp thực tế trong kho</small>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Filter Controls Panel (Thời gian, Chu kỳ, Phân loại kho) -->
+                        <div class="card" style="border:1px solid var(--border-color); padding:16px 18px; border-radius:12px; background:var(--bg-card); margin-bottom:18px;">
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                <!-- Row 1: Time Range Presets & Granularity -->
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Mốc thời gian:</span>
+                                        <div class="btn-group" id="whReportTimePresets" style="display:flex; gap:4px; flex-wrap:wrap;">
+                                            <button type="button" class="btn btn-secondary btn-sm wh-time-btn" data-period="today" onclick="window.setWhReportTimePeriod('today')">Hôm nay</button>
+                                            <button type="button" class="btn btn-secondary btn-sm wh-time-btn" data-period="7days" onclick="window.setWhReportTimePeriod('7days')">7 ngày qua</button>
+                                            <button type="button" class="btn btn-primary btn-sm wh-time-btn active" data-period="this_month" style="background:#0284c7; border-color:#0284c7;" onclick="window.setWhReportTimePeriod('this_month')">Tháng này</button>
+                                            <button type="button" class="btn btn-secondary btn-sm wh-time-btn" data-period="last_month" onclick="window.setWhReportTimePeriod('last_month')">Tháng trước</button>
+                                            <button type="button" class="btn btn-secondary btn-sm wh-time-btn" data-period="this_year" onclick="window.setWhReportTimePeriod('this_year')">Năm nay</button>
+                                            <button type="button" class="btn btn-secondary btn-sm wh-time-btn" data-period="all" onclick="window.setWhReportTimePeriod('all')">Tất cả</button>
+                                            <button type="button" class="btn btn-secondary btn-sm wh-time-btn" data-period="custom" onclick="window.setWhReportTimePeriod('custom')">Tùy chọn</button>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Xem theo chu kỳ:</span>
+                                        <select class="form-select" id="whReportGranularity" style="width:130px; padding:5px 10px; font-size:0.82rem; height:32px; font-weight:600;" onchange="window.renderWarehouseReport()">
+                                            <option value="daily" selected>Theo Ngày</option>
+                                            <option value="weekly">Theo Tuần</option>
+                                            <option value="monthly">Theo Tháng</option>
+                                            <option value="yearly">Theo Năm</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Row 2: Custom Date Inputs & Dimension Filters -->
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:10px; border-top:1px dashed var(--border-color);">
+                                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                        <div id="whReportCustomDateWrapper" style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:0.8rem; color:var(--text-secondary);">Từ:</span>
+                                            <input type="date" id="whReportDateFrom" class="form-control" style="width:135px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.onWhReportDateRangeChange()">
+                                            <span style="font-size:0.8rem; color:var(--text-secondary);">Đến:</span>
+                                            <input type="date" id="whReportDateTo" class="form-control" style="width:135px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.onWhReportDateRangeChange()">
+                                        </div>
+                                        <select class="form-select" id="whReportSupplierFilter" style="width:190px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.renderWarehouseReport()">
+                                            <option value="">-- Tất cả Nhà cung cấp --</option>
+                                        </select>
+                                        <select class="form-select" id="whReportStockFilter" style="width:160px; padding:4px 8px; font-size:0.82rem; height:32px;" onchange="window.renderWarehouseReport()">
+                                            <option value="">-- Trạng thái tồn --</option>
+                                            <option value="in_stock">Còn hàng (> 0)</option>
+                                            <option value="low_stock">Sắp hết hàng (<= 10)</option>
+                                            <option value="out_of_stock">Hết hàng (= 0)</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <div class="search-box" style="width:220px;">
+                                            <i data-lucide="search" style="width:14px; height:14px;"></i>
+                                            <input type="text" placeholder="Tìm theo SKU, tên hàng..." id="whReportSearchInput" style="height:32px; font-size:0.82rem;" oninput="window.renderWarehouseReport()">
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" onclick="window.resetWhReportFilters()" title="Đặt lại bộ lọc mặc định" style="height:32px; padding:0 10px;">
+                                            <i data-lucide="rotate-ccw" style="width:13px; height:13px;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Droplist Selector (hiển thị trên mobile) -->
+                        <div class="report-model-select-wrapper">
+                            <div class="mobile-report-droplist-card" style="background:var(--bg-card); border:1.5px solid #0284c7; border-radius:12px; padding:10px 12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:14px;">
+                                <label for="whReportModelSelect" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">
+                                    <span style="display:flex; align-items:center; gap:6px;">
+                                        <i data-lucide="layers" style="width:15px; height:15px; color:#0284c7;"></i>
+                                        <span>CHỌN MẪU BÁO CÁO KHO:</span>
+                                    </span>
+                                    <span class="badge" style="background:rgba(2,132,199,0.12); color:#0284c7; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:8px;">Chạm để chọn mẫu</span>
+                                </label>
+                                <div style="position:relative;">
+                                    <select id="whReportModelSelect" class="form-select mobile-report-select" onchange="window.switchWhReportModel(this.value)" style="width:100%; height:42px; font-size:0.9rem; font-weight:700; color:var(--text-primary); background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:0 36px 0 12px; appearance:none; -webkit-appearance:none; cursor:pointer;">
+                                        <option value="all">📊 Tất cả mẫu báo cáo kho (Tổng thể)</option>
+                                        <option value="model1">1️⃣ Mẫu 1: Dòng tiền Nhập - Xuất kho</option>
+                                        <option value="model2">2️⃣ Mẫu 2: Sản lượng Nhập - Xuất - Tồn</option>
+                                        <option value="model3">3️⃣ Mẫu 3: Top Giá trị tồn & Xuất kho</option>
+                                        <option value="model4">4️⃣ Mẫu 4: Cơ cấu Lưu kho & NCC</option>
+                                        <option value="model5">5️⃣ Mẫu 5: Cảnh báo Tồn & Luân chuyển</option>
+                                        <option value="model6">6️⃣ Mẫu 6: Bảng cân đối thời gian</option>
+                                    </select>
+                                    <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:#0284c7;">
+                                        <i data-lucide="chevron-down" style="width:18px; height:18px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desktop Warehouse Report Model Tabs Selector (hiển thị trên desktop) -->
+                        <div class="report-model-tabs-bar">
+                            <button type="button" class="btn btn-sm wh-tab-model active" data-model="all" onclick="window.switchWhReportModel('all')" style="border-radius:20px; font-weight:600; padding:5px 14px; background:#0284c7; color:#fff; border:none; white-space:nowrap;">
+                                Tất cả mẫu báo cáo kho
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary wh-tab-model" data-model="model1" onclick="window.switchWhReportModel('model1')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                1. Dòng tiền Nhập - Xuất kho
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary wh-tab-model" data-model="model2" onclick="window.switchWhReportModel('model2')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                2. Sản lượng Nhập - Xuất - Tồn
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary wh-tab-model" data-model="model3" onclick="window.switchWhReportModel('model3')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                3. Top Giá trị tồn & Xuất kho
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary wh-tab-model" data-model="model4" onclick="window.switchWhReportModel('model4')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                4. Cơ cấu Lưu kho & NCC
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary wh-tab-model" data-model="model5" onclick="window.switchWhReportModel('model5')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                5. Cảnh báo Tồn & Luân chuyển
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary wh-tab-model" data-model="model6" onclick="window.switchWhReportModel('model6')" style="border-radius:20px; font-weight:600; padding:5px 14px; white-space:nowrap;">
+                                6. Bảng cân đối thời gian
+                            </button>
+                        </div>
+
+                        <!-- Warehouse Report Containers Grid -->
+                        <div id="whReportModelsGrid" style="display:flex; flex-direction:column; gap:20px; width:100%; max-width:100%;">
+
+                            <!-- HÀNG 1: Biểu đồ Dòng tiền kho & Biến động sản lượng -->
+                            <div class="report-charts-grid">
+                                <!-- MẪU 1: Giá trị Tiền Nhập - Xuất kho theo thời gian -->
+                                <div class="card wh-report-card" data-card="model1" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#0284c7;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 1: Dòng tiền Nhập - Xuất kho theo thời gian (VAT 8%)</h4>
+                                        </div>
+                                        <span id="whChart1TimeBadge" class="badge" style="background:rgba(2,132,199,0.1); color:#0284c7; font-size:0.75rem; font-weight:600; border-radius:8px;">Theo ngày</span>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="whChartValueMovement"></canvas>
+                                    </div>
+                                    <div style="margin-top:12px; display:flex; justify-content:center; gap:18px; font-size:0.78rem; color:var(--text-secondary); flex-wrap:wrap;">
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#0284c7; border-radius:3px; display:inline-block;"></span> Tiền Nhập kho (VAT)</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#ea580c; border-radius:3px; display:inline-block;"></span> Tiền Xuất kho (VAT)</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:16px; height:3px; background:#108f53; display:inline-block; border-radius:2px;"></span> Chênh lệch luân chuyển</span>
+                                    </div>
+                                </div>
+
+                                <!-- MẪU 2: Biến động Sản lượng Nhập - Xuất - Tồn kho theo thời gian -->
+                                <div class="card wh-report-card" data-card="model2" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#108f53;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 2: Biến động Sản lượng Nhập - Xuất - Tồn kho</h4>
+                                        </div>
+                                        <span id="whChart2TimeBadge" class="badge" style="background:rgba(16,143,83,0.1); color:#108f53; font-size:0.75rem; font-weight:600; border-radius:8px;">Sản lượng (cái)</span>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="whChartQtyMovement"></canvas>
+                                    </div>
+                                    <div style="margin-top:12px; display:flex; justify-content:center; gap:18px; font-size:0.78rem; color:var(--text-secondary); flex-wrap:wrap;">
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#0284c7; border-radius:3px; display:inline-block;"></span> SL Nhập</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:#ea580c; border-radius:3px; display:inline-block;"></span> SL Xuất</span>
+                                        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:16px; height:3px; background:#f59e0b; display:inline-block; border-radius:2px;"></span> Tồn kho thực tế</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- HÀNG 2: Top Mặt hàng chiếm dụng vốn & Cơ cấu lưu kho -->
+                            <div class="report-charts-grid">
+                                <!-- MẪU 3: Top 10 Hàng hóa có giá trị tồn kho & xuất kho lớn nhất -->
+                                <div class="card wh-report-card" data-card="model3" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#f59e0b;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 3: Top 10 Mặt hàng chiếm dụng vốn & Xuất kho</h4>
+                                        </div>
+                                        <div class="btn-group" style="display:flex; gap:3px;">
+                                            <button type="button" class="btn btn-sm btn-secondary wh-top-mode-btn active" data-mode="stock_val" onclick="window.setWhTopMode('stock_val')" style="padding:2px 8px; font-size:0.75rem; background:rgba(217,119,6,0.15); color:#d97706; font-weight:700; border:none;">Giá trị tồn</button>
+                                            <button type="button" class="btn btn-sm btn-secondary wh-top-mode-btn" data-mode="exp_qty" onclick="window.setWhTopMode('exp_qty')" style="padding:2px 8px; font-size:0.75rem; font-weight:600;">SL Xuất</button>
+                                            <button type="button" class="btn btn-sm btn-secondary wh-top-mode-btn" data-mode="exp_val" onclick="window.setWhTopMode('exp_val')" style="padding:2px 8px; font-size:0.75rem; font-weight:600;">Tiền Xuất</button>
+                                        </div>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="whChartTopStock"></canvas>
+                                    </div>
+                                    <small style="margin-top:10px; text-align:center; color:var(--text-secondary); font-size:0.75rem;">Xếp hạng tự động theo giá trị chiếm dụng vốn kho và nhu cầu xuất hàng</small>
+                                </div>
+
+                                <!-- MẪU 4: Cơ cấu Giá trị lưu kho theo Loại hộp & Nhà cung cấp -->
+                                <div class="card wh-report-card" data-card="model4" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#8b5cf6;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 4: Cơ cấu Giá trị kho theo Loại hộp & NCC</h4>
+                                        </div>
+                                        <div class="btn-group" style="display:flex; gap:3px;">
+                                            <button type="button" class="btn btn-sm btn-secondary wh-structure-mode-btn active" data-mode="category" onclick="window.setWhStructureMode('category')" style="padding:2px 8px; font-size:0.75rem; background:rgba(139,92,246,0.15); color:#8b5cf6; font-weight:700; border:none;">Loại hộp</button>
+                                            <button type="button" class="btn btn-sm btn-secondary wh-structure-mode-btn" data-mode="supplier" onclick="window.setWhStructureMode('supplier')" style="padding:2px 8px; font-size:0.75rem; font-weight:600;">Nhà cung cấp</button>
+                                        </div>
+                                    </div>
+                                    <div style="position:relative; height:280px; width:100%; display:flex; align-items:center; justify-content:center;">
+                                        <canvas id="whChartStructure"></canvas>
+                                    </div>
+                                    <small id="whStructureSummaryText" style="margin-top:10px; text-align:center; color:var(--text-secondary); font-size:0.75rem;">Tỷ trọng phân bổ nguồn vốn lưu kho</small>
+                                </div>
+                            </div>
+
+                            <!-- HÀNG 3: Cảnh báo Tồn kho & Khuyến nghị Kho vận -->
+                            <div class="report-charts-grid">
+                                <!-- MẪU 5: Phân tích Trạng thái tồn kho & Cảnh báo an toàn -->
+                                <div class="card wh-report-card" data-card="model5" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div style="width:10px; height:10px; border-radius:50%; background:#ec4899;"></div>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 5: Cảnh báo Tồn kho & Tốc độ quay vòng</h4>
+                                        </div>
+                                        <span class="badge" style="background:rgba(236,72,153,0.1); color:#ec4899; font-size:0.75rem; font-weight:600; border-radius:8px;">Tỷ trọng kho</span>
+                                    </div>
+                                    <div style="position:relative; height:240px; width:100%; display:flex; align-items:center; justify-content:center;">
+                                        <canvas id="whChartHealth"></canvas>
+                                    </div>
+                                    <div id="whStockHealthLegend" style="margin-top:10px; display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; font-size:0.75rem;">
+                                        <!-- Dynamic badges for warehouse health -->
+                                    </div>
+                                </div>
+
+                                <!-- Tiêu điểm kho vận & Nhận định dòng hàng -->
+                                <div class="card" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                                            <i data-lucide="sparkles" style="width:18px; height:18px; color:#0284c7;"></i>
+                                            <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Nhận định & Khuyến nghị Kho vận</h4>
+                                        </div>
+                                        <div id="whReportSmartInsights" style="display:flex; flex-direction:column; gap:10px;">
+                                            <!-- Dynamic warehouse insights -->
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border-color);">
+                                        <button class="btn btn-secondary btn-sm" onclick="window.navigateTo('kiem-ke')" style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600;">
+                                            <i data-lucide="clipboard-check" style="width:14px; height:14px; color:#108f53;"></i>
+                                            <span>Phiếu kiểm kê</span>
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" onclick="window.navigateTo('nhap-kho')" style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; background:#0284c7; border:none; font-weight:600;">
+                                            <i data-lucide="plus-circle" style="width:14px; height:14px;"></i>
+                                            <span>Tạo phiếu nhập</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MẪU 6: Bảng Cân Đối Nhập - Xuất - Tồn theo chu kỳ thời gian -->
+                            <div class="card wh-report-card" data-card="model6" style="border:1px solid var(--border-color); border-radius:12px; background:var(--bg-card); padding:18px; display:flex; flex-direction:column;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="width:10px; height:10px; border-radius:50%; background:#6366f1;"></div>
+                                        <h4 style="font-size:0.96rem; font-weight:700; margin:0; color:var(--text-primary);">Mẫu 6: Bảng Cân Đối Nhập - Xuất - Tồn kho theo chu kỳ thời gian</h4>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <button class="btn btn-secondary btn-sm" onclick="window.exportWarehouseTimeTableToExcel()" style="display:flex; align-items:center; gap:5px; font-weight:600; font-size:0.78rem;">
+                                            <i data-lucide="download" style="width:13px; height:13px;"></i>
+                                            <span>Xuất bảng thời gian</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" style="border:1px solid var(--border-color); border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+                                    <table class="table" id="whReportTimeTable" style="margin-bottom:0; font-size:0.84rem;">
+                                        <thead>
+                                            <tr style="background:var(--bg-hover);">
+                                                <th style="min-width:120px;">Chu kỳ / Thời gian</th>
+                                                <th style="width:80px; text-align:center;">Số phiếu</th>
+                                                <th style="width:100px; text-align:center; color:#0284c7;">SL Nhập</th>
+                                                <th style="min-width:130px; text-align:right; color:#0284c7;">Tiền Nhập (VAT 8%)</th>
+                                                <th style="width:100px; text-align:center; color:#ea580c;">SL Xuất</th>
+                                                <th style="min-width:130px; text-align:right; color:#ea580c;">Tiền Xuất (VAT 8%)</th>
+                                                <th style="width:100px; text-align:center; color:#108f53;">Tồn cuối (SL)</th>
+                                                <th style="min-width:130px; text-align:right; color:#108f53;">Giá trị tồn cuối kỳ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamic rows by date interval -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="background:var(--bg-hover); font-weight:800;">
+                                                <td style="font-weight:800;">TỔNG CỘNG:</td>
+                                                <td id="whTimeFootVouchers" style="text-align:center;">0</td>
+                                                <td id="whTimeFootImportQty" style="text-align:center; color:#0284c7;">0</td>
+                                                <td id="whTimeFootImportTotal" style="text-align:right; color:#0284c7;">0đ</td>
+                                                <td id="whTimeFootExportQty" style="text-align:center; color:#ea580c;">0</td>
+                                                <td id="whTimeFootExportTotal" style="text-align:right; color:#ea580c;">0đ</td>
+                                                <td id="whTimeFootStockQty" style="text-align:center; color:#108f53;">0</td>
+                                                <td id="whTimeFootStockVal" style="text-align:right; color:#108f53;">0đ</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Sub-tab: Báo cáo Vận chuyển & Giao nhận hàng hóa (Người / Xe) -->
+                    <div id="subtab-online-shipping-report" class="online-subtab-pane" style="display:none;">
+                        <!-- Header & Action Row -->
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+                            <div>
+                                <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+                                    <i data-lucide="truck" style="width:24px; height:24px; color:#0284c7;"></i>
+                                    <span>Báo cáo Vận chuyển & Giao hàng (Người / Xe)</span>
+                                    <span class="badge" style="background:rgba(2,132,199,0.12); color:#0284c7; font-size:0.75rem; font-weight:700; border-radius:12px; padding:3px 10px;">Biểu đồ & Năng suất</span>
+                                </h3>
+                                <p style="margin:0; font-size:0.83rem; color:var(--text-secondary);">Phân tích năng suất tài xế, khối lượng luân chuyển theo biển số phương tiện, tỷ lệ ký nhận và tần suất giao hàng theo Ngày / Tuần / Tháng / Năm</p>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <button class="btn btn-secondary" onclick="window.exportShippingReportToExcel()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="Xuất toàn bộ số liệu báo cáo vận chuyển ra file Excel">
+                                    <i data-lucide="file-spreadsheet" style="width:16px; height:16px; color:#108f53;"></i>
+                                    <span>Xuất Excel Báo cáo</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.printShippingReport()" style="display:flex; align-items:center; gap:6px; font-weight:600;" title="In báo cáo vận chuyển">
+                                    <i data-lucide="printer" style="width:16px; height:16px;"></i>
+                                    <span>In Báo cáo</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.navigateTo('xuat-kho')" style="display:flex; align-items:center; gap:6px; color:#ea580c; border-color:#ea580c; font-weight:600;" title="Mở danh sách phiếu xuất kho">
+                                    <i data-lucide="arrow-up-from-dot" style="width:16px; height:16px;"></i>
+                                    <span>Xuất kho (Mẫu 02-VT)</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.navigateTo('bao-cao-kho-hang')" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Xem báo cáo kho hàng">
+                                    <i data-lucide="warehouse" style="width:16px; height:16px;"></i>
+                                    <span>Báo cáo Kho</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- KPIs Summary Cards -->
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
+                            <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #0284c7;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
+                                    <span>Tổng số chuyến xe</span>
+                                    <i data-lucide="truck" style="width:17px; height:17px; color:#0284c7;"></i>
+                                </div>
+                                <div id="kpiShipTotalTrips" style="font-size:1.45rem; font-weight:800; color:#0284c7;">0</div>
+                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Chuyến vận chuyển hoàn thành</div>
+                            </div>
+
+                            <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #ea580c;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
+                                    <span>Tổng sản lượng vận chuyển</span>
+                                    <i data-lucide="boxes" style="width:17px; height:17px; color:#ea580c;"></i>
+                                </div>
+                                <div id="kpiShipTotalQty" style="font-size:1.45rem; font-weight:800; color:#ea580c;">0 SP</div>
+                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Số lượng hàng hóa giao khách</div>
+                            </div>
+
+                            <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #108f53;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
+                                    <span>Tổng giá trị hàng giao</span>
+                                    <i data-lucide="banknote" style="width:17px; height:17px; color:#108f53;"></i>
+                                </div>
+                                <div id="kpiShipTotalValue" style="font-size:1.45rem; font-weight:800; color:#108f53;">0 đ</div>
+                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Đã bao gồm VAT 8%</div>
+                            </div>
+
+                            <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #8b5cf6;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
+                                    <span>Tỷ lệ ký nhận bàn giao</span>
+                                    <i data-lucide="camera" style="width:17px; height:17px; color:#8b5cf6;"></i>
+                                </div>
+                                <div id="kpiShipSignedRate" style="font-size:1.45rem; font-weight:800; color:#8b5cf6;">100%</div>
+                                <div id="kpiShipSignedCount" style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">0/0 phiếu có ảnh ký</div>
+                            </div>
+
+                            <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #d97706;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
+                                    <span>Tài xế & Xe tích cực nhất</span>
+                                    <i data-lucide="award" style="width:17px; height:17px; color:#d97706;"></i>
+                                </div>
+                                <div id="kpiShipTopDriver" style="font-size:1.05rem; font-weight:800; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+                                <div id="kpiShipTopVehicle" style="font-size:0.75rem; color:#d97706; font-weight:700; margin-top:4px;">-</div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Controls Bar -->
+                        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; margin-bottom:16px;">
+                            <!-- Time Presets Row -->
+                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--border-color);">
+                                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                    <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-right:4px;">Thời gian:</span>
+                                    <button type="button" class="btn btn-sm ship-preset-btn" data-preset="today" onclick="window.setShipReportPreset('today')" style="padding:4px 10px; font-size:0.78rem;">Hôm nay</button>
+                                    <button type="button" class="btn btn-sm ship-preset-btn" data-preset="7days" onclick="window.setShipReportPreset('7days')" style="padding:4px 10px; font-size:0.78rem;">7 ngày qua</button>
+                                    <button type="button" class="btn btn-sm ship-preset-btn active" data-preset="this_month" onclick="window.setShipReportPreset('this_month')" style="padding:4px 10px; font-size:0.78rem; font-weight:700; background:var(--accent); color:#fff;">Tháng này</button>
+                                    <button type="button" class="btn btn-sm ship-preset-btn" data-preset="last_month" onclick="window.setShipReportPreset('last_month')" style="padding:4px 10px; font-size:0.78rem;">Tháng trước</button>
+                                    <button type="button" class="btn btn-sm ship-preset-btn" data-preset="this_year" onclick="window.setShipReportPreset('this_year')" style="padding:4px 10px; font-size:0.78rem;">Năm nay</button>
+                                    <button type="button" class="btn btn-sm ship-preset-btn" data-preset="all" onclick="window.setShipReportPreset('all')" style="padding:4px 10px; font-size:0.78rem;">Tất cả</button>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">Xem theo:</span>
+                                    <select id="shipReportGranularity" class="form-select" onchange="window.renderShippingReport()" style="font-size:0.8rem; height:32px; padding:2px 28px 2px 10px; width:130px;">
+                                        <option value="daily" selected>📅 Theo Ngày</option>
+                                        <option value="weekly">📆 Theo Tuần</option>
+                                        <option value="monthly">🗓️ Theo Tháng</option>
+                                        <option value="yearly">📊 Theo Năm</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Filter Inputs Row -->
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; align-items:flex-end;">
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:600; color:var(--text-secondary); margin-bottom:4px;">Từ ngày:</label>
+                                    <input type="date" id="shipReportDateFrom" class="form-input" style="height:34px; font-size:0.82rem;" onchange="window._shipReportState.dateFrom = this.value; window.renderShippingReport();">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:600; color:var(--text-secondary); margin-bottom:4px;">Đến ngày:</label>
+                                    <input type="date" id="shipReportDateTo" class="form-input" style="height:34px; font-size:0.82rem;" onchange="window._shipReportState.dateTo = this.value; window.renderShippingReport();">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:600; color:var(--text-secondary); margin-bottom:4px;">Người vận chuyển / Lái xe:</label>
+                                    <select id="shipReportDriverFilter" class="form-select" style="height:34px; font-size:0.82rem;" onchange="window.renderShippingReport()">
+                                        <option value="all">-- Tất cả người vận chuyển --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:600; color:var(--text-secondary); margin-bottom:4px;">Phương tiện / Biển số xe:</label>
+                                    <select id="shipReportVehicleFilter" class="form-select" style="height:34px; font-size:0.82rem;" onchange="window.renderShippingReport()">
+                                        <option value="all">-- Tất cả xe / biển số --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; font-weight:600; color:var(--text-secondary); margin-bottom:4px;">Biên bản ký nhận:</label>
+                                    <select id="shipReportProofFilter" class="form-select" style="height:34px; font-size:0.82rem;" onchange="window.renderShippingReport()">
+                                        <option value="all">-- Tất cả tình trạng --</option>
+                                        <option value="signed">📸 Đã có ảnh ký nhận</option>
+                                        <option value="unsigned">⏳ Chưa có ảnh ký</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Droplist Selector (hiển thị trên mobile) -->
+                        <div class="report-model-select-wrapper">
+                            <div class="mobile-report-droplist-card" style="background:var(--bg-card); border:1.5px solid var(--accent); border-radius:12px; padding:10px 12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:14px;">
+                                <label for="shipReportModelSelect" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">
+                                    <span style="display:flex; align-items:center; gap:6px;">
+                                        <i data-lucide="layers" style="width:15px; height:15px; color:var(--accent);"></i>
+                                        <span>CHỌN MẪU BÁO CÁO VẬN CHUYỂN:</span>
+                                    </span>
+                                    <span class="badge" style="background:rgba(217,119,6,0.12); color:var(--accent); font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:8px;">Chạm để chọn mẫu</span>
+                                </label>
+                                <div style="position:relative;">
+                                    <select id="shipReportModelSelect" class="form-select mobile-report-select" onchange="window.switchShipReportModel(this.value)" style="width:100%; height:42px; font-size:0.9rem; font-weight:700; color:var(--text-primary); background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:0 36px 0 12px; appearance:none; -webkit-appearance:none; cursor:pointer;">
+                                        <option value="shipModelTime">1️⃣ Mẫu 1: Tần suất & Sản lượng theo Thời gian</option>
+                                        <option value="shipModelDriver">2️⃣ Mẫu 2: Năng suất Lái xe</option>
+                                        <option value="shipModelVehicle">3️⃣ Mẫu 3: Hiệu suất Xe / Biển số</option>
+                                        <option value="shipModelChannel">4️⃣ Mẫu 4: Cơ cấu Kênh & Ký nhận</option>
+                                        <option value="shipModelLogTable">5️⃣ Mẫu 5: Bảng Nhật trình Chuyến xe & Ký nhận</option>
+                                    </select>
+                                    <div style="position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--accent);">
+                                        <i data-lucide="chevron-down" style="width:18px; height:18px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multi-Model Switcher Tabs (hiển thị trên desktop) -->
+                        <div class="report-model-tabs-bar" style="border-bottom:2px solid var(--border-color); gap:4px; margin-bottom:16px;">
+                            <button type="button" class="ship-model-tab-btn active" onclick="window.switchShipReportModel('shipModelTime', this)" style="padding:8px 14px; font-size:0.83rem; font-weight:700; border:none; background:transparent; border-bottom:3px solid var(--accent); color:var(--text-primary); cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                                <i data-lucide="line-chart" style="width:15px; height:15px; color:#0284c7;"></i>
+                                <span>Mẫu 1: Tần suất & Sản lượng theo Thời gian</span>
+                            </button>
+                            <button type="button" class="ship-model-tab-btn" onclick="window.switchShipReportModel('shipModelDriver', this)" style="padding:8px 14px; font-size:0.83rem; font-weight:600; border:none; background:transparent; border-bottom:3px solid transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                                <i data-lucide="user-check" style="width:15px; height:15px; color:#108f53;"></i>
+                                <span>Mẫu 2: Năng suất Lái xe</span>
+                            </button>
+                            <button type="button" class="ship-model-tab-btn" onclick="window.switchShipReportModel('shipModelVehicle', this)" style="padding:8px 14px; font-size:0.83rem; font-weight:600; border:none; background:transparent; border-bottom:3px solid transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                                <i data-lucide="truck" style="width:15px; height:15px; color:#ea580c;"></i>
+                                <span>Mẫu 3: Hiệu suất Xe / Biển số</span>
+                            </button>
+                            <button type="button" class="ship-model-tab-btn" onclick="window.switchShipReportModel('shipModelChannel', this)" style="padding:8px 14px; font-size:0.83rem; font-weight:600; border:none; background:transparent; border-bottom:3px solid transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                                <i data-lucide="pie-chart" style="width:15px; height:15px; color:#8b5cf6;"></i>
+                                <span>Mẫu 4: Cơ cấu Kênh & Ký nhận</span>
+                            </button>
+                            <button type="button" class="ship-model-tab-btn" onclick="window.switchShipReportModel('shipModelLogTable', this)" style="padding:8px 14px; font-size:0.83rem; font-weight:600; border:none; background:transparent; border-bottom:3px solid transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                                <i data-lucide="table" style="width:15px; height:15px; color:#d97706;"></i>
+                                <span>Mẫu 5: Bảng Nhật trình Chuyến xe & Ký nhận</span>
+                            </button>
+                        </div>
+
+                        <!-- Report Model 1: Tần suất & Sản lượng theo Thời gian -->
+                        <div id="shipModelTime" class="ship-report-model-pane">
+                            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; margin-bottom:16px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <div>
+                                        <h4 style="margin:0; font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                                            <i data-lucide="activity" style="width:18px; height:18px; color:#0284c7;"></i>
+                                            <span>Biểu đồ Tần suất Chuyến xe & Sản lượng Vận chuyển theo Thời gian</span>
+                                        </h4>
+                                        <span style="font-size:0.75rem; color:var(--text-secondary);">Cột màu xanh: Số chuyến vận chuyển | Đường màu cam: Tổng sản lượng hộp vận chuyển</span>
+                                    </div>
+                                </div>
+                                <div style="position:relative; min-height:340px; width:100%;">
+                                    <canvas id="shipChartTimeMovement"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report Model 2: Năng suất Lái xe -->
+                        <div id="shipModelDriver" class="ship-report-model-pane" style="display:none;">
+                            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; margin-bottom:16px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <div>
+                                        <h4 style="margin:0; font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                                            <i data-lucide="user-check" style="width:18px; height:18px; color:#108f53;"></i>
+                                            <span>Năng suất & So sánh Khối lượng Giao hàng giữa các Lái xe</span>
+                                        </h4>
+                                        <span style="font-size:0.75rem; color:var(--text-secondary);">Định lượng số chuyến hoàn thành và tổng sản lượng kiện hàng chuyên chở của từng người vận chuyển</span>
+                                    </div>
+                                </div>
+                                <div style="position:relative; min-height:340px; width:100%;">
+                                    <canvas id="shipChartDriverComparison"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report Model 3: Hiệu suất Xe / Biển số -->
+                        <div id="shipModelVehicle" class="ship-report-model-pane" style="display:none;">
+                            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; margin-bottom:16px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <div>
+                                        <h4 style="margin:0; font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                                            <i data-lucide="truck" style="width:18px; height:18px; color:#ea580c;"></i>
+                                            <span>Tải trọng & Khối lượng Hàng Luân chuyển qua từng Phương tiện (Biển số xe)</span>
+                                        </h4>
+                                        <span style="font-size:0.75rem; color:var(--text-secondary);">Thống kê tổng số lượng hàng chở và số lượt lăn bánh của từng loại xe (Xe tải 1.5T, Xe 2.5T, Xe van, Bán tải, Xe gửi...)</span>
+                                    </div>
+                                </div>
+                                <div style="position:relative; min-height:340px; width:100%;">
+                                    <canvas id="shipChartVehiclePerformance"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report Model 4: Cơ cấu Kênh & Ký nhận -->
+                        <div id="shipModelChannel" class="ship-report-model-pane" style="display:none;">
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; margin-bottom:16px;">
+                                <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px;">
+                                    <h4 style="margin:0 0 4px 0; font-size:0.92rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                                        <i data-lucide="pie-chart" style="width:16px; height:16px; color:#8b5cf6;"></i>
+                                        <span>Cơ cấu Kênh Giao nhận / Vận tải</span>
+                                    </h4>
+                                    <p style="margin:0 0 12px 0; font-size:0.75rem; color:var(--text-secondary);">Tỷ trọng giữa Đội xe nội bộ vs Gửi nhà xe vs Đối tác công nghệ (Ahamove/Grab) vs Bưu cục</p>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="shipChartCarrierStructure"></canvas>
+                                    </div>
+                                </div>
+
+                                <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px;">
+                                    <h4 style="margin:0 0 4px 0; font-size:0.92rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                                        <i data-lucide="check-circle" style="width:16px; height:16px; color:#108f53;"></i>
+                                        <span>Tỷ lệ Ký nhận & Biên bản Bàn giao</span>
+                                    </h4>
+                                    <p style="margin:0 0 12px 0; font-size:0.75rem; color:var(--text-secondary);">Đo lường mức độ tuân thủ quy trình chụp ảnh ký nhận biên bản giao hàng</p>
+                                    <div style="position:relative; height:280px; width:100%;">
+                                        <canvas id="shipChartProofStatus"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report Model 5: Bảng Nhật trình Chuyến xe & Ký nhận -->
+                        <div id="shipModelLogTable" class="ship-report-model-pane" style="display:none;">
+                            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:16px; margin-bottom:16px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <div>
+                                        <h4 style="margin:0; font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                                            <i data-lucide="clipboard-list" style="width:18px; height:18px; color:#d97706;"></i>
+                                            <span>Nhật trình Chi tiết các Chuyến Vận chuyển & Biên bản Ký nhận</span>
+                                        </h4>
+                                        <span style="font-size:0.75rem; color:var(--text-secondary);">Danh sách chi tiết từng chuyến xe, tài xế phụ trách, biển số xe, sản lượng, giá trị hàng hóa và chứng từ ký nhận</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" onclick="window.exportShippingReportToExcel()" style="display:flex; align-items:center; gap:6px;">
+                                        <i data-lucide="file-spreadsheet" style="width:14px; height:14px; color:#108f53;"></i>
+                                        <span>Xuất Excel bảng này</span>
+                                    </button>
+                                </div>
+                                <div class="table-responsive" style="max-height:500px; overflow-y:auto;">
+                                    <table class="table" id="shipReportDetailTable" style="width:100%; border-collapse:collapse; font-size:0.83rem;">
+                                        <thead style="position:sticky; top:0; background:var(--bg-card); z-index:2; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="white-space:nowrap;">Thời gian</th>
+                                                <th style="white-space:nowrap;">Số phiếu XK</th>
+                                                <th>Lái xe & SĐT</th>
+                                                <th>Phương tiện & Biển số</th>
+                                                <th>Người nhận & Địa chỉ</th>
+                                                <th style="text-align:right; white-space:nowrap;">SL mặt hàng</th>
+                                                <th style="text-align:right; white-space:nowrap;">Tổng SL thực xuất</th>
+                                                <th style="text-align:right; white-space:nowrap;">Tổng giá trị (VAT)</th>
+                                                <th style="text-align:center; white-space:nowrap;">Ảnh ký nhận</th>
+                                                <th style="text-align:center; white-space:nowrap;">Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Injected dynamically -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="font-weight:700; background:var(--bg-secondary);">
+                                                <td colspan="5" style="text-align:right;">Tổng cộng kỳ báo cáo:</td>
+                                                <td id="shipTableFootItems" style="text-align:right;">-</td>
+                                                <td id="shipTableFootQty" style="text-align:right; color:#ea580c; font-size:0.95rem;">-</td>
+                                                <td id="shipTableFootValue" style="text-align:right; color:#108f53; font-size:0.95rem;">-</td>
+                                                <td id="shipTableFootProof" style="text-align:center;">-</td>
+                                                <td id="shipTableFootStatus" style="text-align:center;">-</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Smart Logistics Insights -->
+                        <div id="shipSmartInsights" style="background:linear-gradient(135deg, rgba(2,132,199,0.05) 0%, rgba(16,143,83,0.05) 100%); border:1px solid rgba(2,132,199,0.2); border-radius:10px; padding:16px; margin-bottom:20px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                                <i data-lucide="sparkles" style="width:18px; height:18px; color:#0284c7;"></i>
+                                <h4 style="margin:0; font-size:0.95rem; font-weight:700; color:var(--text-primary);">Phân tích Thông minh về Đội xe & Vận chuyển (Smart Logistics Insights)</h4>
+                            </div>
+                            <div id="shipSmartInsightsContent" style="font-size:0.83rem; color:var(--text-primary); line-height:1.6;">
+                                <!-- Dynamic insights -->
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Sub-tab 3: Stock Logs -->
@@ -2867,6 +3715,10 @@
                                 <button class="btn btn-secondary" onclick="window.exportOnlineExportRecordsToExcel()" style="display:flex; align-items:center; gap:6px;" title="Xuất danh sách phiếu xuất kho ra Excel">
                                     <i data-lucide="file-spreadsheet"></i>
                                     <span>Xuất Excel</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.navigateTo('bao-cao-van-chuyen')" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Báo cáo phân tích năng suất Người / Xe vận chuyển">
+                                    <i data-lucide="truck" style="width:16px; height:16px;"></i>
+                                    <span>Báo cáo Vận chuyển</span>
                                 </button>
                                 <button class="btn btn-primary" onclick="window.openStockExportModal()" style="display:flex; align-items:center; gap:6px; background:linear-gradient(135deg, #108f53 0%, #065f46 100%); border:none; font-weight:700; box-shadow:0 2px 6px rgba(16, 143, 83, 0.35);" title="Tạo phiếu xuất kho chuẩn Mẫu 02-VT">
                                     <i data-lucide="plus-circle"></i>
@@ -11883,7 +12735,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261022_split_modules_v42"></script>
+    <script src="/app.js?v=20261022_shipping_logistics_report_v46"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
