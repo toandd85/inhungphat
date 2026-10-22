@@ -9256,9 +9256,9 @@ select.form-select, .form-select {
     touch-action: manipulation;
 }
 
-/* Mobile viewport adjustments (<= 768px) */
-@media (max-width: 768px) {
-    /* 1. Switch to droplist on mobile */
+/* Mobile viewport adjustments (<= 900px) */
+@media (max-width: 900px) {
+    /* 1. Switch to droplist on mobile & tablet */
     .report-model-tabs-bar {
         display: none !important;
     }
@@ -9284,6 +9284,9 @@ select.form-select, .form-select {
         padding: 12px 14px !important;
         border-radius: 12px !important;
         margin-bottom: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     /* 4. Chart height & canvas safety */
@@ -9310,9 +9313,28 @@ select.form-select, .form-select {
         line-height: 1.35 !important;
     }
 
+    /* Header action buttons wrap cleanly on mobile */
+    #subtab-online-products-report > div:first-child > div:last-child,
+    #subtab-online-warehouse-report > div:first-child > div:last-child,
+    #subtab-online-shipping-report > div:first-child > div:last-child {
+        width: 100% !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+    #subtab-online-products-report > div:first-child > div:last-child button,
+    #subtab-online-warehouse-report > div:first-child > div:last-child button,
+    #subtab-online-shipping-report > div:first-child > div:last-child button {
+        flex: 1 1 auto !important;
+        font-size: 0.78rem !important;
+        padding: 6px 10px !important;
+    }
+
     /* 6. Filter Controls on mobile */
     #subtab-online-products-report .card select.form-select,
-    #subtab-online-warehouse-report .card select.form-select {
+    #subtab-online-warehouse-report .card select.form-select,
+    #subtab-online-products-report .search-box,
+    #subtab-online-warehouse-report .search-box {
         width: 100% !important;
         max-width: 100% !important;
     }
@@ -9355,3 +9377,4 @@ select.form-select, .form-select {
         max-width: 100% !important;
     }
 }
+
