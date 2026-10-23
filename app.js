@@ -25737,25 +25737,34 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
         const totalPaid = Math.max(Number(order.paid_amount || 0), payments.reduce((sum, t) => sum + Number(t.amount || 0), 0));
         const remainingDebt = Math.max(0, grandTotal - totalPaid);
         
+        const paymentStatusEl = document.getElementById("pdfPaymentStatus");
+        const paymentStatusRow = document.getElementById("pdfPaymentStatusRow") || (paymentStatusEl ? paymentStatusEl.parentElement : null);
+
         let statusText = "";
+        let showStatusRow = true;
+
         if (totalPaid === 0) {
             statusText = "Chưa thanh toán (Ghi nợ)";
+            showStatusRow = true;
         } else if (remainingDebt > 0) {
-            statusText = `Đã đặt cọc: ${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid} (Còn nợ: ${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt})`;
+            // Bỏ dòng trạng thái tạm ứng đặt cọc ở phần thông tin trên đầu hóa đơn
+            statusText = "";
+            showStatusRow = false;
         } else {
             statusText = "Đã thanh toán đủ";
+            showStatusRow = true;
         }
         
-        const paymentStatusEl = document.getElementById("pdfPaymentStatus");
         if (paymentStatusEl) {
             paymentStatusEl.textContent = statusText;
             if (totalPaid >= grandTotal && grandTotal > 0) {
                 paymentStatusEl.style.color = "#108f53";
-            } else if (totalPaid > 0) {
-                paymentStatusEl.style.color = "#d97706";
             } else {
                 paymentStatusEl.style.color = "#e11d48";
             }
+        }
+        if (paymentStatusRow) {
+            paymentStatusRow.style.display = showStatusRow ? "" : "none";
         }
         
         // Render Line Items Table
