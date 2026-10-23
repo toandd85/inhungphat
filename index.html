@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261023_hide_deposit_invoice_v54">
+    <link rel="stylesheet" href="/style.css?v=20261023_streamline_shipping_kpis_v55">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -3271,47 +3271,44 @@
                         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #0284c7;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
-                                    <span>Tổng số chuyến xe</span>
+                                    <span>Tổng chuyến xe</span>
                                     <i data-lucide="truck" style="width:17px; height:17px; color:#0284c7;"></i>
                                 </div>
                                 <div id="kpiShipTotalTrips" style="font-size:1.45rem; font-weight:800; color:#0284c7;">0</div>
-                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Chuyến vận chuyển hoàn thành</div>
                             </div>
 
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #ea580c;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
-                                    <span>Tổng sản lượng vận chuyển</span>
+                                    <span>Tổng sản lượng</span>
                                     <i data-lucide="boxes" style="width:17px; height:17px; color:#ea580c;"></i>
                                 </div>
                                 <div id="kpiShipTotalQty" style="font-size:1.45rem; font-weight:800; color:#ea580c;">0 SP</div>
-                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Số lượng hàng hóa giao khách</div>
                             </div>
 
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #108f53;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
-                                    <span>Tổng giá trị hàng giao</span>
+                                    <span>Tổng giá trị</span>
                                     <i data-lucide="banknote" style="width:17px; height:17px; color:#108f53;"></i>
                                 </div>
                                 <div id="kpiShipTotalValue" style="font-size:1.45rem; font-weight:800; color:#108f53;">0 đ</div>
-                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Đã bao gồm VAT 8%</div>
                             </div>
 
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #8b5cf6;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
-                                    <span>Tỷ lệ ký nhận bàn giao</span>
+                                    <span>Tỷ lệ ký nhận</span>
                                     <i data-lucide="camera" style="width:17px; height:17px; color:#8b5cf6;"></i>
                                 </div>
                                 <div id="kpiShipSignedRate" style="font-size:1.45rem; font-weight:800; color:#8b5cf6;">100%</div>
-                                <div id="kpiShipSignedCount" style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">0/0 phiếu có ảnh ký</div>
+                                <div id="kpiShipSignedCount" style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">0/0 chuyến</div>
                             </div>
 
                             <div class="kpi-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.05); border-left:4px solid #d97706;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-secondary); font-size:0.8rem; font-weight:600; margin-bottom:6px;">
-                                    <span>Tài xế & Xe tích cực nhất</span>
+                                    <span>Tài xế & Xe tích cực</span>
                                     <i data-lucide="award" style="width:17px; height:17px; color:#d97706;"></i>
                                 </div>
-                                <div id="kpiShipTopDriver" style="font-size:1.05rem; font-weight:800; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
-                                <div id="kpiShipTopVehicle" style="font-size:0.75rem; color:#d97706; font-weight:700; margin-top:4px;">-</div>
+                                <div id="kpiShipTopDriver" style="font-size:1.15rem; font-weight:800; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+                                <div id="kpiShipTopVehicle" style="font-size:0.78rem; color:#d97706; font-weight:700; margin-top:4px;">-</div>
                             </div>
                         </div>
 
@@ -12869,7 +12866,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261023_hide_deposit_invoice_v54"></script>
+    <script src="/app.js?v=20261023_streamline_shipping_kpis_v55"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

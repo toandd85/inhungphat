@@ -43777,7 +43777,7 @@ window.renderShippingReport = function() {
     Object.keys(driverStats).forEach(d => {
         if (driverStats[d].qty > maxDriverQty) {
             maxDriverQty = driverStats[d].qty;
-            topDriverName = `${d} (${driverStats[d].trips} chuyến - ${driverStats[d].qty.toLocaleString('vi-VN')} SP)`;
+            topDriverName = d;
         }
     });
 
@@ -43786,7 +43786,7 @@ window.renderShippingReport = function() {
     Object.keys(vehicleStats).forEach(v => {
         if (vehicleStats[v].qty > maxVehicleQty) {
             maxVehicleQty = vehicleStats[v].qty;
-            topVehiclePlate = `${v} (${vehicleStats[v].qty.toLocaleString('vi-VN')} SP - ${vehicleStats[v].trips} lượt)`;
+            topVehiclePlate = `${v} (${vehicleStats[v].qty.toLocaleString('vi-VN')} SP)`;
         }
     });
 
@@ -43803,7 +43803,7 @@ window.renderShippingReport = function() {
     if (elQty) elQty.textContent = totalQty.toLocaleString('vi-VN') + " SP";
     if (elVal) elVal.textContent = totalValue.toLocaleString('vi-VN') + " đ";
     if (elRate) elRate.textContent = signedRate;
-    if (elCount) elCount.textContent = `${signedCount}/${totalTrips} chuyến có biên bản ký nhận`;
+    if (elCount) elCount.textContent = `${signedCount}/${totalTrips} chuyến`;
     if (elTopDrv) elTopDrv.textContent = topDriverName;
     if (elTopVeh) elTopVeh.textContent = topVehiclePlate;
 
