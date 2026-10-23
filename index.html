@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261023_streamline_shipping_kpis_v55">
+    <link rel="stylesheet" href="/style.css?v=20261023_invoice_header_layout_v56">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -12420,33 +12420,26 @@
                     <div class="pdf-preview-container">
                         <div id="printArea" onclick="window.toggleInvoiceZoom()" class="scaled-preview" style="background:#fff; padding: 40px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-family: 'Be Vietnam Pro', sans-serif;">
 
-                        <!-- Header -->
+                        <!-- Header: Logo, Company Info & Centered Order Title (Ảnh 2) -->
 
-                        <div class="pdf-header" style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #108f53; padding-bottom:15px;">
-
+                        <div class="pdf-header" style="display:flex; align-items:center; gap:16px;">
+                            <img src="/logo.png?v=20261020_lachong" alt="In Lạc Hồng Logo" style="height:58px; max-height:58px; width:auto; object-fit:contain;" onerror="this.style.display='none'">
                             <div>
-
-                                <h2 style="color:#108f53; margin:0; font-size:1.4rem; font-weight:800;">CÔNG TY CỔ PHẦN IN LẠC HỒNG</h2>
-                                <p style="margin:4px 0 0 0; font-size:0.85rem; color:#555;">Địa chỉ: P.605, Số 14 Pháo Đài Láng, P. Láng, Hà Nội</p>
-                                <p style="margin:2px 0 0 0; font-size:0.85rem; color:#555;">Xưởng Gia Công: KCN Ứng Hòa – Hà Nội.</p>
-                                <p style="margin:2px 0 0 0; font-size:0.85rem; color:#555;">Hotline: 0907.86.1111- 0965.861.333</p>
-                                <p style="margin:2px 0 0 0; font-size:0.85rem; color:#555;">Website: inlachong.com</p>
-
+                                <div style="font-weight:800; font-size:1.25rem; color:#111; text-transform:uppercase; line-height:1.25; margin-bottom:3px;">CÔNG TY CỔ PHẦN IN LẠC HỒNG</div>
+                                <div style="font-size:0.85rem; color:#444; line-height:1.35; margin-bottom:2px;">Địa chỉ: P.605, Số 14 Pháo Đài Láng, P. Láng, Hà Nội &nbsp;|&nbsp; Xưởng: KCN Ứng Hòa – Hà Nội</div>
+                                <div style="font-size:0.85rem; color:#444; line-height:1.35;">Website: inlachong.com / Hotline: 0907.86.1111 - 0965.861.333</div>
                             </div>
-
-                            <div style="text-align:right;">
-
-                                <h3 style="margin:0; font-size:1.2rem; color:#333;" id="pdfInvoiceTitle">ĐƠN HÀNG ONLINE</h3>
-
-                                <p style="margin:4px 0 0 0; font-weight:700; color:#e11d48;" id="pdfOrderNumber">SO-ON-XXXX</p>
-
-                            </div>
-
                         </div>
+
+                        <div style="text-align:center; margin:16px 0 14px 0;">
+                            <h2 id="pdfInvoiceTitle" style="margin:0; font-size:1.65rem; font-weight:800; text-transform:uppercase; color:#111; letter-spacing:1px;">ĐƠN HÀNG</h2>
+                        </div>
+
+                        <div style="border-bottom:2px solid #108f53; margin-bottom:18px;"></div>
 
                         <!-- Customer & Order details -->
 
-                        <div class="pdf-details" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:20px; font-size:0.9rem;">
+                        <div class="pdf-details" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; font-size:0.9rem;">
 
                             <div>
 
@@ -12468,7 +12461,7 @@
 
                                 <p style="margin:4px 0;"><strong>Hình thức:</strong> <span id="pdfPaymentMethod">Chuyển khoản VCB</span></p>
 
-                                <p style="margin:4px 0;" id="pdfPaymentStatusRow"><strong>Trạng thái:</strong> <span id="pdfPaymentStatus" style="font-weight:700; color:#e11d48;">Chưa thanh toán</span></p>
+                                <p style="margin:4px 0;" id="pdfOrderNumberRow"><strong>Mã đơn hàng:</strong> <span id="pdfOrderNumber" style="font-weight:700; color:#e11d48;">SO-ON-XXXX</span></p>
 
                             </div>
 
@@ -12866,7 +12859,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261023_streamline_shipping_kpis_v55"></script>
+    <script src="/app.js?v=20261023_invoice_header_layout_v56"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

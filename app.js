@@ -25656,10 +25656,9 @@ window.openOnlineOrderInvoicePdf = function(orderId) {
             modal.dataset.orderId = orderId;
         }
 
-        const isOnline = !!order.items;
         const invoiceTitleEl = document.getElementById("pdfInvoiceTitle");
         if (invoiceTitleEl) {
-            invoiceTitleEl.textContent = isOnline ? "ĐƠN HÀNG ONLINE / XUẤT KHO" : "ĐƠN HÀNG SẢN XUẤT";
+            invoiceTitleEl.textContent = "ĐƠN HÀNG";
         }
         
         const customer = state.partners.find(p => p.id === order.customer_id);
@@ -36398,8 +36397,12 @@ window.exportInvoiceAsPDF = function() {
                     background-color: #ffffff !important;
                 }
                 /* Brand headers green */
-                #printArea h2, #printArea h4 {
+                #printArea h4 {
                     color: #108f53 !important;
+                    background-color: transparent !important;
+                }
+                #printArea #pdfInvoiceTitle {
+                    color: #111111 !important;
                     background-color: transparent !important;
                 }
                 /* Table headers green and text white */
