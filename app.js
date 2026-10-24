@@ -46086,6 +46086,18 @@ window.openNewPaymentInstallmentModal = function(orderId, isOnline = true, mode 
     document.getElementById("payInstPayer").value = custName;
     document.getElementById("payInstNote").value = "";
 
+    const amtInput = document.getElementById("payInstAmount");
+    if (amtInput) {
+        amtInput.removeAttribute("step");
+        amtInput.removeAttribute("min");
+        amtInput.removeAttribute("max");
+        amtInput.removeAttribute("required");
+        amtInput.setAttribute("step", "any");
+        amtInput.setAttribute("min", "0");
+    }
+    const formEl = document.getElementById("orderPaymentInstallmentForm");
+    if (formEl) formEl.setAttribute("novalidate", "true");
+
     window.updatePayInstAmountFormatted();
     window.renderPayInstThumbnails();
 
@@ -46126,6 +46138,18 @@ window.openEditPaymentInstallmentModal = function(orderId, instId, isOnline = tr
     document.getElementById("payInstAccount").value = inst.account || "";
     document.getElementById("payInstPayer").value = inst.payer || custName;
     document.getElementById("payInstNote").value = inst.note || "";
+
+    const amtInput = document.getElementById("payInstAmount");
+    if (amtInput) {
+        amtInput.removeAttribute("step");
+        amtInput.removeAttribute("min");
+        amtInput.removeAttribute("max");
+        amtInput.removeAttribute("required");
+        amtInput.setAttribute("step", "any");
+        amtInput.setAttribute("min", "0");
+    }
+    const formEl = document.getElementById("orderPaymentInstallmentForm");
+    if (formEl) formEl.setAttribute("novalidate", "true");
 
     window.updatePayInstAmountFormatted();
     window.renderPayInstThumbnails();
