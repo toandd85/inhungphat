@@ -18565,7 +18565,7 @@ window.onCrmFilterTypeChange = function() {
         container.innerHTML = `
             <select id="crmFilterValueSelect" class="form-select" style="width: 100%; height: 38px; font-size: 0.85rem;" onchange="renderCRM()">
                 <option value="">-- Tất cả loại đối tác / KH --</option>
-                <option value="DIRECT">👑 Chính chủ</option>
+                <option value="DIRECT">👤 Khách trực tiếp</option>
                 <option value="AGENCY">🏪 Đại lý</option>
                 <option value="SUPPLIER">🚚 NCC (Nhà cung cấp)</option>
             </select>
@@ -18638,7 +18638,7 @@ function renderCRM() {
             } else if (selectVal === "SUPPLIER") {
                 return p.customer_type === "SUPPLIER" || p.customer_type === "NCC" || p.role === "SUPPLIER";
             } else if (selectVal === "DIRECT") {
-                return p.customer_type === "DIRECT" || p.customer_type === "Chính chủ" || p.customer_type === "RETAIL" || (!p.customer_type && p.role !== "SUPPLIER");
+                return p.customer_type === "DIRECT" || p.customer_type === "Khách trực tiếp" || p.customer_type === "Chính chủ" || p.customer_type === "RETAIL" || (!p.customer_type && p.role !== "SUPPLIER");
             }
             return true;
         } else if (filterType === "status") {
@@ -18681,7 +18681,7 @@ function renderCRM() {
 
         const statusBadge = p.status !== false ? `<span class="badge badge-success">Đang làm việc</span>` : `<span class="badge badge-danger">Tạm dừng</span>`;
 
-        // Phân loại khách hàng: Đại lý, NCC, Chính chủ
+        // Phân loại khách hàng: Đại lý, NCC, Khách trực tiếp
         let custTypeBadge = '';
         const isAgency = p.customer_type === "AGENCY" || p.customer_type === "Đại lý" || p.customer_type === "WHOLESALE" || p.customer_type === "Khách sỉ" || p.customer_type === "SI";
         const isSupplier = p.customer_type === "SUPPLIER" || p.customer_type === "NCC" || p.role === "SUPPLIER";
@@ -18691,7 +18691,7 @@ function renderCRM() {
         } else if (isSupplier) {
             custTypeBadge = `<span class="badge" style="font-size:0.75rem; background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-weight:600;"><i data-lucide="truck" style="width:11px; height:11px; margin-right:3px;"></i>NCC</span>`;
         } else {
-            custTypeBadge = `<span class="badge" style="font-size:0.75rem; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; font-weight:600;"><i data-lucide="user-check" style="width:11px; height:11px; margin-right:3px;"></i>Chính chủ</span>`;
+            custTypeBadge = `<span class="badge" style="font-size:0.75rem; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; font-weight:600;"><i data-lucide="user-check" style="width:11px; height:11px; margin-right:3px;"></i>Khách trực tiếp</span>`;
         }
 
         const row = document.createElement("tr");
@@ -34714,7 +34714,7 @@ window.viewPartnerBillingDetails = function(partnerId) {
     if (bodyEl) {
         const roleLabels = { CUSTOMER: "Khách hàng", SUPPLIER: "Nhà cung cấp", SUBCONTRACTOR: "Đơn vị gia công", BOTH: "Khách hàng & NCC" };
         const bTypeLabels = { ENTERPRISE: "🏢 Doanh nghiệp", HOUSEHOLD: "🏪 Hộ kinh doanh", INDIVIDUAL: "👤 Cá nhân" };
-        const cTypeLabels = { DIRECT: "👑 Chính chủ", AGENCY: "🏪 Đại lý", SUPPLIER: "🚚 NCC" };
+        const cTypeLabels = { DIRECT: "👤 Khách trực tiếp", AGENCY: "🏪 Đại lý", SUPPLIER: "🚚 NCC" };
         
         let cType = partner.customer_type;
         if (cType === "WHOLESALE" || cType === "Khách sỉ" || cType === "SI") cType = "AGENCY";
@@ -46694,7 +46694,7 @@ window.openPartner360 = function(partnerId, initialFilter = 'ALL') {
 
     const customerTypeBadge = partner.customer_type === 'AGENCY' || partner.customer_type === 'Đại lý' ? '<span class="badge" style="background:#ede9fe; color:#5b21b6; border:1px solid #ddd6fe;">Đại lý</span>' :
                              (partner.customer_type === 'SUPPLIER' || partner.role === 'SUPPLIER' ? '<span class="badge" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a;">NCC</span>' :
-                             '<span class="badge" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0;">Chính chủ</span>');
+                             '<span class="badge" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0;">Khách trực tiếp</span>');
 
     const statusBadge = partner.status !== false ? '<span class="badge badge-success">Đang làm việc</span>' : '<span class="badge badge-danger">Tạm dừng</span>';
 
