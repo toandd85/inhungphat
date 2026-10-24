@@ -31309,7 +31309,7 @@ window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
     }
 
     window.activeCommercialContractId = contractId;
-    window.activeCommercialDocType = docType;
+    window.activeCommercialDocType = null;
 
     let partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
     if (!partner) {
@@ -31365,8 +31365,11 @@ window.getCommercialDocDraftKey = function(contractId, docType) {
 window.saveCommercialDocDraft = function() {
     const paper = document.getElementById("commercialDocPaperContent");
     if (!paper) return;
-    const key = window.getCommercialDocDraftKey();
-    window.commercialDocDrafts[key] = paper.innerHTML;
+    const textOnly = (paper.innerText || "").trim();
+    if (textOnly.length > 50) {
+        const key = window.getCommercialDocDraftKey();
+        window.commercialDocDrafts[key] = paper.innerHTML;
+    }
 };
 
 // Word Editing ExecCommand helper
@@ -31476,10 +31479,14 @@ window.resetCommercialDocTemplate = function() {
 window.switchCommercialDocTab = function(docType, forceReset = false) {
     const paperEl = document.getElementById("commercialDocPaperContent");
 
-    // Save active tab's draft before switching away
-    if (paperEl && window.activeCommercialDocType && !forceReset) {
-        const prevKey = window.getCommercialDocDraftKey(window.activeCommercialContractId, window.activeCommercialDocType);
-        window.commercialDocDrafts[prevKey] = paperEl.innerHTML;
+    // Only save previous tab's draft if it is an actual previous rendered document
+    const prevDocType = window.activeCommercialDocType;
+    if (paperEl && prevDocType && prevDocType !== docType && !forceReset) {
+        const innerText = (paperEl.innerText || "").trim();
+        if (innerText.length > 50) {
+            const prevKey = window.getCommercialDocDraftKey(window.activeCommercialContractId, prevDocType);
+            window.commercialDocDrafts[prevKey] = paperEl.innerHTML;
+        }
     }
 
     window.activeCommercialDocType = docType;
@@ -31594,8 +31601,12 @@ window.switchCommercialDocTab = function(docType, forceReset = false) {
     paperEl.setAttribute("spellcheck", "false");
 
     const draftKey = window.getCommercialDocDraftKey(c.id, docType);
-    if (!forceReset && window.commercialDocDrafts[draftKey]) {
-        paperEl.innerHTML = window.commercialDocDrafts[draftKey];
+    const draftHtml = window.commercialDocDrafts[draftKey];
+    const stripped = draftHtml ? draftHtml.replace(/<!--[\s\S]*?-->/g, '').trim() : '';
+    const hasValidDraft = stripped.length > 50;
+
+    if (!forceReset && hasValidDraft) {
+        paperEl.innerHTML = draftHtml;
     } else {
         paperEl.innerHTML = window.renderCommercialDocContent(c, partner, linkedOrders, docType);
         window.commercialDocDrafts[draftKey] = paperEl.innerHTML;
@@ -31638,7 +31649,7 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
     const totalAmount = Number(c.value || 0);
     const depositAmount = Number(c.deposit || 0);
     const remainingAmount = Math.max(0, totalAmount - depositAmount);
-    const amountInWords = window.docSoThanhChu(totalAmount);
+    const amountInWords = (typeof window.docSoThanhChu === 'function') ? window.docSoThanhChu(totalAmount) : '';
     const depositPercent = totalAmount > 0 ? Math.round((depositAmount / totalAmount) * 100) : 0;
     
     const signDate = c.signing_date ? new Date(c.signing_date) : new Date();
@@ -32035,7 +32046,7 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
     // 4. PAYMENT REQUEST TEMPLATE (GIẤY ĐỀ NGHỊ THANH TOÁN)
     if (docType === 'PAYMENT') {
         const paymentDue = remainingAmount > 0 ? remainingAmount : totalAmount;
-        const paymentWords = window.docSoThanhChu(paymentDue);
+        const paymentWords = (typeof window.docSoThanhChu === 'function') ? window.docSoThanhChu(paymentDue) : '';
 
         return `
             ${nationalHeaderHtml}
