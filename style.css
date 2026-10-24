@@ -9567,3 +9567,236 @@ select.form-select, .form-select {
     }
 }
 
+
+/* ==========================================================================
+   Order Timeline & Interaction Hub Modal Styles
+   ========================================================================== */
+.order-timeline-modal .modal-dialog {
+    max-width: 900px;
+    width: 95%;
+}
+
+.order-timeline-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .order-timeline-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.order-summary-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+[data-theme="dark"] .order-summary-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.order-summary-card .card-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+
+.order-summary-card .card-value {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.order-timeline-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    position: relative;
+    overflow-x: auto;
+    gap: 12px;
+}
+
+[data-theme="dark"] .order-timeline-stepper {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.ot-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    min-width: 95px;
+    flex: 1;
+}
+
+.ot-step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    transition: all 0.2s ease;
+}
+
+.ot-step.active .ot-step-circle {
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
+}
+
+.ot-step.done .ot-step-circle {
+    background: #108f53;
+    color: #ffffff;
+}
+
+.ot-step-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.ot-step.active .ot-step-label {
+    color: #0284c7;
+    font-weight: 700;
+}
+
+.ot-step.done .ot-step-label {
+    color: #108f53;
+    font-weight: 700;
+}
+
+/* Timeline vertical list */
+.ot-events-list {
+    position: relative;
+    padding-left: 36px;
+}
+
+.ot-events-list::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    bottom: 20px;
+    left: 15px;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+[data-theme="dark"] .ot-events-list::before {
+    background: #334155;
+}
+
+.ot-event-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.ot-event-icon {
+    position: absolute;
+    left: -36px;
+    top: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    color: #64748b;
+    z-index: 2;
+}
+
+[data-theme="dark"] .ot-event-icon {
+    background: #0f172a;
+    border-color: #475569;
+}
+
+.ot-event-icon.success {
+    border-color: #108f53;
+    color: #108f53;
+    background: #f0fdf4;
+}
+
+.ot-event-icon.info {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: #f0f9ff;
+}
+
+.ot-event-icon.warning {
+    border-color: #f59e0b;
+    color: #f59e0b;
+    background: #fffbeb;
+}
+
+.ot-event-icon.purple {
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+    background: #faf5ff;
+}
+
+.ot-event-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+[data-theme="dark"] .ot-event-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.ot-event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ot-event-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ot-event-time {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.ot-event-body {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}

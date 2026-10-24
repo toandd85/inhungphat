@@ -13827,7 +13827,7 @@ function renderQuotes() {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><small>${formattedCreatedDate}</small></td>
-            <td><strong>${order.order_number}</strong></td>
+            <td><a href="javascript:void(0)" onclick="window.openOrderTimelineModal('${order.id}', false)" style="text-decoration:underline; font-weight:700; color:var(--accent);" title="Bấm để xem lịch sử giao dịch & tiến trình đơn hàng"><strong>${order.order_number}</strong></a></td>
             <td>
                 <div>${customer ? customer.name : 'Khách vãng lai'}</div>
                 <small class="text-muted">${customer ? customer.phone : ''}</small>
@@ -13935,7 +13935,7 @@ function renderProdOrders() {
 
         row.innerHTML = `
             <td><small>${formattedCreatedDate}</small></td>
-            <td><strong>${order.order_number}</strong></td>
+            <td><a href="javascript:void(0)" onclick="window.openOrderTimelineModal('${order.id}', false)" style="text-decoration:underline; font-weight:700; color:var(--accent);" title="Bấm để xem lịch sử giao dịch & tiến trình đơn hàng"><strong>${order.order_number}</strong></a></td>
             <td><strong>${customer ? customer.code : 'N/A'}</strong></td>
             <td>
                 <div>${customer ? customer.name : 'Khách vãng lai'}</div>
@@ -26646,7 +26646,7 @@ window.renderOnlineSales = function() {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>
-                <a href="javascript:void(0)" onclick="openOnlineOrderInvoicePdf('${o.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent);"><strong>${o.order_number}</strong></a>
+                <a href="javascript:void(0)" onclick="window.openOrderTimelineModal('${o.id}', true)" style="text-decoration:underline; font-weight:700; color:var(--accent);" title="Bấm để xem lịch sử giao dịch & tiến trình đơn hàng"><strong>${o.order_number}</strong></a>
                 ${o.sales_channel ? ` <span class="badge badge-info" style="font-size:0.68rem; margin-left:4px;">${o.sales_channel}</span>` : ''}
             </td>
             <td style="text-align:center;"><small>${formattedDate}</small></td>
@@ -45002,4 +45002,438 @@ window.resetAllStockToZero = async function() {
     } catch (e) {
         alert("Lỗi khi đặt lại tồn kho: " + e.message);
     }
+};
+
+// ==========================================================================
+// ORDER TIMELINE & INTERACTION HUB (Lịch Sử Giao Dịch & Tiến Trình Đơn Hàng)
+// ==========================================================================
+
+window.openOrderTimelineModal = function(orderId, isOnline = true) {
+    let order = null;
+    let isOnlineOrder = isOnline;
+
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+        if (!order) {
+            order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+            if (order) isOnlineOrder = false;
+        }
+    } else {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+        if (!order) {
+            order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+            if (order) isOnlineOrder = true;
+        }
+    }
+
+    if (!order) {
+        alert("Không tìm thấy thông tin đơn hàng!");
+        return;
+    }
+
+    const modal = document.getElementById("orderTimelineModal");
+    const body = document.getElementById("orderTimelineModalBody");
+    const titleEl = document.getElementById("orderTimelineModalTitle");
+    const subTitleEl = document.getElementById("orderTimelineModalSubtitle");
+
+    if (!modal || !body) return;
+
+    const partner = (state.partners || []).find(p => p.id === order.customer_id) || {};
+    const custName = order.customer_name || partner.name || "Khách hàng";
+    const custPhone = order.customer_phone || partner.phone || "";
+    const custAddr = order.customer_address || partner.address || "";
+
+    const totalAmt = Number(order.total_amount || 0);
+    // Find all payment transactions linked to this order
+    const payments = (state.transactions || []).filter(t => 
+        (t.reference_id === order.id || t.order_id === order.id || t.order_number === order.order_number) && t.type === 'RECEIPT'
+    );
+    const transTotalPaid = payments.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+    const totalPaid = Math.max(Number(order.paid_amount || 0), transTotalPaid);
+    const depositAmt = Number(order.deposit_amount || order.deposit || 0);
+    const remainingDebt = Math.max(0, totalAmt - totalPaid);
+    const paidPercent = totalAmt > 0 ? Math.min(100, Math.round((totalPaid / totalAmt) * 100)) : 100;
+
+    // Delivery Status
+    const delStat = order.delivery_status || "PENDING";
+    const isDelivered = delStat === "DELIVERED";
+    const isShipping = delStat === "SHIPPING";
+
+    // Linked Contract / Docs
+    const linkedContract = (state.contracts || []).find(c => 
+        (c.order_ids && c.order_ids.includes(order.id)) || 
+        c.order_id === order.id || 
+        (c.order_numbers && c.order_numbers.includes(order.order_number))
+    );
+
+    // Overall Completion Status
+    const isCompleted = (isDelivered || order.status === "COMPLETED") && remainingDebt <= 0;
+
+    let overallBadge = '';
+    if (isCompleted) {
+        overallBadge = `<span class="badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:0.85rem; padding:6px 12px; font-weight:700;"><i data-lucide="check-check" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> ĐÃ HOÀN THÀNH 100%</span>`;
+    } else if (isDelivered && remainingDebt > 0) {
+        overallBadge = `<span class="badge" style="background:#fffbeb; color:#b45309; border:1px solid #fde68a; font-size:0.85rem; padding:6px 12px; font-weight:700;"><i data-lucide="alert-circle" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> ĐÃ GIAO HÀNG - CÒN NỢ</span>`;
+    } else if (isShipping) {
+        overallBadge = `<span class="badge" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; font-size:0.85rem; padding:6px 12px; font-weight:700;"><i data-lucide="truck" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> ĐANG GIAO HÀNG</span>`;
+    } else if (depositAmt > 0 || totalPaid > 0) {
+        overallBadge = `<span class="badge" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; font-size:0.85rem; padding:6px 12px; font-weight:700;"><i data-lucide="clock" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> ĐÃ TẠM ỨNG - ĐANG XỬ LÝ</span>`;
+    } else {
+        overallBadge = `<span class="badge" style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; font-size:0.85rem; padding:6px 12px; font-weight:700;"><i data-lucide="hourglass" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> MỚI TẠO - CHỜ TẠM ỨNG</span>`;
+    }
+
+    if (titleEl) {
+        titleEl.innerHTML = `<span style="color:var(--accent); font-weight:800;">${order.order_number}</span> - Tiến Trình & Lịch Sử Giao Dịch`;
+    }
+    if (subTitleEl) {
+        subTitleEl.textContent = `Khách hàng: ${custName} ${custPhone ? '(' + custPhone + ')' : ''} | Kênh: ${order.sales_channel || 'Trực tiếp'} | NV: ${order.salesperson || 'N/A'}`;
+    }
+
+    body.innerHTML = window.generateOrderTimelineHtml(order, isOnlineOrder, partner, totalAmt, totalPaid, depositAmt, remainingDebt, paidPercent, delStat, isDelivered, isCompleted, overallBadge, payments, linkedContract);
+
+    openModal("orderTimelineModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        try {
+            lucide.createIcons();
+        } catch(e) {}
+    }
+};
+
+window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, totalPaid, depositAmt, remainingDebt, paidPercent, delStat, isDelivered, isCompleted, overallBadge, payments, linkedContract) {
+    const isShipping = delStat === 'SHIPPING';
+    const custName = order.customer_name || partner.name || "Khách hàng";
+    const custPhone = order.customer_phone || partner.phone || "Chưa cập nhật";
+    const custAddr = order.customer_address || partner.address || "Chưa cập nhật";
+    const createdDateStr = order.created_at ? (typeof order.created_at === 'string' ? order.created_at.replace('T', ' ').substring(0, 19) : new Date(order.created_at).toLocaleString('vi-VN')) : 'N/A';
+
+    // Products table rows
+    const items = order.items || (order.print_spec ? [{ sku: order.order_number, name: order.print_spec, qty: order.quantity || 1, price: order.unit_price || order.total_amount }] : []);
+    const itemsHtml = items.map((it, idx) => `
+        <tr>
+            <td style="text-align:center;">${idx + 1}</td>
+            <td><strong>${escapeHtml(it.sku || it.name || '')}</strong></td>
+            <td>${escapeHtml(it.name || it.brand || it.spec || '')}</td>
+            <td style="text-align:center; font-weight:700;">x${it.qty || 1}</td>
+            <td style="text-align:right;">${formatMoney(it.price || 0)} đ</td>
+            <td style="text-align:right; font-weight:700;">${formatMoney((it.qty || 1) * (it.price || 0))} đ</td>
+        </tr>
+    `).join("");
+
+    // Stepper logic
+    const step1Done = true;
+    const step2Done = !!linkedContract;
+    const step3Done = depositAmt > 0 || totalPaid > 0;
+    const step4Done = isDelivered;
+    const step5Done = isCompleted;
+
+    // Delivery carrier text
+    const carrierText = order.delivery_carrier || "Nội bộ công ty";
+    const trackingCodeText = order.delivery_tracking_code ? ` (Mã vận đơn: <strong>${escapeHtml(order.delivery_tracking_code)}</strong>)` : '';
+    const deliveryDateStr = order.delivery_date ? (typeof order.delivery_date === 'string' ? order.delivery_date : new Date(order.delivery_date).toLocaleDateString('vi-VN')) : 'Chưa giao';
+
+    // Invoice VAT text
+    const invStatus = order.invoice_status || "NOT_ISSUED";
+    const isInvIssued = invStatus === "ISSUED";
+
+    return `
+        <!-- Top Action & Status Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#f1f5f9; padding:12px 16px; border-radius:10px; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.85rem; font-weight:700; color:var(--text-secondary);">TÌNH TRẠNG HIỆN TẠI:</span>
+                ${overallBadge}
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsForOrder('${order.id}', ${isOnline});" title="Xem hoặc tạo Hợp đồng, BBBG, Thanh lý">
+                    <i data-lucide="file-signature" style="width:14px; height:14px; color:#6366f1;"></i> Hồ Sơ & BBBG
+                </button>
+                <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); ${isOnline ? `window.openOnlineOrderInvoicePdf('${order.id}')` : `openOrderDetailModal('${order.id}')`};" title="Xem Hóa Đơn PDF">
+                    <i data-lucide="printer" style="width:14px; height:14px; color:#0284c7;"></i> In Hóa Đơn
+                </button>
+                ${isOnline ? `
+                <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');" title="Cập nhật tạm ứng, giao hàng, thu tiền">
+                    <i data-lucide="edit-3" style="width:14px; height:14px;"></i> Cập Nhật / Thu Tiền
+                </button>
+                ` : ''}
+            </div>
+        </div>
+
+        <!-- Financial Summary 4-Card Grid -->
+        <div class="order-timeline-summary-grid">
+            <div class="order-summary-card">
+                <div class="card-label">1. Tổng Giá Trị Đơn</div>
+                <div class="card-value" style="color:var(--text-primary);">${formatMoney(totalAmt)} <small style="font-size:0.8rem;">đ</small></div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">Gồm ${items.length} mặt hàng</div>
+            </div>
+            <div class="order-summary-card">
+                <div class="card-label">2. Đã Thu (Tạm ứng + TT)</div>
+                <div class="card-value" style="color:#108f53;">${formatMoney(totalPaid)} <small style="font-size:0.8rem;">đ</small></div>
+                <div style="font-size:0.75rem; color:#108f53; font-weight:600; margin-top:3px;">Đạt ${paidPercent}% giá trị đơn</div>
+            </div>
+            <div class="order-summary-card">
+                <div class="card-label">3. Công Nợ Còn Lại</div>
+                <div class="card-value" style="color:${remainingDebt > 0 ? '#ef4444' : '#108f53'};">
+                    ${remainingDebt > 0 ? `${formatMoney(remainingDebt)} <small style="font-size:0.8rem;">đ</small>` : '0 đ (Đã tất toán)'}
+                </div>
+                <div style="font-size:0.75rem; color:${remainingDebt > 0 ? '#ef4444' : '#108f53'}; font-weight:600; margin-top:3px;">
+                    ${remainingDebt > 0 ? '🔴 Cần thu hồi nợ' : '🟢 Không còn nợ'}
+                </div>
+            </div>
+            <div class="order-summary-card">
+                <div class="card-label">4. Tình Trạng Giao Nhận</div>
+                <div class="card-value" style="font-size:1.05rem; color:${isDelivered ? '#108f53' : (isShipping ? '#0284c7' : '#f59e0b')};">
+                    ${isDelivered ? 'Đã giao thành công' : (isShipping ? 'Đang vận chuyển' : 'Chờ đóng gói')}
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">${escapeHtml(carrierText)}</div>
+            </div>
+        </div>
+
+        <!-- 5-Step Pipeline Progress Stepper -->
+        <div class="order-timeline-stepper">
+            <div class="ot-step ${step1Done ? 'done' : ''}">
+                <div class="ot-step-circle"><i data-lucide="${step1Done ? 'check' : 'plus'}"></i></div>
+                <div class="ot-step-label">1. Tạo đơn</div>
+            </div>
+            <div class="ot-step ${step2Done ? 'done' : (step1Done ? 'active' : '')}">
+                <div class="ot-step-circle"><i data-lucide="${step2Done ? 'check' : 'file-text'}"></i></div>
+                <div class="ot-step-label">2. Chứng từ/HĐ</div>
+            </div>
+            <div class="ot-step ${step3Done ? 'done' : (step2Done ? 'active' : '')}">
+                <div class="ot-step-circle"><i data-lucide="${step3Done ? 'check' : 'dollar-sign'}"></i></div>
+                <div class="ot-step-label">3. Tạm ứng</div>
+            </div>
+            <div class="ot-step ${step4Done ? 'done' : (step3Done ? 'active' : '')}">
+                <div class="ot-step-circle"><i data-lucide="${step4Done ? 'check' : 'truck'}"></i></div>
+                <div class="ot-step-label">4. Giao hàng</div>
+            </div>
+            <div class="ot-step ${step5Done ? 'done' : (step4Done ? 'active' : '')}">
+                <div class="ot-step-circle"><i data-lucide="${step5Done ? 'check-check' : 'flag'}"></i></div>
+                <div class="ot-step-label">5. Hoàn thành</div>
+            </div>
+        </div>
+
+        <!-- Chronological Timeline List -->
+        <div style="font-size:0.95rem; font-weight:800; color:var(--text-primary); margin-bottom:14px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="calendar-check-2" style="width:18px; height:18px; color:#0284c7;"></i>
+            DÒNG THỜI GIAN CÁC MỐC GIAO DỊCH & TƯƠNG TÁC
+        </div>
+
+        <div class="ot-events-list">
+            <!-- Event 1: Tạo đơn hàng -->
+            <div class="ot-event-item">
+                <div class="ot-event-icon success"><i data-lucide="shopping-bag" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card">
+                    <div class="ot-event-header">
+                        <div class="ot-event-title">
+                            <span>Mốc 1: Khởi tạo đơn hàng ${order.order_number}</span>
+                            <span class="badge badge-success" style="font-size:0.72rem;">ĐÃ XÁC LẬP</span>
+                        </div>
+                        <div class="ot-event-time"><i data-lucide="clock" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> ${createdDateStr}</div>
+                    </div>
+                    <div class="ot-event-body">
+                        <div style="margin-bottom:8px; line-height:1.6;">
+                            • <strong>Khách hàng:</strong> ${escapeHtml(custName)} | SĐT: ${escapeHtml(custPhone)}<br>
+                            • <strong>Địa chỉ giao:</strong> ${escapeHtml(custAddr)}<br>
+                            • <strong>Kênh bán hàng:</strong> ${escapeHtml(order.sales_channel || 'Trực tiếp')} | <strong>Phụ trách:</strong> ${escapeHtml(order.salesperson || 'N/A')}
+                            ${order.note ? `<br>• <em>Ghi chú đơn:</em> ${escapeHtml(order.note)}` : ''}
+                        </div>
+                        <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; overflow:hidden;">
+                            <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+                                <thead>
+                                    <tr style="background:#e2e8f0; font-weight:700;">
+                                        <th style="padding:6px; width:5%; text-align:center;">#</th>
+                                        <th style="padding:6px; width:20%;">Mã SKU</th>
+                                        <th style="padding:6px; width:35%;">Sản phẩm / Quy cách</th>
+                                        <th style="padding:6px; width:10%; text-align:center;">SL</th>
+                                        <th style="padding:6px; width:15%; text-align:right;">Đơn giá</th>
+                                        <th style="padding:6px; width:15%; text-align:right;">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${itemsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event 2: Hồ sơ & Biên bản làm việc -->
+            <div class="ot-event-item">
+                <div class="ot-event-icon ${linkedContract ? 'success' : 'info'}"><i data-lucide="file-check-2" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card">
+                    <div class="ot-event-header">
+                        <div class="ot-event-title">
+                            <span>Mốc 2: Hồ sơ văn bản & Biên bản làm việc</span>
+                            ${linkedContract ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ KÝ KẾT</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">SẴN SÀNG TẠO</span>`}
+                        </div>
+                        <div class="ot-event-time">${linkedContract ? linkedContract.signing_date : 'Đồng bộ tự động'}</div>
+                    </div>
+                    <div class="ot-event-body">
+                        ${linkedContract ? `
+                            <div style="line-height:1.6; margin-bottom:8px;">
+                                • <strong>Hợp đồng kinh tế:</strong> Số <code>${escapeHtml(linkedContract.contract_number)}</code><br>
+                                • <strong>Bộ hồ sơ đính kèm:</strong> Biên bản giao nhận & Nghiệm thu (BBBG), Biên bản thanh lý, Giấy đề nghị thanh toán.<br>
+                                • <strong>Đại diện phê duyệt:</strong> ${escapeHtml(linkedContract.signer || "Bùi Đại Hùng - Giám đốc")}
+                            </div>
+                            <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsForOrder('${order.id}', ${isOnline});">
+                                <i data-lucide="file-text" style="width:13px; height:13px; color:#108f53;"></i> Mở xem & In Bộ hồ sơ (HĐ / BBBG)
+                            </button>
+                        ` : `
+                            <div style="color:var(--text-secondary); margin-bottom:8px;">
+                                Đơn hàng đã có đầy đủ thông số để tự động sinh Bộ hồ sơ văn bản (Hợp đồng kinh tế hoặc Biên bản bàn giao & nghiệm thu BBBG chuẩn A4).
+                            </div>
+                            <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsForOrder('${order.id}', ${isOnline});">
+                                <i data-lucide="plus-circle" style="width:13px; height:13px; color:#0284c7;"></i> Mở / Tạo Hợp đồng & BBBG ngay
+                            </button>
+                        `}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event 3: Tạm ứng / Đặt cọc -->
+            <div class="ot-event-item">
+                <div class="ot-event-icon ${depositAmt > 0 ? 'success' : 'warning'}"><i data-lucide="dollar-sign" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card">
+                    <div class="ot-event-header">
+                        <div class="ot-event-title">
+                            <span>Mốc 3: Nhận tiền tạm ứng (Đặt cọc)</span>
+                            ${depositAmt > 0 ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ NHẬN TẠM ỨNG</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA TẠM ỨNG</span>`}
+                        </div>
+                        <div class="ot-event-time">${order.deposit_date || 'Theo thỏa thuận'}</div>
+                    </div>
+                    <div class="ot-event-body">
+                        ${depositAmt > 0 ? `
+                            <div style="line-height:1.6;">
+                                • <strong>Số tiền tạm ứng:</strong> <span style="font-size:1.05rem; font-weight:800; color:#108f53;">${formatMoney(depositAmt)} đ</span> (${Math.round((depositAmt / totalAmt) * 100)}% giá trị đơn)<br>
+                                • <strong>Hình thức nhận:</strong> ${order.deposit_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản ngân hàng'}<br>
+                                • <strong>Ghi chú:</strong> ${escapeHtml(order.deposit_note || 'Đã ghi nhận đặt cọc sản xuất')}
+                            </div>
+                        ` : `
+                            <div style="color:#b45309; margin-bottom:8px;">
+                                ⚠️ Đơn hàng chưa ghi nhận khoản tiền tạm ứng nào.
+                            </div>
+                            ${isOnline ? `
+                            <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
+                                <i data-lucide="plus" style="width:13px; height:13px;"></i> Ghi nhận tạm ứng (Cọc)
+                            </button>
+                            ` : ''}
+                        `}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event 4: Giao hàng & Nghiệm thu -->
+            <div class="ot-event-item">
+                <div class="ot-event-icon ${isDelivered ? 'success' : (isShipping ? 'info' : 'warning')}"><i data-lucide="truck" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card">
+                    <div class="ot-event-header">
+                        <div class="ot-event-title">
+                            <span>Mốc 4: Tình trạng giao hàng & Nghiệm thu</span>
+                            ${isDelivered ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ GIAO THÀNH CÔNG</span>` : (isShipping ? `<span class="badge badge-info" style="font-size:0.72rem;">ĐANG GIAO HÀNG</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA GIAO</span>`)}
+                        </div>
+                        <div class="ot-event-time">${deliveryDateStr}</div>
+                    </div>
+                    <div class="ot-event-body">
+                        <div style="line-height:1.6; margin-bottom:8px;">
+                            • <strong>Đơn vị vận chuyển / Người giao:</strong> ${escapeHtml(carrierText)}${trackingCodeText}<br>
+                            • <strong>Thời gian giao:</strong> ${deliveryDateStr}<br>
+                            • <strong>Ghi chú giao nhận:</strong> ${escapeHtml(order.delivery_note || (isDelivered ? 'Khách hàng đã nhận đủ số lượng và ký nghiệm thu đạt 100%' : 'Chờ vận chuyển'))}
+                        </div>
+                        ${isOnline ? `
+                        <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
+                            <i data-lucide="truck" style="width:13px; height:13px;"></i> Cập nhật tình trạng giao hàng
+                        </button>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event 5: Lịch sử thu tiền & Quyết toán công nợ -->
+            <div class="ot-event-item">
+                <div class="ot-event-icon ${remainingDebt <= 0 ? 'success' : 'warning'}"><i data-lucide="credit-card" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card">
+                    <div class="ot-event-header">
+                        <div class="ot-event-title">
+                            <span>Mốc 5: Lịch sử thanh toán & Quyết toán công nợ</span>
+                            ${remainingDebt <= 0 ? `<span class="badge badge-success" style="font-size:0.72rem;">TẤT TOÁN 100%</span>` : `<span class="badge badge-danger" style="font-size:0.72rem;">CÒN NỢ ${formatMoney(remainingDebt)} đ</span>`}
+                        </div>
+                        <div class="ot-event-time">Đã thu: ${formatMoney(totalPaid)} / ${formatMoney(totalAmt)} đ</div>
+                    </div>
+                    <div class="ot-event-body">
+                        <div style="margin-bottom:8px;">
+                            ${payments.length > 0 ? `
+                                <div style="margin-bottom:6px; font-weight:700; font-size:0.8rem; color:var(--text-secondary);">DANH SÁCH CÁC PHIẾU THU TIỀN:</div>
+                                <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; padding:6px 10px; margin-bottom:8px;">
+                                    ${payments.map(p => `
+                                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; padding:3px 0; border-bottom:1px dashed var(--border-color);">
+                                            <span>• <strong>${formatMoney(p.amount)} đ</strong> (${p.method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'}) - <em>${p.date || p.created_at || ''}</em></span>
+                                            <span style="color:var(--text-secondary);">${escapeHtml(p.note || p.desc || 'Thu tiền đơn')}</span>
+                                        </div>
+                                    `).join("")}
+                                </div>
+                            ` : `
+                                <div style="color:var(--text-secondary); line-height:1.6;">
+                                    • <strong>Tổng số tiền đã thanh toán:</strong> ${formatMoney(totalPaid)} đ (${paidPercent}%)<br>
+                                    • <strong>Hình thức thanh toán chính:</strong> ${order.payment_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản ngân hàng'}
+                                </div>
+                            `}
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            ${remainingDebt > 0 && isOnline ? `
+                            <button type="button" class="btn btn-primary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
+                                <i data-lucide="check-circle" style="width:13px; height:13px;"></i> Thu tiền / Tất toán công nợ
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event 6: Hóa đơn VAT -->
+            <div class="ot-event-item">
+                <div class="ot-event-icon ${isInvIssued ? 'success' : 'purple'}"><i data-lucide="receipt" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card">
+                    <div class="ot-event-header">
+                        <div class="ot-event-title">
+                            <span>Mốc 6: Hóa đơn tài chính VAT</span>
+                            ${isInvIssued ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ XUẤT HÓA ĐƠN</span>` : (invStatus === 'NOT_REQUIRED' ? `<span class="badge badge-secondary" style="font-size:0.72rem;">KHÔNG LẤY HÓA ĐƠN</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA XUẤT</span>`)}
+                        </div>
+                        <div class="ot-event-time">${order.invoice_date || 'Theo quy chế'}</div>
+                    </div>
+                    <div class="ot-event-body">
+                        ${isInvIssued ? `
+                            <div style="line-height:1.6;">
+                                • <strong>Số hóa đơn:</strong> <span style="font-weight:700; color:#0e7542;">${escapeHtml(order.invoice_number)}</span> ${order.invoice_serial ? `(Ký hiệu: ${escapeHtml(order.invoice_serial)})` : ''}<br>
+                                • <strong>Ngày xuất:</strong> ${escapeHtml(order.invoice_date || '')}<br>
+                                • <strong>Ghi chú:</strong> ${escapeHtml(order.invoice_note || 'Đã gửi hóa đơn điện tử cho khách')}
+                            </div>
+                        ` : `
+                            <div style="color:var(--text-secondary);">
+                                ${invStatus === 'NOT_REQUIRED' ? 'Khách hàng cá nhân không yêu cầu xuất hóa đơn giá trị gia tăng.' : 'Đang chờ xử lý xuất hóa đơn VAT điện tử cho đơn vị thụ hưởng.'}
+                            </div>
+                        `}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event 7: Tổng kết kết luận hoàn thành -->
+            <div class="ot-event-item" style="margin-bottom:0;">
+                <div class="ot-event-icon ${isCompleted ? 'success' : 'warning'}"><i data-lucide="${isCompleted ? 'award' : 'flag'}" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-card" style="background:${isCompleted ? '#f0fdf4' : '#fffbeb'}; border-color:${isCompleted ? '#bbf7d0' : '#fde68a'};">
+                    <div class="ot-event-title" style="color:${isCompleted ? '#166534' : '#b45309'}; font-size:1rem;">
+                        ${isCompleted ? '🎉 KẾT LUẬN: ĐƠN HÀNG ĐÃ HOÀN TẤT TRỌN VẸN 100%' : '⏳ KẾT LUẬN: ĐƠN HÀNG ĐANG TRONG QUÁ TRÌNH THỰC HIỆN'}
+                    </div>
+                    <div style="margin-top:6px; font-size:0.85rem; color:${isCompleted ? '#15803d' : '#92400e'}; line-height:1.5;">
+                        ${isCompleted ? `
+                            Toàn bộ hàng hóa sản phẩm đã được giao nhận nghiệm thu thành công và 100% tài chính công nợ đã được tất toán đầy đủ. Hồ sơ văn bản lưu trữ hợp lệ.
+                        ` : `
+                            Đơn hàng đang ở giai đoạn <strong>${step4Done ? 'Thu tiền sau giao' : (step3Done ? 'Giao hàng / Vận chuyển' : 'Tạm ứng & Chuẩn bị')}</strong>.
+                            ${remainingDebt > 0 ? `<br>• Còn thiếu khoản tiền: <strong>${formatMoney(remainingDebt)} đ</strong>.` : ''}
+                            ${!isDelivered ? `<br>• Chưa xác nhận giao hàng thành công.` : ''}
+                        `}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 };
