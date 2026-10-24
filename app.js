@@ -18696,11 +18696,19 @@ function renderCRM() {
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td style="text-align:center;"><a href="javascript:void(0)" onclick="window.openEditPartner('${p.id}')" style="text-decoration:none; font-weight:700; color:var(--accent); font-family:monospace;">${p.code || 'N/A'}</a></td>
+            <td style="text-align:center;">
+                <a href="javascript:void(0)" onclick="window.openPartner360('${p.id}')" style="text-decoration:underline; font-weight:700; color:var(--accent); font-family:monospace;" title="Bấm để xem Chân dung 360°">
+                    <strong>${p.code || 'N/A'}</strong>
+                </a>
+            </td>
             <td>
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                    <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem;">${p.name || ''}</div>
-                    ${p.company_name && p.company_name !== p.name ? `<div style="font-size:0.76rem; color:var(--text-secondary); max-width:230px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.company_name}">🏢 ${p.company_name}</div>` : ''}
+                    <div style="font-weight:700; color:var(--text-primary); font-size:0.88rem;">
+                        <a href="javascript:void(0)" onclick="window.openPartner360('${p.id}')" style="color:var(--accent); text-decoration:none;" title="Bấm để xem Chân dung 360°">
+                            <span style="border-bottom:1px dashed var(--accent);">${escapeHtml(p.name || '')}</span>
+                        </a>
+                    </div>
+                    ${p.company_name && p.company_name !== p.name ? `<div style="font-size:0.76rem; color:var(--text-secondary); max-width:230px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><a href="javascript:void(0)" onclick="window.openPartner360('${p.id}')" style="color:var(--text-secondary); text-decoration:none;" title="Bấm để xem Chân dung 360°">🏢 ${escapeHtml(p.company_name)}</a></div>` : ''}
                     <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:2px;">
                         ${p.tax_code ? `<span class="badge" style="font-size:0.68rem; background:#f1f5f9; color:#475569; font-family:monospace; padding:1px 5px;" title="Mã số thuế">MST: ${p.tax_code}</span>` : ''}
                         ${p.legal_representative ? `<span style="font-size:0.72rem; color:var(--accent); font-weight:500;" title="Người đại diện"><i data-lucide="user" style="width:10px; height:10px; display:inline;"></i> ${p.legal_representative}</span>` : ''}
@@ -18715,14 +18723,13 @@ function renderCRM() {
             <td style="text-align:center;">${p.sales_staff ? `<span class="badge badge-primary" style="font-size:0.75rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px; margin-right:2px;"></i>${p.sales_staff}</span>` : '<span class="text-muted">-</span>'}</td>
             <td style="text-align:center;">${p.sales_channel ? `<span class="badge badge-secondary" style="font-size:0.75rem;">${p.sales_channel}</span>` : '<span class="text-muted">-</span>'}</td>
             <td style="max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.note || ''}">${p.note || '<span class="text-muted">-</span>'}</td>
-            <td style="text-align:right; font-variant-numeric:tabular-nums;"><strong>${typeof formatMoney === 'function' ? formatMoney(spendVal) : spendVal}</strong></td>
-            <td style="text-align:right; font-variant-numeric:tabular-nums;" class="${debtVal > 0 ? 'text-warning font-bold' : ''}">${typeof formatMoney === 'function' ? formatMoney(debtVal) : debtVal}</td>
-            <td style="text-align:center;">${statusBadge}</td>
-            <td style="text-align:center;">
+            <td style="text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;"><strong>${typeof formatMoney === 'function' ? formatMoney(spendVal) : spendVal} đ</strong></td>
+            <td style="text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;" class="${debtVal > 0 ? 'text-warning font-bold' : ''}">${typeof formatMoney === 'function' ? formatMoney(debtVal) : debtVal} đ</td>
+            <td style="text-align:center; white-space:nowrap;">${statusBadge}</td>
+            <td style="text-align:center; white-space:nowrap;">
                 <div class="card-actions-row" style="display:inline-flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap;">
-                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem;" onclick="window.openCrmDetail('${p.id}')">Xem CRM</button>
-                    <button class="btn-icon" onclick="window.viewPartnerBillingDetails('${p.id}')" title="Xem Hồ sơ DN / Hóa đơn VAT"><i data-lucide="receipt"></i></button>
-                    <button class="btn-icon" onclick="window.openEditPartner('${p.id}')" title="Sửa"><i data-lucide="edit-2"></i></button>
+                    <button class="btn btn-primary" style="padding: 3px 8px; font-size: 0.75rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;" onclick="window.openPartner360('${p.id}')" title="Xem Chân dung 360° toàn diện"><i data-lucide="scan-face" style="width:13px; height:13px;"></i> 360°</button>
+                    <button class="btn-icon" onclick="window.openEditPartner('${p.id}')" title="Sửa thông tin"><i data-lucide="edit-2"></i></button>
                     <button class="btn-icon" style="color:var(--danger)" onclick="window.deletePartner('${p.id}')" title="Xóa"><i data-lucide="trash-2"></i></button>
                 </div>
             </td>
@@ -46466,4 +46473,423 @@ window.deleteOrderDeliveryBatch = function(orderId, batchId, isOnline = true) {
 
     window.openOrderTimelineModal(order.id, isOnline);
     if (typeof renderOnlineSales === 'function') renderOnlineSales();
+};
+
+
+// ==========================================================================
+// CHÂN DUNG 360° KHÁCH HÀNG & NHÀ CUNG CẤP (CUSTOMER / SUPPLIER 360 PORTRAIT)
+// ==========================================================================
+window.openPartner360 = function(partnerId, initialFilter = 'ALL') {
+    const partner = (state.partners || []).find(p => p.id === partnerId || p.code === partnerId);
+    if (!partner) {
+        alert("Không tìm thấy thông tin khách hàng / nhà cung cấp!");
+        return;
+    }
+
+    const modal = document.getElementById("partner360Modal");
+    const container = document.getElementById("partner360ModalContent");
+    if (!modal || !container) return;
+
+    window._currentP360PartnerId = partner.id;
+    window._currentP360Filter = initialFilter;
+
+    const isCustomer = partner.role === 'CUSTOMER' || partner.role === 'BOTH';
+    const isSupplier = partner.role === 'SUPPLIER';
+    const isSubcontractor = partner.role === 'SUBCONTRACTOR';
+
+    // Retrieve all orders associated with this partner
+    let allOrders = [];
+    if (isCustomer) {
+        const pPhone = partner.phone ? String(partner.phone).trim() : '';
+        const pName = (partner.name || '').toLowerCase().trim();
+        const pComp = (partner.company_name || '').toLowerCase().trim();
+        const pCode = (partner.code || '').toLowerCase().trim();
+
+        const onlineOrders = (state.online_orders || []).filter(o => {
+            if (o.customer_id === partner.id) return true;
+            if (pCode && o.customer_code && o.customer_code.toLowerCase().trim() === pCode) return true;
+            if (pPhone && o.customer_phone && String(o.customer_phone).trim() === pPhone) return true;
+            if (o.customer_name) {
+                const cName = o.customer_name.toLowerCase().trim();
+                if (cName === pName || (pComp && cName === pComp)) return true;
+            }
+            return false;
+        }).map(o => ({ ...o, isOnline: true }));
+
+        const stdOrders = (state.orders || []).filter(o => {
+            if (o.customer_id === partner.id) return true;
+            if (pCode && o.customer_code && o.customer_code.toLowerCase().trim() === pCode) return true;
+            if (pPhone && o.customer_phone && String(o.customer_phone).trim() === pPhone) return true;
+            if (o.customer_name) {
+                const cName = o.customer_name.toLowerCase().trim();
+                if (cName === pName || (pComp && cName === pComp)) return true;
+            }
+            return false;
+        }).map(o => ({ ...o, isOnline: false }));
+
+        const map = new Map();
+        [...onlineOrders, ...stdOrders].forEach(o => {
+            const key = o.id || o.order_number;
+            if (!map.has(key)) map.set(key, o);
+        });
+        allOrders = Array.from(map.values());
+        allOrders.sort((a, b) => new Date(b.created_at || b.date || 0) - new Date(a.created_at || a.date || 0));
+    } else if (isSupplier) {
+        allOrders = (state.restocks || []).filter(r => 
+            r.supplier_id === partner.id || 
+            (partner.code && r.supplier_code === partner.code)
+        ).map(r => ({
+            id: r.id,
+            order_number: r.code || r.id,
+            created_at: r.date || r.created_at,
+            total_amount: r.total_amount || 0,
+            paid_amount: r.paid_amount || 0,
+            delivery_status: 'DELIVERED',
+            status: r.status || 'COMPLETED',
+            items_summary: r.items ? r.items.map(it => it.name).join(", ") : (r.note || 'Nhập vật tư xưởng'),
+            isRestock: true,
+            isOnline: false
+        }));
+        allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    } else if (isSubcontractor) {
+        allOrders = (state.subcontracts || []).filter(s => 
+            s.subcontractor_id === partner.id
+        ).map(s => ({
+            id: s.id,
+            order_number: s.code || s.id,
+            created_at: s.date || s.created_at,
+            total_amount: s.cost || 0,
+            paid_amount: s.paid_amount || 0,
+            delivery_status: s.status === 'COMPLETED' ? 'DELIVERED' : 'PENDING',
+            status: s.status || 'COMPLETED',
+            items_summary: s.spec || 'Gia công ngoài',
+            isSubcontract: true,
+            isOnline: false
+        }));
+        allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    }
+
+    // Calculate financials for each order
+    allOrders.forEach(o => {
+        const total = Number(o.total_amount || 0);
+        const orderTrans = (state.transactions || []).filter(t => 
+            (t.reference_id === o.id || t.order_id === o.id || t.order_number === o.order_number) && 
+            (isCustomer ? t.type === 'RECEIPT' : t.type === 'PAYMENT')
+        );
+        const transPaid = orderTrans.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+        const instPaid = Array.isArray(o.payment_installments) ? o.payment_installments.reduce((sum, i) => sum + (Number(i.amount) || 0), 0) : 0;
+        o._calcPaid = Math.max(Number(o.paid_amount || 0), transPaid, instPaid);
+        o._calcDebt = Math.max(0, total - o._calcPaid);
+
+        // Compute high-level status
+        const isDel = o.delivery_status === 'DELIVERED' || o.isRestock;
+        const isShip = o.delivery_status === 'SHIPPING';
+        const isFullPaid = o._calcDebt <= 0;
+        o._isCompleted = (isDel || o.status === 'COMPLETED') && isFullPaid;
+        o._hasDebt = o._calcDebt > 0;
+        o._isInProgress = !o._isCompleted && o.status !== 'CANCELLED';
+    });
+
+    const totalOrders = allOrders.length;
+    const totalSpend = allOrders.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
+    const totalPaid = allOrders.reduce((sum, o) => sum + o._calcPaid, 0);
+    const totalDebt = allOrders.reduce((sum, o) => sum + o._calcDebt, 0);
+    const completedCount = allOrders.filter(o => o._isCompleted).length;
+    const inProgressCount = allOrders.filter(o => o._isInProgress).length;
+    const debtCount = allOrders.filter(o => o._hasDebt).length;
+    const paidPercent = totalSpend > 0 ? Math.min(100, Math.round((totalPaid / totalSpend) * 100)) : 100;
+    const avgOrderVal = totalOrders > 0 ? Math.round(totalSpend / totalOrders) : 0;
+
+    // Filtered orders list for display
+    let displayedOrders = allOrders;
+    if (initialFilter === 'IN_PROGRESS') {
+        displayedOrders = allOrders.filter(o => o._isInProgress);
+    } else if (initialFilter === 'HAS_DEBT') {
+        displayedOrders = allOrders.filter(o => o._hasDebt);
+    } else if (initialFilter === 'COMPLETED') {
+        displayedOrders = allOrders.filter(o => o._isCompleted);
+    }
+
+    // Generate table rows HTML
+    let ordersRowsHtml = '';
+    if (displayedOrders.length === 0) {
+        ordersRowsHtml = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:24px; color:var(--text-secondary); font-style:italic;">
+                    Chưa có đơn hàng nào phù hợp với bộ lọc hiện tại.
+                </td>
+            </tr>
+        `;
+    } else {
+        ordersRowsHtml = displayedOrders.map((o, idx) => {
+            const dateStr = o.created_at ? (typeof o.created_at === 'string' ? o.created_at.split('T')[0] : new Date(o.created_at).toLocaleDateString('vi-VN')) : 'N/A';
+            const total = Number(o.total_amount || 0);
+
+            // Summary of products
+            let prodSummary = '';
+            if (o.items && o.items.length > 0) {
+                prodSummary = o.items.slice(0, 3).map(it => `${escapeHtml(it.name || it.sku || '')} (x${it.qty || 1})`).join(", ");
+                if (o.items.length > 3) prodSummary += ` +${o.items.length - 3} món nữa`;
+            } else if (o.print_spec) {
+                prodSummary = `${escapeHtml(o.print_spec)} (SL: ${o.quantity || 1})`;
+            } else if (o.items_summary) {
+                prodSummary = escapeHtml(o.items_summary);
+            } else {
+                prodSummary = 'Sản phẩm in ấn';
+            }
+
+            // Badges
+            const isDel = o.delivery_status === 'DELIVERED';
+            const isShip = o.delivery_status === 'SHIPPING';
+            const delBadge = isDel ? `<span class="badge badge-success" style="font-size:0.7rem; white-space:nowrap;">✔ Đã giao</span>` :
+                            (isShip ? `<span class="badge badge-info" style="font-size:0.7rem; white-space:nowrap;">🚚 Đang giao</span>` :
+                            `<span class="badge badge-warning" style="font-size:0.7rem; white-space:nowrap;">⏳ Chờ giao</span>`);
+
+            const payBadge = o._calcDebt <= 0 ? `<span class="badge badge-success" style="font-size:0.7rem; white-space:nowrap;">✔ Đã tất toán</span>` :
+                            (o._calcPaid > 0 ? `<span class="badge badge-warning" style="font-size:0.7rem; white-space:nowrap;">⚠️ Đã ứng: ${formatMoney(o._calcPaid)} đ</span>` :
+                            `<span class="badge badge-danger" style="font-size:0.7rem; white-space:nowrap;">🔴 Chưa TT</span>`);
+
+            const invBadge = o.invoice_status === 'ISSUED' ? `<span class="badge badge-purple" style="font-size:0.68rem; background:#faf5ff; color:#7c3aed; border:1px solid #ddd6fe; white-space:nowrap;" title="HĐ VAT: ${o.invoice_number || ''}">🧾 Đã xuất HĐ</span>` :
+                            (o.invoice_status === 'NOT_REQUIRED' ? `<span class="badge badge-secondary" style="font-size:0.68rem; white-space:nowrap;">K.lấy HĐ</span>` :
+                            `<span class="badge badge-gray" style="font-size:0.68rem; white-space:nowrap;">Chưa HĐ</span>`);
+
+            return `
+                <tr>
+                    <td style="text-align:center; padding:10px 8px; white-space:nowrap; font-weight:600;">${idx + 1}</td>
+                    <td style="white-space:nowrap; padding:10px 10px;">
+                        <a href="javascript:void(0)" onclick="closeModal('partner360Modal'); window.openOrderTimelineModal('${o.id}', ${o.isOnline});" style="text-decoration:underline; font-weight:700; color:var(--accent);" title="Bấm để xem dòng thời gian & bằng chứng đơn hàng">
+                            <strong>${o.order_number}</strong>
+                        </a>
+                        ${o.sales_channel ? `<span class="badge badge-info" style="font-size:0.68rem; margin-left:4px;">${o.sales_channel}</span>` : ''}
+                    </td>
+                    <td style="text-align:center; white-space:nowrap; padding:10px 8px; font-size:0.8rem; color:var(--text-secondary);">${dateStr}</td>
+                    <td style="min-width:160px; max-width:240px; padding:10px 10px; font-size:0.82rem; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(prodSummary)}">
+                        ${escapeHtml(prodSummary)}
+                    </td>
+                    <td style="text-align:right; white-space:nowrap; padding:10px 10px; font-weight:700;">${formatMoney(total)} đ</td>
+                    <td style="text-align:right; white-space:nowrap; padding:10px 10px; color:#108f53; font-weight:600;">${formatMoney(o._calcPaid)} đ</td>
+                    <td style="text-align:right; white-space:nowrap; padding:10px 10px; color:${o._calcDebt > 0 ? 'var(--danger)' : '#108f53'}; font-weight:700;">${o._calcDebt > 0 ? `${formatMoney(o._calcDebt)} đ` : '0 đ'}</td>
+                    <td style="text-align:center; white-space:nowrap; padding:10px 8px;">
+                        <div style="display:inline-flex; flex-direction:column; gap:3px; align-items:center;">
+                            ${delBadge}
+                            ${payBadge}
+                            ${invBadge}
+                        </div>
+                    </td>
+                    <td style="text-align:center; white-space:nowrap; padding:10px 8px;">
+                        <div style="display:inline-flex; align-items:center; gap:4px;">
+                            <button type="button" class="btn-icon" onclick="closeModal('partner360Modal'); window.openOrderTimelineModal('${o.id}', ${o.isOnline});" title="Xem tiến trình & bằng chứng 360°"><i data-lucide="history" style="width:14px; height:14px; color:#0284c7;"></i></button>
+                            ${o.isOnline ? `<button type="button" class="btn-icon" onclick="closeModal('partner360Modal'); window.openOnlineOrderInvoicePdf('${o.id}');" title="In Hóa Đơn PDF"><i data-lucide="printer" style="width:14px; height:14px; color:#108f53;"></i></button>` : ''}
+                            <button type="button" class="btn-icon" onclick="closeModal('partner360Modal'); window.openCommercialDocsForOrder('${o.id}', ${o.isOnline});" title="Xem Hợp đồng & BBBG"><i data-lucide="file-signature" style="width:14px; height:14px; color:#6366f1;"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    const roleBadge = isSupplier ? '<span class="badge badge-warning" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a;">Nhà cung cấp</span>' : 
+                     (isSubcontractor ? '<span class="badge badge-info" style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe;">Xưởng gia công</span>' : 
+                     '<span class="badge badge-primary" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">Khách hàng</span>');
+
+    const customerTypeBadge = partner.customer_type === 'AGENCY' || partner.customer_type === 'Đại lý' ? '<span class="badge" style="background:#ede9fe; color:#5b21b6; border:1px solid #ddd6fe;">Đại lý</span>' :
+                             (partner.customer_type === 'SUPPLIER' || partner.role === 'SUPPLIER' ? '<span class="badge" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a;">NCC</span>' :
+                             '<span class="badge" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0;">Chính chủ</span>');
+
+    const statusBadge = partner.status !== false ? '<span class="badge badge-success">Đang làm việc</span>' : '<span class="badge badge-danger">Tạm dừng</span>';
+
+    container.innerHTML = `
+        <!-- Header -->
+        <div class="p360-header">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; box-shadow:0 4px 10px rgba(2, 132, 199, 0.35);">
+                    <i data-lucide="${isSupplier ? 'truck' : (partner.company_name ? 'building-2' : 'user')}"></i>
+                </div>
+                <div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <h2 style="margin:0; font-size:1.25rem; font-weight:800; color:var(--text-primary);">${escapeHtml(partner.name || partner.company_name || 'Đối tác')}</h2>
+                        ${roleBadge}
+                        ${customerTypeBadge}
+                        ${statusBadge}
+                    </div>
+                    <div style="font-size:0.82rem; color:var(--text-secondary); margin-top:3px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>Mã: <code style="font-weight:700; background:#f1f5f9; padding:1px 6px; border-radius:4px; color:#0f172a;">${escapeHtml(partner.code || 'N/A')}</code></span>
+                        ${partner.company_name && partner.company_name !== partner.name ? `<span>• 🏢 <strong>${escapeHtml(partner.company_name)}</strong></span>` : ''}
+                        ${partner.tax_code ? `<span>• MST: <strong>${escapeHtml(partner.tax_code)}</strong></span>` : ''}
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                ${isCustomer ? `
+                    <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('partner360Modal'); window.openNewOnlineOrderModal('NEW', null, '${partner.id}');">
+                        <i data-lucide="plus" style="width:14px; height:14px;"></i> Lập Đơn Hàng Mới
+                    </button>
+                ` : ''}
+                <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('partner360Modal'); window.openEditPartner('${partner.id}');">
+                    <i data-lucide="edit-3" style="width:14px; height:14px;"></i> Sửa thông tin
+                </button>
+                <button type="button" class="btn-close" onclick="closeModal('partner360Modal')"><i data-lucide="x"></i></button>
+            </div>
+        </div>
+
+        <div style="padding: 20px; max-height: 82vh; overflow-y: auto;">
+            <!-- 4 Thẻ Số Liệu Chân Dung 360 -->
+            <div class="p360-metrics-grid">
+                <div class="p360-metric-card" style="border-left: 4px solid #0284c7;">
+                    <div class="card-title"><i data-lucide="shopping-bag" style="width:14px; height:14px; color:#0284c7;"></i> 1. TỔNG SỐ ĐƠN HÀNG</div>
+                    <div class="card-val" style="color:#0284c7;">${totalOrders} <small style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">đơn</small></div>
+                    <div class="card-sub">${completedCount} hoàn thành • ${inProgressCount} đang xử lý • ${debtCount} nợ</div>
+                </div>
+
+                <div class="p360-metric-card" style="border-left: 4px solid #6366f1;">
+                    <div class="card-title"><i data-lucide="dollar-sign" style="width:14px; height:14px; color:#6366f1;"></i> 2. ${isSupplier ? 'TỔNG TIỀN NHẬP HÀNG' : 'TỔNG GIÁ TRỊ MUA'}</div>
+                    <div class="card-val" style="color:var(--text-primary);">${formatMoney(totalSpend)} <small style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">đ</small></div>
+                    <div class="card-sub">Trung bình: ${formatMoney(avgOrderVal)} đ / đơn</div>
+                </div>
+
+                <div class="p360-metric-card" style="border-left: 4px solid #108f53;">
+                    <div class="card-title"><i data-lucide="check-circle" style="width:14px; height:14px; color:#108f53;"></i> 3. ĐÃ THANH TOÁN</div>
+                    <div class="card-val" style="color:#108f53;">${formatMoney(totalPaid)} <small style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">đ</small></div>
+                    <div class="card-sub">Đạt <strong>${paidPercent}%</strong> giá trị mua bán</div>
+                </div>
+
+                <div class="p360-metric-card" style="border-left: 4px solid ${totalDebt > 0 ? '#ef4444' : '#108f53'};">
+                    <div class="card-title"><i data-lucide="credit-card" style="width:14px; height:14px; color:${totalDebt > 0 ? '#ef4444' : '#108f53'};"></i> 4. CÔNG NỢ HIỆN TẠI</div>
+                    <div class="card-val" style="color:${totalDebt > 0 ? '#ef4444' : '#108f53'};">
+                        ${totalDebt > 0 ? `${formatMoney(totalDebt)} <small style="font-size:0.85rem; font-weight:600;">đ</small>` : '0 đ (Đã tất toán)'}
+                    </div>
+                    <div class="card-sub">Hạn mức nợ: <strong>${formatMoney(partner.credit_limit || 0)} đ</strong> ${totalDebt > 0 ? '• 🔴 Cần thu hồi nợ' : '• 🟢 Không nợ'}</div>
+                </div>
+            </div>
+
+            <!-- Profile Details Card (Collapsible) -->
+            <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:10px; margin-bottom:20px; overflow:hidden;">
+                <div style="padding:10px 16px; background:#f1f5f9; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.82rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.3px; display:inline-flex; align-items:center; gap:6px;">
+                        <i data-lucide="info" style="width:14px; height:14px; color:var(--accent);"></i> HỒ SƠ DOANH NGHIỆP & LIÊN HỆ
+                    </span>
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:2px 8px;" onclick="window.toggleP360InfoGrid()">
+                        <span id="p360InfoToggleText">Thu gọn</span>
+                    </button>
+                </div>
+                <div class="p360-info-grid" id="p360InfoGridContainer" style="margin:0; border:none; border-radius:0;">
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Tên doanh nghiệp:</span>
+                        <span class="p360-info-value" style="font-weight:700;">${escapeHtml(partner.company_name || partner.name || '---')}</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Người liên hệ:</span>
+                        <span class="p360-info-value" style="font-weight:600;">${escapeHtml(partner.contact_person || partner.name || '---')}</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Mã số thuế:</span>
+                        <span class="p360-info-value"><code style="font-weight:700; background:#f1f5f9; padding:2px 6px; border-radius:4px;">${escapeHtml(partner.tax_code || 'Chưa cập nhật')}</code></span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Số điện thoại:</span>
+                        <span class="p360-info-value"><a href="tel:${partner.phone}" style="font-weight:700; color:var(--accent); text-decoration:none;">${escapeHtml(partner.phone || 'Chưa cập nhật')}</a></span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Email liên hệ:</span>
+                        <span class="p360-info-value">${partner.email || partner.billing_email ? `<a href="mailto:${partner.email || partner.billing_email}" style="color:var(--accent); text-decoration:none;">${escapeHtml(partner.email || partner.billing_email)}</a>` : '<span style="color:var(--text-secondary); font-style:italic;">Chưa có</span>'}</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Địa chỉ giao hàng:</span>
+                        <span class="p360-info-value">${escapeHtml(partner.shipping_address || partner.address || 'Chưa cập nhật')}</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Địa chỉ xuất HĐ:</span>
+                        <span class="p360-info-value">${escapeHtml(partner.billing_address || partner.address || 'Theo địa chỉ chính')}</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">NVKD phụ trách:</span>
+                        <span class="p360-info-value"><span class="badge badge-primary" style="font-size:0.75rem;">${escapeHtml(partner.sales_staff || 'Chưa gán')}</span> (Kênh: ${escapeHtml(partner.sales_channel || 'Trực tiếp')})</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Tài khoản ngân hàng:</span>
+                        <span class="p360-info-value">${escapeHtml(partner.bank_account_no ? `${partner.bank_account_no} (${partner.bank_name || ''})` : 'Chưa cập nhật')}</span>
+                    </div>
+                    <div class="p360-info-row">
+                        <span class="p360-info-label">Ghi chú đối tác:</span>
+                        <span class="p360-info-value" style="font-style:italic; color:var(--text-secondary);">${escapeHtml(partner.note || partner.notes || 'Không có ghi chú')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Orders & Statuses Section -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <div class="p360-section-title" style="margin:0;">
+                    <i data-lucide="package-check" style="width:16px; height:16px; color:#0284c7;"></i>
+                    DANH SÁCH & TRẠNG THÁI CÁC ĐƠN HÀNG (${allOrders.length})
+                </div>
+                <!-- Filter Pills -->
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button type="button" class="p360-filter-pill ${initialFilter === 'ALL' ? 'active' : ''}" onclick="window.openPartner360('${partner.id}', 'ALL')">Tất cả (${allOrders.length})</button>
+                    <button type="button" class="p360-filter-pill ${initialFilter === 'IN_PROGRESS' ? 'active' : ''}" onclick="window.openPartner360('${partner.id}', 'IN_PROGRESS')">Đang xử lý / giao (${inProgressCount})</button>
+                    <button type="button" class="p360-filter-pill ${initialFilter === 'HAS_DEBT' ? 'active' : ''}" onclick="window.openPartner360('${partner.id}', 'HAS_DEBT')">Còn nợ (${debtCount})</button>
+                    <button type="button" class="p360-filter-pill ${initialFilter === 'COMPLETED' ? 'active' : ''}" onclick="window.openPartner360('${partner.id}', 'COMPLETED')">Hoàn thành (${completedCount})</button>
+                </div>
+            </div>
+
+            <div class="p360-orders-table-wrapper">
+                <table class="table p360-orders-table" style="margin-bottom:0; font-size:0.82rem; min-width:850px; width:100%;">
+                    <thead>
+                        <tr style="background:#e2e8f0; font-weight:700; color:var(--text-secondary);">
+                            <th style="padding:10px 8px; width:45px; text-align:center; white-space:nowrap;">#</th>
+                            <th style="padding:10px 10px; width:130px; white-space:nowrap;">MÃ ĐƠN</th>
+                            <th style="padding:10px 8px; width:95px; text-align:center; white-space:nowrap;">NGÀY ĐẶT</th>
+                            <th style="padding:10px 10px; min-width:180px;">SẢN PHẨM / QUY CÁCH</th>
+                            <th style="padding:10px 10px; width:120px; text-align:right; white-space:nowrap;">TỔNG TIỀN</th>
+                            <th style="padding:10px 10px; width:120px; text-align:right; white-space:nowrap;">ĐÃ THU</th>
+                            <th style="padding:10px 10px; width:120px; text-align:right; white-space:nowrap;">CÒN NỢ</th>
+                            <th style="padding:10px 8px; width:130px; text-align:center; white-space:nowrap;">TRẠNG THÁI</th>
+                            <th style="padding:10px 8px; width:90px; text-align:center; white-space:nowrap;">THAO TÁC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${ordersRowsHtml}
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:1px solid var(--border-color); padding-top:14px; flex-wrap:wrap; gap:8px;">
+                <div style="font-size:0.8rem; color:var(--text-secondary);">
+                    💡 Bấm vào <strong>Mã đơn hàng</strong> hoặc icon <i data-lucide="history" style="width:12px; height:12px; display:inline-block; vertical-align:middle; color:#0284c7;"></i> để xem toàn bộ Dòng thời gian giao dịch & Bằng chứng nghiệm thu của đơn.
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('partner360Modal')">Đóng</button>
+                    ${isCustomer && totalDebt > 0 ? `
+                        <button type="button" class="btn btn-warning" style="font-weight:700; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('partner360Modal'); window.collectCustomerDebt ? window.collectCustomerDebt('${partner.id}') : switchTab('finance');">
+                            <i data-lucide="credit-card" style="width:14px; height:14px;"></i> Thu Tiền Nợ (${formatMoney(totalDebt)} đ)
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `;
+
+    openModal("partner360Modal");
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        try {
+            lucide.createIcons();
+        } catch(e) {}
+    }
+};
+
+window.toggleP360InfoGrid = function() {
+    const el = document.getElementById("p360InfoGridContainer");
+    const txt = document.getElementById("p360InfoToggleText");
+    if (!el) return;
+    if (el.style.display === "none") {
+        el.style.display = "grid";
+        if (txt) txt.textContent = "Thu gọn";
+    } else {
+        el.style.display = "none";
+        if (txt) txt.textContent = "Xem thêm";
+    }
+};
+
+// Alias viewPartnerCompanyDetails to openPartner360
+window.viewPartnerCompanyDetails = function(partnerId) {
+    window.openPartner360(partnerId);
 };
