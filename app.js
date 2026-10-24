@@ -10739,7 +10739,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp phổ thông",
-        "stock_qty": 2000,
+        "stock_qty": 0,
         "min_stock_qty": 100,
         "cost_price": 58900,
         "import_price": 58900,
@@ -10763,7 +10763,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp phổ thông",
-        "stock_qty": 2000,
+        "stock_qty": 0,
         "min_stock_qty": 100,
         "cost_price": 57200,
         "import_price": 57200,
@@ -10787,7 +10787,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp phổ thông",
-        "stock_qty": 2000,
+        "stock_qty": 0,
         "min_stock_qty": 100,
         "cost_price": 54500,
         "import_price": 54500,
@@ -10811,7 +10811,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 92400,
         "import_price": 92400,
@@ -10834,7 +10834,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 99400,
         "import_price": 99400,
@@ -10857,7 +10857,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 105600,
         "import_price": 105600,
@@ -10880,7 +10880,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 117000,
         "import_price": 117000,
@@ -10903,7 +10903,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 130200,
         "import_price": 130200,
@@ -10926,7 +10926,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 130200,
         "import_price": 130200,
@@ -10949,7 +10949,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 134600,
         "import_price": 134600,
@@ -10972,7 +10972,7 @@ const DEFAULT_ONLINE_PRODUCTS = [
         "brand": "In Lạc Hồng",
         "unit": "Bộ",
         "category": "Hộp cao cấp",
-        "stock_qty": 1500,
+        "stock_qty": 0,
         "min_stock_qty": 50,
         "cost_price": 213800,
         "import_price": 213800,
@@ -11065,19 +11065,7 @@ const DEFAULT_PRICING_CONFIG = {
     ]
 };
 
-const DEFAULT_ONLINE_STOCK_LOGS = [
-    { id: "log-A", created_at: "2026-10-19T08:00:00Z", sku: "SIZE-A", type: "IMPORT", qty: 2000, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-B", created_at: "2026-10-19T08:00:00Z", sku: "SIZE-B", type: "IMPORT", qty: 2000, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-C", created_at: "2026-10-19T08:00:00Z", sku: "SIZE-C", type: "IMPORT", qty: 2000, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-S36", created_at: "2026-10-19T08:00:00Z", sku: "S36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-P33", created_at: "2026-10-19T08:00:00Z", sku: "P33", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-G36", created_at: "2026-10-19T08:00:00Z", sku: "G36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-G07", created_at: "2026-10-19T08:00:00Z", sku: "G07", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-M36", created_at: "2026-10-19T08:00:00Z", sku: "M36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-H36", created_at: "2026-10-19T08:00:00Z", sku: "H36", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-S38", created_at: "2026-10-19T08:00:00Z", sku: "S38", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" },
-    { id: "log-T40", created_at: "2026-10-19T08:00:00Z", sku: "T40", type: "IMPORT", qty: 1500, note: "Khởi tạo tồn kho ban đầu vụ Tết 2027", operator: "Admin" }
-];
+const DEFAULT_ONLINE_STOCK_LOGS = [];
 
 const DEFAULT_ONLINE_EXPORT_RECORDS = [
     {
@@ -11805,11 +11793,15 @@ class AppState {
         }
 
         this.online_products = this.load("online_products", DEFAULT_ONLINE_PRODUCTS);
-        // Force seed Tet 2027 products for existing localstorage (Wipe old and load 11 new products)
-        if (!localStorage.getItem("ihp_tet_2027_seeded_v1")) {
-            this.online_products = DEFAULT_ONLINE_PRODUCTS;
-            this.save("online_products", DEFAULT_ONLINE_PRODUCTS);
-            localStorage.setItem("ihp_tet_2027_seeded_v1", "true");
+        // Reset stock to 0 for real data input as requested
+        if (!localStorage.getItem("ihp_reset_stock_to_zero_v57")) {
+            if (Array.isArray(this.online_products)) {
+                this.online_products.forEach(p => { if (p) p.stock_qty = 0; });
+                this.save("online_products", this.online_products);
+            }
+            this.online_stock_logs = [];
+            this.save("online_stock_logs", []);
+            localStorage.setItem("ihp_reset_stock_to_zero_v57", "true");
         }
 
         // Tự động khôi phục và tạo ảnh sản phẩm cho TOÀN BỘ sản phẩm trong danh mục
@@ -11919,8 +11911,8 @@ class AppState {
         if (Array.isArray(this.online_products)) {
             this.online_products = this.online_products.map(p => {
                 if (p) {
-                    p.stock_qty = typeof p.stock_qty === 'number' ? p.stock_qty : 2500;
-                    p.min_stock_qty = typeof p.min_stock_qty === 'number' ? p.min_stock_qty : 100;
+                    p.stock_qty = typeof p.stock_qty === 'number' ? p.stock_qty : 0;
+                    p.min_stock_qty = typeof p.min_stock_qty === 'number' ? p.min_stock_qty : 0;
                     p.price = typeof p.price === 'number' ? p.price : 0;
                     p.wholesale_price = typeof p.wholesale_price === 'number' ? p.wholesale_price : 0;
                     
@@ -11932,11 +11924,6 @@ class AppState {
                     p.import_price = p.cost_price;
                     p.supplier = p.supplier || p.brand || 'In Lạc Hồng';
                     p.brand = p.supplier;
-                    
-                    // Ensure stock quantity is abundant and greater than min stock / remaining
-                    if (!p.stock_qty || p.stock_qty <= p.min_stock_qty) {
-                        p.stock_qty = Math.max((p.min_stock_qty || 100) * 15, 2500);
-                    }
                     
                     // Auto configure retail quantity price tiers if missing
                     if (!p.retail_qty_prices || p.retail_qty_prices.length === 0) {
@@ -11960,21 +11947,7 @@ class AppState {
                 return p;
             }).filter(Boolean);
 
-            // One-time migration to ensure cost price and abundant stock are persisted in existing localStorage
-            if (!localStorage.getItem('ihp_cost_and_stock_v4')) {
-                this.online_products.forEach(p => {
-                    const wsPrice = p.wholesale_price > 0 ? p.wholesale_price : (p.price > 0 ? Math.round(p.price * 0.9) : 50000);
-                    p.cost_price = Math.round((wsPrice * 0.88) / 100) * 100;
-                    p.import_price = p.cost_price;
-                    p.supplier = p.supplier || p.brand || 'In Lạc Hồng';
-                    p.brand = p.supplier;
-                    if (!p.stock_qty || p.stock_qty < 2500) {
-                        p.stock_qty = 2500;
-                    }
-                });
-                this.save('online_products', this.online_products);
-                localStorage.setItem('ihp_cost_and_stock_v4', 'true');
-            }
+
         }
         if (Array.isArray(this.online_orders)) {
             this.online_orders = this.online_orders.map(o => {
@@ -23032,13 +23005,16 @@ window.openNewOnlineProductModal = function(mode, sku = "") {
         titleEl.textContent = "Sửa thông tin hàng hóa";
         skuInput.value = sku;
         skuInput.readOnly = true;
-        if (stockGroup) stockGroup.style.display = "none";
+        if (stockGroup) stockGroup.style.display = "block";
         document.getElementById("onlineProductAction").value = "EDIT";
         
         const cleanSku = String(sku).trim().toUpperCase();
         const prod = state.online_products.find(p => String(p.sku).trim().toUpperCase() === cleanSku);
         if (prod) {
             document.getElementById("onlineProductName").value = prod.name;
+            if (document.getElementById("onlineProductStockQty")) {
+                document.getElementById("onlineProductStockQty").value = prod.stock_qty || 0;
+            }
             if (document.getElementById("onlineProductCategory")) {
                 const curCat = prod.category || "";
                 if (curCat && catSelect && !Array.from(catSelect.options).some(o => o.value === curCat)) {
@@ -24713,17 +24689,19 @@ window.renderPosCatalog = function() {
         card.onclick = () => window.addPosItem(p.sku, 1);
 
         const currentPrice = window.getPosProductPrice(p, currentPriceBook, 1);
-        const stockQty = p.stock_qty !== undefined ? p.stock_qty : 999;
-        const isOutOfStock = stockQty <= 0;
-        const stockBadgeColor = isOutOfStock ? "#ef4444" : "#10b981";
+        const cartItem = (window.posCart || []).find(ci => ci.sku === p.sku);
+        const inCartQty = cartItem && cartItem.qty > 0 ? cartItem.qty : 0;
+        const totalStock = typeof p.stock_qty === 'number' ? p.stock_qty : 0;
+        // Tồn khả dụng theo thời gian thực (trừ đi số lượng đang chọn trong đơn hàng)
+        const availableStock = totalStock - inCartQty;
+        const stockBadgeColor = availableStock <= 0 ? "#ef4444" : "#10b981";
 
         let wholesaleBadge = "";
         if (currentPriceBook === "WHOLESALE" && p.wholesale_price > 0) {
             wholesaleBadge = `<span class="pos-prod-badge-wholesale">Giá sỉ</span>`;
         }
 
-        const cartItem = (window.posCart || []).find(ci => ci.sku === p.sku);
-        const inCartBadge = cartItem && cartItem.qty > 0 ? `<span class="pos-prod-incart-badge">${formatNumber(cartItem.qty)}</span>` : '';
+        const inCartBadge = inCartQty > 0 ? `<span class="pos-prod-incart-badge">${formatNumber(inCartQty)}</span>` : '';
 
         let imgHtml = "";
         const effectiveImg = (p.image && String(p.image).trim().length >= 15) ? p.image : (typeof window.generateProductBoxSvg === 'function' ? window.generateProductBoxSvg(p.sku, p.name, p.category, p.supplier || p.brand) : "");
@@ -24746,7 +24724,7 @@ window.renderPosCatalog = function() {
             <div>
                 <div class="pos-prod-meta">
                     <span>${p.sku}</span>
-                    <span style="color: ${stockBadgeColor}; font-weight: 600;">Tồn: ${formatNumber(stockQty)}</span>
+                    <span style="color: ${stockBadgeColor}; font-weight: 600;" title="Tồn kho thực tế: ${formatNumber(totalStock)}${inCartQty > 0 ? ' | Đang chọn trong đơn: ' + formatNumber(inCartQty) : ''}">Tồn: ${formatNumber(availableStock)}${inCartQty > 0 ? ' <small style="color:#d97706; font-size:0.68rem; font-weight:700;">(-' + formatNumber(inCartQty) + ')</small>' : ''}</span>
                 </div>
                 ${supplierText ? `<div style="font-size:0.68rem; color:#64748b; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Nhà cung cấp: ${supplierText}">NCC: <strong style="color:var(--text-primary); font-weight:600;">${supplierText}</strong></div>` : ''}
                 <div class="pos-prod-price">
@@ -24800,11 +24778,16 @@ window.handlePosSearchInput = function(val) {
         const item = document.createElement("div");
         item.className = "pos-search-item";
         const price = window.getPosProductPrice(p, window.posSelectedPriceBook, 1);
+        const cartItem = (window.posCart || []).find(ci => ci.sku === p.sku);
+        const inCartQty = cartItem && cartItem.qty > 0 ? cartItem.qty : 0;
+        const totalStock = typeof p.stock_qty === 'number' ? p.stock_qty : 0;
+        const avail = totalStock - inCartQty;
         const supplierInfo = (p.supplier || p.brand) ? ` &bull; NCC: <strong style="color:#0f766e;">${p.supplier || p.brand}</strong>` : '';
+        const inCartHint = inCartQty > 0 ? ` <span style="color:#d97706; font-weight:700;">(Đang chọn: ${formatNumber(inCartQty)})</span>` : '';
         item.innerHTML = `
             <div>
                 <strong>${p.sku}</strong> - ${p.name}
-                <div style="font-size:0.75rem; color:#64748b;">Tồn: ${p.stock_qty || 0} ${p.unit || ''}${supplierInfo}</div>
+                <div style="font-size:0.75rem; color:#64748b;">Tồn: ${formatNumber(avail)} ${p.unit || ''}${inCartHint}${supplierInfo}</div>
             </div>
             <div style="font-weight:700; color:#108f53;">
                 ${typeof formatMoney === 'function' ? formatMoney(price) : price}
@@ -24867,6 +24850,7 @@ window.addPosItem = function(sku, qtyDelta = 1) {
     }
 
     window.renderPosCart();
+    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
 };
 
 // Update item quantity in Cart (Hỗ trợ cả Hàng hóa và Dịch vụ gia công)
@@ -24901,11 +24885,13 @@ window.updatePosItemQty = function(sku, newQty) {
     }
 
     window.renderPosCart();
+    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
 };
 
 window.removePosItem = function(sku) {
     window.posCart = window.posCart.filter(i => i.sku !== sku);
     window.renderPosCart();
+    if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
 };
 
 window.clearPosCart = function() {
@@ -24921,6 +24907,7 @@ window.clearPosCart = function() {
         if (inDqCb) inDqCb.checked = false;
         if (vnCb) vnCb.checked = false;
         window.renderPosCart();
+        if (typeof window.renderPosCatalog === 'function') window.renderPosCatalog();
     }
 };
 
@@ -26303,6 +26290,21 @@ function handleOnlineProductSubmit(e) {
             prod.wholesale_price = wholesalePrice;
             prod.min_stock_qty = minStock;
             prod.image = image;
+
+            const newStock = parseFloat(document.getElementById("onlineProductStockQty")?.value);
+            if (!isNaN(newStock) && newStock !== prod.stock_qty) {
+                const diff = newStock - (prod.stock_qty || 0);
+                prod.stock_qty = newStock;
+                state.online_stock_logs.push({
+                    id: "log_" + Math.random().toString(36).substring(2, 9),
+                    created_at: new Date().toISOString(),
+                    sku: prod.sku,
+                    type: diff >= 0 ? "IMPORT" : "EXPORT",
+                    qty: diff,
+                    note: `Điều chỉnh tồn kho thực tế: ${prod.stock_qty - diff} ➔ ${newStock}`
+                });
+                state.updateState("online_stock_logs", state.online_stock_logs);
+            }
         }
     }
     
@@ -38688,6 +38690,20 @@ window.confirmExcelImportCatalog = function() {
             if (item.price > 0) prod.price = item.price;
             if (item.wholesale_price > 0) prod.wholesale_price = item.wholesale_price;
             if (item.min_stock_qty > 0) prod.min_stock_qty = item.min_stock_qty;
+            if (typeof item.stock_qty === 'number') {
+                const diff = item.stock_qty - (prod.stock_qty || 0);
+                prod.stock_qty = item.stock_qty;
+                if (diff !== 0) {
+                    state.online_stock_logs.push({
+                        id: "log_" + Math.random().toString(36).substring(2, 9),
+                        created_at: new Date().toISOString(),
+                        sku: cleanSku,
+                        type: diff >= 0 ? "IMPORT" : "EXPORT",
+                        qty: diff,
+                        note: `Cập nhật tồn kho thực tế từ Excel: ${prod.stock_qty - diff} ➔ ${item.stock_qty}`
+                    });
+                }
+            }
         } else {
             addedCount++;
             state.online_products.push(item);
@@ -44401,3 +44417,28 @@ window.printShippingReport = function() {
 };
 
 
+
+// ==========================================================================
+// ĐẶT LẠI TOÀN BỘ TỒN KHO VỀ 0 ĐỂ NHẬP SỐ LIỆU THỰC TẾ
+// ==========================================================================
+window.resetAllStockToZero = async function() {
+    if (!confirm("⚠️ XÁC NHẬN ĐẶT LẠI TOÀN BỘ TỒN KHO:\n\nBạn có chắc chắn muốn đặt lại số lượng tồn kho của TẤT CẢ hàng hóa về 0 để nhập số liệu thực tế?\n\n(Thao tác này sẽ đưa toàn bộ số tồn cũ về 0 và dọn sạch nhật ký nhập/xuất demo để chuẩn bị nhập số liệu mới)")) {
+        return;
+    }
+    try {
+        (state.online_products || []).forEach(p => { p.stock_qty = 0; });
+        state.online_stock_logs = [];
+        state.updateState("online_products", state.online_products);
+        state.updateState("online_stock_logs", state.online_stock_logs);
+
+        if (typeof renderOnlineProducts === 'function') renderOnlineProducts();
+        if (typeof renderOnlineStock === 'function') renderOnlineStock();
+        if (typeof renderOnlineStockLogs === 'function') renderOnlineStockLogs();
+        if (typeof renderPosCatalog === 'function') renderPosCatalog();
+        if (typeof renderPosCart === 'function') renderPosCart();
+
+        alert("✅ Đã đặt lại toàn bộ tồn kho về 0 thành công!\n\nBây giờ bạn có thể nhập số liệu thực tế qua:\n1. Nút Sửa trên từng sản phẩm (Danh mục hàng hóa)\n2. Nút '+ Nhập hàng vào kho'\n3. Nút '📥 Nhập từ Excel' danh mục hàng hóa.");
+    } catch (e) {
+        alert("Lỗi khi đặt lại tồn kho: " + e.message);
+    }
+};

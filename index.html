@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261023_invoice_header_layout_v56">
+    <link rel="stylesheet" href="/style.css?v=20261024_reset_stock_to_zero_v57">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -2461,6 +2461,10 @@
                                     <i data-lucide="image"></i>
                                     <span>Cập nhật ảnh</span>
                                 </button>
+                                <button class="btn btn-secondary" onclick="window.resetAllStockToZero()" style="display:flex; align-items:center; gap:6px; color:#e11d48; border:1px solid #fca5a5; background:#fff1f2; font-weight:600;" title="Đặt lại toàn bộ số lượng tồn kho của tất cả sản phẩm về 0 để nhập số liệu thực tế">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>Bỏ tồn kho (Về 0)</span>
+                                </button>
                                 <button class="btn btn-primary" id="btnNewOnlineProduct" onclick="window.openNewOnlineProductModal('ADD')" style="display:flex; align-items:center; gap:6px;">
                                     <i data-lucide="plus"></i>
                                     <span>Thêm hàng hóa</span>
@@ -3582,6 +3586,10 @@
                                 <button class="btn btn-secondary" id="btnExportOnlineProduct" onclick="window.openOnlineExportStockModal()" style="background:var(--danger); color:white; border:none; display:flex; align-items:center; gap:6px;">
                                     <i data-lucide="upload"></i>
                                     <span>📤 Xuất kho</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.resetAllStockToZero()" style="display:flex; align-items:center; gap:6px; color:#e11d48; border:1px solid #fca5a5; background:#fff1f2; font-weight:600;" title="Đặt lại toàn bộ số lượng tồn kho của tất cả sản phẩm về 0 để nhập số liệu thực tế">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>Bỏ tồn kho (Về 0)</span>
                                 </button>
                                 <button class="btn btn-secondary" id="btnToggleStockView" onclick="window.toggleStockViewMode()" style="display:flex; align-items:center; gap:6px; background:var(--bg-hover); color:var(--text-primary); border:1px solid var(--border-color);">
                                     <i data-lucide="history"></i>
@@ -12859,7 +12867,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261023_invoice_header_layout_v56"></script>
+    <script src="/app.js?v=20261024_reset_stock_to_zero_v57"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
