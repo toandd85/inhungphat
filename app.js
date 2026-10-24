@@ -45005,8 +45005,178 @@ window.resetAllStockToZero = async function() {
 };
 
 // ==========================================================================
-// ORDER TIMELINE & INTERACTION HUB (Lịch Sử Giao Dịch & Tiến Trình Đơn Hàng)
+// ORDER TIMELINE & INTERACTION HUB (Lịch Sử Giao Dịch & Bằng Chứng Văn Bản, Biên Lai Đính Kèm)
 // ==========================================================================
+
+window.currentEvidenceTarget = null;
+
+// Trigger upload file or take photo for a specific milestone
+window.triggerAddOrderEvidence = function(orderId, milestone, defaultTitle, isOnline = true) {
+    window.currentEvidenceTarget = { orderId, milestone, defaultTitle, isOnline };
+    const input = document.getElementById("orderTimelineEvidenceFileInput");
+    if (input) {
+        input.value = "";
+        input.click();
+    }
+};
+
+// Handle uploading evidence image/document with automatic compression
+window.handleOrderEvidenceUpload = function(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0 || !window.currentEvidenceTarget) return;
+
+    const file = files[0];
+    const target = window.currentEvidenceTarget;
+    const isImage = file.type.startsWith("image/");
+
+    let order = null;
+    let listKey = target.isOnline ? 'online_orders' : 'orders';
+    let list = state[listKey] || [];
+    order = list.find(o => o.id === target.orderId || o.order_number === target.orderId);
+
+    if (!order) {
+        // Check other collection
+        listKey = target.isOnline ? 'orders' : 'online_orders';
+        list = state[listKey] || [];
+        order = list.find(o => o.id === target.orderId || o.order_number === target.orderId);
+    }
+
+    if (!order) {
+        alert("Không tìm thấy đơn hàng để lưu bằng chứng!");
+        return;
+    }
+
+    const saveEvidence = function(fileUrl, fileType) {
+        order.evidence_files = Array.isArray(order.evidence_files) ? order.evidence_files : [];
+        const newEv = {
+            id: 'ev_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+            milestone: target.milestone,
+            title: target.defaultTitle || file.name,
+            file_name: file.name,
+            file_type: fileType,
+            file_url: fileUrl,
+            upload_date: new Date().toISOString(),
+            created_at_formatted: new Date().toLocaleString('vi-VN')
+        };
+        order.evidence_files.push(newEv);
+        state.updateState(listKey, list);
+
+        // Re-render modal to display new evidence immediately
+        window.openOrderTimelineModal(order.id, target.isOnline);
+    };
+
+    const reader = new FileReader();
+    if (isImage) {
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement("canvas");
+                const maxDim = 1200;
+                let w = img.width;
+                let h = img.height;
+                if (w > maxDim || h > maxDim) {
+                    if (w > h) {
+                        h = Math.round((h * maxDim) / w);
+                        w = maxDim;
+                    } else {
+                        w = Math.round((w * maxDim) / h);
+                        h = maxDim;
+                    }
+                }
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, w, h);
+                const compressedUrl = canvas.toDataURL("image/jpeg", 0.78);
+                saveEvidence(compressedUrl, "IMAGE");
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        reader.onload = function(e) {
+            saveEvidence(e.target.result, file.name.endsWith('.pdf') ? "PDF" : "DOC");
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+// Delete an attached evidence item
+window.deleteOrderEvidence = function(orderId, evidenceId, isOnline = true) {
+    if (!confirm("Bạn có chắc chắn muốn xóa bằng chứng / biên lai này khỏi đơn hàng?")) return;
+
+    let listKey = isOnline ? 'online_orders' : 'orders';
+    let list = state[listKey] || [];
+    let order = list.find(o => o.id === orderId || o.order_number === orderId);
+
+    if (!order) {
+        listKey = isOnline ? 'orders' : 'online_orders';
+        list = state[listKey] || [];
+        order = list.find(o => o.id === orderId || o.order_number === orderId);
+    }
+
+    if (!order || !Array.isArray(order.evidence_files)) return;
+
+    order.evidence_files = order.evidence_files.filter(ev => ev.id !== evidenceId);
+    state.updateState(listKey, list);
+    window.openOrderTimelineModal(order.id, isOnline);
+};
+
+// Render Evidence & Proofs Block for each milestone
+window.renderMilestoneEvidenceSection = function(order, milestoneCode, milestoneTitle, isOnline, systemBadgesHtml = "") {
+    const allEvidences = Array.isArray(order.evidence_files) ? order.evidence_files : [];
+    const milestoneEvs = allEvidences.filter(ev => ev.milestone === milestoneCode);
+
+    let thumbsHtml = '';
+    if (milestoneEvs.length > 0) {
+        thumbsHtml = milestoneEvs.map(ev => {
+            if (ev.file_type === "IMAGE") {
+                return `
+                    <div class="ot-evidence-thumb" title="${escapeHtml(ev.title)} (${ev.created_at_formatted || ''}) - Nhấp để xem phóng to">
+                        <img src="${ev.file_url}" alt="${escapeHtml(ev.title)}" onclick="window.openLightbox('${ev.file_url}', '${escapeHtml(ev.title)} (${ev.created_at_formatted || ''})')">
+                        <button type="button" class="ot-evidence-thumb-delete" title="Xóa ảnh này" onclick="event.stopPropagation(); window.deleteOrderEvidence('${order.id}', '${ev.id}', ${isOnline});">&times;</button>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="ot-evidence-doc-pill" onclick="window.openOrderDocumentPreview('${ev.file_url}', '${escapeHtml(ev.file_name)}')">
+                        <i data-lucide="file-text" style="width:14px; height:14px; color:#ef4444;"></i>
+                        <span>${escapeHtml(ev.title || ev.file_name)}</span>
+                        <button type="button" style="border:none; background:transparent; color:#ef4444; cursor:pointer; font-size:12px; font-weight:bold; margin-left:4px;" onclick="event.stopPropagation(); window.deleteOrderEvidence('${order.id}', '${ev.id}', ${isOnline});">&times;</button>
+                    </div>
+                `;
+            }
+        }).join("");
+    } else {
+        thumbsHtml = `<div style="font-size:0.78rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh/biên lai chụp đính kèm. Bấm "+ Đính kèm" để tải lên ảnh Ủy nhiệm chi, biên lai hoặc tài liệu.</div>`;
+    }
+
+    return `
+        <div class="ot-evidence-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                <span style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.3px; display:inline-flex; align-items:center; gap:4px;">
+                    <i data-lucide="paperclip" style="width:12px; height:12px;"></i> BẰNG CHỨNG & BIÊN LAI ĐÍNH KÈM (${milestoneEvs.length})
+                </span>
+                <button type="button" class="btn btn-secondary" style="padding:2px 8px; font-size:0.75rem; font-weight:600; display:inline-flex; align-items:center; gap:4px; border-color:#0284c7; color:#0284c7;" onclick="window.triggerAddOrderEvidence('${order.id}', '${milestoneCode}', '${milestoneTitle}', ${isOnline})" title="Chụp ảnh bằng Camera hoặc chọn tệp từ máy">
+                    <i data-lucide="camera" style="width:12px; height:12px;"></i> + Đính kèm ảnh / Biên lai
+                </button>
+            </div>
+            ${systemBadgesHtml ? `<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">${systemBadgesHtml}</div>` : ''}
+            <div class="ot-evidence-grid">
+                ${thumbsHtml}
+            </div>
+        </div>
+    `;
+};
+
+window.openOrderDocumentPreview = function(url, filename) {
+    if (url.startsWith('data:application/pdf') || url.endsWith('.pdf')) {
+        const win = window.open();
+        win.document.write('<iframe src="' + url + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+    } else {
+        window.openLightbox(url, filename);
+    }
+};
 
 window.openOrderTimelineModal = function(orderId, isOnline = true) {
     let order = null;
@@ -45083,7 +45253,7 @@ window.openOrderTimelineModal = function(orderId, isOnline = true) {
     }
 
     if (titleEl) {
-        titleEl.innerHTML = `<span style="color:var(--accent); font-weight:800;">${order.order_number}</span> - Tiến Trình & Lịch Sử Giao Dịch`;
+        titleEl.innerHTML = `<span style="color:var(--accent); font-weight:800;">${order.order_number}</span> - Tiến Trình & Bằng Chứng Giao Dịch`;
     }
     if (subTitleEl) {
         subTitleEl.textContent = `Khách hàng: ${custName} ${custPhone ? '(' + custPhone + ')' : ''} | Kênh: ${order.sales_channel || 'Trực tiếp'} | NV: ${order.salesperson || 'N/A'}`;
@@ -45100,7 +45270,7 @@ window.openOrderTimelineModal = function(orderId, isOnline = true) {
 };
 
 window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, totalPaid, depositAmt, remainingDebt, paidPercent, delStat, isDelivered, isCompleted, overallBadge, payments, linkedContract) {
-    const isShipping = delStat === 'SHIPPING';
+    const isShipping = delStat === "SHIPPING";
     const custName = order.customer_name || partner.name || "Khách hàng";
     const custPhone = order.customer_phone || partner.phone || "Chưa cập nhật";
     const custAddr = order.customer_address || partner.address || "Chưa cập nhật";
@@ -45134,6 +45304,40 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
     // Invoice VAT text
     const invStatus = order.invoice_status || "NOT_ISSUED";
     const isInvIssued = invStatus === "ISSUED";
+
+    // System Proof Badges for Milestones
+    const contractProofBadges = linkedContract ? `
+        <button type="button" class="ot-proof-badge-btn ot-proof-badge-green" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsModal('${linkedContract.id}', 'CONTRACT');" title="Bấm để xem & in Hợp đồng">
+            <i data-lucide="file-text" style="width:13px; height:13px;"></i> HĐ: ${escapeHtml(linkedContract.contract_number)}
+        </button>
+        <button type="button" class="ot-proof-badge-btn ot-proof-badge-green" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsModal('${linkedContract.id}', 'DELIVERY');" title="Bấm để xem & in Biên bản bàn giao nghiệm thu BBBG">
+            <i data-lucide="truck" style="width:13px; height:13px;"></i> BBBG Nghiệm Thu (Đạt 100%)
+        </button>
+        <button type="button" class="ot-proof-badge-btn ot-proof-badge-blue" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsModal('${linkedContract.id}', 'LIQUIDATION');" title="Bấm để xem Biên bản thanh lý">
+            <i data-lucide="check-check" style="width:13px; height:13px;"></i> Biên Bản Thanh Lý
+        </button>
+        <button type="button" class="ot-proof-badge-btn ot-proof-badge-purple" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsModal('${linkedContract.id}', 'PAYMENT');" title="Bấm để xem Giấy đề nghị thanh toán">
+            <i data-lucide="credit-card" style="width:13px; height:13px;"></i> Đề Nghị Thanh Toán
+        </button>
+    ` : '';
+
+    const depositProofBadges = depositAmt > 0 ? `
+        <span class="ot-proof-badge-btn ot-proof-badge-green">
+            <i data-lucide="receipt" style="width:13px; height:13px;"></i> Phiếu Thu Cọc: ${formatMoney(depositAmt)} đ (${order.deposit_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'})
+        </span>
+    ` : '';
+
+    const deliveryProofBadges = isDelivered ? `
+        <span class="ot-proof-badge-btn ot-proof-badge-green">
+            <i data-lucide="check-circle" style="width:13px; height:13px;"></i> Đã giao: ${deliveryDateStr} (${escapeHtml(carrierText)})
+        </span>
+    ` : '';
+
+    const invoiceProofBadges = isInvIssued ? `
+        <span class="ot-proof-badge-btn ot-proof-badge-purple">
+            <i data-lucide="file-check" style="width:13px; height:13px;"></i> HĐ VAT: ${escapeHtml(order.invoice_number)} (${escapeHtml(order.invoice_date || '')})
+        </span>
+    ` : '';
 
     return `
         <!-- Top Action & Status Bar -->
@@ -45211,10 +45415,10 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
             </div>
         </div>
 
-        <!-- Chronological Timeline List -->
+        <!-- Chronological Timeline List with Evidence Support -->
         <div style="font-size:0.95rem; font-weight:800; color:var(--text-primary); margin-bottom:14px; display:flex; align-items:center; gap:6px;">
             <i data-lucide="calendar-check-2" style="width:18px; height:18px; color:#0284c7;"></i>
-            DÒNG THỜI GIAN CÁC MỐC GIAO DỊCH & TƯƠNG TÁC
+            DÒNG THỜI GIAN GIAO DỊCH, BẰNG CHỨNG VĂN BẢN & BIÊN LAI ĐÍNH KÈM
         </div>
 
         <div class="ot-events-list">
@@ -45236,7 +45440,7 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                             • <strong>Kênh bán hàng:</strong> ${escapeHtml(order.sales_channel || 'Trực tiếp')} | <strong>Phụ trách:</strong> ${escapeHtml(order.salesperson || 'N/A')}
                             ${order.note ? `<br>• <em>Ghi chú đơn:</em> ${escapeHtml(order.note)}` : ''}
                         </div>
-                        <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; overflow:hidden;">
+                        <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; overflow:hidden; margin-bottom:8px;">
                             <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
                                 <thead>
                                     <tr style="background:#e2e8f0; font-weight:700;">
@@ -45253,6 +45457,8 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Evidence for Order -->
+                        ${window.renderMilestoneEvidenceSection(order, 'ORDER', 'Ảnh chốt đơn / Trao đổi / Thiết kế', isOnline)}
                     </div>
                 </div>
             </div>
@@ -45275,17 +45481,16 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                                 • <strong>Bộ hồ sơ đính kèm:</strong> Biên bản giao nhận & Nghiệm thu (BBBG), Biên bản thanh lý, Giấy đề nghị thanh toán.<br>
                                 • <strong>Đại diện phê duyệt:</strong> ${escapeHtml(linkedContract.signer || "Bùi Đại Hùng - Giám đốc")}
                             </div>
-                            <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsForOrder('${order.id}', ${isOnline});">
-                                <i data-lucide="file-text" style="width:13px; height:13px; color:#108f53;"></i> Mở xem & In Bộ hồ sơ (HĐ / BBBG)
-                            </button>
                         ` : `
                             <div style="color:var(--text-secondary); margin-bottom:8px;">
                                 Đơn hàng đã có đầy đủ thông số để tự động sinh Bộ hồ sơ văn bản (Hợp đồng kinh tế hoặc Biên bản bàn giao & nghiệm thu BBBG chuẩn A4).
                             </div>
-                            <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsForOrder('${order.id}', ${isOnline});">
+                            <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px; margin-bottom:8px;" onclick="closeModal('orderTimelineModal'); window.openCommercialDocsForOrder('${order.id}', ${isOnline});">
                                 <i data-lucide="plus-circle" style="width:13px; height:13px; color:#0284c7;"></i> Mở / Tạo Hợp đồng & BBBG ngay
                             </button>
                         `}
+                        <!-- Evidence for Contract / BBBG -->
+                        ${window.renderMilestoneEvidenceSection(order, 'CONTRACT', 'Ảnh chụp Hợp đồng / Biên bản ký tay & đóng dấu', isOnline, contractProofBadges)}
                     </div>
                 </div>
             </div>
@@ -45303,7 +45508,7 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                     </div>
                     <div class="ot-event-body">
                         ${depositAmt > 0 ? `
-                            <div style="line-height:1.6;">
+                            <div style="line-height:1.6; margin-bottom:8px;">
                                 • <strong>Số tiền tạm ứng:</strong> <span style="font-size:1.05rem; font-weight:800; color:#108f53;">${formatMoney(depositAmt)} đ</span> (${Math.round((depositAmt / totalAmt) * 100)}% giá trị đơn)<br>
                                 • <strong>Hình thức nhận:</strong> ${order.deposit_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản ngân hàng'}<br>
                                 • <strong>Ghi chú:</strong> ${escapeHtml(order.deposit_note || 'Đã ghi nhận đặt cọc sản xuất')}
@@ -45313,11 +45518,13 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                                 ⚠️ Đơn hàng chưa ghi nhận khoản tiền tạm ứng nào.
                             </div>
                             ${isOnline ? `
-                            <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
+                            <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px; margin-bottom:8px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
                                 <i data-lucide="plus" style="width:13px; height:13px;"></i> Ghi nhận tạm ứng (Cọc)
                             </button>
                             ` : ''}
                         `}
+                        <!-- Evidence for Deposit -->
+                        ${window.renderMilestoneEvidenceSection(order, 'DEPOSIT', 'Ủy nhiệm chi / Biên lai chuyển khoản cọc', isOnline, depositProofBadges)}
                     </div>
                 </div>
             </div>
@@ -45339,11 +45546,8 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                             • <strong>Thời gian giao:</strong> ${deliveryDateStr}<br>
                             • <strong>Ghi chú giao nhận:</strong> ${escapeHtml(order.delivery_note || (isDelivered ? 'Khách hàng đã nhận đủ số lượng và ký nghiệm thu đạt 100%' : 'Chờ vận chuyển'))}
                         </div>
-                        ${isOnline ? `
-                        <button type="button" class="btn btn-secondary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
-                            <i data-lucide="truck" style="width:13px; height:13px;"></i> Cập nhật tình trạng giao hàng
-                        </button>
-                        ` : ''}
+                        <!-- Evidence for Delivery -->
+                        ${window.renderMilestoneEvidenceSection(order, 'DELIVERY', 'Ảnh chụp kiện hàng / Phiếu giao ký nhận', isOnline, deliveryProofBadges)}
                     </div>
                 </div>
             </div>
@@ -45378,13 +45582,8 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                                 </div>
                             `}
                         </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            ${remainingDebt > 0 && isOnline ? `
-                            <button type="button" class="btn btn-primary" style="padding:5px 12px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
-                                <i data-lucide="check-circle" style="width:13px; height:13px;"></i> Thu tiền / Tất toán công nợ
-                            </button>
-                            ` : ''}
-                        </div>
+                        <!-- Evidence for Payment -->
+                        ${window.renderMilestoneEvidenceSection(order, 'PAYMENT', 'Biên lai thanh toán / UNC quyết toán', isOnline)}
                     </div>
                 </div>
             </div>
@@ -45402,16 +45601,18 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                     </div>
                     <div class="ot-event-body">
                         ${isInvIssued ? `
-                            <div style="line-height:1.6;">
+                            <div style="line-height:1.6; margin-bottom:8px;">
                                 • <strong>Số hóa đơn:</strong> <span style="font-weight:700; color:#0e7542;">${escapeHtml(order.invoice_number)}</span> ${order.invoice_serial ? `(Ký hiệu: ${escapeHtml(order.invoice_serial)})` : ''}<br>
                                 • <strong>Ngày xuất:</strong> ${escapeHtml(order.invoice_date || '')}<br>
                                 • <strong>Ghi chú:</strong> ${escapeHtml(order.invoice_note || 'Đã gửi hóa đơn điện tử cho khách')}
                             </div>
                         ` : `
-                            <div style="color:var(--text-secondary);">
+                            <div style="color:var(--text-secondary); margin-bottom:8px;">
                                 ${invStatus === 'NOT_REQUIRED' ? 'Khách hàng cá nhân không yêu cầu xuất hóa đơn giá trị gia tăng.' : 'Đang chờ xử lý xuất hóa đơn VAT điện tử cho đơn vị thụ hưởng.'}
                             </div>
                         `}
+                        <!-- Evidence for Invoice -->
+                        ${window.renderMilestoneEvidenceSection(order, 'INVOICE', 'Ảnh hóa đơn điện tử / Bản scan HĐ VAT', isOnline, invoiceProofBadges)}
                     </div>
                 </div>
             </div>
@@ -45425,7 +45626,7 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                     </div>
                     <div style="margin-top:6px; font-size:0.85rem; color:${isCompleted ? '#15803d' : '#92400e'}; line-height:1.5;">
                         ${isCompleted ? `
-                            Toàn bộ hàng hóa sản phẩm đã được giao nhận nghiệm thu thành công và 100% tài chính công nợ đã được tất toán đầy đủ. Hồ sơ văn bản lưu trữ hợp lệ.
+                            Toàn bộ hàng hóa sản phẩm đã được giao nhận nghiệm thu thành công và 100% tài chính công nợ đã được tất toán đầy đủ. Mọi bằng chứng, biên lai và chứng từ đã được lưu trữ hợp lệ.
                         ` : `
                             Đơn hàng đang ở giai đoạn <strong>${step4Done ? 'Thu tiền sau giao' : (step3Done ? 'Giao hàng / Vận chuyển' : 'Tạm ứng & Chuẩn bị')}</strong>.
                             ${remainingDebt > 0 ? `<br>• Còn thiếu khoản tiền: <strong>${formatMoney(remainingDebt)} đ</strong>.` : ''}
