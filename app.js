@@ -22786,7 +22786,7 @@ window.openNewOnlineOrderModal = function(mode = "ADD", orderId = "") {
         
         const titleEl = document.getElementById("onlineOrderModalTitle");
         if (titleEl) {
-            titleEl.textContent = mode === "EDIT" ? "Cập nhật đơn hàng online" : "Tạo đơn hàng online mới";
+            titleEl.textContent = mode === "EDIT" ? "Cập nhật đơn hàng" : "Tạo đơn hàng";
         }
         
         const container = document.getElementById("onlineOrderRowsContainer");

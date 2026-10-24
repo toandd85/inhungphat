@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261024_reset_stock_to_zero_v57">
+    <link rel="stylesheet" href="/style.css?v=20261024_center_create_order_text_v58">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -267,9 +267,9 @@
     <div class="modal" id="orderChoiceModal" style="z-index: 200000;">
         <div class="modal-dialog" style="max-width: 400px;">
             <div class="modal-content">
-                <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-weight: 700; font-size: 1.1rem; margin: 0;">Lựa chọn loại đơn hàng</h3>
-                    <button type="button" class="btn-icon" onclick="document.getElementById('orderChoiceModal').classList.remove('active')" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
+                <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; position: relative;">
+                    <h3 style="font-weight: 800; font-size: 1.15rem; margin: 0 auto; text-align: center; color: #108f53;">Tạo đơn hàng</h3>
+                    <button type="button" class="btn-icon" onclick="document.getElementById('orderChoiceModal').classList.remove('active')" style="position: absolute; right: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
                 </div>
                 <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
                     <button class="btn btn-primary" id="btnChoiceOnlineOrder" style="padding: 18px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 12px; background: linear-gradient(135deg, #108f53 0%, #0b7a46 100%); color: #ffffff; border: none; box-shadow: 0 6px 16px rgba(16, 143, 83, 0.4); cursor: pointer; letter-spacing: 0.3px;">
@@ -6754,11 +6754,11 @@
 
             <div class="modal-content">
 
-                <div class="modal-header">
+                <div class="modal-header" style="position: relative; display: flex; align-items: center; justify-content: center;">
 
-                    <h2>Tạo đơn hàng mới</h2>
+                    <h2 style="margin: 0 auto; text-align: center; font-weight: 800; font-size: 1.3rem; color: #108f53;">Tạo đơn hàng</h2>
 
-                    <button class="btn-close" id="btnCloseQuoteModal"><i data-lucide="x"></i></button>
+                    <button class="btn-close" id="btnCloseQuoteModal" style="position: absolute; right: 16px;"><i data-lucide="x"></i></button>
 
                 </div>
 
@@ -8204,7 +8204,7 @@
     <div class="modal pos-screen-modal" id="onlinePosModal">
         <div class="pos-container pos-mobile-view-catalog">
             <!-- POS TOPBAR -->
-            <div class="pos-topbar">
+            <div class="pos-topbar" style="position: relative;">
                 <div class="pos-topbar-left">
                     <button type="button" class="pos-mobile-exit-btn" onclick="window.closePosModal()" title="Thoát POS">
                         <i data-lucide="arrow-left" style="width:18px; height:18px;"></i>
@@ -8231,6 +8231,9 @@
                     </div>
                 </div>
 
+                <div class="pos-topbar-center desktop-only" style="position: absolute; left: 50%; transform: translateX(-50%); font-weight: 900; font-size: 1.2rem; letter-spacing: 0.8px; text-transform: uppercase; color: #ffffff; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.3); white-space: nowrap;">
+                    TẠO ĐƠN HÀNG
+                </div>
                 <div class="pos-topbar-right">
                     <button type="button" class="pos-btn-action" id="posBtnToggleProductCatalog" onclick="window.togglePosProductCatalog()" title="Ẩn hoặc hiện danh mục chọn sản phẩm" style="font-weight:700; background:rgba(255,255,255,0.22); border-radius:6px; padding:0 12px; display:inline-flex; align-items:center; gap:6px;">
                         <i data-lucide="layout-grid" style="width:15px; height:15px;"></i>
@@ -8460,9 +8463,9 @@
                         </div>
 
                         <div class="pos-actions-row" style="margin-top: 10px;">
-                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn hàng (F9)">
-                                <i data-lucide="check-circle" style="width:24px; height:24px; stroke-width: 2.8;"></i>
-                                <span id="posSubmitBtnText" style="font-weight: 900; letter-spacing: 0.6px;">TẠO ĐƠN (F9)</span>
+                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn hàng (F9)" style="display: flex; align-items: center; justify-content: center; text-align: center; gap: 8px;">
+                                <i data-lucide="check-circle" style="width:22px; height:22px; stroke-width: 2.8;"></i>
+                                <span id="posSubmitBtnText" style="font-weight: 900; letter-spacing: 0.6px; text-align: center;">TẠO ĐƠN HÀNG</span>
                             </button>
                             <div class="pos-sub-actions" style="display: flex; width: 100%; gap: 8px;">
                                 <button type="button" class="pos-action-btn pos-btn-cancel" onclick="window.closePosModal()" title="Hủy thao tác và đóng POS" style="flex: 1;">
@@ -8562,11 +8565,11 @@
 
             <div class="modal-content">
 
-                <div class="modal-header">
+                <div class="modal-header" style="position: relative; display: flex; align-items: center; justify-content: center;">
 
-                    <h2 id="onlineOrderModalTitle">Tạo đơn hàng online mới</h2>
+                    <h2 id="onlineOrderModalTitle" style="margin: 0 auto; text-align: center; font-weight: 800; font-size: 1.3rem; color: #108f53;">Tạo đơn hàng</h2>
 
-                    <button class="btn-close" id="btnCloseOnlineOrderModal"><i data-lucide="x"></i></button>
+                    <button class="btn-close" id="btnCloseOnlineOrderModal" style="position: absolute; right: 16px;"><i data-lucide="x"></i></button>
 
                 </div>
 
@@ -12867,7 +12870,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261024_reset_stock_to_zero_v57"></script>
+    <script src="/app.js?v=20261024_center_create_order_text_v58"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
