@@ -23930,12 +23930,21 @@ window.syncCurrentTabState = function() {
 
     activeTab.customer_id = document.getElementById("posCustomerSelect")?.value || "";
     const partner = (state.partners || []).find(p => p.id === activeTab.customer_id);
-    activeTab.customer_name = partner ? partner.name : (activeTab.customer_name && !activeTab.customer_name.startsWith("Khách lẻ") ? activeTab.customer_name : "Khách lẻ");
+    if (partner) {
+        activeTab.customer_name = partner.name;
+    } else {
+        // Keep existing customer_name if set (e.g. Khách lẻ 1, Khách lẻ 2), don't wipe it
+        if (!activeTab.customer_name) {
+            const idx = (window.posOrderTabs || []).indexOf(activeTab) + 1;
+            activeTab.customer_name = `Khách lẻ ${idx > 0 ? idx : 1}`;
+        }
+    }
+
     activeTab.discount = parseFloat(document.getElementById("posOrderDiscount")?.value) || 0;
     activeTab.vat = parseFloat(document.getElementById("posOrderVat")?.value) || 0;
     activeTab.ship_fee = parseFloat(document.getElementById("posOrderShipFee")?.value) || 0;
     activeTab.notes = document.getElementById("posOrderNotes")?.value || "";
-    activeTab.payment_status = document.getElementById("posPaymentStatusSelect")?.value || "PAID";
+    activeTab.payment_status = document.getElementById("posPaymentStatusSelect")?.value || "UNPAID";
     activeTab.payment_method = document.getElementById("posPaymentMethodSelect")?.value || "BANK_TRANSFER";
     activeTab.deposit_amount = parseFloat(document.getElementById("posDepositAmount")?.value) || 0;
     activeTab.price_book = window.posSelectedPriceBook || "RETAIL";
@@ -23957,8 +23966,14 @@ window.renderPosOrderTabs = function() {
         btn.className = "pos-tab" + (tab.id === window.posActiveTabId ? " active" : "");
         btn.onclick = () => window.switchPosOrderTab(tab.id);
         
-        const displayName = tab.customer_name || `Hóa đơn ${idx + 1}`;
-        btn.setAttribute("title", `${displayName} (${tab.orderNumber})`);
+        const fallbackName = `Khách lẻ ${idx + 1}`;
+        const displayName = tab.customer_name || fallbackName;
+        const itemCount = (tab.cart || []).reduce((s, i) => s + (parseFloat(i.qty) || 0), 0);
+        const countBadge = itemCount > 0 
+            ? `<span class="pos-tab-item-count" style="background:#108f53; color:#fff; border-radius:10px; padding:1px 6px; font-size:0.7rem; font-weight:700; margin-left:4px;">${itemCount}</span>` 
+            : '';
+
+        btn.setAttribute("title", `${displayName} (${tab.orderNumber}) - ${itemCount} sản phẩm`);
 
         let closeBtnHtml = "";
         if (window.posOrderTabs.length > 1) {
@@ -23966,20 +23981,22 @@ window.renderPosOrderTabs = function() {
         }
 
         btn.innerHTML = `
-            <i data-lucide="file-text" style="width:13px; height:13px; flex-shrink:0;"></i>
-            <span class="pos-tab-name">${displayName}</span>
+            <i data-lucide="user" style="width:13px; height:13px; flex-shrink:0;"></i>
+            <span class="pos-tab-name">${escapeHtml(displayName)}</span>
+            ${countBadge}
             ${closeBtnHtml}
         `;
         container.appendChild(btn);
     });
 
-    // Plus button to add new order
+    // Plus button to add new order / customer
     const addBtn = document.createElement("button");
     addBtn.type = "button";
     addBtn.className = "pos-tab-add";
-    addBtn.setAttribute("title", "Tạo thêm đơn hàng mới (+)");
+    addBtn.style.cssText = "display:inline-flex; align-items:center; gap:5px; padding:0 12px; height:32px; width:auto; font-weight:700; font-size:0.8rem; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.45); border-radius:6px; color:#ffffff; cursor:pointer; flex-shrink:0; white-space:nowrap; transition:all 0.15s ease;";
+    addBtn.setAttribute("title", "Tạo thêm đơn hàng / khách hàng mới (+)");
     addBtn.onclick = () => window.addNewPosOrderTab();
-    addBtn.innerHTML = `<i data-lucide="plus" style="width:15px; height:15px;"></i>`;
+    addBtn.innerHTML = `<i data-lucide="plus" style="width:14px; height:14px;"></i> <span>Thêm khách</span>`;
     container.appendChild(addBtn);
 
     if (window.lucide && typeof lucide.createIcons === 'function') {
@@ -23998,7 +24015,7 @@ window.addNewPosOrderTab = function() {
         id: newId,
         orderNumber: newOrderNo,
         customer_id: "",
-        customer_name: `Khách lẻ (${tabCount})`,
+        customer_name: `Khách lẻ ${tabCount}`,
         price_book: "RETAIL",
         cart: [],
         discount: 0,
@@ -24062,8 +24079,20 @@ window.switchPosOrderTab = function(tabId) {
     window.posSelectedPriceBook = target.price_book || "RETAIL";
     window.posCart = (target.cart || []).map(i => ({ ...i }));
 
-    if (typeof window.handlePosCustomerChange === 'function') {
-        window.handlePosCustomerChange(false);
+    // Customer badges
+    const partner = (state.partners || []).find(p => p.id === target.customer_id);
+    const isWholesale = partner && (partner.customer_type === "WHOLESALE" || partner.customer_type === "Khách sỉ" || partner.customer_type === "SI");
+    
+    const badgeEl = document.getElementById("posCustomerTypeBadge");
+    if (badgeEl) {
+        badgeEl.textContent = isWholesale ? "⭐ Khách sỉ" : "👤 Khách lẻ";
+        badgeEl.className = "pos-cust-type-pill " + (isWholesale ? "wholesale" : "retail");
+        badgeEl.style.display = "inline-flex";
+    }
+
+    const priceBookSelect = document.getElementById("posPriceBookSelect");
+    if (priceBookSelect) {
+        priceBookSelect.value = target.price_book || "RETAIL";
     }
 
     window.renderPosOrderTabs();
@@ -24173,7 +24202,7 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
                     id: "pos_tab_" + Date.now(),
                     orderNumber: newOrderNo,
                     customer_id: "",
-                    customer_name: "Khách lẻ",
+                    customer_name: "Khách lẻ 1",
                     price_book: "RETAIL",
                     cart: [],
                     discount: 0,
@@ -24922,7 +24951,12 @@ window.handlePosCustomerChange = function(forceAutoPriceBook = true) {
     const activeTab = typeof window.getCurrentActiveTab === "function" ? window.getCurrentActiveTab() : null;
     if (activeTab) {
         activeTab.customer_id = customerId;
-        activeTab.customer_name = partner ? partner.name : "Khách lẻ";
+        if (partner) {
+            activeTab.customer_name = partner.name;
+        } else {
+            const idx = (window.posOrderTabs || []).indexOf(activeTab) + 1;
+            activeTab.customer_name = `Khách lẻ ${idx > 0 ? idx : 1}`;
+        }
         if (typeof window.renderPosOrderTabs === "function") {
             window.renderPosOrderTabs();
         }

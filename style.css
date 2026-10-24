@@ -6831,8 +6831,11 @@ select.form-select, .form-select {
     align-items: center;
     gap: 6px;
     overflow-x: auto;
-    max-width: 480px;
+    max-width: 680px;
+    flex: 1;
+    min-width: 0;
     padding: 2px 0;
+    scrollbar-width: thin;
 }
 
 .pos-tab {
@@ -6870,6 +6873,29 @@ select.form-select, .form-select {
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 115px;
+}
+
+.pos-tab-item-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #108f53;
+    color: #ffffff !important;
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    margin-left: 2px;
+}
+.pos-tab.active .pos-tab-item-count {
+    background: #108f53;
+    color: #ffffff !important;
+}
+.pos-tab:not(.active) .pos-tab-item-count {
+    background: rgba(255, 255, 255, 0.35);
+    color: #ffffff !important;
 }
 
 .pos-tab-close {
