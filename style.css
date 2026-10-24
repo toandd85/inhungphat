@@ -782,6 +782,14 @@ body {
 /* ==========================================================================
    COMMERCIAL DOCUMENTS SUITE (BỘ HỒ SƠ VĂN BẢN CHUẨN THƯƠNG MẠI & SẢN XUẤT)
    ========================================================================== */
+.doc-choice-card {
+    transition: all 0.2s ease-in-out;
+}
+.doc-choice-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
 .commercial-doc-preview-modal .modal-dialog {
     max-width: 940px;
     width: 95%;

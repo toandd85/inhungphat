@@ -13921,7 +13921,7 @@ function renderProdOrders() {
         
         const viewPdfButton = `<button class="btn-icon" style="background-color:var(--info-light); color:var(--info);" onclick="openOnlineOrderInvoicePdf('${order.id}')" title="Xem Hóa Đơn PDF"><i data-lucide="file-text"></i></button>`;
         const editButton = `<button class="btn-icon" style="background-color:var(--warning-light); color:var(--warning);" onclick="editOrder('${order.id}')" title="Sửa đơn hàng"><i data-lucide="edit"></i></button>`;
-        const contractButton = `<button class="btn-icon" style="background-color:rgba(99, 102, 241, 0.15); color:#6366f1;" onclick="window.quickCreateContract('${order.id}', false)" title="Làm hợp đồng nhanh"><i data-lucide="file-signature"></i></button>`;
+        const contractButton = `<button class="btn-icon" style="background-color:rgba(99, 102, 241, 0.15); color:#6366f1;" onclick="window.openOrderDocChoiceModal('${order.id}', false)" title="Tạo hồ sơ / Biểu mẫu (Nghiệm thu, Hợp đồng)"><i data-lucide="file-signature"></i></button>`;
         
         let payButton = '';
         if (pct < 100 && order.status !== "CANCELLED") {
@@ -26593,7 +26593,7 @@ window.renderOnlineSales = function() {
         const trackButton = `<button class="btn-icon" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Theo dõi & Cập nhật quy trình"><i data-lucide="activity" style="color:var(--accent);"></i></button>`;
         const viewPdfButton = `<button class="btn-icon" onclick="openOnlineOrderInvoicePdf('${o.id}')" title="Xem Hóa Đơn PDF/Chi tiết"><i data-lucide="file-text" style="color:var(--info);"></i></button>`;
         const editButton = `<button class="btn-icon" onclick="window.openNewOnlineOrderModal('EDIT', '${o.id}')" title="Sửa đơn hàng"><i data-lucide="edit" style="color:var(--warning);"></i></button>`;
-        const contractButton = `<button class="btn-icon" onclick="window.quickCreateContract('${o.id}', true)" title="Làm hợp đồng nhanh"><i data-lucide="file-signature" style="color:#6366f1;"></i></button>`;
+        const contractButton = `<button class="btn-icon" onclick="window.openOrderDocChoiceModal('${o.id}', true)" title="Tạo hồ sơ / Biểu mẫu (Nghiệm thu, Hợp đồng)"><i data-lucide="file-signature" style="color:#6366f1;"></i></button>`;
         
         let payButton = '';
         if (remainingDebt > 0 && o.status !== "CANCELLED") {
@@ -28868,7 +28868,7 @@ window.renderOnlineSalesKanban = function(filteredOrders) {
         
         const viewPdfButton = `<button class="btn-icon" onclick="openOnlineOrderInvoicePdf('${o.id}')" title="Xem Hóa Đơn PDF"><i data-lucide="file-text" style="color:var(--info); width:16px; height:16px;"></i></button>`;
         const editButton = `<button class="btn-icon" onclick="window.openNewOnlineOrderModal('EDIT', '${o.id}')" title="Sửa đơn hàng"><i data-lucide="edit" style="color:var(--accent); width:16px; height:16px;"></i></button>`;
-        const contractButton = `<button class="btn-icon" onclick="window.quickCreateContract('${o.id}', true)" title="Làm hợp đồng nhanh"><i data-lucide="file-signature" style="color:#6366f1; width:16px; height:16px;"></i></button>`;
+        const contractButton = `<button class="btn-icon" onclick="window.openOrderDocChoiceModal('${o.id}', true)" title="Tạo hồ sơ / Biểu mẫu (Nghiệm thu, Hợp đồng)"><i data-lucide="file-signature" style="color:#6366f1; width:16px; height:16px;"></i></button>`;
         
         let payButton = '';
         if (o.payment_status !== "PAID" && o.kanban_status !== "CANCELLED") {
@@ -30490,12 +30490,21 @@ window.autoRepairContractsData = function() {
 
     state.contracts.forEach((c, idx) => {
         let partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
-        if (!partner) {
+        if (!partner && !c.partner_id?.startsWith("retail_")) {
             const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
             let ord = (state.online_orders || []).find(o => orderIds.includes(o.id) || (c.order_numbers && c.order_numbers.includes(o.order_number))) ||
                       (state.orders || []).find(o => orderIds.includes(o.id) || (c.order_numbers && c.order_numbers.includes(o.order_number)));
             if (ord && ord.customer_id) {
                 c.partner_id = ord.customer_id;
+                modified = true;
+            } else if (ord) {
+                c.partner_id = `retail_${ord.id}`;
+                c.customer_name = ord.customer_name || "Khách lẻ";
+                c.is_retail = true;
+                modified = true;
+            } else if (c.customer_name) {
+                c.partner_id = `retail_${c.id}`;
+                c.is_retail = true;
                 modified = true;
             } else {
                 const picked = customers[idx % Math.max(1, customers.length)] || fallbackCustomer;
@@ -30695,6 +30704,12 @@ window.renderContracts = function() {
 };
 
 // 4. Populate Contract Partners Dropdown
+// ==========================================================================
+// COMMERCIAL DOCUMENTS SUITE & CONTRACTS MANAGEMENT
+// HỢP ĐỒNG KINH TẾ, BIÊN BẢN NGHIỆM THU (KHÁCH LẺ & DOANH NGHIỆP), THANH LÝ, ĐỀ NGHỊ THANH TOÁN
+// ==========================================================================
+
+// 1. Populate Contract Partners (Supports both CRM Corporate & Retail Customers)
 window.populateContractPartners = function() {
     const select = document.getElementById("contractPartnerId");
     if (!select) return;
@@ -30714,8 +30729,8 @@ window.populateContractPartners = function() {
     }
 };
 
-// 5. Populate Contract Orders Checklist (Multi-Order selection)
-window.populateContractOrders = function(preselectedOrderIds = []) {
+// 2. Populate Contract Orders Checklist (Multi-Order selection, guaranteed fallback for retail orders)
+window.populateContractOrders = function(preselectedOrderIds = [], fallbackOrder = null) {
     const partnerSelect = document.getElementById("contractPartnerId");
     const typeSelect = document.getElementById("contractOrderType");
     const container = document.getElementById("contractOrdersListContainer");
@@ -30729,112 +30744,165 @@ window.populateContractOrders = function(preselectedOrderIds = []) {
     // Update partner summary box
     const partnerSummaryBox = document.getElementById("contractPartnerSummary");
     const partner = (state.partners || []).find(p => p.id === partnerId);
-    if (partnerSummaryBox && partner) {
-        partnerSummaryBox.style.display = "block";
-        partnerSummaryBox.innerHTML = `
-            <div><strong>${escapeHtml(partner.company_name || partner.name)}</strong> ${partner.tax_code ? ` | <span>MST: <strong>${escapeHtml(partner.tax_code)}</strong></span>` : ''} ${partner.phone ? ` | <span>ĐT: <strong>${escapeHtml(partner.phone)}</strong></span>` : ''}</div>
-            ${partner.address ? `<div style="color:var(--text-secondary); margin-top:2px;">Địa chỉ: ${escapeHtml(partner.address)}</div>` : ''}
-        `;
-    } else if (partnerSummaryBox) {
-        partnerSummaryBox.style.display = "none";
+    if (partnerSummaryBox) {
+        if (partner) {
+            partnerSummaryBox.style.display = "block";
+            partnerSummaryBox.innerHTML = `
+                <div><strong>${escapeHtml(partner.company_name || partner.name)}</strong> ${partner.tax_code ? ` | <span>MST: <strong>${escapeHtml(partner.tax_code)}</strong></span>` : ''} ${partner.phone ? ` | <span>ĐT: <strong>${escapeHtml(partner.phone)}</strong></span>` : ''}</div>
+                ${partner.address ? `<div style="color:var(--text-secondary); margin-top:2px;">Địa chỉ: ${escapeHtml(partner.address)}</div>` : ''}
+            `;
+        } else if (fallbackOrder || (partnerId && partnerId.startsWith("retail_"))) {
+            const ord = fallbackOrder || (state.online_orders || []).find(o => `retail_${o.id}` === partnerId) || {};
+            partnerSummaryBox.style.display = "block";
+            partnerSummaryBox.innerHTML = `
+                <div><strong>Khách hàng lẻ: ${escapeHtml(ord.customer_name || 'Khách lẻ')}</strong> ${ord.customer_phone || ord.phone ? ` | <span>ĐT: <strong>${escapeHtml(ord.customer_phone || ord.phone)}</strong></span>` : ''}</div>
+                ${ord.customer_address || ord.address ? `<div style="color:var(--text-secondary); margin-top:2px;">Địa chỉ: ${escapeHtml(ord.customer_address || ord.address)}</div>` : ''}
+            `;
+        } else {
+            partnerSummaryBox.style.display = "none";
+        }
     }
 
     container.innerHTML = "";
     if (hiddenSelect) hiddenSelect.innerHTML = "";
 
-    if (!partnerId) {
-        container.innerHTML = `<div class="text-muted text-center" style="padding:14px; font-size:0.83rem;">Vui lòng chọn khách hàng để tải danh sách đơn hàng</div>`;
-        if (summaryEl) summaryEl.innerHTML = `<span>Đã chọn: 0 đơn hàng</span><span>Tổng tiền: 0đ</span>`;
-        return;
-    }
-
     // Gather candidate orders
     let candidateOrders = [];
 
-    if (orderType === "PRODUCTION" || orderType === "ALL") {
-        (state.orders || []).filter(o => o.customer_id === partnerId).forEach(o => {
-            candidateOrders.push({
-                id: o.id,
-                order_number: o.order_number,
-                type: "PRODUCTION",
-                typeName: "Sản xuất",
-                date: o.created_at || o.order_date || "",
-                spec: o.print_spec || o.name || "Sản xuất in ấn",
-                total_amount: Number(o.total_amount || 0),
-                deposit: Number(o.deposit || o.paid_amount || 0),
-                status: o.status || "PENDING"
+    if (partnerId) {
+        if (orderType === "PRODUCTION" || orderType === "ALL") {
+            (state.orders || []).filter(o => o.customer_id === partnerId).forEach(o => {
+                candidateOrders.push({
+                    id: o.id,
+                    order_number: o.order_number,
+                    type: "PRODUCTION",
+                    typeName: "Sản xuất",
+                    date: o.created_at || o.order_date || "",
+                    spec: o.print_spec || o.name || "Sản xuất in ấn",
+                    total_amount: Number(o.total_amount || 0),
+                    deposit: Number(o.deposit || o.paid_amount || 0),
+                    status: o.status || "PENDING"
+                });
             });
+        }
+
+        if (orderType === "ONLINE" || orderType === "ALL") {
+            (state.online_orders || []).filter(o => o.customer_id === partnerId || `retail_${o.id}` === partnerId).forEach(o => {
+                candidateOrders.push({
+                    id: o.id,
+                    order_number: o.order_number,
+                    type: "ONLINE",
+                    typeName: "Online",
+                    date: o.created_at || "",
+                    spec: (o.items || []).map(i => i.name).join(", ") || "Bán hàng Online",
+                    total_amount: Number(o.total_amount || 0),
+                    deposit: Number(o.deposit_amount || o.paid_amount || 0),
+                    status: o.status || "COMPLETED"
+                });
+            });
+        }
+    }
+
+    // Guarantee that fallbackOrder is present in candidateOrders
+    if (fallbackOrder && !candidateOrders.some(co => co.id === fallbackOrder.id)) {
+        candidateOrders.push({
+            id: fallbackOrder.id,
+            order_number: fallbackOrder.order_number,
+            type: fallbackOrder.items ? "ONLINE" : "PRODUCTION",
+            typeName: fallbackOrder.items ? "Online" : "Sản xuất",
+            date: fallbackOrder.created_at || fallbackOrder.order_date || "",
+            spec: fallbackOrder.print_spec || (fallbackOrder.items || []).map(i => i.name).join(", ") || "Đơn hàng",
+            total_amount: Number(fallbackOrder.total_amount || 0),
+            deposit: Number(fallbackOrder.deposit || fallbackOrder.deposit_amount || fallbackOrder.paid_amount || 0),
+            status: fallbackOrder.status || "COMPLETED"
         });
     }
 
-    if (orderType === "ONLINE" || orderType === "ALL") {
-        (state.online_orders || []).filter(o => o.customer_id === partnerId).forEach(o => {
-            candidateOrders.push({
-                id: o.id,
-                order_number: o.order_number,
-                type: "ONLINE",
-                typeName: "Online",
-                date: o.created_at || "",
-                spec: (o.items || []).map(i => `${i.sku} x${i.qty}`).join(", ") || "Hàng hóa online",
-                total_amount: Number(o.total_amount || 0),
-                deposit: Number(o.deposit_amount || o.paid_amount || 0),
-                status: o.status || "ORDER"
-            });
-        });
-    }
+    // Guarantee preselected orders are present
+    (preselectedOrderIds || []).forEach(oid => {
+        if (!candidateOrders.some(co => co.id === oid)) {
+            const oOnline = (state.online_orders || []).find(o => o.id === oid);
+            const oProd = (state.orders || []).find(o => o.id === oid);
+            if (oOnline) {
+                candidateOrders.push({
+                    id: oOnline.id,
+                    order_number: oOnline.order_number,
+                    type: "ONLINE",
+                    typeName: "Online",
+                    date: oOnline.created_at || "",
+                    spec: (oOnline.items || []).map(i => i.name).join(", ") || "Bán hàng Online",
+                    total_amount: Number(oOnline.total_amount || 0),
+                    deposit: Number(oOnline.deposit_amount || oOnline.paid_amount || 0),
+                    status: oOnline.status || "COMPLETED"
+                });
+            } else if (oProd) {
+                candidateOrders.push({
+                    id: oProd.id,
+                    order_number: oProd.order_number,
+                    type: "PRODUCTION",
+                    typeName: "Sản xuất",
+                    date: oProd.created_at || oProd.order_date || "",
+                    spec: oProd.print_spec || oProd.name || "Sản xuất in ấn",
+                    total_amount: Number(oProd.total_amount || 0),
+                    deposit: Number(oProd.deposit || oProd.paid_amount || 0),
+                    status: oProd.status || "PENDING"
+                });
+            }
+        }
+    });
 
     if (candidateOrders.length === 0) {
-        container.innerHTML = `<div class="text-muted text-center" style="padding:14px; font-size:0.83rem;">Khách hàng này hiện chưa có đơn hàng nào trên hệ thống.</div>`;
+        container.innerHTML = `<div class="text-muted text-center" style="padding:14px; font-size:0.83rem;">Không tìm thấy đơn hàng nào của khách hàng này</div>`;
         if (summaryEl) summaryEl.innerHTML = `<span>Đã chọn: 0 đơn hàng</span><span>Tổng tiền: 0đ</span>`;
         return;
     }
 
-    // Render checkbox list
-    candidateOrders.forEach(ord => {
-        const isChecked = Array.isArray(preselectedOrderIds) && preselectedOrderIds.includes(ord.id);
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "contract-order-item";
-        itemDiv.style.cssText = "display:flex; align-items:center; justify-content:space-between; padding:6px 10px; margin-bottom:4px; border-radius:6px; background:var(--bg-card); border:1px solid var(--border-color);";
-        itemDiv.innerHTML = `
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1; margin:0;">
-                <input type="checkbox" name="contractOrderIds" value="${ord.id}" data-amount="${ord.total_amount}" data-deposit="${ord.deposit}" data-number="${ord.order_number}" ${isChecked ? 'checked' : ''} onchange="window.onContractOrderSelectionChange()" style="accent-color:var(--accent); width:16px; height:16px;">
-                <div>
-                    <div style="font-size:0.825rem; font-weight:700; color:var(--text-primary);">
-                        <span class="badge ${ord.type === 'ONLINE' ? 'badge-info' : 'badge-primary'}" style="font-size:0.65rem; margin-right:4px;">${ord.typeName}</span>
-                        ${escapeHtml(ord.order_number)}
-                        <small style="font-weight:400; color:var(--text-secondary); margin-left:6px;">(${ord.date ? ord.date.split('T')[0] : ''})</small>
-                    </div>
-                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px; max-width:420px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                        ${escapeHtml(ord.spec)}
-                    </div>
-                </div>
-            </label>
-            <div style="text-align:right; flex-shrink:0; margin-left:10px;">
-                <div style="font-size:0.85rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums;">${formatMoney(ord.total_amount)}</div>
-                <div style="font-size:0.7rem; color:var(--text-muted);">Cọc: ${formatMoney(ord.deposit)}</div>
-            </div>
-        `;
-        container.appendChild(itemDiv);
+    // Render order selection checkboxes
+    let totalSelectedAmount = 0;
+    let selectedCount = 0;
 
-        if (hiddenSelect) {
-            const opt = document.createElement("option");
-            opt.value = ord.id;
-            opt.textContent = ord.order_number;
-            hiddenSelect.appendChild(opt);
+    candidateOrders.forEach(o => {
+        const isChecked = preselectedOrderIds.includes(o.id) || (candidateOrders.length === 1 && preselectedOrderIds.length === 0);
+        if (isChecked) {
+            totalSelectedAmount += o.total_amount;
+            selectedCount++;
         }
+
+        const div = document.createElement("div");
+        div.style.cssText = "display:flex; align-items:center; justify-content:space-between; padding:7px 10px; border-bottom:1px solid var(--border-color); font-size:0.83rem;";
+        div.innerHTML = `
+            <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer; flex:1;">
+                <input type="checkbox" name="contractOrderIds" value="${o.id}" data-amount="${o.total_amount}" data-deposit="${o.deposit}" data-number="${o.order_number}" ${isChecked ? 'checked' : ''} onchange="window.handleContractOrderCheckChange()">
+                <strong>${escapeHtml(o.order_number)}</strong>
+                <span class="badge" style="font-size:0.7rem; padding:1px 6px; background:${o.type === 'ONLINE' ? '#108f53' : '#d97706'}; color:#fff; border-radius:4px;">${o.typeName}</span>
+                <span style="color:var(--text-secondary); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(o.spec)}</span>
+            </label>
+            <div style="font-weight:700; color:var(--accent); white-space:nowrap; margin-left:8px;">${formatMoney(o.total_amount)} đ</div>
+        `;
+        container.appendChild(div);
     });
 
-    window.onContractOrderSelectionChange();
+    if (summaryEl) {
+        summaryEl.innerHTML = `<span>Đã chọn: <strong>${selectedCount}</strong> đơn hàng</span><span>Tổng tiền: <strong style="font-size:0.95rem; color:#108f53;">${formatMoney(totalSelectedAmount)} đ</strong></span>`;
+    }
+
+    // If totalSelectedAmount > 0 and contractValue is empty, set it
+    const valInput = document.getElementById("contractValue");
+    if (valInput && (!valInput.value || Number(valInput.value) === 0)) {
+        valInput.value = totalSelectedAmount;
+    }
 };
 
-window.selectAllContractOrders = function(selectAll) {
+// 3. Multi-Order Checklist Helper: Select All / Clear All
+window.selectAllContractOrders = function(select = true) {
     const checkboxes = document.querySelectorAll("input[name='contractOrderIds']");
-    checkboxes.forEach(cb => { cb.checked = !!selectAll; });
-    window.onContractOrderSelectionChange();
+    checkboxes.forEach(cb => cb.checked = select);
+    window.handleContractOrderCheckChange();
 };
 
-window.onContractOrderSelectionChange = function() {
-    const checkboxes = document.querySelectorAll("input[name='contractOrderIds']:checked");
+// 4. Update Summary when checking/unchecking orders
+window.handleContractOrderCheckChange = function() {
+    const checkboxes = Array.from(document.querySelectorAll("input[name='contractOrderIds']:checked"));
     let totalAmt = 0;
     let totalDep = 0;
     checkboxes.forEach(cb => {
@@ -30844,7 +30912,7 @@ window.onContractOrderSelectionChange = function() {
 
     const summaryEl = document.getElementById("contractSelectedOrdersSummary");
     if (summaryEl) {
-        summaryEl.innerHTML = `<span>Đã chọn: <strong>${checkboxes.length}</strong> đơn hàng</span><span>Tổng tiền: <strong style="font-size:0.95rem;">${formatMoney(totalAmt)}</strong></span>`;
+        summaryEl.innerHTML = `<span>Đã chọn: <strong>${checkboxes.length}</strong> đơn hàng</span><span>Tổng tiền: <strong style="font-size:0.95rem; color:#108f53;">${formatMoney(totalAmt)} đ</strong></span>`;
     }
 
     const valueInput = document.getElementById("contractValue");
@@ -30858,7 +30926,7 @@ window.onContractOrderSelectionChange = function() {
     }
 };
 
-// 6. Edit Contract Modal
+// 5. Edit Contract Modal
 window.openEditContract = function(contractId) {
     const c = (state.contracts || []).find(item => item.id === contractId);
     if (!c) return;
@@ -30885,7 +30953,7 @@ window.openEditContract = function(contractId) {
     openModal("contractModal");
 };
 
-// 7. Quick Create Contract from Order
+// 6. Quick Create Contract from Order (Eliminates retail client lock)
 window.quickCreateContract = function(orderId, isOnline = false) {
     const typeStr = isOnline ? "ONLINE" : "PRODUCTION";
     let order = null;
@@ -30896,11 +30964,40 @@ window.quickCreateContract = function(orderId, isOnline = false) {
     }
 
     if (!order) {
+        order = (state.online_orders || []).find(o => o.id === orderId) || (state.orders || []).find(o => o.id === orderId);
+        if (order) isOnline = !state.orders.some(o => o.id === orderId);
+    }
+
+    if (!order) {
         alert("Không tìm thấy thông tin đơn hàng!");
         return;
     }
 
     populateContractPartners();
+
+    const partnerSelect = document.getElementById("contractPartnerId");
+    let chosenPartnerId = order.customer_id;
+
+    // Check if partner exists in select
+    let hasPartner = partnerSelect && chosenPartnerId && Array.from(partnerSelect.options).some(opt => opt.value === chosenPartnerId);
+    if (!hasPartner) {
+        // Retail customer or customer not yet created in partners list
+        const retailPartnerId = chosenPartnerId || `retail_${order.id}`;
+        const custName = order.customer_name || "Khách lẻ";
+        const custPhone = order.customer_phone || order.phone || "";
+        
+        let retailOpt = partnerSelect.querySelector(`option[value="${retailPartnerId}"]`);
+        if (!retailOpt) {
+            retailOpt = document.createElement("option");
+            retailOpt.value = retailPartnerId;
+            retailOpt.textContent = `Khách lẻ: ${custName}${custPhone ? ' (' + custPhone + ')' : ''}`;
+            partnerSelect.appendChild(retailOpt);
+        }
+        partnerSelect.value = retailPartnerId;
+        chosenPartnerId = retailPartnerId;
+    } else {
+        partnerSelect.value = chosenPartnerId;
+    }
 
     const modalTitle = document.getElementById("contractModalTitle");
     if (modalTitle) {
@@ -30918,18 +31015,14 @@ window.quickCreateContract = function(orderId, isOnline = false) {
     
     const signInput = document.getElementById("contractSigningDate");
     if (signInput) signInput.value = now.toISOString().split('T')[0];
-    
-    const partnerSelect = document.getElementById("contractPartnerId");
-    if (partnerSelect && order.customer_id) {
-        partnerSelect.value = order.customer_id;
-    }
 
     const typeSelect = document.getElementById("contractOrderType");
     if (typeSelect) {
         typeSelect.value = typeStr;
     }
 
-    populateContractOrders([order.id]);
+    // Guaranteed checklist population with this order
+    populateContractOrders([order.id], order);
 
     const valueInput = document.getElementById("contractValue");
     if (valueInput) {
@@ -30954,7 +31047,7 @@ window.quickCreateContract = function(orderId, isOnline = false) {
     const detailsInput = document.getElementById("contractDetails");
     if (detailsInput) {
         const partner = (state.partners || []).find(p => p.id === order.customer_id);
-        const custName = partner ? (partner.company_name || partner.name) : "Khách hàng";
+        const custName = partner ? (partner.company_name || partner.name) : (order.customer_name || "Khách hàng");
         if (isOnline) {
             detailsInput.value = `Hợp đồng kinh tế cung cấp sản phẩm cho đơn hàng ${order.order_number}. Khách hàng: ${custName}. Cam kết giao đúng tiến độ, bảo hành sản phẩm.`;
         } else {
@@ -30966,6 +31059,68 @@ window.quickCreateContract = function(orderId, isOnline = false) {
     openModal("contractModal");
 };
 
+// 7. Preview Document Directly from contractModal
+window.previewDocFromContractModal = function(docType = 'DELIVERY') {
+    const number = document.getElementById("contractNumber")?.value || "HĐ-001";
+    const signingDate = document.getElementById("contractSigningDate")?.value || new Date().toISOString().split('T')[0];
+    const partnerId = document.getElementById("contractPartnerId")?.value || "";
+    const orderType = document.getElementById("contractOrderType")?.value || "ALL";
+    const checkedBoxes = Array.from(document.querySelectorAll("input[name='contractOrderIds']:checked"));
+    const orderIds = checkedBoxes.map(cb => cb.value);
+    const orderNumbers = checkedBoxes.map(cb => cb.getAttribute("data-number") || cb.value);
+    const value = parseInt(document.getElementById("contractValue")?.value) || 0;
+    const deposit = parseInt(document.getElementById("contractDeposit")?.value) || 0;
+    const expiryDate = document.getElementById("contractExpiryDate")?.value || "";
+    const signer = document.getElementById("contractSigner")?.value || "Bùi Đại Hùng - Giám đốc";
+    const details = document.getElementById("contractDetails")?.value || "";
+
+    const partner = (state.partners || []).find(p => p.id === partnerId) || {};
+    const partnerSelect = document.getElementById("contractPartnerId");
+    const selectedOptionText = partnerSelect?.selectedOptions[0]?.textContent || "";
+    const cleanCustName = selectedOptionText.replace(/^Khách lẻ:\s*/, "") || partner.name || "Khách hàng lẻ";
+    const isRetail = !partner.tax_code || partnerId.startsWith("retail_") || selectedOptionText.includes("Khách lẻ");
+
+    let contractId = document.getElementById("contractIdInput")?.value;
+    if (!contractId) {
+        contractId = "ct_temp_" + Date.now();
+    }
+
+    const cObj = {
+        id: contractId,
+        contract_number: number,
+        signing_date: signingDate,
+        partner_id: partnerId,
+        customer_name: cleanCustName,
+        customer_phone: partner.phone || "",
+        customer_address: partner.address || "",
+        customer_tax_code: partner.tax_code || "",
+        is_retail: isRetail,
+        order_type: orderType,
+        order_ids: orderIds,
+        order_numbers: orderNumbers,
+        order_id: orderIds[0] || "",
+        value,
+        deposit,
+        expiry_date: expiryDate,
+        signer,
+        status: "ACTIVE",
+        details
+    };
+
+    const contracts = state.contracts || [];
+    const existingIdx = contracts.findIndex(item => item.id === contractId);
+    if (existingIdx >= 0) {
+        contracts[existingIdx] = cObj;
+    } else {
+        contracts.unshift(cObj);
+    }
+    state.updateState("contracts", contracts);
+
+    closeModal("contractModal");
+    window.openCommercialDocsModal(contractId, docType === 'ALL' ? 'CONTRACT' : docType);
+};
+
+// 8. Delete & Liquidate Contract
 window.deleteContract = function(contractId) {
     if (!confirm("Bạn có chắc chắn muốn xóa hợp đồng này không?")) return;
     const newContracts = (state.contracts || []).filter(c => c.id !== contractId);
@@ -30990,11 +31145,123 @@ window.liquidateContract = function(contractId) {
 };
 
 // ==========================================================================
-// COMMERCIAL DOCUMENTS SUITE: HỢP ĐỒNG, GIAO NHẬN, THANH LÝ, ĐỀ NGHỊ THANH TOÁN
+// COMMERCIAL DOCUMENTS SUITE: HỢP ĐỒNG, GIAO NHẬN/NGHIỆM THU, THANH LÝ, ĐỀ NGHỊ THANH TOÁN
 // ==========================================================================
 window.activeCommercialContractId = null;
 window.activeCommercialDocType = 'CONTRACT';
 
+// Open Document Choice Modal from Order List
+window.openOrderDocChoiceModal = function(orderId, isOnline = true) {
+    window.currentDocOrderId = orderId;
+    window.currentDocIsOnline = isOnline;
+
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId);
+    } else {
+        order = (state.orders || []).find(o => o.id === orderId);
+    }
+    if (!order) {
+        order = (state.online_orders || []).find(o => o.id === orderId) || (state.orders || []).find(o => o.id === orderId);
+        if (order) isOnline = !state.orders.some(o => o.id === orderId);
+    }
+    if (!order) {
+        alert("Không tìm thấy thông tin đơn hàng!");
+        return;
+    }
+
+    const titleEl = document.getElementById("orderDocChoiceTitle");
+    const subEl = document.getElementById("orderDocChoiceSubtitle");
+    if (titleEl) titleEl.textContent = `Hồ sơ & Biểu mẫu - ${order.order_number}`;
+    if (subEl) {
+        const cust = (state.partners || []).find(p => p.id === order.customer_id);
+        const custName = cust ? cust.name : (order.customer_name || "Khách lẻ");
+        const dateStr = order.created_at ? (typeof order.created_at === 'string' ? order.created_at.split('T')[0] : new Date(order.created_at).toLocaleDateString('vi-VN')) : '-';
+        subEl.textContent = `Khách hàng: ${custName} | Tổng tiền: ${formatMoney(order.total_amount)} | Ngày: ${dateStr}`;
+    }
+
+    openModal("orderDocChoiceModal");
+    if (window.lucide) lucide.createIcons();
+};
+
+window.chooseOrderDoc = function(docType) {
+    closeModal("orderDocChoiceModal");
+    if (window.currentDocOrderId) {
+        window.openCommercialDocsForOrder(window.currentDocOrderId, window.currentDocIsOnline, docType);
+    }
+};
+
+window.editContractForSelectedOrder = function() {
+    closeModal("orderDocChoiceModal");
+    if (window.currentDocOrderId) {
+        window.quickCreateContract(window.currentDocOrderId, window.currentDocIsOnline);
+    }
+};
+
+// Direct Document Generation from Order
+window.openCommercialDocsForOrder = function(orderId, isOnline = true, docType = 'DELIVERY') {
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    } else {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId) ||
+                (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+        if (order) isOnline = !state.orders.some(o => o.id === orderId);
+    }
+    if (!order) {
+        alert("Không tìm thấy đơn hàng!");
+        return;
+    }
+
+    // Look for existing contract linked with this order
+    let c = (state.contracts || []).find(item => 
+        (Array.isArray(item.order_ids) && item.order_ids.includes(order.id)) ||
+        (Array.isArray(item.order_numbers) && item.order_numbers.includes(order.order_number)) ||
+        item.order_id === order.id
+    );
+
+    const partner = (state.partners || []).find(p => p.id === order.customer_id) || {};
+    const isRetail = !partner.tax_code || !order.customer_id || (partner.name && partner.name.includes("Khách lẻ")) || order.customer_name === "Khách lẻ";
+
+    if (!c) {
+        const now = new Date();
+        const dateCode = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0');
+        const randCode = String(Math.floor(1000 + Math.random() * 9000));
+        const newCtId = "ct_ord_" + order.id;
+
+        c = {
+            id: newCtId,
+            contract_number: `HĐ-${dateCode}-${randCode}`,
+            signing_date: order.created_at ? (typeof order.created_at === 'string' ? order.created_at.split('T')[0] : new Date(order.created_at).toISOString().split('T')[0]) : now.toISOString().split('T')[0],
+            partner_id: order.customer_id || `retail_${order.id}`,
+            customer_name: partner.name || order.customer_name || "Khách hàng lẻ",
+            customer_phone: partner.phone || order.customer_phone || order.phone || "",
+            customer_address: partner.address || partner.shipping_address || order.customer_address || order.address || "Giao nhận trực tiếp",
+            customer_tax_code: partner.tax_code || "",
+            is_retail: isRetail,
+            order_type: isOnline ? "ONLINE" : "PRODUCTION",
+            order_ids: [order.id],
+            order_numbers: [order.order_number],
+            order_id: order.id,
+            value: Number(order.total_amount || 0),
+            deposit: Number(order.deposit || order.deposit_amount || order.paid_amount || 0),
+            expiry_date: order.delivery_date || "",
+            signer: "Bùi Đại Hùng - Giám đốc",
+            status: "ACTIVE",
+            details: isOnline ? `Đơn hàng bán online ${order.order_number}` : `Đơn hàng sản xuất in ấn ${order.order_number}`
+        };
+
+        const list = state.contracts || [];
+        state.updateState("contracts", [c, ...list]);
+    }
+
+    window.openCommercialDocsModal(c.id, docType === 'ALL' ? 'CONTRACT' : docType);
+};
+
+// Open Commercial Document Suite Modal
 window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
     const c = (state.contracts || []).find(item => item.id === contractId);
     if (!c) {
@@ -31005,79 +31272,18 @@ window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
     window.activeCommercialContractId = contractId;
     window.activeCommercialDocType = docType;
 
-    const partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id) || {
-        name: c.customer_name || "Khách hàng đối tác",
-        company_name: c.customer_name || "Công ty Đối tác",
-        tax_code: "Đang cập nhật",
-        phone: "",
-        address: "Hà Nội"
-    };
-
-    // Gather linked orders and their products
-    const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
-    const linkedOrders = [];
-
-    orderIds.forEach(oid => {
-        const oOnline = (state.online_orders || []).find(o => o.id === oid || o.order_number === oid);
-        const oProd = (state.orders || []).find(o => o.id === oid || o.order_number === oid);
-        if (oOnline) {
-            linkedOrders.push({
-                id: oOnline.id,
-                order_number: oOnline.order_number,
-                type: "ONLINE",
-                typeName: "Bán hàng Online",
-                date: oOnline.created_at || "",
-                total_amount: Number(oOnline.total_amount || 0),
-                items: (oOnline.items || []).map(i => ({
-                    sku: i.sku,
-                    name: i.name || i.sku,
-                    spec: i.brand || "Sản phẩm thương mại",
-                    unit: "Chiếc",
-                    qty: i.qty || 1,
-                    price: i.price || (i.qty ? Math.round(oOnline.total_amount / i.qty) : oOnline.total_amount),
-                    amount: (i.qty || 1) * (i.price || 0)
-                }))
-            });
-        } else if (oProd) {
-            linkedOrders.push({
-                id: oProd.id,
-                order_number: oProd.order_number,
-                type: "PRODUCTION",
-                typeName: "Sản xuất gia công",
-                date: oProd.created_at || oProd.order_date || "",
-                total_amount: Number(oProd.total_amount || 0),
-                items: [{
-                    sku: oProd.order_number,
-                    name: oProd.name || "Sản xuất in ấn",
-                    spec: oProd.print_spec || "Theo quy cách thiết kế",
-                    unit: "Bộ/Quyển",
-                    qty: oProd.quantity || 1,
-                    price: oProd.unit_price || oProd.total_amount,
-                    amount: Number(oProd.total_amount || 0)
-                }]
-            });
-        }
-    });
-
-    // If no linked orders found from state, generate synthesized line from contract details
-    if (linkedOrders.length === 0) {
-        linkedOrders.push({
-            id: c.id,
-            order_number: (c.order_numbers && c.order_numbers[0]) || "DON-001",
-            type: c.order_type || "PRODUCTION",
-            typeName: c.order_type === "ONLINE" ? "Bán hàng Online" : "Sản xuất gia công",
-            date: c.signing_date || new Date().toISOString().split('T')[0],
-            total_amount: Number(c.value || 0),
-            items: [{
-                sku: (c.order_numbers && c.order_numbers[0]) || "DON-001",
-                name: c.details || "Hàng hóa & Dịch vụ in ấn thương mại",
-                spec: "Theo thỏa thuận hợp đồng",
-                unit: "Trọn gói",
-                qty: 1,
-                price: Number(c.value || 0),
-                amount: Number(c.value || 0)
-            }]
-        });
+    let partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
+    if (!partner) {
+        partner = {
+            name: c.customer_name || "Khách hàng lẻ",
+            company_name: c.is_retail ? "" : (c.customer_name || "Công ty Đối tác"),
+            tax_code: c.customer_tax_code || (c.is_retail ? "" : "Đang cập nhật"),
+            phone: c.customer_phone || "",
+            address: c.customer_address || "Hà Nội",
+            is_retail: c.is_retail
+        };
+    } else {
+        if (c.is_retail) partner.is_retail = true;
     }
 
     const titleEl = document.getElementById("commercialDocModalTitle");
@@ -31085,11 +31291,18 @@ window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
     if (titleEl) titleEl.textContent = `Bộ Hồ Sơ Văn Bản: ${c.contract_number}`;
     if (subTitleEl) subTitleEl.textContent = `Đối tác: ${partner.company_name || partner.name} | Trị giá: ${formatMoney(c.value)} | Ngày: ${c.signing_date}`;
 
+    // Update toggle mode label
+    const modeLabel = document.getElementById("labelToggleDocMode");
+    if (modeLabel) {
+        modeLabel.textContent = c.is_retail ? "Mẫu: Khách lẻ" : "Mẫu: Doanh nghiệp";
+    }
+
     window.switchCommercialDocTab(docType);
     openModal("commercialDocsModal");
     if (window.lucide) lucide.createIcons();
 };
 
+// Switch between tabs in Commercial Document Suite
 window.switchCommercialDocTab = function(docType) {
     window.activeCommercialDocType = docType;
 
@@ -31114,13 +31327,19 @@ window.switchCommercialDocTab = function(docType) {
     const c = (state.contracts || []).find(item => item.id === window.activeCommercialContractId);
     if (!c) return;
 
-    const partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id) || {
-        name: c.customer_name || "Khách hàng đối tác",
-        company_name: c.customer_name || "Công ty Đối tác",
-        tax_code: "Đang cập nhật",
-        phone: "",
-        address: "Hà Nội"
-    };
+    let partner = (state.partners || []).find(p => p.id === c.partner_id || p.code === c.partner_id || p.name === c.partner_id);
+    if (!partner) {
+        partner = {
+            name: c.customer_name || "Khách hàng lẻ",
+            company_name: c.is_retail ? "" : (c.customer_name || "Công ty Đối tác"),
+            tax_code: c.customer_tax_code || (c.is_retail ? "" : "Đang cập nhật"),
+            phone: c.customer_phone || "",
+            address: c.customer_address || "Hà Nội",
+            is_retail: c.is_retail
+        };
+    } else {
+        if (c.is_retail) partner.is_retail = true;
+    }
 
     const orderIds = Array.isArray(c.order_ids) ? c.order_ids : (c.order_id ? [c.order_id] : []);
     const linkedOrders = [];
@@ -31136,9 +31355,10 @@ window.switchCommercialDocTab = function(docType) {
                 typeName: "Bán hàng Online",
                 date: oOnline.created_at || "",
                 total_amount: Number(oOnline.total_amount || 0),
+                deposit: Number(oOnline.deposit_amount || oOnline.paid_amount || 0),
                 items: (oOnline.items || []).map(i => ({
-                    sku: i.sku,
-                    name: i.name || i.sku,
+                    sku: i.sku || oOnline.order_number,
+                    name: i.name || i.sku || "Sản phẩm thương mại",
                     spec: i.brand || "Sản phẩm thương mại",
                     unit: "Chiếc",
                     qty: i.qty || 1,
@@ -31154,6 +31374,7 @@ window.switchCommercialDocTab = function(docType) {
                 typeName: "Sản xuất gia công",
                 date: oProd.created_at || oProd.order_date || "",
                 total_amount: Number(oProd.total_amount || 0),
+                deposit: Number(oProd.deposit || oProd.paid_amount || 0),
                 items: [{
                     sku: oProd.order_number,
                     name: oProd.name || "Sản xuất in ấn",
@@ -31175,6 +31396,7 @@ window.switchCommercialDocTab = function(docType) {
             typeName: c.order_type === "ONLINE" ? "Bán hàng Online" : "Sản xuất gia công",
             date: c.signing_date || new Date().toISOString().split('T')[0],
             total_amount: Number(c.value || 0),
+            deposit: Number(c.deposit || 0),
             items: [{
                 sku: (c.order_numbers && c.order_numbers[0]) || "DON-001",
                 name: c.details || "Hàng hóa & Dịch vụ in ấn thương mại",
@@ -31194,7 +31416,25 @@ window.switchCommercialDocTab = function(docType) {
     if (window.lucide) lucide.createIcons();
 };
 
+// Toggle between Retail Mode & Corporate Mode
+window.toggleCommercialDocRetailMode = function() {
+    const c = (state.contracts || []).find(item => item.id === window.activeCommercialContractId);
+    if (!c) return;
+
+    c.is_retail = !c.is_retail;
+    state.updateState("contracts", state.contracts);
+
+    const modeLabel = document.getElementById("labelToggleDocMode");
+    if (modeLabel) {
+        modeLabel.textContent = c.is_retail ? "Mẫu: Khách lẻ" : "Mẫu: Doanh nghiệp";
+    }
+
+    window.switchCommercialDocTab(window.activeCommercialDocType);
+};
+
+// Render Document HTML Content
 window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) {
+    const isRetail = Boolean(c.is_retail || !partner.tax_code || partner.is_retail || (partner.name && partner.name.includes("Khách lẻ")) || c.partner_id?.startsWith("retail_"));
     const isOnline = c.order_type === "ONLINE";
     const totalAmount = Number(c.value || 0);
     const depositAmount = Number(c.deposit || 0);
@@ -31237,55 +31477,63 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
         });
     }
 
-    // Common Legal Header
+    // Common Legal National Header
     const nationalHeaderHtml = `
         <table class="doc-header-table">
             <tr>
                 <td style="width: 50%;">
                     <div class="doc-header-company">
-                        <strong>CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong>
+                        <strong style="color:#0e7542 !important; font-size:11.5pt;">CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong>
                         <div>Địa chỉ: Số 14 Pháo Đài Láng, P. Láng Thượng, Q. Đống Đa, Hà Nội</div>
-                        <div>MST: 0108993214 - Hotline: 0907.861.111</div>
-                        <div>Email: info@inlachong.com - Web: inlachong.com</div>
+                        <div>MST: 0108993214 - Hotline: 0907.861.111 / 0988.776.655</div>
+                        <div>Email: info@inlachong.com - Website: inlachong.com</div>
                     </div>
                 </td>
                 <td style="width: 50%;">
                     <div class="doc-header-national">
-                        <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
+                        <strong style="font-size:11.5pt;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
                         <div style="font-weight:700;">Độc lập - Tự do - Hạnh phúc</div>
                         <div class="underline"></div>
-                        <div style="margin-top:6px; font-style:italic; font-size:11pt;">Hà Nội, ngày ${day} tháng ${month} năm ${year}</div>
+                        <div style="margin-top:6px; font-style:italic; font-size:10.5pt;">Hà Nội, ngày ${day} tháng ${month} năm ${year}</div>
                     </div>
                 </td>
             </tr>
         </table>
     `;
 
-    // Party Information Block
+    // Party Information Block (Adaptive: Corporate vs Retail)
     const partyInfoHtml = `
         <div class="doc-parties-box">
             <div class="doc-party-block">
-                <div class="doc-party-title">BÊN A (BÊN BÁN / BÊN NHẬN SẢN XUẤT): CÔNG TY CỔ PHẦN IN LẠC HỒNG</div>
-                <div class="doc-field-row"><span class="doc-field-label">• Đại diện pháp luật:</span><span class="doc-field-val"><strong>${escapeHtml(c.signer || "Ông Bùi Đại Hùng")}</strong> - Chức vụ: Giám đốc</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Mã số thuế (MST):</span><span class="doc-field-val">0108993214</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Địa chỉ trụ sở:</span><span class="doc-field-val">Số 14 Pháo Đài Láng, P. Láng Thượng, Q. Đống Đa, TP. Hà Nội</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Điện thoại liên hệ:</span><span class="doc-field-val">0907.861.111 / 0988.776.655</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Tài khoản ngân hàng:</span><span class="doc-field-val"><strong>190345678901</strong> tại Ngân hàng Techcombank - CN Ba Đình</span></div>
+                <div class="doc-party-title">BÊN A (BÊN BÁN / ĐƠN VỊ CUNG CẤP): CÔNG TY CỔ PHẦN IN LẠC HỒNG</div>
+                <div class="doc-field-row"><span class="doc-field-label">  Đại diện pháp luật:</span><span class="doc-field-val"><strong>${escapeHtml(c.signer || "Ông Bùi Đại Hùng")}</strong> - Chức vụ: Giám đốc</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">  Mã số thuế (MST):</span><span class="doc-field-val">0108993214</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">  Địa chỉ trụ sở:</span><span class="doc-field-val">Số 14 Pháo Đài Láng, P. Láng Thượng, Q. Đống Đa, TP. Hà Nội</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">  Điện thoại liên hệ:</span><span class="doc-field-val">0907.861.111 / 0988.776.655</span></div>
+                <div class="doc-field-row"><span class="doc-field-label">  Tài khoản ngân hàng:</span><span class="doc-field-val"><strong>190345678901</strong> tại Ngân hàng Techcombank - CN Ba Đình</span></div>
             </div>
 
             <div class="doc-party-block" style="margin-top:10px;">
-                <div class="doc-party-title">BÊN B (BÊN MUA / BÊN ĐẶT HÀNG): ${escapeHtml(partner.company_name || partner.name || "KHÁCH HÀNG ĐỐI TÁC")}</div>
-                <div class="doc-field-row"><span class="doc-field-label">• Người đại diện:</span><span class="doc-field-val"><strong>${escapeHtml(partner.legal_representative || partner.contact_person || partner.name || "Đại diện theo pháp luật")}</strong> - Chức vụ: ${escapeHtml(partner.representative_position || partner.position || "Đại diện theo pháp luật")}</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Mã số thuế (MST):</span><span class="doc-field-val"><strong>${escapeHtml(partner.tax_code || "Chưa cập nhật / Khách cá nhân")}</strong></span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Địa chỉ ĐKKD xuất hóa đơn:</span><span class="doc-field-val">${escapeHtml(partner.billing_address || partner.address || "Theo thỏa thuận giao dịch")}</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Địa chỉ nhận hàng (Kho):</span><span class="doc-field-val">${escapeHtml(partner.shipping_address || partner.address || "Theo thỏa thuận giao nhận")}</span></div>
-                <div class="doc-field-row"><span class="doc-field-label">• Điện thoại & Email:</span><span class="doc-field-val">${escapeHtml(partner.phone || "Chưa cập nhật")} ${partner.billing_email || partner.email ? `• Email: ${escapeHtml(partner.billing_email || partner.email)}` : ''}</span></div>
-                ${partner.bank_account_no ? `<div class="doc-field-row"><span class="doc-field-label">• Tài khoản ngân hàng:</span><span class="doc-field-val"><strong>${escapeHtml(partner.bank_account_no)}</strong> tại Ngân hàng ${escapeHtml(partner.bank_name || "")} ${partner.bank_branch ? `- CN: ${escapeHtml(partner.bank_branch)}` : ''} (Chủ TK: ${escapeHtml(partner.bank_account_holder || partner.company_name || partner.name)})</span></div>` : ''}
+                ${isRetail ? `
+                    <div class="doc-party-title">BÊN B (KHÁCH HÀNG / BÊN NHẬN HÀNG): ${escapeHtml(partner.name || c.customer_name || "KHÁCH HÀNG LẺ")}</div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Họ và tên khách hàng:</span><span class="doc-field-val"><strong>${escapeHtml(partner.name || c.customer_name || "Khách hàng cá nhân")}</strong></span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Số điện thoại:</span><span class="doc-field-val"><strong>${escapeHtml(partner.phone || c.customer_phone || "Chưa cập nhật")}</strong></span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Địa chỉ giao nhận:</span><span class="doc-field-val">${escapeHtml(partner.address || partner.shipping_address || c.customer_address || "Giao nhận trực tiếp")}</span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Đơn hàng liên kết:</span><span class="doc-field-val"><strong>${escapeHtml(c.order_numbers ? c.order_numbers.join(", ") : c.contract_number)}</strong></span></div>
+                ` : `
+                    <div class="doc-party-title">BÊN B (BÊN MUA / BÊN ĐẶT HÀNG): ${escapeHtml(partner.company_name || partner.name || "KHÁCH HÀNG ĐỐI TÁC")}</div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Người đại diện:</span><span class="doc-field-val"><strong>${escapeHtml(partner.legal_representative || partner.contact_person || partner.name || "Đại diện theo pháp luật")}</strong> - Chức vụ: ${escapeHtml(partner.representative_position || partner.position || "Đại diện theo pháp luật")}</span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Mã số thuế (MST):</span><span class="doc-field-val"><strong>${escapeHtml(partner.tax_code || "Chưa cập nhật")}</strong></span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Địa chỉ ĐKKD xuất HĐ:</span><span class="doc-field-val">${escapeHtml(partner.billing_address || partner.address || "Theo thỏa thuận giao dịch")}</span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Địa chỉ nhận hàng (Kho):</span><span class="doc-field-val">${escapeHtml(partner.shipping_address || partner.address || "Theo thỏa thuận giao nhận")}</span></div>
+                    <div class="doc-field-row"><span class="doc-field-label">  Điện thoại & Email:</span><span class="doc-field-val">${escapeHtml(partner.phone || "Chưa cập nhật")} ${partner.billing_email || partner.email ? ` | Email: ${escapeHtml(partner.billing_email || partner.email)}` : ''}</span></div>
+                    ${partner.bank_account_no ? `<div class="doc-field-row"><span class="doc-field-label">  Tài khoản ngân hàng:</span><span class="doc-field-val"><strong>${escapeHtml(partner.bank_account_no)}</strong> tại Ngân hàng ${escapeHtml(partner.bank_name || "")} ${partner.bank_branch ? `- CN: ${escapeHtml(partner.bank_branch)}` : ''} (Chủ TK: ${escapeHtml(partner.bank_account_holder || partner.company_name || partner.name)})</span></div>` : ''}
+                `}
             </div>
         </div>
     `;
 
-    // 1. CONTRACT TEMPLATE
+    // 1. CONTRACT TEMPLATE (HỢP ĐỒNG KINH TẾ)
     if (docType === 'CONTRACT') {
         const itemsRowsHtml = allItems.map((item, idx) => `
             <tr>
@@ -31346,13 +31594,13 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
             <p class="doc-clause-p"><strong>2.3. Hình thức thanh toán:</strong> Chuyển khoản qua tài khoản ngân hàng của Bên A nêu tại phần đầu hợp đồng.</p>
 
             <div class="doc-clause-title">ĐIỀU 3: THỜI GIAN, ĐỊA ĐIỂM & PHƯƠNG THỨC GIAO HÀNG</div>
-            <p class="doc-clause-p"><strong>3.1. Địa điểm giao hàng:</strong> Tại địa chỉ của Bên B: ${escapeHtml(partner.address || partner.billing_address || 'Địa chỉ bên mua chỉ định')}.</p>
+            <p class="doc-clause-p"><strong>3.1. Địa điểm giao hàng:</strong> Tại địa chỉ của Bên B: ${escapeHtml(partner.address || partner.shipping_address || 'Địa chỉ bên mua chỉ định')}.</p>
             <p class="doc-clause-p"><strong>3.2. Thời gian giao hàng:</strong> Dự kiến hoàn thành trước ngày <strong>${c.expiry_date ? new Date(c.expiry_date).toLocaleDateString('vi-VN') : 'theo tiến độ đơn hàng'}</strong>.</p>
             <p class="doc-clause-p"><strong>3.3. Chi phí vận chuyển:</strong> Bên A chịu trách nhiệm đóng gói bao bì quy chuẩn và vận chuyển hàng hóa đến tận nơi cho Bên B.</p>
 
             <div class="doc-clause-title">ĐIỀU 4: TIÊU CHUẨN KỸ THUẬT, BẢO HÀNH & ĐỔI TRẢ</div>
             <p class="doc-clause-p"><strong>4.1. Tiêu chuẩn chất lượng:</strong> Sản phẩm được sản xuất đúng mẫu market, kích thước, định lượng giấy, kỹ thuật gia công và chất lượng in ấn theo đúng cam kết.</p>
-            <p class="doc-clause-p"><strong>4.2. Bảo hành & Đổi trả:</strong> Khi nhận hàng, Bên B có quyền kiểm tra đối chiếu. Trường hợp hàng hóa bị lỗi kỹ thuật do Bên A (in sai nội dung, lỗi dán bế, hư hỏng trong quá trình vận chuyển), Bên A cam kết sản xuất bù hoặc đổi mới 100% trong thời gian 03 ngày làm việc mà không thu thêm bất kỳ phụ phí nào.</p>
+            <p class="doc-clause-p"><strong>4.2. Bảo hành & Đổi trả:</strong> Khi nhận hàng, Bên B có quyền kiểm tra đối chiếu. Trường hợp hàng hóa bị lỗi kỹ thuật do Bên A (in sai nội dung, lỗi dán bồi, hư hỏng trong quá trình vận chuyển), Bên A cam kết sản xuất bù hoặc đổi mới 100% trong thời gian 03 ngày làm việc mà không thu thêm bất kỳ phụ phí nào.</p>
 
             <div class="doc-clause-title">ĐIỀU 5: ĐIỀU KHOẢN CHUNG & HIỆU LỰC HỢP ĐỒNG</div>
             <p class="doc-clause-p">5.1. Hai bên cam kết thực hiện đúng và đầy đủ các điều khoản đã thỏa thuận trong hợp đồng.</p>
@@ -31370,9 +31618,9 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
                         </td>
                         <td>
                             <strong>ĐẠI DIỆN BÊN B</strong><br>
-                            <span>(Ký, ghi rõ họ tên và đóng dấu)</span>
+                            <span>(Ký, ghi rõ họ tên ${isRetail ? '' : '& đóng dấu'})</span>
                             <div class="doc-sign-space"></div>
-                            <strong>${escapeHtml(partner.contact_person || partner.name || "Đại diện Bên B")}</strong>
+                            <strong>${escapeHtml(partner.contact_person || partner.name || c.customer_name || "Đại diện Bên B")}</strong>
                         </td>
                     </tr>
                 </table>
@@ -31380,57 +31628,110 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
         `;
     }
 
-    // 2. DELIVERY & ACCEPTANCE ACT TEMPLATE
+    // 2. DELIVERY & ACCEPTANCE ACT TEMPLATE (BIÊN BẢN NGHIỆM THU & BÀN GIAO)
     if (docType === 'DELIVERY') {
         const itemsRowsHtml = allItems.map((item, idx) => `
             <tr>
                 <td style="text-align:center;">${idx + 1}</td>
                 <td style="text-align:center; font-weight:700;">${escapeHtml(item.order_number)}</td>
-                <td><strong>${escapeHtml(item.name)}</strong> - ${escapeHtml(item.spec)}</td>
+                <td><strong>${escapeHtml(item.name)}</strong> - <small style="color:#475569;">${escapeHtml(item.spec)}</small></td>
                 <td style="text-align:center;">${escapeHtml(item.unit)}</td>
                 <td style="text-align:center; font-weight:700;">${item.qty}</td>
                 <td style="text-align:center; font-weight:700; color:#0e7542;">${item.qty}</td>
-                <td style="text-align:center; color:#0e7542; font-weight:600;">Đạt 100%</td>
+                <td style="text-align:right;">${formatMoney(item.price)}</td>
+                <td style="text-align:right; font-weight:700;">${formatMoney(item.amount)}</td>
+                <td style="text-align:center; color:#0e7542; font-weight:700;">Đạt 100%</td>
             </tr>
         `).join("");
+
+        const docTitle = isRetail ? "BIÊN BẢN BÀN GIAO & NGHIỆM THU HÀNG HÓA" : "BIÊN BẢN GIAO NHẬN HÀNG HÓA & NGHIỆM THU KỸ THUẬT";
+        const docSubNo = isRetail 
+            ? `Số: BBNT-${escapeHtml(c.order_numbers ? c.order_numbers.join('-') : c.contract_number)}`
+            : `Số: BBGN-${escapeHtml(c.contract_number)}`;
+        const docBasis = isRetail
+            ? `Căn cứ theo Đơn hàng số: <strong>${escapeHtml(c.order_numbers ? c.order_numbers.join(', ') : c.contract_number)}</strong> lập ngày ${day}/${month}/${year}`
+            : `Căn cứ theo Hợp đồng kinh tế số: <strong>${escapeHtml(c.contract_number)}</strong> ký ngày ${day}/${month}/${year}`;
 
         return `
             ${nationalHeaderHtml}
             <div class="doc-title-box">
-                <h1 class="doc-main-title">BIÊN BẢN GIAO NHẬN HÀNG HÓA & NGHIỆM THU KỸ THUẬT</h1>
-                <div class="doc-sub-number">Số: BBGN-${escapeHtml(c.contract_number)}</div>
-                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">Căn cứ theo Hợp đồng kinh tế số: ${escapeHtml(c.contract_number)} ký ngày ${day}/${month}/${year}</div>
+                <h1 class="doc-main-title">${docTitle}</h1>
+                <div class="doc-sub-number">${docSubNo}</div>
+                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">${docBasis}</div>
             </div>
 
-            <p class="doc-clause-p">Hôm nay, ngày ${day} tháng ${month} năm ${year}, tại địa điểm giao hàng của Bên B, chúng tôi gồm có:</p>
+            <p class="doc-clause-p">Hôm nay, ngày ${day} tháng ${month} năm ${year}, tại địa điểm bàn giao hàng hóa của Bên B, chúng tôi gồm có:</p>
             
             ${partyInfoHtml}
 
-            <div class="doc-clause-title">I. BẢNG KÊ CHI TIẾT HÀNG HÓA BÀN GIAO THỰC TẾ</div>
+            <div class="doc-clause-title">I. BẢNG KÊ CHI TIẾT SẢN PHẨM BÀN GIAO & NGHIỆM THU THỰC TẾ</div>
             <table class="doc-table">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">STT</th>
-                        <th style="width: 17%;">Mã đơn</th>
-                        <th style="width: 44%;">Tên hàng hóa & Quy cách bàn giao</th>
-                        <th style="width: 8%;">ĐVT</th>
-                        <th style="width: 8%;">SL HĐ</th>
-                        <th style="width: 8%;">SL Giao</th>
-                        <th style="width: 10%;">Tình trạng</th>
+                        <th style="width: 4%;">STT</th>
+                        <th style="width: 14%;">Mã đơn</th>
+                        <th style="width: 32%;">Tên hàng hóa & Quy cách bàn giao</th>
+                        <th style="width: 7%;">ĐVT</th>
+                        <th style="width: 7%;">SL Đặt</th>
+                        <th style="width: 7%;">SL Giao</th>
+                        <th style="width: 10%;">Đơn giá (đ)</th>
+                        <th style="width: 10%;">Thành tiền (đ)</th>
+                        <th style="width: 9%;">Đánh giá</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${itemsRowsHtml}
+                    <tr style="background:#f8fafc; font-weight:700;">
+                        <td colspan="7" style="text-align:right; text-transform:uppercase;">Tổng cộng giá trị hàng hóa nghiệm thu:</td>
+                        <td style="text-align:right; color:#0e7542;">${formatMoney(totalAmount)} đ</td>
+                        <td style="text-align:center; color:#0e7542;">ĐẠT 100%</td>
+                    </tr>
+                    ${depositAmount > 0 ? `
+                    <tr>
+                        <td colspan="7" style="text-align:right;">Số tiền đã thanh toán / tạm ứng trước:</td>
+                        <td style="text-align:right; font-weight:700;">${formatMoney(depositAmount)} đ</td>
+                        <td></td>
+                    </tr>
+                    ` : ''}
+                    <tr style="background:#fffbeb; font-weight:700;">
+                        <td colspan="7" style="text-align:right; color:#b45309; text-transform:uppercase;">Số tiền còn lại thanh toán khi nhận hàng:</td>
+                        <td style="text-align:right; font-size:12pt; color:#dc2626;">${formatMoney(remainingAmount)} đ</td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
 
             <div class="doc-clause-title">II. NỘI DUNG NGHIỆM THU & ĐÁNH GIÁ CHẤT LƯỢNG</div>
             <p class="doc-clause-p">1. Bên B đã tiến hành kiểm tra, đối chiếu trực tiếp số lượng và quy cách toàn bộ kiện hàng do Bên A bàn giao.</p>
-            <p class="doc-clause-p">2. <strong>Kết luận nghiệm thu:</strong> Toàn bộ hàng hóa đạt tiêu chuẩn 100%, đúng mẫu mã thiết kế, in ấn sắc nét, đúng định lượng và kích thước quy chuẩn. Đóng thùng bao bì nguyên vẹn, không có hiện tượng ẩm ướt hay biến dạng.</p>
+            <p class="doc-clause-p">2. <strong>Kết luận nghiệm thu:</strong> Toàn bộ hàng hóa đạt tiêu chuẩn 100%, đúng mẫu mã thiết kế duyệt in, in ấn sắc nét, đúng định lượng giấy và kích thước quy chuẩn. Đóng thùng bao bì nguyên vẹn, không có hiện tượng ẩm ướt hay biến dạng.</p>
             <p class="doc-clause-p">3. Bên B đồng ý tiếp nhận đủ 100% số lượng hàng hóa nói trên và không có bất kỳ khiếu nại nào về chất lượng sản phẩm.</p>
-            <p class="doc-clause-p">4. Biên bản này là căn cứ pháp lý để hai bên thực hiện các thủ tục quyết toán và thanh lý hợp đồng kinh tế theo quy định.</p>
+            <p class="doc-clause-p">4. Biên bản này là căn cứ pháp lý để hai bên thực hiện các thủ tục quyết toán tài chính và lưu trữ hồ sơ theo quy định.</p>
 
             <div class="doc-sign-box">
+                ${isRetail ? `
+                <table class="doc-sign-table">
+                    <tr>
+                        <td style="width:33%;">
+                            <strong>NGƯỜI GIAO HÀNG</strong><br>
+                            <span>(Ký, ghi rõ họ tên)</span>
+                            <div class="doc-sign-space"></div>
+                            <span>Nguyễn Văn Giao</span>
+                        </td>
+                        <td style="width:34%;">
+                            <strong>ĐẠI DIỆN IN LẠC HỒNG</strong><br>
+                            <span>(Ký, ghi rõ họ tên & đóng dấu)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(c.signer || "Bùi Đại Hùng")}</strong>
+                        </td>
+                        <td style="width:33%;">
+                            <strong>KHÁCH HÀNG / NGƯỜI NHẬN</strong><br>
+                            <span>(Ký, ghi rõ họ tên)</span>
+                            <div class="doc-sign-space"></div>
+                            <strong>${escapeHtml(partner.name || c.customer_name || "Khách hàng")}</strong>
+                        </td>
+                    </tr>
+                </table>
+                ` : `
                 <table class="doc-sign-table">
                     <tr>
                         <td style="width:25%;">
@@ -31459,11 +31760,12 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
                         </td>
                     </tr>
                 </table>
+                `}
             </div>
         `;
     }
 
-    // 3. LIQUIDATION ACT TEMPLATE
+    // 3. LIQUIDATION ACT TEMPLATE (BIÊN BẢN THANH LÝ)
     if (docType === 'LIQUIDATION') {
         return `
             ${nationalHeaderHtml}
@@ -31505,9 +31807,9 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
                         </td>
                         <td>
                             <strong>ĐẠI DIỆN BÊN B</strong><br>
-                            <span>(Ký, ghi rõ họ tên và đóng dấu)</span>
+                            <span>(Ký, ghi rõ họ tên ${isRetail ? '' : '& đóng dấu'})</span>
                             <div class="doc-sign-space"></div>
-                            <strong>${escapeHtml(partner.contact_person || partner.name || "Đại diện Bên B")}</strong>
+                            <strong>${escapeHtml(partner.contact_person || partner.name || c.customer_name || "Đại diện Bên B")}</strong>
                         </td>
                     </tr>
                 </table>
@@ -31515,7 +31817,7 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
         `;
     }
 
-    // 4. PAYMENT REQUEST TEMPLATE
+    // 4. PAYMENT REQUEST TEMPLATE (GIẤY ĐỀ NGHỊ THANH TOÁN)
     if (docType === 'PAYMENT') {
         const paymentDue = remainingAmount > 0 ? remainingAmount : totalAmount;
         const paymentWords = window.docSoThanhChu(paymentDue);
@@ -31525,28 +31827,34 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
             <div class="doc-title-box">
                 <h1 class="doc-main-title">GIẤY ĐỀ NGHỊ THANH TOÁN</h1>
                 <div class="doc-sub-number">Số: DNTT-${escapeHtml(c.contract_number)}</div>
-                <div style="font-size:12pt; font-weight:700; margin-top:4px;">Kính gửi: Ban Giám đốc & Phòng Kế toán - ${escapeHtml(partner.company_name || partner.name)}</div>
+                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">V/v: Thanh toán công nợ đơn hàng / hợp đồng ${escapeHtml(c.contract_number)}</div>
             </div>
 
-            <p class="doc-clause-p">- Căn cứ Hợp đồng kinh tế số: <strong>${escapeHtml(c.contract_number)}</strong> ký ngày ${day}/${month}/${year};<br>- Căn cứ tiến độ giao nhận hàng hóa và đối chiếu công nợ giữa hai bên.</p>
+            <p class="doc-clause-p"><strong>Kính gửi:</strong> <strong>${escapeHtml(partner.company_name || partner.name || "Quý Khách hàng")}</strong></p>
+            <p class="doc-clause-p">Căn cứ Hợp đồng kinh tế / Đơn hàng số <strong>${escapeHtml(c.contract_number)}</strong> ký ngày ${day}/${month}/${year};<br>Căn cứ Biên bản nghiệm thu và giao nhận hàng hóa đã hoàn tất giữa hai đơn vị.</p>
 
-            <p class="doc-clause-p">Công ty Cổ phần In Lạc Hồng trân trọng kính đề nghị Quý Công ty thanh toán kinh phí theo nội dung chi tiết dưới đây:</p>
-
+            <div class="doc-clause-title">BẢNG KÊ QUYẾT TOÁN CÔNG NỢ & SỐ TIỀN ĐỀ NGHỊ THANH TOÁN:</div>
             <table class="doc-table">
                 <thead>
                     <tr>
                         <th style="width: 8%;">STT</th>
-                        <th style="width: 48%;">Nội dung thanh toán</th>
-                        <th style="width: 22%;">Căn cứ / Đơn hàng</th>
-                        <th style="width: 22%;">Số tiền đề nghị (VNĐ)</th>
+                        <th style="width: 48%;">Nội dung công việc / Mặt hàng</th>
+                        <th style="width: 22%;">Chứng từ kèm theo</th>
+                        <th style="width: 22%;">Số tiền (VNĐ)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td style="text-align:center;">1</td>
-                        <td><strong>Thanh toán chi phí theo Hợp đồng số ${escapeHtml(c.contract_number)}</strong><br><small style="color:#475569;">${depositAmount > 0 ? 'Quyết toán số tiền còn lại sau khi bàn giao nghiệm thu hàng hóa' : 'Thanh toán tiền tạm ứng thực hiện đơn hàng'}</small></td>
-                        <td style="text-align:center; font-weight:600;">${(c.order_numbers && c.order_numbers.join(', ')) || c.contract_number}</td>
-                        <td style="text-align:right; font-weight:700; color:#0e7542;">${formatMoney(paymentDue)} đ</td>
+                        <td>Tổng giá trị đơn hàng / Hợp đồng kinh tế:</td>
+                        <td style="text-align:center;">HĐ số ${escapeHtml(c.contract_number)}</td>
+                        <td style="text-align:right; font-weight:700;">${formatMoney(totalAmount)} đ</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">2</td>
+                        <td>Số tiền Bên B đã thanh toán / tạm ứng:</td>
+                        <td style="text-align:center;">Phiếu thu / UNC</td>
+                        <td style="text-align:right; font-weight:700; color:#0e7542;">- ${formatMoney(depositAmount)} đ</td>
                     </tr>
                     <tr style="background:#f8fafc; font-weight:700;">
                         <td colspan="3" style="text-align:right; text-transform:uppercase;">Tổng số tiền đề nghị thanh toán:</td>
@@ -31558,14 +31866,14 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
             <p class="doc-clause-p"><strong>Số tiền bằng chữ:</strong> <em>${paymentWords}</em></p>
 
             <div class="doc-clause-title" style="margin-top:16px;">THÔNG TIN TÀI KHOẢN THỤ HƯỞNG:</div>
-            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px 16px; margin:10px 0 16px 0; font-size:12pt; line-height:1.6;">
-                <div>• Tên đơn vị thụ hưởng: <strong>CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong></div>
-                <div>• Số tài khoản: <strong style="font-size:13pt; color:#0e7542;">190345678901</strong></div>
-                <div>• Tại ngân hàng: <strong>Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank) - Chi nhánh Ba Đình</strong></div>
-                <div>• Nội dung chuyển tiền: <strong>Thanh toan hop dong ${escapeHtml(c.contract_number)} - ${escapeHtml(partner.code || partner.name)}</strong></div>
+            <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:14px 18px; margin:10px 0 16px 0; font-size:12pt; line-height:1.65;">
+                <div>  Tên đơn vị thụ hưởng: <strong>CÔNG TY CỔ PHẦN IN LẠC HỒNG</strong></div>
+                <div>  Số tài khoản: <strong style="font-size:13pt; color:#0e7542;">190345678901</strong></div>
+                <div>  Tại ngân hàng: <strong>Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank) - Chi nhánh Ba Đình</strong></div>
+                <div>  Nội dung chuyển tiền: <strong>Thanh toan don hang ${escapeHtml(c.order_numbers ? c.order_numbers.join(', ') : c.contract_number)} - ${escapeHtml(partner.code || partner.name)}</strong></div>
             </div>
 
-            <p class="doc-clause-p">Kính đề nghị Quý Công ty hỗ trợ giải ngân thanh toán trước ngày <strong>${new Date(Date.now() + 5*86400000).toLocaleDateString('vi-VN')}</strong> để hoàn tất chứng từ sổ sách.</p>
+            <p class="doc-clause-p">Kính đề nghị Quý Khách hàng hỗ trợ giải ngân thanh toán trước ngày <strong>${new Date(Date.now() + 5*86400000).toLocaleDateString('vi-VN')}</strong> để hoàn tất chứng từ sổ sách.</p>
             <p class="doc-clause-p">Trân trọng cảm ơn sự hợp tác của Quý khách hàng!</p>
 
             <div class="doc-sign-box">
@@ -31598,7 +31906,37 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
     return `<div style="padding:24px; text-align:center;">Văn bản đang được cập nhật...</div>`;
 };
 
-// 8. Print Commercial Document
+// 9. Export PDF using html2pdf
+window.exportCommercialDocPdf = function() {
+    const paper = document.getElementById("commercialDocPaperContent");
+    if (!paper) {
+        alert("Không tìm thấy nội dung văn bản để xuất PDF!");
+        return;
+    }
+
+    const c = (state.contracts || []).find(item => item.id === window.activeCommercialContractId);
+    const docTypeName = window.activeCommercialDocType === 'DELIVERY' ? 'Bien_Ban_Nghiem_Thu'
+                      : window.activeCommercialDocType === 'CONTRACT' ? 'Hop_Dong_Kinh_Te'
+                      : window.activeCommercialDocType === 'LIQUIDATION' ? 'Bien_Ban_Thanh_Ly'
+                      : 'De_Nghi_Thanh_Toan';
+    const code = c ? c.contract_number.replace(/[^a-zA-Z0-9_-]/g, '_') : 'DOC';
+    const filename = `${docTypeName}_${code}.pdf`;
+
+    if (window.html2pdf) {
+        const opt = {
+            margin: [8, 10, 8, 10],
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(paper).save();
+    } else {
+        window.printCommercialDoc();
+    }
+};
+
+// 10. Print Commercial Document
 window.printCommercialDoc = function() {
     const paper = document.getElementById("commercialDocPaperContent");
     if (!paper) {
@@ -31628,26 +31966,19 @@ window.printCommercialDoc = function() {
                 background: #ffffff;
                 margin: 0;
                 padding: 10px 15px;
-                font-size: 13.5pt;
+                font-size: 13pt;
                 line-height: 1.5;
             }
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-            }
-            .doc-header-table td {
-                padding: 2px 4px !important;
-                border: none !important;
-                vertical-align: top !important;
-            }
-            .doc-header-company { font-size: 11pt; line-height: 1.35; }
-            .doc-header-company strong { font-size: 12pt; display: block; margin-bottom: 3px; color: #0e7542 !important; }
-            .doc-header-national { text-align: center; font-size: 11pt; line-height: 1.35; }
-            .doc-header-national strong { font-size: 11.5pt; display: block; }
-            .doc-header-national .underline { display: inline-block; width: 140px; height: 1px; background: #0f172a; margin-top: 4px; }
-            .doc-title-box { text-align: center; margin: 18px 0 22px 0; }
-            .doc-main-title { font-size: 16pt; font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0; color: #0e7542 !important; }
-            .doc-sub-number { font-size: 11pt; font-style: italic; }
+            .doc-header-table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 20px; }
+            .doc-header-table td { border: none !important; padding: 2px 4px !important; vertical-align: top !important; }
+            .doc-header-company strong { font-size: 12pt; }
+            .doc-header-company div { font-size: 10pt; line-height: 1.35; }
+            .doc-header-national { text-align: center; }
+            .doc-header-national strong { font-size: 12pt; }
+            .doc-header-national .underline { width: 140px; height: 1.5px; background: #000; margin: 4px auto 0 auto; }
+            .doc-title-box { text-align: center; margin: 18px 0 20px 0; }
+            .doc-main-title { font-size: 18pt; font-weight: 800; text-transform: uppercase; margin: 0 0 6px 0; color: #0e7542 !important; }
+            .doc-sub-number { font-size: 12pt; font-weight: 700; margin-bottom: 4px; }
             .doc-parties-box { margin-bottom: 16px; font-size: 12pt; }
             .doc-party-block { margin-bottom: 12px; }
             .doc-party-title { font-weight: 700; text-transform: uppercase; font-size: 12pt; margin-bottom: 4px; color: #0e7542 !important; }
@@ -31656,10 +31987,11 @@ window.printCommercialDoc = function() {
             .doc-field-val { flex: 1; }
             .doc-clause-title { font-weight: 700; text-transform: uppercase; font-size: 12pt; margin: 14px 0 6px 0; color: #0e7542 !important; }
             .doc-clause-p { margin: 0 0 5px 0; text-align: justify; line-height: 1.45; }
-            .doc-table { margin: 12px 0 14px 0 !important; font-size: 11.5pt !important; }
+            .doc-table { margin: 12px 0 14px 0 !important; font-size: 11pt !important; width: 100% !important; border-collapse: collapse !important; }
             .doc-table th, .doc-table td { border: 1px solid #334155 !important; padding: 6px 8px !important; }
             .doc-table th { background: #f1f5f9 !important; font-weight: 700 !important; text-align: center !important; }
             .doc-sign-box { margin-top: 30px; page-break-inside: avoid; }
+            .doc-sign-table { width: 100% !important; border-collapse: collapse !important; }
             .doc-sign-table td { border: none !important; text-align: center !important; vertical-align: top !important; }
             .doc-sign-space { height: 75px; }
             @media print {
@@ -31678,6 +32010,7 @@ window.printCommercialDoc = function() {
         printWindow.close();
     }, 300);
 };
+
 
 
 // ==========================================================================
