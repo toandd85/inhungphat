@@ -12627,7 +12627,7 @@
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                             <div>
                                 <label class="form-label" style="font-weight:700; font-size:0.85rem;">Số tiền thu (VNĐ) <span style="color:var(--danger);">*</span></label>
-                                <input type="number" class="form-control" id="payInstAmount" min="1" step="1000" placeholder="0" oninput="window.updatePayInstAmountFormatted()" required>
+                                <input type="number" class="form-control" id="payInstAmount" min="0" step="any" placeholder="Nhập số tiền tùy ý..." oninput="window.updatePayInstAmountFormatted()" required style="font-size:1.05rem; font-weight:700;">
                                 <div id="payInstAmountDisplay" style="font-size:0.85rem; font-weight:700; color:#108f53; margin-top:4px;">0 đ</div>
                             </div>
                             <div>
@@ -12660,7 +12660,7 @@
                         <div style="background:#f8fafc; border:1px dashed var(--border-color); border-radius:8px; padding:12px; margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                 <label style="font-weight:700; font-size:0.82rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; margin:0;">
-                                    <i data-lucide="paperclip" style="width:14px; height:14px;"></i> ẢNH BIÊN LAI / ỦY NHIỆM CHI (UNC) ĐÍNH KÈM
+                                    <i data-lucide="paperclip" style="width:15px; height:15px; color:#108f53;"></i> <span>ẢNH BIÊN LAI / ỦY NHIỆM CHI (UNC) ĐÍNH KÈM</span> <span style="color:#ef4444; font-weight:800; font-size:0.8rem;">* (BẮT BUỘC)</span>
                                 </label>
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('payInstFileField').click()" style="padding:3px 8px; font-size:0.75rem;">
                                     <i data-lucide="camera" style="width:12px; height:12px;"></i> + Chọn ảnh / Chụp hình
@@ -12668,7 +12668,7 @@
                                 <input type="file" id="payInstFileField" accept="image/*,.pdf" multiple style="display:none;" onchange="window.handlePayInstFiles(event)">
                             </div>
                             <div id="payInstThumbnailsList" style="display:flex; gap:8px; flex-wrap:wrap; min-height:36px; align-items:center;">
-                                <span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh đính kèm. Bấm nút phía trên để chụp hoặc tải ảnh biên lai chuyển tiền.</span>
+                                <span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">⚠️ Chưa có ảnh đính kèm. <u>Bắt buộc</u> phải bấm "+ Chọn ảnh / Chụp hình" để tải biên lai/UNC!</span>
                             </div>
                         </div>
 

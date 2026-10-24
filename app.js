@@ -46158,8 +46158,8 @@ window.handlePayInstFiles = function(event) {
 window.renderPayInstThumbnails = function() {
     const container = document.getElementById("payInstThumbnailsList");
     if (!container) return;
-    if (window._payInstTempFiles.length === 0) {
-        container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh đính kèm. Bấm nút phía trên để chụp hoặc tải ảnh biên lai chuyển tiền.</span>`;
+    if (!Array.isArray(window._payInstTempFiles) || window._payInstTempFiles.length === 0) {
+        container.innerHTML = `<span style="font-size:0.78rem; color:#ef4444; font-weight:600; display:flex; align-items:center; gap:4px;">⚠️ Chưa có ảnh đính kèm. <u>Bắt buộc</u> phải chọn hoặc chụp ảnh Biên lai / UNC.</span>`;
         return;
     }
     container.innerHTML = window._payInstTempFiles.map((f, idx) => `
@@ -46210,6 +46210,13 @@ window.saveOrderPaymentInstallment = function() {
     }
     if (!date) {
         alert("Vui lòng chọn ngày thu tiền!");
+        return;
+    }
+
+    if (!Array.isArray(window._payInstTempFiles) || window._payInstTempFiles.length === 0) {
+        alert("Bắt buộc phải tải lên hoặc chụp ảnh Biên lai / Ủy nhiệm chi (UNC) đính kèm trước khi lưu đợt thu tiền!");
+        const fileField = document.getElementById("payInstFileField");
+        if (fileField) fileField.click();
         return;
     }
 
