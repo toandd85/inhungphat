@@ -31262,13 +31262,18 @@ window.openCommercialDocsForOrder = function(orderId, isOnline = true, docType =
 
     if (!c) {
         const now = new Date();
-        const dateCode = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0');
-        const randCode = String(Math.floor(1000 + Math.random() * 9000));
+        const dStr = String(now.getDate()).padStart(2, '0');
+        const mStr = String(now.getMonth() + 1).padStart(2, '0');
+        const yStr = now.getFullYear();
+        const partnerNameForCode = (partner.code || partner.company_name || partner.name || order.customer_name || "Khách lẻ")
+            .trim()
+            .replace(/[^\w\s\u00C0-\u024F\u1EA0-\u1EF9-]/g, '')
+            .replace(/\s+/g, '-');
         const newCtId = "ct_ord_" + order.id;
 
         c = {
             id: newCtId,
-            contract_number: `HĐ-${dateCode}-${randCode}`,
+            contract_number: `${dStr}-${mStr}/${yStr}/Inlachong-${partnerNameForCode}`,
             signing_date: order.created_at ? (typeof order.created_at === 'string' ? order.created_at.split('T')[0] : new Date(order.created_at).toISOString().split('T')[0]) : now.toISOString().split('T')[0],
             partner_id: order.customer_id || `retail_${order.id}`,
             customer_name: partner.name || order.customer_name || "Khách hàng lẻ",
@@ -31318,6 +31323,18 @@ window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
         };
     } else {
         if (c.is_retail) partner.is_retail = true;
+    }
+
+    const signD = c.signing_date ? new Date(c.signing_date) : new Date();
+    const dStr = String(signD.getDate()).padStart(2, '0');
+    const mStr = String(signD.getMonth() + 1).padStart(2, '0');
+    const yStr = signD.getFullYear();
+    const partnerNameForCode = (partner.code || partner.company_name || partner.name || c.customer_name || "Khách lẻ")
+        .trim()
+        .replace(/[^\w\s\u00C0-\u024F\u1EA0-\u1EF9-]/g, '')
+        .replace(/\s+/g, '-');
+    if (!c.contract_number || c.contract_number.startsWith('HĐ-') || !c.contract_number.includes('/Inlachong-')) {
+        c.contract_number = `${dStr}-${mStr}/${yStr}/Inlachong-${partnerNameForCode}`;
     }
 
     const titleEl = document.getElementById("commercialDocModalTitle");
@@ -31729,16 +31746,32 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
             </tr>
         `).join("");
 
+        const partnerClean = ((partner.code || partner.company_name || partner.name || c.customer_name || "Khách lẻ")
+            .trim()
+            .replace(/[^\w\s\u00C0-\u024F\u1EA0-\u1EF9-]/g, '')
+            .replace(/\s+/g, '-')) || "DoiTac";
+        const contractNoFormatted = c.contract_number && c.contract_number.includes('/Inlachong-') 
+            ? c.contract_number 
+            : `${day}-${month}/${year}/Inlachong-${partnerClean}`;
+        c.contract_number = contractNoFormatted;
+
+        const contractSubject = c.details || (isOnline ? 'Mua bán và cung ứng hàng hóa thành phẩm' : 'Sản xuất, gia công in ấn và bao bì thương mại');
+
         return `
-            ${nationalHeaderHtml}
-            <div class="doc-title-box">
-                <h1 class="doc-main-title">HỢP ĐỒNG KINH TẾ</h1>
-                <div class="doc-sub-number">Số: ${escapeHtml(c.contract_number)} / HĐKT-IHP</div>
-                <div style="font-size:11.5pt; font-weight:600; margin-top:2px;">V/v: ${isOnline ? 'Mua bán và cung ứng hàng hóa thành phẩm' : 'Sản xuất, gia công in ấn và bao bì thương mại'}</div>
+            <div class="contract-top-header" style="margin-bottom: 22px; line-height: 1.55;">
+                <div style="font-weight: 800; font-size: 13pt; text-transform: uppercase; color: #0e7542; letter-spacing: 0.3px;">CÔNG TY CỔ PHẦN IN LẠC HỒNG</div>
+                <div style="font-size: 12pt; font-weight: 700; margin-top: 5px; color: #0f172a;">Hợp đồng số: ${contractNoFormatted}</div>
+                <div style="font-size: 12pt; margin-top: 4px; color: #1e293b;">v/v : ${escapeHtml(contractSubject)}</div>
+            </div>
+
+            <div class="doc-title-box" style="text-align: center; margin: 18px 0 22px 0;">
+                <h1 class="doc-main-title" style="font-size: 20pt; font-weight: 800; text-transform: uppercase; color: #0e7542; margin: 0; letter-spacing: 0.5px;">HỢP ĐỒNG KINH TẾ</h1>
             </div>
 
             <p class="doc-clause-p" style="font-style:italic;">- Căn cứ Bộ luật Dân sự số 91/2015/QH13 ngày 24/11/2015;<br>- Căn cứ Luật Thương mại số 36/2005/QH11 ngày 14/06/2005;<br>- Căn cứ vào nhu cầu của Bên B và năng lực cung ứng của Bên A.</p>
             
+            <p class="doc-clause-p" style="margin-top: 8px;">Hôm nay, ngày ${day} tháng ${month} năm ${year}, tại Văn phòng Công ty Cổ phần In Lạc Hồng, hai bên chúng tôi gồm có:</p>
+
             ${partyInfoHtml}
 
             <p class="doc-clause-p">Sau khi bàn bạc, trao đổi, hai bên đồng ý thống nhất ký kết Hợp đồng kinh tế với các điều khoản cụ thể sau đây:</p>
