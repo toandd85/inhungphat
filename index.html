@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261024_multi_customer_pos_tabs_v61">
+    <link rel="stylesheet" href="/style.css?v=20261024_center_order_btn_red_cancel_v62">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -8446,21 +8446,21 @@
                             </div>
                         </div>
 
-                        <div class="pos-actions-row" style="margin-top: 10px;">
-                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn hàng (F9)" style="display: flex; align-items: center; justify-content: center; text-align: center; gap: 8px;">
+                        <div class="pos-actions-row" style="margin-top: 10px; display: flex; align-items: center; gap: 8px; width: 100%;">
+                            <button type="button" class="pos-action-btn pos-btn-cancel" onclick="window.closePosModal()" title="Hủy thao tác và đóng POS" style="flex: 1; height: 50px; font-weight: 800; font-size: 0.95rem; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fef2f2 !important; color: #dc2626 !important; border: 1.5px solid #f87171 !important; cursor: pointer; transition: all 0.2s;">
+                                <i data-lucide="x-circle" style="width:18px; height:18px; color: #dc2626;"></i>
+                                <span>HỦY</span>
+                            </button>
+
+                            <button type="button" class="pos-action-btn pos-checkout-btn" onclick="window.submitPosOrder(false)" title="Xác nhận tạo đơn hàng (F9)" style="flex: 2; height: 50px; min-height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; gap: 8px;">
                                 <i data-lucide="check-circle" style="width:22px; height:22px; stroke-width: 2.8;"></i>
                                 <span id="posSubmitBtnText" style="font-weight: 900; letter-spacing: 0.6px; text-align: center;">TẠO ĐƠN HÀNG</span>
                             </button>
-                            <div class="pos-sub-actions" style="display: flex; width: 100%; gap: 8px;">
-                                <button type="button" class="pos-action-btn pos-btn-cancel" onclick="window.closePosModal()" title="Hủy thao tác và đóng POS" style="flex: 1;">
-                                    <i data-lucide="x-circle" style="width:16px; height:16px;"></i>
-                                    <span>HỦY</span>
-                                </button>
-                                <button type="button" class="pos-action-btn pos-btn-draft" onclick="window.submitPosOrder(true)" title="Lưu nháp đơn hàng (không trừ tồn kho)" style="flex: 1;">
-                                    <i data-lucide="file-text" style="width:16px; height:16px;"></i>
-                                    <span>LƯU NHÁP</span>
-                                </button>
-                            </div>
+
+                            <button type="button" class="pos-action-btn pos-btn-draft" onclick="window.submitPosOrder(true)" title="Lưu nháp đơn hàng (không trừ tồn kho)" style="flex: 1; height: 50px; font-weight: 800; font-size: 0.95rem; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                <i data-lucide="file-text" style="width:18px; height:18px;"></i>
+                                <span>LƯU NHÁP</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -12959,7 +12959,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261024_multi_customer_pos_tabs_v61"></script>
+    <script src="/app.js?v=20261024_center_order_btn_red_cancel_v62"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

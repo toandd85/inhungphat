@@ -7689,28 +7689,31 @@ select.form-select, .form-select {
 }
 
 .pos-btn-cancel {
-    flex: 0 0 auto;
+    flex: 1;
     padding: 0 16px;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #cbd5e1;
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1.5px solid #f87171 !important;
+    font-weight: 800 !important;
+    border-radius: 8px !important;
 }
 
 .pos-btn-cancel:hover {
-    background: #e2e8f0;
-    color: #1e293b;
-    border-color: #94a3b8;
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 3px 10px rgba(220, 38, 38, 0.25) !important;
 }
 
 [data-theme="dark"] .pos-btn-cancel {
-    background: #334155;
-    color: #cbd5e1;
-    border-color: #475569;
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
 }
 
 [data-theme="dark"] .pos-btn-cancel:hover {
-    background: #475569;
-    color: #ffffff;
+    background: rgba(239, 68, 68, 0.28) !important;
+    color: #ffffff !important;
 }
 
 .pos-btn-draft {
