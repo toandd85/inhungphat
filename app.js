@@ -26433,6 +26433,39 @@ window.toggleOrderItemsExpand = function(orderId, btn) {
     }
 };
 
+
+// Open customer profile modal directly from order
+window.openCustomerDetailsFromOrder = function(orderId) {
+    const o = (state.online_orders || []).find(x => x.id === orderId || x.order_number === orderId) || (state.orders || []).find(x => x.id === orderId || x.order_number === orderId);
+    if (!o) return;
+
+    let partner = (state.partners || []).find(p => p.id === o.customer_id || p.code === o.customer_id);
+    if (!partner && o.customer_phone) {
+        partner = (state.partners || []).find(p => p.phone === o.customer_phone);
+    }
+    if (!partner) {
+        partner = {
+            id: o.customer_id || ('cust_' + (o.id || Date.now())),
+            code: 'KH-LE',
+            name: o.customer_name || 'Khách hàng lẻ',
+            company_name: o.customer_name || 'Khách hàng cá nhân',
+            phone: o.customer_phone || '',
+            address: o.customer_address || o.customer_region || 'Hà Nội',
+            role: 'CUSTOMER',
+            is_retail: true,
+            status: 'ACTIVE',
+            note: 'Khách lẻ đơn hàng ' + (o.order_number || '')
+        };
+        state.partners = state.partners || [];
+        state.partners.push(partner);
+    }
+    if (typeof window.viewPartnerCompanyDetails === 'function') {
+        window.viewPartnerCompanyDetails(partner.id);
+    } else if (typeof window.openEditPartner === 'function') {
+        window.openEditPartner(partner.id);
+    }
+};
+
 window.renderOnlineSales = function() {
     const tableBody = document.querySelector("#onlineOrdersTable tbody");
     if (!tableBody) return;
@@ -26546,85 +26579,89 @@ window.renderOnlineSales = function() {
         const phoneHtml = custPhone ? ` <small style="color:var(--text-secondary); margin-left:4px;"><i data-lucide="phone" style="width:10px; height:10px;"></i> ${custPhone}</small>` : "";
         const locationStr = (o.customer_region || o.customer_address) ? `${o.customer_region || ''}${o.customer_address ? (o.customer_region ? ' - ' : '') + o.customer_address : ''}` : '-';
 
+        // Sản phẩm: Chỉ hiện tối đa 5 mã sản phẩm (không cần số lượng)
         const items = o.items || [];
         let productsHtml = '<span class="text-muted">-</span>';
         if (items.length > 0) {
-            const firstItem = items[0];
-            const firstProd = (state.online_products || []).find(p => p.sku === firstItem.sku);
-            const firstPName = firstItem.name || (firstProd ? firstProd.name : firstItem.sku);
-            const moreCount = items.length - 1;
+            const skus = items.map(i => i.sku || i.name || 'SP').filter(Boolean);
+            const displayedSkus = skus.slice(0, 5);
+            const extraCount = skus.length - 5;
+            
+            const pills = displayedSkus.map(s => 
+                `<span style="display:inline-block; padding:1px 5px; font-size:0.75rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; color:#1e293b; margin:1px;">${escapeHtml(s)}</span>`
+            ).join("");
 
-            const firstItemHtml = `
-                <div style="display:inline-flex; align-items:center; flex-wrap:nowrap; gap:4px; white-space:nowrap;">
-                    <span>• <strong>${firstItem.sku}</strong>: ${firstPName}</span>
-                    <span class="badge badge-secondary" style="font-size:0.7rem; font-weight:700;">x${firstItem.qty}</span>
-                    ${moreCount > 0 ? `
-                        <button type="button" class="order-items-more-btn" data-count="${moreCount}" onclick="window.toggleOrderItemsExpand('${o.id}', this)" style="padding: 1px 7px; font-size: 0.68rem; border-radius: 4px; background: rgba(16, 143, 83, 0.12); border: 1px solid #108f53; color: #108f53; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; transition: all 0.15s ease;" title="Xem thêm ${moreCount} sản phẩm khác trong đơn này">
-                            +${moreCount}
-                        </button>
-                    ` : ''}
-                </div>
-            `;
-
-            let moreItemsHtml = '';
-            if (moreCount > 0) {
-                const restItems = items.slice(1).map(item => {
-                    const prod = (state.online_products || []).find(p => p.sku === item.sku);
-                    const pName = item.name || (prod ? prod.name : item.sku);
-                    return `<div style="margin-bottom:3px; font-size:0.75rem; color:var(--text-secondary); white-space:nowrap;">• <strong>${item.sku}</strong>: ${pName} <span class="badge badge-secondary" style="font-size:0.68rem; font-weight:600;">x${item.qty}</span></div>`;
-                }).join("");
-                moreItemsHtml = `
-                    <div id="orderItemsMore_${o.id}" style="display:none; margin-top:5px; padding:4px 0 2px 8px; border-left:2px solid #108f53; background: rgba(16, 143, 83, 0.04); border-radius: 0 4px 4px 0;">
-                        ${restItems}
-                    </div>
-                `;
-            }
-
-            productsHtml = `<div class="order-items-box" style="white-space:nowrap;">${firstItemHtml}${moreItemsHtml}</div>`;
+            const extraHtml = extraCount > 0 ? `<span style="font-size:0.72rem; color:#64748b; font-weight:700; margin-left:3px;">+${extraCount}</span>` : '';
+            productsHtml = `<div style="display:flex; flex-wrap:wrap; gap:2px; align-items:center;">${pills}${extraHtml}</div>`;
         }
-
-        const salesInfoHtml = `
-            ${o.sales_channel ? `<span class="badge badge-info" style="font-size:0.7rem; margin-right:4px;">${o.sales_channel}</span>` : ''}
-            ${o.salesperson ? `<span class="badge badge-primary" style="font-size:0.7rem; font-weight:600;"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</span>` : ''}
-        `;
 
         const payments = state.transactions.filter(t => t.reference_id === o.id && t.type === 'RECEIPT');
         const totalPaid = Math.max(o.paid_amount || 0, payments.reduce((sum, t) => sum + t.amount, 0));
         const remainingDebt = Math.max(0, (o.total_amount || 0) - totalPaid);
 
-        // 1. Giao hàng badge (Trạng thái giao hàng)
-        const delStat = o.delivery_status || "PENDING";
-        let deliveryBadge = '';
-        if (delStat === "DELIVERED") {
-            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-done" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đã giao hàng ${o.delivery_date || ''} (${o.delivery_carrier || ''})"><i data-lucide="check-circle" style="width:11px; height:11px;"></i> Đã giao hàng</span>`;
-        } else if (delStat === "SHIPPING") {
-            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-shipping" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Đang vận chuyển (${o.delivery_carrier || ''})"><i data-lucide="truck" style="width:11px; height:11px;"></i> Đang giao</span>`;
-        } else if (delStat === "FAILED") {
-            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-pending" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Giao thất bại/Hoàn hàng"><i data-lucide="alert-triangle" style="width:11px; height:11px;"></i> Giao hỏng</span>`;
+        // Quy trình: 4 bước, mỗi bước 3 trạng thái nhanh, hiển thị 2 dòng (mỗi dòng 2 trạng thái)
+        // 1. Thanh toán
+        let payBadge = '';
+        if (totalPaid >= (o.total_amount || 0) && (o.total_amount || 0) > 0) {
+            payBadge = `<span class="ot-step-badge badge-green" title="Đã thanh toán 100% (${formatMoney(totalPaid)} đ)">● Đã TT</span>`;
+        } else if (totalPaid > 0 || (o.deposit_amount && o.deposit_amount > 0)) {
+            payBadge = `<span class="ot-step-badge badge-amber" title="Đã cọc/tạm ứng: ${formatMoney(totalPaid || o.deposit_amount)} đ">● Đã cọc</span>`;
         } else {
-            deliveryBadge = `<span class="workflow-badge workflow-badge-delivery-pending" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa giao hàng cho khách (Click để cập nhật)"><i data-lucide="clock" style="width:11px; height:11px;"></i> Chưa giao</span>`;
+            payBadge = `<span class="ot-step-badge badge-red" title="Chưa thanh toán (Khách nợ 100%)">○ Chưa TT</span>`;
         }
 
-        // 2. Hoá đơn VAT badge (Trạng thái xuất hóa đơn)
+        // 2. Giao hàng
+        const delStat = o.delivery_status || "PENDING";
+        let delBadge = '';
+        if (delStat === "DELIVERED") {
+            delBadge = `<span class="ot-step-badge badge-green" title="Đã giao hàng thành công (${o.delivery_date || ''})">● Đã giao</span>`;
+        } else if (delStat === "SHIPPING") {
+            delBadge = `<span class="ot-step-badge badge-blue" title="Đang vận chuyển (${o.delivery_carrier || ''})">● Đang giao</span>`;
+        } else if (delStat === "FAILED") {
+            delBadge = `<span class="ot-step-badge badge-red" title="Giao thất bại">✕ Giao hỏng</span>`;
+        } else {
+            delBadge = `<span class="ot-step-badge badge-gray" title="Chưa giao hàng">○ Chưa giao</span>`;
+        }
+
+        // 3. BBNT (Biên bản nghiệm thu & HĐ)
+        const linkedCt = (state.contracts || []).find(c => 
+            (c.order_ids && c.order_ids.includes(o.id)) || c.order_id === o.id || (c.order_numbers && c.order_numbers.includes(o.order_number))
+        );
+        let bbntBadge = '';
+        if (delStat === "DELIVERED" || (linkedCt && linkedCt.status === 'COMPLETED')) {
+            bbntBadge = `<span class="ot-step-badge badge-green" title="Đã nghiệm thu (BBBG đạt 100%)">● Đã BBNT</span>`;
+        } else if (linkedCt) {
+            bbntBadge = `<span class="ot-step-badge badge-amber" title="Đã lập hồ sơ hợp đồng ${linkedCt.contract_number}">● Đã lập HĐ</span>`;
+        } else {
+            bbntBadge = `<span class="ot-step-badge badge-gray" title="Chưa lập biên bản nghiệm thu">○ Chưa BBNT</span>`;
+        }
+
+        // 4. Xuất hóa đơn
         const invStat = o.invoice_status || "NOT_ISSUED";
         let invBadge = '';
         if (invStat === "ISSUED") {
-            invBadge = `<span class="workflow-badge workflow-badge-inv-yes" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="HĐ VAT: ${o.invoice_number || ''} ${o.invoice_date || ''}"><i data-lucide="file-check" style="width:11px; height:11px;"></i> HĐ: ${o.invoice_number || 'Đã xuất'}</span>`;
+            invBadge = `<span class="ot-step-badge badge-green" title="Đã xuất HĐ VAT: ${o.invoice_number || ''}">● Đã xuất HĐ</span>`;
         } else if (invStat === "NOT_REQUIRED") {
-            invBadge = `<span class="workflow-badge workflow-badge-inv-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Khách không lấy hóa đơn"><i data-lucide="minus-circle" style="width:11px; height:11px;"></i> K.lấy HĐ</span>`;
+            invBadge = `<span class="ot-step-badge badge-gray" title="Khách không lấy hóa đơn">○ K.lấy HĐ</span>`;
         } else {
-            invBadge = `<span class="workflow-badge workflow-badge-inv-no" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Chưa xuất hóa đơn VAT (Click để cập nhật)"><i data-lucide="file-text" style="width:11px; height:11px;"></i> Chưa xuất HĐ</span>`;
+            invBadge = `<span class="ot-step-badge badge-red" title="Chưa xuất hóa đơn VAT">○ Chưa xuất HĐ</span>`;
         }
 
-        // Cột Trạng thái quy trình: Hiển thị gọn gàng trên 1 dòng
+        // 4 bước trên 2 dòng, mỗi dòng 2 trạng thái
         const workflowColHtml = `
-            <div class="workflow-badges-col" style="display:inline-flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap;">
-                ${deliveryBadge}
-                ${invBadge}
+            <div class="workflow-2x2-box" onclick="window.openOrderTimelineModal('${o.id}', true)" title="Bấm để xem lịch sử tiến trình & chi tiết" style="cursor:pointer; display:flex; flex-direction:column; gap:3px; min-width:160px;">
+                <div style="display:flex; gap:4px;">
+                    ${payBadge}
+                    ${delBadge}
+                </div>
+                <div style="display:flex; gap:4px;">
+                    ${bbntBadge}
+                    ${invBadge}
+                </div>
             </div>
         `;
 
-        const trackButton = `<button class="btn-icon" onclick="window.openOnlineOrderTrackingModal('${o.id}')" title="Theo dõi & Cập nhật quy trình"><i data-lucide="activity" style="color:var(--accent);"></i></button>`;
+        // Hành động: Bỏ trackButton vì đã nằm trong modal tiến trình
         const viewPdfButton = `<button class="btn-icon" onclick="openOnlineOrderInvoicePdf('${o.id}')" title="Xem Hóa Đơn PDF/Chi tiết"><i data-lucide="file-text" style="color:var(--info);"></i></button>`;
         const editButton = `<button class="btn-icon" onclick="window.openNewOnlineOrderModal('EDIT', '${o.id}')" title="Sửa đơn hàng"><i data-lucide="edit" style="color:var(--warning);"></i></button>`;
         const contractButton = `<button class="btn-icon" onclick="window.openOrderDocChoiceModal('${o.id}', true)" title="Tạo hồ sơ / Biểu mẫu (Nghiệm thu, Hợp đồng)"><i data-lucide="file-signature" style="color:#6366f1;"></i></button>`;
@@ -26639,9 +26676,16 @@ window.renderOnlineSales = function() {
             cancelButton = `<button class="btn-icon" onclick="window.cancelOnlineOrder('${o.id}')" title="Hủy đơn hàng"><i data-lucide="x-circle" style="color:#d97706;"></i></button>`;
         }
         
-        let actionButtons = `<div style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">${trackButton}${viewPdfButton}${editButton}${payButton}${cancelButton}${contractButton}</div>`;
+        let actionButtons = `<div style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">${viewPdfButton}${editButton}${payButton}${cancelButton}${contractButton}</div>`;
 
         const formattedDate = o.created_at ? (typeof o.created_at === 'string' ? o.created_at.split('T')[0] : new Date(o.created_at).toLocaleDateString('vi-VN')) : '-';
+
+        // Bấm tên khách hàng ra trang thông tin khách hàng
+        const customerLink = `
+            <a href="javascript:void(0)" onclick="window.openCustomerDetailsFromOrder('${o.id}')" style="font-weight:700; color:var(--accent); text-decoration:none;" class="customer-name-link" title="Bấm để xem trang thông tin khách hàng">
+                <span style="border-bottom:1px dashed var(--accent);">${escapeHtml(custName)}</span>
+            </a>
+        `;
 
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -26651,12 +26695,12 @@ window.renderOnlineSales = function() {
             </td>
             <td style="text-align:center;"><small>${formattedDate}</small></td>
             <td>
-                <strong>${custName}</strong>${phoneHtml}
+                ${customerLink}${phoneHtml}
                 ${o.salesperson ? ` <small class="text-muted" style="margin-left:4px;"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</small>` : ''}
             </td>
             <td><small>${locationStr}</small></td>
-            <td style="max-width: 220px; font-size: 0.8rem;">${productsHtml}</td>
-            <td style="min-width: 175px;">${workflowColHtml}</td>
+            <td style="max-width: 190px; font-size: 0.8rem;">${productsHtml}</td>
+            <td style="min-width: 165px;">${workflowColHtml}</td>
             <td><strong>${typeof formatMoney === 'function' ? formatMoney(o.total_amount) : o.total_amount}</strong></td>
             <td><span style="color: var(--success); font-weight: 600;">${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid}</span></td>
             <td><span style="color: ${remainingDebt > 0 ? 'var(--danger)' : 'var(--text-secondary)'}; font-weight: 700;">${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt}</span></td>

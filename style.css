@@ -9937,3 +9937,74 @@ select.form-select, .form-select {
     background: #f3e8ff;
     border-color: #7c3aed;
 }
+
+/* Workflow 2x2 Status Badges */
+.ot-step-badge {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 5px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 4px;
+    white-space: nowrap;
+    text-align: center;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+}
+
+.ot-step-badge.badge-green {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+[data-theme="dark"] .ot-step-badge.badge-green {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-color: #047857;
+}
+
+.ot-step-badge.badge-amber {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+[data-theme="dark"] .ot-step-badge.badge-amber {
+    background: #78350f;
+    color: #fde68a;
+    border-color: #b45309;
+}
+
+.ot-step-badge.badge-blue {
+    background: #f0f9ff;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+[data-theme="dark"] .ot-step-badge.badge-blue {
+    background: #0c4a6e;
+    color: #7dd3fc;
+    border-color: #0284c7;
+}
+
+.ot-step-badge.badge-red {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+[data-theme="dark"] .ot-step-badge.badge-red {
+    background: #7f1d1d;
+    color: #fca5a5;
+    border-color: #991b1b;
+}
+
+.ot-step-badge.badge-gray {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+}
+[data-theme="dark"] .ot-step-badge.badge-gray {
+    background: #1e293b;
+    color: #94a3b8;
+    border-color: #334155;
+}
