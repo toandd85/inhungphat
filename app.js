@@ -15288,6 +15288,62 @@ window.viewPartnerCompanyDetails = function(partnerId) {
     openModal("partnerCompanyDetailsModal");
 };
 
+// Unified Partner Orders: Centralized order retrieval with deduplication between online_orders and mirrored state.orders
+window.getUnifiedPartnerOrders = function(partnerId) {
+    if (!partnerId) return [];
+    const partner = (state.partners || []).find(p => p.id === partnerId || p.code === partnerId);
+    const pId = partner ? partner.id : partnerId;
+    const pCode = (partner && partner.code ? partner.code : partnerId).toLowerCase().trim();
+    const pPhone = partner && partner.phone ? String(partner.phone).trim() : '';
+    const pName = partner && partner.name ? partner.name.toLowerCase().trim() : '';
+    const isRetail = pId === 'p_kh_Khách lẻ' || pCode === 'kh-le' || pCode === 'khách lẻ' || pName === 'khách lẻ';
+
+    const matchesOrder = (o) => {
+        if (!o) return false;
+        if (isRetail) {
+            if (!o.customer_id || o.customer_id === '' || o.customer_id === 'p_kh_Khách lẻ') return true;
+            if (o.customer_code && (o.customer_code.toLowerCase().trim() === 'kh-le' || o.customer_code.toLowerCase().trim() === 'khách lẻ')) return true;
+            if (o.customer_name && o.customer_name.toLowerCase().trim() === 'khách lẻ') return true;
+            return false;
+        }
+        if (o.customer_id && o.customer_id === pId) return true;
+        if (pCode && o.customer_code && o.customer_code.toLowerCase().trim() === pCode) return true;
+        if (pPhone && o.customer_phone && String(o.customer_phone).trim() === pPhone) return true;
+        if (o.customer_name && pName && o.customer_name.toLowerCase().trim() === pName) return true;
+        return false;
+    };
+
+    const onlineList = (state.online_orders || []).filter(matchesOrder);
+    const stdList = (state.orders || []).filter(matchesOrder);
+
+    const seenIds = new Set();
+    const seenNumbers = new Set();
+    const result = [];
+
+    onlineList.forEach(o => {
+        const idKey = o.id || o.order_number;
+        if (!seenIds.has(idKey)) {
+            seenIds.add(idKey);
+            if (o.order_number) seenNumbers.add(o.order_number);
+            result.push({ ...o, isOnline: true });
+        }
+    });
+
+    stdList.forEach(o => {
+        const idKey = o.id || o.order_number;
+        if (seenIds.has(idKey)) return;
+        if (o.order_number && seenNumbers.has(o.order_number)) return;
+        if (o.id && (state.online_orders || []).some(oo => oo.id === o.id)) return;
+
+        seenIds.add(idKey);
+        if (o.order_number) seenNumbers.add(o.order_number);
+        result.push({ ...o, isOnline: false });
+    });
+
+    result.sort((a, b) => new Date(b.created_at || b.date || 0) - new Date(a.created_at || a.date || 0));
+    return result;
+};
+
 function renderCustomerDebts() {
     const tableBody = document.querySelector("#customerDebtsTable tbody");
     if (!tableBody) return;
@@ -15310,9 +15366,8 @@ function renderCustomerDebts() {
 
     if (statusFilter) {
         customers = customers.filter(p => {
-            const standardSales = (state.orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
-            const onlineSales = (state.online_orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
-            const totalSales = standardSales + onlineSales;
+            const partnerOrders = window.getUnifiedPartnerOrders(p.id);
+            const totalSales = partnerOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
             const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "RECEIPT").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
             const debt = Math.max(0, totalSales - paid);
             const creditLimit = Number(p.credit_limit) || 0;
@@ -15332,9 +15387,8 @@ function renderCustomerDebts() {
 
     customers.forEach(p => {
         // Calculate total sales from both standard orders and online orders
-        const standardSales = (state.orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
-        const onlineSales = (state.online_orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
-        const totalSales = standardSales + onlineSales;
+        const partnerOrders = window.getUnifiedPartnerOrders(p.id);
+        const totalSales = partnerOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
         
         // Payments received
         const paid = (state.transactions || []).filter(t => t.partner_id === p.id && t.type === "RECEIPT").reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
@@ -15496,9 +15550,7 @@ window.viewCustomerPaymentHistory = function(partnerId) {
     }
 
     // Calc total debts and populate order-by-order detailed table
-    const standardOrders = (state.orders || []).filter(o => o.customer_id === partnerId);
-    const onlineOrders = (state.online_orders || []).filter(o => o.customer_id === partnerId);
-    const allOrders = [...standardOrders, ...onlineOrders].sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    const allOrders = window.getUnifiedPartnerOrders(partnerId);
 
     const ordersCountBadge = document.getElementById("historyOrdersCountBadge");
     if (ordersCountBadge) {
@@ -18816,9 +18868,8 @@ function renderCRM() {
         let debtVal = 0;
 
         if (p.role === "CUSTOMER" || p.role === "BOTH") {
-            const stdSpend = (state.orders || []).filter(o => o.customer_id === p.id).reduce((sum, o) => sum + (o.total_amount || 0), 0);
-            const onlineSpend = (state.online_orders || []).filter(o => o.customer_id === p.id || o.customer_code === p.code).reduce((sum, o) => sum + (o.total_amount || 0), 0);
-            spendVal = stdSpend + onlineSpend;
+            const pOrders = window.getUnifiedPartnerOrders(p.id);
+            spendVal = pOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
             const paid = (state.transactions || []).filter(t => (t.partner_id === p.id || t.customer_code === p.code) && t.type === "RECEIPT").reduce((sum, t) => sum + (t.amount || 0), 0);
             const onlinePaid = (state.online_orders || []).filter(o => (o.customer_id === p.id || o.customer_code === p.code)).reduce((sum, o) => sum + (o.paid_amount || 0), 0);
             const actualTotalPaid = Math.max(paid, onlinePaid);
@@ -19228,7 +19279,7 @@ function renderCrmDetailSubtabs(partnerId) {
     const ordersBody = document.querySelector("#crmOrdersLogTable tbody");
     if (ordersBody) {
         ordersBody.innerHTML = "";
-        const partnerOrders = state.orders.filter(o => o.customer_id === partnerId);
+        const partnerOrders = window.getUnifiedPartnerOrders(partnerId);
         if (partnerOrders.length === 0) {
             ordersBody.innerHTML = `<tr><td colspan="4" class="text-muted text-center">Không có đơn đặt hàng nào</td></tr>`;
         } else {
@@ -19296,7 +19347,7 @@ function renderCrmDetailSubtabs(partnerId) {
     const debtOrdersBody = document.querySelector("#crmDebtOrdersTable tbody");
     if (debtOrdersBody) {
         debtOrdersBody.innerHTML = "";
-        const partnerOrders = state.orders.filter(o => o.customer_id === partnerId);
+        const partnerOrders = window.getUnifiedPartnerOrders(partnerId);
         if (partnerOrders.length === 0) {
             debtOrdersBody.innerHTML = `<tr><td colspan="6" class="text-muted text-center">Không có đơn đặt hàng nào</td></tr>`;
         } else {
@@ -23752,10 +23803,32 @@ async function handleOnlineOrderSubmit(e) {
         }
         const remainingDebt = Math.max(0, totalAmount - actualPaid);
         
+        let resolvedCustomer = (state.partners || []).find(p => p.id === customerId);
+        if (!resolvedCustomer) {
+            resolvedCustomer = (state.partners || []).find(p => p.id === 'p_kh_Khách lẻ' || p.code === 'KH-LE' || (p.name && p.name.trim().toLowerCase() === 'khách lẻ'));
+            if (!resolvedCustomer) {
+                resolvedCustomer = {
+                    id: 'p_kh_Khách lẻ',
+                    code: 'KH-LE',
+                    name: 'Khách lẻ',
+                    company_name: 'Khách trực tiếp',
+                    role: 'CUSTOMER',
+                    customer_type: 'DIRECT',
+                    status: 'ACTIVE'
+                };
+                state.partners = state.partners || [];
+                state.partners.push(resolvedCustomer);
+            }
+            customerId = resolvedCustomer.id;
+        }
+        const customerCode = resolvedCustomer.code || 'KH-LE';
+        const customerName = resolvedCustomer.name || 'Khách lẻ';
         const newOrder = {
             id: orderId,
             order_number: orderNumber,
             customer_id: customerId,
+            customer_code: customerCode,
+            customer_name: customerName,
             salesperson,
             commission_rate: commissionRate,
             commission_amount: commissionAmount,
@@ -25585,14 +25658,34 @@ window.submitPosOrder = function(isDraft = false) {
             orderId = "oo_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
         }
 
-        const customer = (state.partners || []).find(p => p.id === customerId);
+        let customer = (state.partners || []).find(p => p.id === customerId);
 
+        if (!customer) {
+            customer = (state.partners || []).find(p => p.id === 'p_kh_Khách lẻ' || p.code === 'KH-LE' || (p.name && p.name.trim().toLowerCase() === 'khách lẻ'));
+            if (!customer) {
+                customer = {
+                    id: 'p_kh_Khách lẻ',
+                    code: 'KH-LE',
+                    name: 'Khách lẻ',
+                    company_name: 'Khách trực tiếp',
+                    role: 'CUSTOMER',
+                    customer_type: 'DIRECT',
+                    status: 'ACTIVE'
+                };
+                state.partners = state.partners || [];
+                state.partners.push(customer);
+            }
+            customerId = customer.id;
+        }
+        const customerCode = customer.code || 'KH-LE';
+        const customerName = customer.name || 'Khách lẻ';
         const newOrder = {
             id: orderId,
             order_number: orderNumber,
             customer_id: customerId,
-            customer_name: customer ? customer.name : "Khách lẻ",
-            customer_phone: customer ? customer.phone : "",
+            customer_code: customerCode,
+            customer_name: customerName,
+            customer_phone: customer.phone || "",
             salesperson: salesperson,
             commission_rate: 5,
             commission_amount: Math.round(totalAmount * 0.05),
@@ -25667,6 +25760,8 @@ window.submitPosOrder = function(isDraft = false) {
             if (stdOrder) {
                 Object.assign(stdOrder, {
                     customer_id: customerId,
+                    customer_code: customerCode,
+                    customer_name: customerName,
                     quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
                     subtotal: subtotal,
                     discount: discount,
@@ -25684,6 +25779,8 @@ window.submitPosOrder = function(isDraft = false) {
                     id: orderId,
                     order_number: `SO-202606-${stdCodeSuffix}`,
                     customer_id: customerId,
+                    customer_code: customerCode,
+                    customer_name: customerName,
                     quantity: window.posCart.reduce((sum, i) => sum + i.qty, 0),
                     paper_type: "Thành phẩm kho sẵn",
                     print_spec: window.posCart.map(i => `${i.name} (SL: ${i.qty})`).join(", "),
@@ -26601,25 +26698,30 @@ window.openCustomerDetailsFromOrder = function(orderId) {
     const o = (state.online_orders || []).find(x => x.id === orderId || x.order_number === orderId) || (state.orders || []).find(x => x.id === orderId || x.order_number === orderId);
     if (!o) return;
 
-    let partner = (state.partners || []).find(p => p.id === o.customer_id || p.code === o.customer_id);
+    let partner = (state.partners || []).find(p => p.id === o.customer_id || (p.code && p.code === o.customer_id) || (o.customer_code && p.code === o.customer_code));
     if (!partner && o.customer_phone) {
         partner = (state.partners || []).find(p => p.phone === o.customer_phone);
     }
+    if (!partner && (!o.customer_id || o.customer_id === 'p_kh_Khách lẻ' || o.customer_name === 'Khách lẻ' || o.customer_code === 'KH-LE')) {
+        partner = (state.partners || []).find(p => p.id === 'p_kh_Khách lẻ' || p.code === 'KH-LE');
+    }
     if (!partner) {
         partner = {
-            id: o.customer_id || ('cust_' + (o.id || Date.now())),
-            code: 'KH-LE',
-            name: o.customer_name || 'Khách hàng lẻ',
-            company_name: o.customer_name || 'Khách hàng cá nhân',
+            id: o.customer_id || 'p_kh_Khách lẻ',
+            code: o.customer_code || 'KH-LE',
+            name: o.customer_name || 'Khách lẻ',
+            company_name: o.customer_name || 'Khách trực tiếp',
             phone: o.customer_phone || '',
-            address: o.customer_address || o.customer_region || 'Hà Nội',
             role: 'CUSTOMER',
-            is_retail: true,
-            status: 'ACTIVE',
-            note: 'Khách lẻ đơn hàng ' + (o.order_number || '')
+            customer_type: 'DIRECT',
+            status: 'ACTIVE'
         };
         state.partners = state.partners || [];
         state.partners.push(partner);
+    }
+    if (typeof window.openPartner360 === 'function') {
+        window.openPartner360(partner.id);
+        return;
     }
     if (typeof window.viewPartnerCompanyDetails === 'function') {
         window.viewPartnerCompanyDetails(partner.id);
@@ -26735,10 +26837,12 @@ window.renderOnlineSales = function() {
     }
 
     filteredOrders.forEach(o => {
-        const customer = state.partners.find(p => p.id === o.customer_id);
-        const custName = o.customer_name || (customer ? customer.name : "Khách hàng");
+        const customer = (state.partners || []).find(p => p.id === o.customer_id || (p.code && p.code === o.customer_code));
+        const custCode = o.customer_code || (customer ? customer.code : (o.customer_name === 'Khách lẻ' || !o.customer_id ? 'KH-LE' : 'KH'));
+        const custName = o.customer_name || (customer ? customer.name : "Khách lẻ");
         const custPhone = o.customer_phone || (customer ? customer.phone : "");
         const phoneHtml = custPhone ? ` <small style="color:var(--text-secondary); margin-left:4px;"><i data-lucide="phone" style="width:10px; height:10px;"></i> ${custPhone}</small>` : "";
+        const codeBadge = `<span class="badge" style="background:#e0e7ff; color:#3730a3; font-size:0.72rem; padding:1px 5px; border-radius:4px; font-weight:700; margin-right:4px;" title="Mã khách hàng: ${escapeHtml(custCode)}">${escapeHtml(custCode)}</span>`;
         const locationStr = (o.customer_region || o.customer_address) ? `${o.customer_region || ''}${o.customer_address ? (o.customer_region ? ' - ' : '') + o.customer_address : ''}` : '-';
 
         // Sản phẩm: Chỉ hiện tối đa 5 mã sản phẩm (không cần số lượng)
@@ -26844,9 +26948,13 @@ window.renderOnlineSales = function() {
 
         // Bấm tên khách hàng ra trang thông tin khách hàng
         const customerLink = `
-            <a href="javascript:void(0)" onclick="window.openCustomerDetailsFromOrder('${o.id}')" style="font-weight:700; color:var(--accent); text-decoration:none;" class="customer-name-link" title="Bấm để xem trang thông tin khách hàng">
-                <span style="border-bottom:1px dashed var(--accent);">${escapeHtml(custName)}</span>
-            </a>
+            <div style="display:flex; align-items:center; flex-wrap:wrap; gap:3px;">
+                ${codeBadge}
+                <a href="javascript:void(0)" onclick="window.openCustomerDetailsFromOrder('${o.id}')" style="font-weight:700; color:var(--accent); text-decoration:none;" class="customer-name-link" title="Bấm để xem trang thông tin khách hàng">
+                    <span style="border-bottom:1px dashed var(--accent);">${escapeHtml(custName)}</span>
+                </a>
+                ${phoneHtml}
+            </div>
         `;
 
         const row = document.createElement("tr");
@@ -46701,40 +46809,7 @@ window.openPartner360 = function(partnerId, initialFilter = 'ALL') {
     // Retrieve all orders associated with this partner
     let allOrders = [];
     if (isCustomer) {
-        const pPhone = partner.phone ? String(partner.phone).trim() : '';
-        const pName = (partner.name || '').toLowerCase().trim();
-        const pComp = (partner.company_name || '').toLowerCase().trim();
-        const pCode = (partner.code || '').toLowerCase().trim();
-
-        const onlineOrders = (state.online_orders || []).filter(o => {
-            if (o.customer_id === partner.id) return true;
-            if (pCode && o.customer_code && o.customer_code.toLowerCase().trim() === pCode) return true;
-            if (pPhone && o.customer_phone && String(o.customer_phone).trim() === pPhone) return true;
-            if (o.customer_name) {
-                const cName = o.customer_name.toLowerCase().trim();
-                if (cName === pName || (pComp && cName === pComp)) return true;
-            }
-            return false;
-        }).map(o => ({ ...o, isOnline: true }));
-
-        const stdOrders = (state.orders || []).filter(o => {
-            if (o.customer_id === partner.id) return true;
-            if (pCode && o.customer_code && o.customer_code.toLowerCase().trim() === pCode) return true;
-            if (pPhone && o.customer_phone && String(o.customer_phone).trim() === pPhone) return true;
-            if (o.customer_name) {
-                const cName = o.customer_name.toLowerCase().trim();
-                if (cName === pName || (pComp && cName === pComp)) return true;
-            }
-            return false;
-        }).map(o => ({ ...o, isOnline: false }));
-
-        const map = new Map();
-        [...onlineOrders, ...stdOrders].forEach(o => {
-            const key = o.id || o.order_number;
-            if (!map.has(key)) map.set(key, o);
-        });
-        allOrders = Array.from(map.values());
-        allOrders.sort((a, b) => new Date(b.created_at || b.date || 0) - new Date(a.created_at || a.date || 0));
+        allOrders = window.getUnifiedPartnerOrders(partner.id);
     } else if (isSupplier) {
         allOrders = (state.restocks || []).filter(r => 
             r.supplier_id === partner.id || 
