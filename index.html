@@ -8266,11 +8266,15 @@
                         <!-- Customer search & select -->
                         <div class="pos-customer-box">
                             <i data-lucide="user-check" class="pos-control-icon"></i>
-                            <select id="posCustomerSelect" class="pos-control-select" onchange="window.handlePosCustomerChange(true)">
-                                <!-- Loaded dynamically from state.partners (CUSTOMER) -->
-                            </select>
-                            <span id="posCustomerTypeBadge" class="pos-cust-type-pill retail" style="display:inline-flex;">👤 Khách lẻ</span>
-                            <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal()" title="Thêm khách hàng nhanh">+</button>
+                            <div class="pos-cust-combobox" style="position:relative; flex:1; min-width:0;">
+                                <input type="text" id="posCustomerInput" class="pos-control-select" placeholder="🔍 Chọn từ DS hoặc gõ tên mới..." autocomplete="off" onfocus="window.openPosCustomerDropdown()" oninput="window.filterPosCustomerDropdown(this.value)">
+                                <select id="posCustomerSelect" style="display:none;" onchange="window.handlePosCustomerChange(true)">
+                                    <!-- Loaded dynamically from state.partners (CUSTOMER) -->
+                                </select>
+                                <div id="posCustomerDropdown" class="pos-cust-dropdown" style="display:none;"></div>
+                            </div>
+                            <span id="posCustomerTypeBadge" class="pos-cust-type-pill retail" style="display:inline-flex; cursor:pointer;" onclick="window.openQuickAddCustomerModal()" title="Phân loại khách hàng">👤 Khách lẻ</span>
+                            <button type="button" class="pos-btn-mini-add" onclick="window.openQuickAddCustomerModal(document.getElementById('posCustomerInput')?.value || '')" title="Thêm khách hàng mới">+</button>
                         </div>
 
                         <!-- Price Book selector (TỰ ĐỘNG THEO LOẠI KHÁCH - CHỈ HIỂN THỊ THÔNG TIN) -->
@@ -14075,6 +14079,62 @@
             <div class="brand-alert-footer" id="brandAlertFooter">
                 <button id="brandAlertOkBtn" type="button" class="btn-brand-alert-primary" onclick="window.closeBrandAlert(true)">Đồng ý</button>
                 <button id="brandAlertCancelBtn" type="button" class="btn-brand-alert-secondary" onclick="window.closeBrandAlert(false)" style="display:none;">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thêm Khách Hàng Nhanh (POS) -->
+    <div id="posQuickAddCustomerModal" class="modal" style="display:none; z-index: 2060;">
+        <div class="modal-dialog" style="max-width: 440px; margin: 60px auto;">
+            <div class="modal-content" style="border-radius: 12px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);">
+                <div class="modal-header" style="background: var(--bg-secondary, #f8fafc); padding: 14px 18px; border-bottom: 1px solid var(--border-color, #e2e8f0); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; color: var(--text, #1e293b);">
+                        <i data-lucide="user-plus" style="width: 18px; height: 18px; color: #108f53;"></i>
+                        <span>Thêm Khách Hàng Mới</span>
+                    </div>
+                    <button type="button" class="btn-close" onclick="window.closeQuickAddCustomerModal()" style="background:none; border:none; cursor:pointer; font-size:1.2rem; color:var(--text-secondary, #64748b);">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 18px;">
+                    <form id="posQuickAddCustomerForm" onsubmit="window.submitQuickAddCustomer(event)">
+                        <div style="margin-bottom: 14px;">
+                            <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: var(--text, #334155);">Tên khách hàng / Công ty <span style="color:#ef4444;">*</span></label>
+                            <input type="text" id="quickAddCustName" class="form-input" style="width: 100%; height: 40px; font-size: 0.95rem; border-radius: 6px;" placeholder="Ví dụ: Anh Tuấn, Chị Mai, Cty ABC..." required>
+                        </div>
+                        <div style="margin-bottom: 14px;">
+                            <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: var(--text, #334155);">Số điện thoại</label>
+                            <input type="tel" id="quickAddCustPhone" class="form-input" style="width: 100%; height: 40px; font-size: 0.95rem; border-radius: 6px;" placeholder="09xxxxxxxxx">
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: var(--text, #334155);">Phân loại khách hàng</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1.5px solid var(--border-color, #cbd5e1); border-radius: 8px; cursor: pointer; background: var(--bg-card, #fff);" id="lblQuickAddTypeRetail">
+                                    <input type="radio" name="quickAddCustType" value="RETAIL" checked onchange="window.updateQuickAddTypeStyle()">
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 0.88rem;">👤 Khách lẻ</div>
+                                        <div style="font-size: 0.72rem; color: var(--text-secondary, #64748b);">Áp dụng giá lẻ</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1.5px solid var(--border-color, #cbd5e1); border-radius: 8px; cursor: pointer; background: var(--bg-card, #fff);" id="lblQuickAddTypeWholesale">
+                                    <input type="radio" name="quickAddCustType" value="WHOLESALE" onchange="window.updateQuickAddTypeStyle()">
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 0.88rem; color: #b45309;">🏢 Khách sỉ</div>
+                                        <div style="font-size: 0.72rem; color: var(--text-secondary, #64748b);">Áp dụng giá sỉ</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: var(--text, #334155);">Địa chỉ / Khu vực (tùy chọn)</label>
+                            <input type="text" id="quickAddCustAddress" class="form-input" style="width: 100%; height: 38px; font-size: 0.88rem; border-radius: 6px;" placeholder="Hà Nội, TP.HCM...">
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                            <button type="button" class="btn btn-secondary" onclick="window.closeQuickAddCustomerModal()" style="height: 40px; padding: 0 16px;">Hủy</button>
+                            <button type="submit" class="btn btn-primary" style="height: 40px; padding: 0 20px; font-weight: 700; background: #108f53; border-color: #108f53;">
+                                <i data-lucide="check" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle;"></i> Lưu & Chọn
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

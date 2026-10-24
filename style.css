@@ -10234,3 +10234,74 @@ select.form-select, .form-select {
     color: #ffffff;
     border-color: var(--accent);
 }
+
+/* POS Customer Searchable Combobox & Dropdown */
+.pos-cust-combobox {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.pos-cust-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1.5px solid #108f53;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+    z-index: 1050;
+    padding: 4px;
+}
+
+[data-theme="dark"] .pos-cust-dropdown {
+    background: #1e293b;
+    border-color: #10b981;
+    color: #f8fafc;
+}
+
+.pos-cust-dropdown-create {
+    padding: 9px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #108f53;
+    background: rgba(16, 143, 83, 0.08);
+    border: 1px dashed #108f53;
+    margin-bottom: 4px;
+    transition: all 0.15s;
+}
+
+.pos-cust-dropdown-create:hover, .pos-cust-dropdown-create:active {
+    background: #108f53;
+    color: #ffffff;
+}
+
+.pos-cust-dropdown-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.84rem;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.pos-cust-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.pos-cust-dropdown-item:hover, .pos-cust-dropdown-item:active {
+    background: rgba(16, 143, 83, 0.1);
+    color: #108f53;
+}

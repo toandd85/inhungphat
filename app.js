@@ -24282,6 +24282,9 @@ window.switchPosOrderTab = function(tabId) {
 
     const custSel = document.getElementById("posCustomerSelect");
     if (custSel) custSel.value = target.customer_id || "";
+    if (typeof window.syncPosCustomerInputDisplay === 'function') {
+        window.syncPosCustomerInputDisplay(target.customer_id || "");
+    }
 
     const discEl = document.getElementById("posOrderDiscount");
     if (discEl) discEl.value = target.discount || 0;
@@ -24384,6 +24387,9 @@ window.openOnlinePosModal = function(mode = "ADD", orderId = "") {
                 const typePrefix = (c.customer_type === "WHOLESALE" || c.customer_type === "Khách sỉ" || c.customer_type === "SI") ? "🏢 [SỈ] " : "";
                 customerSelect.innerHTML += `<option value="${c.id}">${typePrefix}${codePrefix}${c.name}${phoneSuffix}</option>`;
             });
+            if (typeof window.syncPosCustomerInputDisplay === 'function') {
+                window.syncPosCustomerInputDisplay(customerSelect.value || "");
+            }
         }
 
         window.posCatalogTab = "PRODUCTS";
@@ -25866,41 +25872,293 @@ window.submitPosOrder = function(isDraft = false) {
     }
 };
 
-window.openQuickAddCustomerModal = function() {
-    const name = prompt("Nhập tên khách hàng mới:");
-    if (!name || !name.trim()) return;
-    const phone = prompt("Nhập số điện thoại khách hàng:");
-    const isWholesale = confirm("Khách hàng này là Khách sỉ? (Nhấn OK nếu là Khách sỉ, Cancel nếu là Khách lẻ)");
+// ==========================================
+// POS CUSTOMER AUTOCOMPLETE & QUICK ADD MODAL
+// ==========================================
 
-    const codeSuffix = String((state.partners || []).length + 1).padStart(3, '0');
-    const newCust = {
-        id: "p_" + Date.now(),
-        code: `KH-${codeSuffix}`,
-        name: name.trim(),
-        phone: (phone || "").trim(),
+window.syncPosCustomerInputDisplay = function(customerId) {
+    const input = document.getElementById("posCustomerInput");
+    if (!input) return;
+    if (!customerId || customerId === 'p_kh_Khách lẻ') {
+        input.value = "Khách lẻ";
+        return;
+    }
+    const partner = (state.partners || []).find(p => p.id === customerId);
+    if (partner) {
+        const code = partner.code ? `[${partner.code}] ` : "";
+        const phone = partner.phone ? ` - ${partner.phone}` : "";
+        input.value = `${code}${partner.name}${phone}`;
+    } else {
+        input.value = customerId;
+    }
+};
+
+window.openPosCustomerDropdown = function() {
+    const input = document.getElementById("posCustomerInput");
+    const val = input ? input.value : "";
+    window.filterPosCustomerDropdown(val.startsWith("[") ? "" : val);
+    if (input) input.select();
+};
+
+window.filterPosCustomerDropdown = function(rawQuery = "") {
+    const dropdown = document.getElementById("posCustomerDropdown");
+    if (!dropdown) return;
+
+    const query = (rawQuery || "").trim().toLowerCase();
+    const partners = (state.partners || []).filter(p => p && (p.role === "CUSTOMER" || p.role === "BOTH" || !p.role));
+    partners.sort((a, b) => (a.name || "").localeCompare(b.name || "", 'vi'));
+
+    let matched = partners;
+    if (query && query !== "khách lẻ") {
+        matched = partners.filter(p => {
+            const name = (p.name || "").toLowerCase();
+            const code = (p.code || "").toLowerCase();
+            const phone = (p.phone || "").toLowerCase();
+            const comp = (p.company_name || "").toLowerCase();
+            return name.includes(query) || code.includes(query) || phone.includes(query) || comp.includes(query);
+        });
+    }
+
+    let html = "";
+
+    // 1. Action to create new customer if query entered
+    if (query && query !== "khách lẻ" && !partners.some(p => (p.name || "").toLowerCase() === query)) {
+        html += `
+            <div class="pos-cust-dropdown-create" onclick="window.openQuickAddCustomerModal('${escapeHtml(rawQuery.trim())}')">
+                <i data-lucide="user-plus" style="width:15px; height:15px; flex-shrink:0;"></i>
+                <span>➕ Tạo khách hàng mới: "<strong>${escapeHtml(rawQuery.trim())}</strong>"</span>
+            </div>
+        `;
+    }
+
+    // 2. Default: Khách lẻ
+    html += `
+        <div class="pos-cust-dropdown-item" onclick="window.selectPosCustomer('')">
+            <div style="display:flex; align-items:center; gap:6px;">
+                <span class="badge" style="background:#e0e7ff; color:#3730a3; font-weight:700; font-size:0.75rem;">KH-LE</span>
+                <strong>Khách lẻ / Trực tiếp</strong>
+            </div>
+            <span class="pos-cust-type-pill retail" style="font-size:0.7rem; padding:1px 6px;">👤 Lẻ</span>
+        </div>
+    `;
+
+    // 3. Matched existing customers
+    const displayList = matched.slice(0, 40);
+    displayList.forEach(c => {
+        const isWholesale = c.customer_type === "WHOLESALE" || c.customer_type === "Khách sỉ" || c.customer_type === "SI";
+        const codeBadge = c.code ? `<span class="badge" style="background:#f1f5f9; color:#1e293b; font-weight:700; font-size:0.72rem; margin-right:4px;">[${escapeHtml(c.code)}]</span>` : '';
+        const phoneTxt = c.phone ? `<small style="color:var(--text-secondary); margin-left:4px;">(${escapeHtml(c.phone)})</small>` : '';
+        html += `
+            <div class="pos-cust-dropdown-item" onclick="window.selectPosCustomer('${c.id}')">
+                <div style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    ${codeBadge}
+                    <strong>${escapeHtml(c.name || 'Khách hàng')}</strong>
+                    ${phoneTxt}
+                </div>
+                <div style="flex-shrink:0;">
+                    <span class="pos-cust-type-pill ${isWholesale ? 'wholesale' : 'retail'}" style="font-size:0.7rem; padding:1px 6px;">${isWholesale ? '⭐ Sỉ' : '👤 Lẻ'}</span>
+                </div>
+            </div>
+        `;
+    });
+
+    if (matched.length === 0 && query && query !== "khách lẻ") {
+        html += `
+            <div style="padding:12px 10px; text-align:center; color:var(--text-secondary); font-size:0.825rem;">
+                Không tìm thấy khách hàng phù hợp.
+                <div style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-success" style="font-size:0.78rem; padding:3px 10px;" onclick="window.openQuickAddCustomerModal('${escapeHtml(rawQuery.trim())}')">
+                        <i data-lucide="plus-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> Tạo mới ngay
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.style.display = "block";
+
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons({ root: dropdown });
+    }
+};
+
+window.selectPosCustomer = function(customerId) {
+    const select = document.getElementById("posCustomerSelect");
+    const input = document.getElementById("posCustomerInput");
+    const dropdown = document.getElementById("posCustomerDropdown");
+
+    if (dropdown) dropdown.style.display = "none";
+
+    const partner = (state.partners || []).find(p => p.id === customerId);
+
+    if (select) {
+        if (customerId && partner && !Array.from(select.options).some(o => o.value === customerId)) {
+            const opt = document.createElement("option");
+            opt.value = partner.id;
+            opt.textContent = `[${partner.code || 'KH'}] ${partner.name}${partner.phone ? ' - ' + partner.phone : ''}`;
+            select.insertBefore(opt, select.firstChild);
+        }
+        select.value = customerId || "";
+    }
+
+    if (typeof window.syncPosCustomerInputDisplay === 'function') {
+        window.syncPosCustomerInputDisplay(customerId);
+    }
+
+    if (typeof window.handlePosCustomerChange === 'function') {
+        window.handlePosCustomerChange(true);
+    }
+};
+
+window.openQuickAddCustomerModal = function(prefillName = "") {
+    const dropdown = document.getElementById("posCustomerDropdown");
+    if (dropdown) dropdown.style.display = "none";
+
+    let modal = document.getElementById("posQuickAddCustomerModal");
+    if (!modal) return;
+
+    const nameEl = document.getElementById("quickAddCustName");
+    const phoneEl = document.getElementById("quickAddCustPhone");
+    const addrEl = document.getElementById("quickAddCustAddress");
+
+    let cleanName = "";
+    if (typeof prefillName === 'string') {
+        cleanName = prefillName.trim();
+        if (cleanName.startsWith("[") && cleanName.includes("]")) {
+            cleanName = cleanName.substring(cleanName.indexOf("]") + 1).split("-")[0].trim();
+        }
+        if (cleanName === "Khách lẻ") cleanName = "";
+    }
+
+    if (nameEl) nameEl.value = cleanName;
+    if (phoneEl) phoneEl.value = "";
+    if (addrEl) addrEl.value = "";
+
+    const rRadio = document.querySelector('input[name="quickAddCustType"][value="RETAIL"]');
+    if (rRadio) rRadio.checked = true;
+    if (typeof window.updateQuickAddTypeStyle === 'function') {
+        window.updateQuickAddTypeStyle();
+    }
+
+    modal.style.display = "block";
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons({ root: modal });
+    }
+
+    setTimeout(() => {
+        if (nameEl && !nameEl.value) {
+            nameEl.focus();
+        } else if (phoneEl) {
+            phoneEl.focus();
+        }
+    }, 120);
+};
+
+window.closeQuickAddCustomerModal = function() {
+    const modal = document.getElementById("posQuickAddCustomerModal");
+    if (modal) modal.style.display = "none";
+};
+
+window.updateQuickAddTypeStyle = function() {
+    const rRadio = document.querySelector('input[name="quickAddCustType"][value="RETAIL"]');
+    const wRadio = document.querySelector('input[name="quickAddCustType"][value="WHOLESALE"]');
+    const lblR = document.getElementById("lblQuickAddTypeRetail");
+    const lblW = document.getElementById("lblQuickAddTypeWholesale");
+    if (lblR) {
+        lblR.style.borderColor = rRadio && rRadio.checked ? "#108f53" : "var(--border-color, #cbd5e1)";
+        lblR.style.background = rRadio && rRadio.checked ? "rgba(16, 143, 83, 0.08)" : "var(--bg-card, #fff)";
+    }
+    if (lblW) {
+        lblW.style.borderColor = wRadio && wRadio.checked ? "#d97706" : "var(--border-color, #cbd5e1)";
+        lblW.style.background = wRadio && wRadio.checked ? "rgba(217, 119, 6, 0.08)" : "var(--bg-card, #fff)";
+    }
+};
+
+window.submitQuickAddCustomer = function(event) {
+    if (event) event.preventDefault();
+    const nameInput = document.getElementById("quickAddCustName");
+    const name = nameInput ? nameInput.value.trim() : "";
+    if (!name) {
+        alert("Vui lòng nhập tên khách hàng!");
+        return;
+    }
+
+    const phone = (document.getElementById("quickAddCustPhone")?.value || "").trim();
+    const address = (document.getElementById("quickAddCustAddress")?.value || "").trim();
+    const typeRadio = document.querySelector('input[name="quickAddCustType"][value="WHOLESALE"]:checked');
+    const isWholesale = !!typeRadio;
+
+    const maxCodeNum = (state.partners || []).reduce((max, p) => {
+        const m = (p.code || "").match(/KH(\d+)/i);
+        return m ? Math.max(max, parseInt(m[1], 10)) : max;
+    }, 400);
+    const newCode = `KH${String(maxCodeNum + 1).padStart(6, '0')}`;
+
+    const newPartner = {
+        id: "p_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6),
+        code: newCode,
+        name: name,
+        company_name: name,
+        phone: phone,
+        address: address,
         role: "CUSTOMER",
         type: "CUSTOMER",
         customer_type: isWholesale ? "WHOLESALE" : "RETAIL",
+        status: "ACTIVE",
         created_at: new Date().toISOString()
     };
-    state.partners = [newCust, ...state.partners];
+
+    state.partners = [newPartner, ...(state.partners || [])];
     state.updateState("partners", state.partners);
 
-    // Refresh select and pick this new customer
     const select = document.getElementById("posCustomerSelect");
     if (select) {
         const opt = document.createElement("option");
-        opt.value = newCust.id;
-        const tag = isWholesale ? "[Sỉ]" : "[Lẻ]";
-        opt.textContent = `${tag} ${newCust.name} ${newCust.phone ? `(${newCust.phone})` : ''}`;
+        opt.value = newPartner.id;
+        const tag = isWholesale ? "🏢 [SỈ] " : "";
+        opt.textContent = `${tag}[${newPartner.code}] ${newPartner.name}${newPartner.phone ? ' - ' + newPartner.phone : ''}`;
         select.insertBefore(opt, select.firstChild);
-        select.value = newCust.id;
-        if (typeof window.handlePosCustomerChange === 'function') {
-            window.handlePosCustomerChange(true);
+    }
+
+    window.selectPosCustomer(newPartner.id);
+    window.closeQuickAddCustomerModal();
+
+    if (typeof showToast === 'function') {
+        showToast(`Đã tạo & chọn khách hàng: [${newPartner.code}] ${name}`, 'success');
+    }
+};
+
+document.addEventListener("click", function(e) {
+    const box = document.querySelector(".pos-cust-combobox");
+    const dropdown = document.getElementById("posCustomerDropdown");
+    if (box && dropdown && dropdown.style.display !== "none" && !box.contains(e.target)) {
+        dropdown.style.display = "none";
+        const input = document.getElementById("posCustomerInput");
+        const select = document.getElementById("posCustomerSelect");
+        if (input && select) {
+            window.syncPosCustomerInputDisplay(select.value);
         }
     }
-    alert(`Đã thêm ${isWholesale ? 'Khách sỉ' : 'Khách lẻ'} ${newCust.name} thành công!`);
-};
+});
+
+document.addEventListener("keydown", function(e) {
+    const input = document.getElementById("posCustomerInput");
+    const dropdown = document.getElementById("posCustomerDropdown");
+    if (document.activeElement === input) {
+        if (e.key === "Escape") {
+            if (dropdown) dropdown.style.display = "none";
+        } else if (e.key === "Enter") {
+            e.preventDefault();
+            const firstItem = dropdown ? dropdown.querySelector(".pos-cust-dropdown-item, .pos-cust-dropdown-create") : null;
+            if (firstItem) {
+                firstItem.click();
+            } else if (input.value.trim()) {
+                window.openQuickAddCustomerModal(input.value.trim());
+            }
+        }
+    }
+});
 
 // Keyboard shortcuts for POS
 document.addEventListener("keydown", function(e) {
