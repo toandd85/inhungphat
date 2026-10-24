@@ -850,7 +850,7 @@ body {
     padding: 24px 16px;
     display: flex;
     justify-content: center;
-    max-height: 78vh;
+    max-height: 74vh;
     overflow-y: auto;
 }
 
@@ -858,9 +858,139 @@ body {
     background: #0b1120;
 }
 
+/* Word-like Editing Ribbon Toolbar */
+.commercial-doc-word-ribbon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+[data-theme="dark"] .commercial-doc-word-ribbon {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.word-ribbon-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.word-ribbon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0e7542;
+    background: #ecfdf5;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #a7f3d0;
+}
+
+[data-theme="dark"] .word-ribbon-badge {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-color: #047857;
+}
+
+.word-ribbon-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.word-tool-group {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 2px 4px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    gap: 2px;
+}
+
+[data-theme="dark"] .word-tool-group {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+.word-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    color: #334155;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+[data-theme="dark"] .word-btn {
+    color: #cbd5e1;
+}
+
+.word-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+[data-theme="dark"] .word-btn:hover {
+    background: #334155;
+    color: #ffffff;
+}
+
+.word-btn:active {
+    transform: translateY(1px);
+}
+
+.word-btn.btn-text-action {
+    font-weight: 600;
+    font-size: 0.76rem;
+    padding: 0 7px;
+}
+
+.word-btn.btn-text-danger {
+    color: #dc2626;
+}
+
+.word-btn.btn-text-danger:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.word-btn.btn-reset-template {
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.76rem;
+    padding: 0 7px;
+}
+
+.word-btn.btn-reset-template:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
 .commercial-doc-paper {
     background: #ffffff !important;
-    color: #0f172a !important;
+    color: #0f172a;
     width: 100%;
     max-width: 820px;
     min-height: 1080px;
@@ -871,10 +1001,30 @@ body {
     line-height: 1.55;
     position: relative;
     box-sizing: border-box;
+    outline: none;
+    cursor: text;
+    transition: box-shadow 0.2s ease;
 }
 
-.commercial-doc-paper * {
-    color: #0f172a !important;
+.commercial-doc-paper:focus-within {
+    box-shadow: 0 0 0 3px rgba(16, 143, 83, 0.25), 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.commercial-doc-paper p, .commercial-doc-paper span, .commercial-doc-paper td, .commercial-doc-paper th, .commercial-doc-paper div {
+    color: inherit;
+}
+
+.commercial-doc-paper table {
+    border-collapse: collapse;
+}
+
+.commercial-doc-paper td, .commercial-doc-paper th {
+    min-height: 24px;
+    outline: none;
+}
+
+.commercial-doc-paper td:hover, .commercial-doc-paper th:hover {
+    background-color: rgba(16, 143, 83, 0.04);
 }
 
 .doc-header-table {

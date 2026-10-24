@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261024_split_xuong_address_v63">
+    <link rel="stylesheet" href="/style.css?v=20261024_word_doc_editor_v64">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -10404,9 +10404,54 @@
 
                 </div>
 
+                <!-- Word-like Editing Ribbon -->
+                <div class="commercial-doc-word-ribbon" id="commercialDocWordRibbon">
+                    <div class="word-ribbon-left">
+                        <span class="word-ribbon-badge">
+                            <i data-lucide="edit-3" style="width:14px; height:14px;"></i>
+                            <span>Soạn thảo Word (Bấm trực tiếp vào chữ, số, bảng để sửa)</span>
+                        </span>
+                    </div>
+                    <div class="word-ribbon-tools">
+                        <!-- Undo / Redo -->
+                        <div class="word-tool-group">
+                            <button type="button" class="word-btn" title="Hoàn tác (Ctrl+Z)" onmousedown="event.preventDefault(); window.docExecCmd('undo');"><i data-lucide="undo" style="width:14px; height:14px;"></i></button>
+                            <button type="button" class="word-btn" title="Làm lại (Ctrl+Y)" onmousedown="event.preventDefault(); window.docExecCmd('redo');"><i data-lucide="redo" style="width:14px; height:14px;"></i></button>
+                        </div>
+                        <!-- Formatting -->
+                        <div class="word-tool-group">
+                            <button type="button" class="word-btn" style="font-weight:800;" title="In đậm (Ctrl+B)" onmousedown="event.preventDefault(); window.docExecCmd('bold');">B</button>
+                            <button type="button" class="word-btn" style="font-style:italic;" title="In nghiêng (Ctrl+I)" onmousedown="event.preventDefault(); window.docExecCmd('italic');">I</button>
+                            <button type="button" class="word-btn" style="text-decoration:underline;" title="Gạch chân (Ctrl+U)" onmousedown="event.preventDefault(); window.docExecCmd('underline');">U</button>
+                            <button type="button" class="word-btn" style="text-decoration:line-through;" title="Gạch ngang" onmousedown="event.preventDefault(); window.docExecCmd('strikeThrough');">S</button>
+                        </div>
+                        <!-- Alignment -->
+                        <div class="word-tool-group">
+                            <button type="button" class="word-btn" title="Căn trái" onmousedown="event.preventDefault(); window.docExecCmd('justifyLeft');"><i data-lucide="align-left" style="width:14px; height:14px;"></i></button>
+                            <button type="button" class="word-btn" title="Căn giữa" onmousedown="event.preventDefault(); window.docExecCmd('justifyCenter');"><i data-lucide="align-center" style="width:14px; height:14px;"></i></button>
+                            <button type="button" class="word-btn" title="Căn phải" onmousedown="event.preventDefault(); window.docExecCmd('justifyRight');"><i data-lucide="align-right" style="width:14px; height:14px;"></i></button>
+                            <button type="button" class="word-btn" title="Căn đều hai bên" onmousedown="event.preventDefault(); window.docExecCmd('justifyFull');"><i data-lucide="align-justify" style="width:14px; height:14px;"></i></button>
+                        </div>
+                        <!-- Lists -->
+                        <div class="word-tool-group">
+                            <button type="button" class="word-btn" title="Danh sách chấm" onmousedown="event.preventDefault(); window.docExecCmd('insertUnorderedList');"><i data-lucide="list" style="width:14px; height:14px;"></i></button>
+                            <button type="button" class="word-btn" title="Danh sách số" onmousedown="event.preventDefault(); window.docExecCmd('insertOrderedList');"><i data-lucide="list-ordered" style="width:14px; height:14px;"></i></button>
+                        </div>
+                        <!-- Table tools -->
+                        <div class="word-tool-group">
+                            <button type="button" class="word-btn btn-text-action" title="Thêm dòng vào bảng tại vị trí con trỏ" onmousedown="event.preventDefault(); window.docInsertTableRow();"><i data-lucide="plus" style="width:13px; height:13px;"></i> Dòng</button>
+                            <button type="button" class="word-btn btn-text-action btn-text-danger" title="Xóa dòng được chọn trong bảng" onmousedown="event.preventDefault(); window.docDeleteTableRow();"><i data-lucide="trash-2" style="width:13px; height:13px;"></i> Xóa dòng</button>
+                        </div>
+                        <!-- Reset -->
+                        <div class="word-tool-group">
+                            <button type="button" class="word-btn btn-reset-template" title="Khôi phục lại nội dung mẫu ban đầu từ đơn hàng" onclick="window.resetCommercialDocTemplate();"><i data-lucide="rotate-ccw" style="width:13px; height:13px;"></i> Khôi phục gốc</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="commercial-doc-paper-wrapper" id="commercialDocPrintContainer">
 
-                    <div class="commercial-doc-paper" id="commercialDocPaperContent">
+                    <div class="commercial-doc-paper" id="commercialDocPaperContent" contenteditable="true" spellcheck="false">
 
                         <!-- Content dynamically rendered based on active tab -->
 
@@ -12960,7 +13005,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261024_split_xuong_address_v63"></script>
+    <script src="/app.js?v=20261024_word_doc_editor_v64"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->

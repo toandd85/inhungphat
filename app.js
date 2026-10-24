@@ -31336,8 +31336,135 @@ window.openCommercialDocsModal = function(contractId, docType = 'CONTRACT') {
     if (window.lucide) lucide.createIcons();
 };
 
+// In-memory Draft Storage for Commercial Documents (Word-like inline editing)
+window.commercialDocDrafts = window.commercialDocDrafts || {};
+
+window.getCommercialDocDraftKey = function(contractId, docType) {
+    const cId = contractId || window.activeCommercialContractId || "default";
+    const dType = docType || window.activeCommercialDocType || "CONTRACT";
+    return `${cId}_${dType}`;
+};
+
+window.saveCommercialDocDraft = function() {
+    const paper = document.getElementById("commercialDocPaperContent");
+    if (!paper) return;
+    const key = window.getCommercialDocDraftKey();
+    window.commercialDocDrafts[key] = paper.innerHTML;
+};
+
+// Word Editing ExecCommand helper
+window.docExecCmd = function(command, value = null) {
+    const paper = document.getElementById("commercialDocPaperContent");
+    if (paper) {
+        paper.focus();
+    }
+    try {
+        document.execCommand(command, false, value);
+    } catch (err) {
+        console.warn("docExecCmd error:", err);
+    }
+    window.saveCommercialDocDraft();
+};
+
+// Insert a row into the current or nearest table in doc
+window.docInsertTableRow = function() {
+    const paper = document.getElementById("commercialDocPaperContent");
+    if (!paper) return;
+    
+    const sel = window.getSelection();
+    let tr = null;
+    if (sel && sel.rangeCount > 0) {
+        let node = sel.anchorNode;
+        tr = node ? (node.nodeType === 1 ? node.closest('tr') : node.parentElement?.closest('tr')) : null;
+    }
+    
+    if (!tr || !paper.contains(tr)) {
+        // Fallback: search doc-table
+        const tables = paper.querySelectorAll("table.doc-table");
+        if (tables.length > 0) {
+            const table = tables[0];
+            const tbody = table.querySelector("tbody") || table;
+            const rows = tbody.querySelectorAll("tr");
+            for (let i = rows.length - 1; i >= 0; i--) {
+                if (!rows[i].querySelector("th") && rows[i].querySelectorAll("td").length >= 4) {
+                    tr = rows[i];
+                    break;
+                }
+            }
+        }
+    }
+    
+    if (tr && tr.parentNode) {
+        const newTr = tr.cloneNode(true);
+        const tds = newTr.querySelectorAll("td");
+        tds.forEach((td, idx) => {
+            if (idx === 0) {
+                const num = parseInt(td.textContent.trim(), 10);
+                td.textContent = !isNaN(num) ? String(num + 1) : "";
+            } else {
+                td.innerHTML = "&nbsp;";
+            }
+        });
+        tr.parentNode.insertBefore(newTr, tr.nextSibling);
+        window.saveCommercialDocDraft();
+        const firstEditableTd = tds.length > 1 ? tds[1] : tds[0];
+        if (firstEditableTd) {
+            firstEditableTd.focus();
+        }
+    } else {
+        alert("Vui lòng đặt con trỏ chuột vào vị trí bảng bạn muốn thêm dòng!");
+    }
+};
+
+// Delete row from current table
+window.docDeleteTableRow = function() {
+    const paper = document.getElementById("commercialDocPaperContent");
+    if (!paper) return;
+    
+    const sel = window.getSelection();
+    let tr = null;
+    if (sel && sel.rangeCount > 0) {
+        let node = sel.anchorNode;
+        tr = node ? (node.nodeType === 1 ? node.closest('tr') : node.parentElement?.closest('tr')) : null;
+    }
+    
+    if (tr && paper.contains(tr)) {
+        if (tr.querySelector("th")) {
+            alert("Không thể xóa dòng tiêu đề của bảng!");
+            return;
+        }
+        const tbody = tr.parentNode;
+        if (tbody && tbody.querySelectorAll("tr").length <= 1) {
+            alert("Bảng cần giữ lại ít nhất 1 dòng dữ liệu!");
+            return;
+        }
+        if (confirm("Bạn có chắc chắn muốn xóa dòng này khỏi bảng?")) {
+            tr.remove();
+            window.saveCommercialDocDraft();
+        }
+    } else {
+        alert("Vui lòng đặt con trỏ chuột vào dòng bảng bạn muốn xóa!");
+    }
+};
+
+// Reset template back to default auto-generated state
+window.resetCommercialDocTemplate = function() {
+    if (!confirm("Khôi phục lại nội dung mẫu ban đầu từ đơn hàng?\nToàn bộ chỉnh sửa gõ tay trên tài liệu này sẽ được đặt lại.")) return;
+    const key = window.getCommercialDocDraftKey();
+    delete window.commercialDocDrafts[key];
+    window.switchCommercialDocTab(window.activeCommercialDocType, true);
+};
+
 // Switch between tabs in Commercial Document Suite
-window.switchCommercialDocTab = function(docType) {
+window.switchCommercialDocTab = function(docType, forceReset = false) {
+    const paperEl = document.getElementById("commercialDocPaperContent");
+
+    // Save active tab's draft before switching away
+    if (paperEl && window.activeCommercialDocType && !forceReset) {
+        const prevKey = window.getCommercialDocDraftKey(window.activeCommercialContractId, window.activeCommercialDocType);
+        window.commercialDocDrafts[prevKey] = paperEl.innerHTML;
+    }
+
     window.activeCommercialDocType = docType;
 
     const tabs = [
@@ -31443,10 +31570,27 @@ window.switchCommercialDocTab = function(docType) {
         });
     }
 
-    const paperEl = document.getElementById("commercialDocPaperContent");
     if (!paperEl) return;
 
-    paperEl.innerHTML = window.renderCommercialDocContent(c, partner, linkedOrders, docType);
+    // Enable Word inline editing
+    paperEl.setAttribute("contenteditable", "true");
+    paperEl.setAttribute("spellcheck", "false");
+
+    const draftKey = window.getCommercialDocDraftKey(c.id, docType);
+    if (!forceReset && window.commercialDocDrafts[draftKey]) {
+        paperEl.innerHTML = window.commercialDocDrafts[draftKey];
+    } else {
+        paperEl.innerHTML = window.renderCommercialDocContent(c, partner, linkedOrders, docType);
+        window.commercialDocDrafts[draftKey] = paperEl.innerHTML;
+    }
+
+    if (!paperEl.dataset.hasDocInputListener) {
+        paperEl.dataset.hasDocInputListener = "true";
+        paperEl.addEventListener("input", function() {
+            window.saveCommercialDocDraft();
+        });
+    }
+
     if (window.lucide) lucide.createIcons();
 };
 
@@ -31458,12 +31602,16 @@ window.toggleCommercialDocRetailMode = function() {
     c.is_retail = !c.is_retail;
     state.updateState("contracts", state.contracts);
 
+    // Clear saved draft for current tab so it regenerates in new mode
+    const key = window.getCommercialDocDraftKey(c.id, window.activeCommercialDocType);
+    delete window.commercialDocDrafts[key];
+
     const modeLabel = document.getElementById("labelToggleDocMode");
     if (modeLabel) {
         modeLabel.textContent = c.is_retail ? "Mẫu: Khách lẻ" : "Mẫu: Doanh nghiệp";
     }
 
-    window.switchCommercialDocTab(window.activeCommercialDocType);
+    window.switchCommercialDocTab(window.activeCommercialDocType, true);
 };
 
 // Render Document HTML Content
@@ -31942,6 +32090,7 @@ window.renderCommercialDocContent = function(c, partner, linkedOrders, docType) 
 
 // 9. Export PDF using html2pdf
 window.exportCommercialDocPdf = function() {
+    window.saveCommercialDocDraft();
     const paper = document.getElementById("commercialDocPaperContent");
     if (!paper) {
         alert("Không tìm thấy nội dung văn bản để xuất PDF!");
@@ -31972,6 +32121,7 @@ window.exportCommercialDocPdf = function() {
 
 // 10. Print Commercial Document
 window.printCommercialDoc = function() {
+    window.saveCommercialDocDraft();
     const paper = document.getElementById("commercialDocPaperContent");
     if (!paper) {
         alert("Không tìm thấy nội dung văn bản để in!");
