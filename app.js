@@ -12176,6 +12176,7 @@ class AppState {
 }
 
 const state = new AppState();
+window.state = state;
 
 // Global mobile navigation references
 let sidebarEl = null;
@@ -26689,22 +26690,22 @@ window.renderOnlineSales = function() {
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>
+            <td style="white-space:nowrap;">
                 <a href="javascript:void(0)" onclick="window.openOrderTimelineModal('${o.id}', true)" style="text-decoration:underline; font-weight:700; color:var(--accent);" title="Bấm để xem lịch sử giao dịch & tiến trình đơn hàng"><strong>${o.order_number}</strong></a>
                 ${o.sales_channel ? ` <span class="badge badge-info" style="font-size:0.68rem; margin-left:4px;">${o.sales_channel}</span>` : ''}
             </td>
-            <td style="text-align:center;"><small>${formattedDate}</small></td>
-            <td>
+            <td style="text-align:center; white-space:nowrap;"><small>${formattedDate}</small></td>
+            <td style="min-width:140px;">
                 ${customerLink}${phoneHtml}
-                ${o.salesperson ? ` <small class="text-muted" style="margin-left:4px;"><i data-lucide="user" style="width:10px; height:10px;"></i> ${o.salesperson}</small>` : ''}
+                ${o.salesperson ? ` <div class="text-muted" style="font-size:0.75rem;"><i data-lucide="user" style="width:10px; height:10px; display:inline-block; vertical-align:middle;"></i> ${escapeHtml(o.salesperson)}</div>` : ''}
             </td>
-            <td><small>${locationStr}</small></td>
-            <td style="max-width: 190px; font-size: 0.8rem;">${productsHtml}</td>
-            <td style="min-width: 165px;">${workflowColHtml}</td>
-            <td><strong>${typeof formatMoney === 'function' ? formatMoney(o.total_amount) : o.total_amount}</strong></td>
-            <td><span style="color: var(--success); font-weight: 600;">${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid}</span></td>
-            <td><span style="color: ${remainingDebt > 0 ? 'var(--danger)' : 'var(--text-secondary)'}; font-weight: 700;">${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt}</span></td>
-            <td>
+            <td style="min-width:130px;"><small>${locationStr}</small></td>
+            <td style="min-width:130px; max-width:190px; font-size:0.8rem;">${productsHtml}</td>
+            <td style="min-width:165px; white-space:nowrap;">${workflowColHtml}</td>
+            <td style="text-align:right; white-space:nowrap;"><strong>${typeof formatMoney === 'function' ? formatMoney(o.total_amount) : o.total_amount} đ</strong></td>
+            <td style="text-align:right; white-space:nowrap;"><span style="color: var(--success); font-weight: 600;">${typeof formatMoney === 'function' ? formatMoney(totalPaid) : totalPaid} đ</span></td>
+            <td style="text-align:right; white-space:nowrap;"><span style="color: ${remainingDebt > 0 ? 'var(--danger)' : 'var(--text-secondary)'}; font-weight: 700;">${typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt} đ</span></td>
+            <td style="text-align:center; white-space:nowrap;">
                 <div class="card-actions-row">
                     ${actionButtons}
                 </div>
@@ -45245,6 +45246,9 @@ window.openOrderTimelineModal = function(orderId, isOnline = true) {
         return;
     }
 
+    window._lastTimelineOrderId = order.id;
+    window._lastTimelineIsOnline = isOnlineOrder;
+
     const modal = document.getElementById("orderTimelineModal");
     const body = document.getElementById("orderTimelineModalBody");
     const titleEl = document.getElementById("orderTimelineModalTitle");
@@ -45258,18 +45262,24 @@ window.openOrderTimelineModal = function(orderId, isOnline = true) {
     const custAddr = order.customer_address || partner.address || "";
 
     const totalAmt = Number(order.total_amount || 0);
+
+    // Multi-installment payments
+    const installments = Array.isArray(order.payment_installments) ? order.payment_installments : [];
+    const installmentTotal = installments.reduce((sum, inst) => sum + (Number(inst.amount) || 0), 0);
+
     // Find all payment transactions linked to this order
     const payments = (state.transactions || []).filter(t => 
         (t.reference_id === order.id || t.order_id === order.id || t.order_number === order.order_number) && t.type === 'RECEIPT'
     );
     const transTotalPaid = payments.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
-    const totalPaid = Math.max(Number(order.paid_amount || 0), transTotalPaid);
-    const depositAmt = Number(order.deposit_amount || order.deposit || 0);
+    const totalPaid = Math.max(Number(order.paid_amount || 0), transTotalPaid, installmentTotal);
+    const depositAmt = Math.max(Number(order.deposit_amount || order.deposit || 0), (installments[0] ? Number(installments[0].amount) : 0));
     const remainingDebt = Math.max(0, totalAmt - totalPaid);
     const paidPercent = totalAmt > 0 ? Math.min(100, Math.round((totalPaid / totalAmt) * 100)) : 100;
 
     // Delivery Status
-    const delStat = order.delivery_status || "PENDING";
+    const batches = Array.isArray(order.delivery_batches) ? order.delivery_batches : [];
+    const delStat = order.delivery_status || (batches.length > 0 ? batches[batches.length - 1].status : "PENDING");
     const isDelivered = delStat === "DELIVERED";
     const isShipping = delStat === "SHIPPING";
 
@@ -45320,16 +45330,16 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
     const custAddr = order.customer_address || partner.address || "Chưa cập nhật";
     const createdDateStr = order.created_at ? (typeof order.created_at === 'string' ? order.created_at.replace('T', ' ').substring(0, 19) : new Date(order.created_at).toLocaleString('vi-VN')) : 'N/A';
 
-    // Products table rows
+    // Products table rows - NO WRAP on numbers, codes, currency
     const items = order.items || (order.print_spec ? [{ sku: order.order_number, name: order.print_spec, qty: order.quantity || 1, price: order.unit_price || order.total_amount }] : []);
     const itemsHtml = items.map((it, idx) => `
         <tr>
-            <td style="text-align:center;">${idx + 1}</td>
-            <td><strong>${escapeHtml(it.sku || it.name || '')}</strong></td>
-            <td>${escapeHtml(it.name || it.brand || it.spec || '')}</td>
-            <td style="text-align:center; font-weight:700;">x${it.qty || 1}</td>
-            <td style="text-align:right;">${formatMoney(it.price || 0)} đ</td>
-            <td style="text-align:right; font-weight:700;">${formatMoney((it.qty || 1) * (it.price || 0))} đ</td>
+            <td style="text-align:center; padding:8px 6px; white-space:nowrap;">${idx + 1}</td>
+            <td style="padding:8px 10px; white-space:nowrap;"><strong>${escapeHtml(it.sku || it.name || '')}</strong></td>
+            <td style="padding:8px 12px; min-width:180px;">${escapeHtml(it.name || it.brand || it.spec || '')}</td>
+            <td style="text-align:center; font-weight:700; padding:8px 8px; white-space:nowrap;">x${it.qty || 1}</td>
+            <td style="text-align:right; font-weight:600; padding:8px 12px; white-space:nowrap;">${formatMoney(it.price || 0)} đ</td>
+            <td style="text-align:right; font-weight:700; color:#0e7542; padding:8px 12px; white-space:nowrap;">${formatMoney((it.qty || 1) * (it.price || 0))} đ</td>
         </tr>
     `).join("");
 
@@ -45367,7 +45377,7 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
 
     const depositProofBadges = depositAmt > 0 ? `
         <span class="ot-proof-badge-btn ot-proof-badge-green">
-            <i data-lucide="receipt" style="width:13px; height:13px;"></i> Phiếu Thu Cọc: ${formatMoney(depositAmt)} đ (${order.deposit_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'})
+            <i data-lucide="receipt" style="width:13px; height:13px;"></i> Đã thu: ${formatMoney(depositAmt)} đ
         </span>
     ` : '';
 
@@ -45383,6 +45393,145 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
         </span>
     ` : '';
 
+    // Payment installments list HTML for Mốc 3
+    const installments = Array.isArray(order.payment_installments) ? order.payment_installments : [];
+    let installmentsHtml = '';
+    if (installments.length > 0) {
+        installmentsHtml = `
+            <div style="margin-bottom:12px;">
+                <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>LỊCH SỬ CÁC ĐỢT TẠM ỨNG & THU TIỀN (${installments.length} đợt):</span>
+                    <span style="color:#108f53; font-weight:800;">Tổng đã thu: ${formatMoney(totalPaid)} đ</span>
+                </div>
+                ${installments.map(inst => `
+                    <div class="ot-batch-card">
+                        <div class="ot-batch-header">
+                            <div class="ot-batch-title">
+                                <span class="badge badge-info" style="font-size:0.75rem;">Đợt ${inst.installment_no || 1}</span>
+                                <span>${escapeHtml(inst.title || 'Tạm ứng')}</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:1.05rem; font-weight:800; color:#108f53; white-space:nowrap;">+ ${formatMoney(inst.amount)} đ</span>
+                                <div class="ot-batch-actions">
+                                    <button type="button" class="btn-icon" onclick="window.openEditPaymentInstallmentModal('${order.id}', '${inst.id}', ${isOnline})" title="Sửa đợt này"><i data-lucide="edit-2" style="width:13px; height:13px; color:#0284c7;"></i></button>
+                                    <button type="button" class="btn-icon" onclick="window.deleteOrderPaymentInstallment('${order.id}', '${inst.id}', ${isOnline})" title="Xóa đợt này"><i data-lucide="trash-2" style="width:13px; height:13px; color:#ef4444;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="font-size:0.8rem; line-height:1.6; color:var(--text-secondary);">
+                            <div>• <strong>Ngày thu:</strong> ${inst.date || 'N/A'} | <strong>Hình thức:</strong> ${inst.method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'}${inst.account ? ` (${escapeHtml(inst.account)})` : ''}</div>
+                            ${inst.payer ? `<div>• <strong>Người nộp/chuyển:</strong> ${escapeHtml(inst.payer)}</div>` : ''}
+                            ${inst.note ? `<div>• <strong>Nội dung:</strong> ${escapeHtml(inst.note)}</div>` : ''}
+                        </div>
+                        ${inst.evidence_files && inst.evidence_files.length > 0 ? `
+                            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; padding-top:6px; border-top:1px dashed var(--border-color);">
+                                ${inst.evidence_files.map(ev => `
+                                    <div class="ot-evidence-thumb" title="${escapeHtml(ev.file_name || 'Biên lai UNC')} - Bấm xem phóng to">
+                                        <img src="${ev.file_url}" alt="Biên lai UNC" onclick="window.openLightbox('${ev.file_url}', '${escapeHtml(ev.file_name || 'Biên lai UNC')}')">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (depositAmt > 0) {
+        installmentsHtml = `
+            <div class="ot-batch-card" style="margin-bottom:12px;">
+                <div class="ot-batch-header">
+                    <div class="ot-batch-title">
+                        <span class="badge badge-info" style="font-size:0.75rem;">Đợt 1</span>
+                        <span>Đã ghi nhận tiền đặt cọc</span>
+                    </div>
+                    <span style="font-size:1.05rem; font-weight:800; color:#108f53; white-space:nowrap;">+ ${formatMoney(depositAmt)} đ</span>
+                </div>
+                <div style="font-size:0.8rem; line-height:1.6; color:var(--text-secondary);">
+                    • <strong>Ngày thu:</strong> ${order.deposit_date || 'Theo thỏa thuận'} | <strong>Hình thức:</strong> ${order.deposit_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'}<br>
+                    • <strong>Ghi chú:</strong> ${escapeHtml(order.deposit_note || 'Đã ghi nhận đặt cọc sản xuất')}
+                </div>
+            </div>
+        `;
+    } else {
+        installmentsHtml = `
+            <div style="color:#b45309; margin-bottom:10px; font-size:0.82rem;">
+                ⚠️ Đơn hàng chưa ghi nhận khoản tiền tạm ứng / đặt cọc nào.
+            </div>
+        `;
+    }
+
+    // Delivery batches list HTML for Mốc 4
+    const batches = Array.isArray(order.delivery_batches) ? order.delivery_batches : [];
+    let batchesHtml = '';
+    if (batches.length > 0) {
+        batchesHtml = `
+            <div style="margin-bottom:12px;">
+                <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>LỊCH SỬ CÁC ĐỢT GIAO HÀNG & NGHIỆM THU (${batches.length} đợt):</span>
+                    <span style="color:#0284c7; font-weight:700;">Tình trạng: ${isDelivered ? 'Đã hoàn tất giao' : (isShipping ? 'Đang giao' : 'Giao 1 phần')}</span>
+                </div>
+                ${batches.map(batch => `
+                    <div class="ot-batch-card">
+                        <div class="ot-batch-header">
+                            <div class="ot-batch-title">
+                                <span class="badge ${batch.status === 'DELIVERED' ? 'badge-success' : 'badge-info'}" style="font-size:0.75rem;">Đợt ${batch.batch_no || 1}</span>
+                                <span>${escapeHtml(batch.title || 'Giao hàng')}</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span class="ot-batch-badge ${batch.status === 'DELIVERED' ? 'ot-proof-badge-green' : 'ot-proof-badge-blue'}">
+                                    ${batch.status === 'DELIVERED' ? '✔ ĐÃ GIAO & KÝ BBBG' : (batch.status === 'SHIPPING' ? '🚚 ĐANG VẬN CHUYỂN' : '📦 GIAO 1 PHẦN')}
+                                </span>
+                                <div class="ot-batch-actions">
+                                    <button type="button" class="btn-icon" onclick="window.openEditDeliveryBatchModal('${order.id}', '${batch.id}', ${isOnline})" title="Sửa đợt này"><i data-lucide="edit-2" style="width:13px; height:13px; color:#0284c7;"></i></button>
+                                    <button type="button" class="btn-icon" onclick="window.deleteOrderDeliveryBatch('${order.id}', '${batch.id}', ${isOnline})" title="Xóa đợt này"><i data-lucide="trash-2" style="width:13px; height:13px; color:#ef4444;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="font-size:0.8rem; line-height:1.6; color:var(--text-secondary);">
+                            <div>• <strong>Ngày giao:</strong> ${batch.date || 'N/A'} | <strong>Đơn vị VC:</strong> ${escapeHtml(batch.carrier || 'Nội bộ công ty')}${batch.tracking_code ? ` (Mã VĐ: <b>${escapeHtml(batch.tracking_code)}</b>)` : ''}</div>
+                            ${batch.recipient ? `<div>• <strong>Người nhận:</strong> ${escapeHtml(batch.recipient)}</div>` : ''}
+                            ${batch.address ? `<div>• <strong>Địa chỉ nhận:</strong> ${escapeHtml(batch.address)}</div>` : ''}
+                            ${batch.items_delivered ? `<div>• <strong>Hàng bàn giao:</strong> ${escapeHtml(batch.items_delivered)}</div>` : ''}
+                            ${batch.note ? `<div>• <strong>Ý kiến nghiệm thu:</strong> ${escapeHtml(batch.note)}</div>` : ''}
+                        </div>
+                        ${batch.evidence_files && batch.evidence_files.length > 0 ? `
+                            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; padding-top:6px; border-top:1px dashed var(--border-color);">
+                                ${batch.evidence_files.map(ev => `
+                                    <div class="ot-evidence-thumb" title="${escapeHtml(ev.file_name || 'Phiếu giao / BBBG')} - Bấm xem phóng to">
+                                        <img src="${ev.file_url}" alt="BBBG" onclick="window.openLightbox('${ev.file_url}', '${escapeHtml(ev.file_name || 'Phiếu giao / BBBG')}')">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (isDelivered) {
+        batchesHtml = `
+            <div class="ot-batch-card" style="margin-bottom:12px;">
+                <div class="ot-batch-header">
+                    <div class="ot-batch-title">
+                        <span class="badge badge-success" style="font-size:0.75rem;">Đợt 1</span>
+                        <span>Đã bàn giao hàng thành công</span>
+                    </div>
+                    <span class="ot-batch-badge ot-proof-badge-green">✔ ĐÃ GIAO & KÝ BBBG</span>
+                </div>
+                <div style="font-size:0.8rem; line-height:1.6; color:var(--text-secondary);">
+                    • <strong>Đơn vị VC:</strong> ${escapeHtml(carrierText)}${trackingCodeText}<br>
+                    • <strong>Thời gian giao:</strong> ${deliveryDateStr}<br>
+                    • <strong>Ghi chú nghiệm thu:</strong> ${escapeHtml(order.delivery_note || 'Khách hàng đã nhận đủ số lượng và ký nghiệm thu đạt 100%')}
+                </div>
+            </div>
+        `;
+    } else {
+        batchesHtml = `
+            <div style="color:var(--text-secondary); margin-bottom:10px; font-size:0.82rem;">
+                ${isShipping ? '🚚 Đơn hàng đang trên đường vận chuyển tới địa chỉ khách hàng.' : '📦 Đơn hàng đang sản xuất chuẩn bị hàng, chưa giao nhận.'}
+            </div>
+        `;
+    }
+
     return `
         <!-- Top Action & Status Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; background:#f1f5f9; padding:12px 16px; border-radius:10px; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
@@ -45397,11 +45546,12 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                 <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); ${isOnline ? `window.openOnlineOrderInvoicePdf('${order.id}')` : `openOrderDetailModal('${order.id}')`};" title="Xem Hóa Đơn PDF">
                     <i data-lucide="printer" style="width:14px; height:14px; color:#0284c7;"></i> In Hóa Đơn
                 </button>
-                ${isOnline ? `
-                <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');" title="Cập nhật tạm ứng, giao hàng, thu tiền">
-                    <i data-lucide="edit-3" style="width:14px; height:14px;"></i> Cập Nhật / Thu Tiền
+                <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;" onclick="window.openNewPaymentInstallmentModal('${order.id}', ${isOnline});" title="Ghi nhận đợt tạm ứng hoặc thu tiền">
+                    <i data-lucide="wallet" style="width:14px; height:14px;"></i> + Thu Tiền / Tạm Ứng
                 </button>
-                ` : ''}
+                <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; gap:4px; border-color:#0284c7; color:#0284c7;" onclick="window.openNewDeliveryBatchModal('${order.id}', ${isOnline});" title="Ghi nhận đợt giao hàng hoặc nghiệm thu">
+                    <i data-lucide="truck" style="width:14px; height:14px;"></i> + Giao Hàng & BBBG
+                </button>
             </div>
         </div>
 
@@ -45409,17 +45559,17 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
         <div class="order-timeline-summary-grid">
             <div class="order-summary-card">
                 <div class="card-label">1. Tổng Giá Trị Đơn</div>
-                <div class="card-value" style="color:var(--text-primary);">${formatMoney(totalAmt)} <small style="font-size:0.8rem;">đ</small></div>
+                <div class="card-value" style="color:var(--text-primary); white-space:nowrap;">${formatMoney(totalAmt)} <small style="font-size:0.8rem;">đ</small></div>
                 <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">Gồm ${items.length} mặt hàng</div>
             </div>
             <div class="order-summary-card">
                 <div class="card-label">2. Đã Thu (Tạm ứng + TT)</div>
-                <div class="card-value" style="color:#108f53;">${formatMoney(totalPaid)} <small style="font-size:0.8rem;">đ</small></div>
+                <div class="card-value" style="color:#108f53; white-space:nowrap;">${formatMoney(totalPaid)} <small style="font-size:0.8rem;">đ</small></div>
                 <div style="font-size:0.75rem; color:#108f53; font-weight:600; margin-top:3px;">Đạt ${paidPercent}% giá trị đơn</div>
             </div>
             <div class="order-summary-card">
                 <div class="card-label">3. Công Nợ Còn Lại</div>
-                <div class="card-value" style="color:${remainingDebt > 0 ? '#ef4444' : '#108f53'};">
+                <div class="card-value" style="color:${remainingDebt > 0 ? '#ef4444' : '#108f53'}; white-space:nowrap;">
                     ${remainingDebt > 0 ? `${formatMoney(remainingDebt)} <small style="font-size:0.8rem;">đ</small>` : '0 đ (Đã tất toán)'}
                 </div>
                 <div style="font-size:0.75rem; color:${remainingDebt > 0 ? '#ef4444' : '#108f53'}; font-weight:600; margin-top:3px;">
@@ -45428,8 +45578,8 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
             </div>
             <div class="order-summary-card">
                 <div class="card-label">4. Tình Trạng Giao Nhận</div>
-                <div class="card-value" style="font-size:1.05rem; color:${isDelivered ? '#108f53' : (isShipping ? '#0284c7' : '#f59e0b')};">
-                    ${isDelivered ? 'Đã giao thành công' : (isShipping ? 'Đang vận chuyển' : 'Chờ đóng gói')}
+                <div class="card-value" style="font-size:1.05rem; color:${isDelivered ? '#108f53' : (isShipping ? '#0284c7' : '#f59e0b')}; white-space:nowrap;">
+                    ${isDelivered ? 'Đã giao thành công' : (isShipping ? 'Đang vận chuyển' : 'Chờ vận chuyển')}
                 </div>
                 <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">${escapeHtml(carrierText)}</div>
             </div>
@@ -45484,16 +45634,16 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                             • <strong>Kênh bán hàng:</strong> ${escapeHtml(order.sales_channel || 'Trực tiếp')} | <strong>Phụ trách:</strong> ${escapeHtml(order.salesperson || 'N/A')}
                             ${order.note ? `<br>• <em>Ghi chú đơn:</em> ${escapeHtml(order.note)}` : ''}
                         </div>
-                        <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; overflow:hidden; margin-bottom:8px;">
-                            <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+                        <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; overflow-x:auto; margin-bottom:8px;">
+                            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; min-width:650px;">
                                 <thead>
                                     <tr style="background:#e2e8f0; font-weight:700;">
-                                        <th style="padding:6px; width:5%; text-align:center;">#</th>
-                                        <th style="padding:6px; width:20%;">Mã SKU</th>
-                                        <th style="padding:6px; width:35%;">Sản phẩm / Quy cách</th>
-                                        <th style="padding:6px; width:10%; text-align:center;">SL</th>
-                                        <th style="padding:6px; width:15%; text-align:right;">Đơn giá</th>
-                                        <th style="padding:6px; width:15%; text-align:right;">Thành tiền</th>
+                                        <th style="padding:8px 6px; width:45px; text-align:center; white-space:nowrap;">#</th>
+                                        <th style="padding:8px 10px; width:120px; white-space:nowrap;">Mã SKU</th>
+                                        <th style="padding:8px 12px; min-width:180px;">Sản phẩm / Quy cách</th>
+                                        <th style="padding:8px 8px; width:60px; text-align:center; white-space:nowrap;">SL</th>
+                                        <th style="padding:8px 12px; width:130px; text-align:right; white-space:nowrap;">Đơn giá</th>
+                                        <th style="padding:8px 12px; width:140px; text-align:right; white-space:nowrap;">Thành tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45539,56 +45689,47 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                 </div>
             </div>
 
-            <!-- Event 3: Tạm ứng / Đặt cọc -->
+            <!-- Event 3: Tạm ứng / Đặt cọc & Các đợt thu tiền -->
             <div class="ot-event-item">
-                <div class="ot-event-icon ${depositAmt > 0 ? 'success' : 'warning'}"><i data-lucide="dollar-sign" style="width:16px; height:16px;"></i></div>
+                <div class="ot-event-icon ${depositAmt > 0 || installments.length > 0 ? 'success' : 'warning'}"><i data-lucide="dollar-sign" style="width:16px; height:16px;"></i></div>
                 <div class="ot-event-card">
                     <div class="ot-event-header">
                         <div class="ot-event-title">
-                            <span>Mốc 3: Nhận tiền tạm ứng (Đặt cọc)</span>
-                            ${depositAmt > 0 ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ NHẬN TẠM ỨNG</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA TẠM ỨNG</span>`}
+                            <span>Mốc 3: Nhận tiền tạm ứng (Đặt cọc) & Các đợt thu tiền</span>
+                            ${totalPaid > 0 ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ THU ${formatMoney(totalPaid)} đ</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA TẠM ỨNG</span>`}
                         </div>
-                        <div class="ot-event-time">${order.deposit_date || 'Theo thỏa thuận'}</div>
+                        <div class="ot-event-time">Đã thu: ${formatMoney(totalPaid)} / ${formatMoney(totalAmt)} đ</div>
                     </div>
                     <div class="ot-event-body">
-                        ${depositAmt > 0 ? `
-                            <div style="line-height:1.6; margin-bottom:8px;">
-                                • <strong>Số tiền tạm ứng:</strong> <span style="font-size:1.05rem; font-weight:800; color:#108f53;">${formatMoney(depositAmt)} đ</span> (${Math.round((depositAmt / totalAmt) * 100)}% giá trị đơn)<br>
-                                • <strong>Hình thức nhận:</strong> ${order.deposit_method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản ngân hàng'}<br>
-                                • <strong>Ghi chú:</strong> ${escapeHtml(order.deposit_note || 'Đã ghi nhận đặt cọc sản xuất')}
-                            </div>
-                        ` : `
-                            <div style="color:#b45309; margin-bottom:8px;">
-                                ⚠️ Đơn hàng chưa ghi nhận khoản tiền tạm ứng nào.
-                            </div>
-                            ${isOnline ? `
-                            <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.78rem; font-weight:600; display:inline-flex; align-items:center; gap:4px; margin-bottom:8px;" onclick="closeModal('orderTimelineModal'); window.openOnlineOrderTrackingModal('${order.id}');">
-                                <i data-lucide="plus" style="width:13px; height:13px;"></i> Ghi nhận tạm ứng (Cọc)
+                        ${installmentsHtml}
+                        <div style="margin-top:10px; margin-bottom:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                            <button type="button" class="btn btn-primary" onclick="window.openNewPaymentInstallmentModal('${order.id}', ${isOnline})" style="padding:6px 14px; font-size:0.8rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+                                <i data-lucide="plus-circle" style="width:14px; height:14px;"></i> + Ghi nhận đợt Tạm ứng / Thu tiền mới (Màn hình riêng)
                             </button>
-                            ` : ''}
-                        `}
+                        </div>
                         <!-- Evidence for Deposit -->
                         ${window.renderMilestoneEvidenceSection(order, 'DEPOSIT', 'Ủy nhiệm chi / Biên lai chuyển khoản cọc', isOnline, depositProofBadges)}
                     </div>
                 </div>
             </div>
 
-            <!-- Event 4: Giao hàng & Nghiệm thu -->
+            <!-- Event 4: Giao hàng & Nghiệm thu từng đợt -->
             <div class="ot-event-item">
                 <div class="ot-event-icon ${isDelivered ? 'success' : (isShipping ? 'info' : 'warning')}"><i data-lucide="truck" style="width:16px; height:16px;"></i></div>
                 <div class="ot-event-card">
                     <div class="ot-event-header">
                         <div class="ot-event-title">
-                            <span>Mốc 4: Tình trạng giao hàng & Nghiệm thu</span>
-                            ${isDelivered ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ GIAO THÀNH CÔNG</span>` : (isShipping ? `<span class="badge badge-info" style="font-size:0.72rem;">ĐANG GIAO HÀNG</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA GIAO</span>`)}
+                            <span>Mốc 4: Tình trạng giao hàng & Nghiệm thu từng đợt</span>
+                            ${isDelivered ? `<span class="badge badge-success" style="font-size:0.72rem;">ĐÃ GIAO THÀNH CÔNG</span>` : (isShipping ? `<span class="badge badge-info" style="font-size:0.72rem;">ĐANG GIAO HÀNG</span>` : `<span class="badge badge-warning" style="font-size:0.72rem;">CHƯA HOÀN TẤT GIAO</span>`)}
                         </div>
                         <div class="ot-event-time">${deliveryDateStr}</div>
                     </div>
                     <div class="ot-event-body">
-                        <div style="line-height:1.6; margin-bottom:8px;">
-                            • <strong>Đơn vị vận chuyển / Người giao:</strong> ${escapeHtml(carrierText)}${trackingCodeText}<br>
-                            • <strong>Thời gian giao:</strong> ${deliveryDateStr}<br>
-                            • <strong>Ghi chú giao nhận:</strong> ${escapeHtml(order.delivery_note || (isDelivered ? 'Khách hàng đã nhận đủ số lượng và ký nghiệm thu đạt 100%' : 'Chờ vận chuyển'))}
+                        ${batchesHtml}
+                        <div style="margin-top:10px; margin-bottom:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                            <button type="button" class="btn btn-primary" onclick="window.openNewDeliveryBatchModal('${order.id}', ${isOnline})" style="padding:6px 14px; font-size:0.8rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+                                <i data-lucide="plus-circle" style="width:14px; height:14px;"></i> + Ghi nhận đợt Giao hàng & Nghiệm thu mới (Màn hình riêng)
+                            </button>
                         </div>
                         <!-- Evidence for Delivery -->
                         ${window.renderMilestoneEvidenceSection(order, 'DELIVERY', 'Ảnh chụp kiện hàng / Phiếu giao ký nhận', isOnline, deliveryProofBadges)}
@@ -45596,7 +45737,7 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                 </div>
             </div>
 
-            <!-- Event 5: Lịch sử thu tiền & Quyết toán công nợ -->
+            <!-- Event 5: Lịch sử thanh toán & Quyết toán công nợ -->
             <div class="ot-event-item">
                 <div class="ot-event-icon ${remainingDebt <= 0 ? 'success' : 'warning'}"><i data-lucide="credit-card" style="width:16px; height:16px;"></i></div>
                 <div class="ot-event-card">
@@ -45610,12 +45751,12 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                     <div class="ot-event-body">
                         <div style="margin-bottom:8px;">
                             ${payments.length > 0 ? `
-                                <div style="margin-bottom:6px; font-weight:700; font-size:0.8rem; color:var(--text-secondary);">DANH SÁCH CÁC PHIẾU THU TIỀN:</div>
+                                <div style="margin-bottom:6px; font-weight:700; font-size:0.8rem; color:var(--text-secondary);">DANH SÁCH CÁC PHIẾU THU TIỀN HỆ THỐNG:</div>
                                 <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:6px; padding:6px 10px; margin-bottom:8px;">
                                     ${payments.map(p => `
-                                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; padding:3px 0; border-bottom:1px dashed var(--border-color);">
+                                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; padding:4px 0; border-bottom:1px dashed var(--border-color);">
                                             <span>• <strong>${formatMoney(p.amount)} đ</strong> (${p.method === 'CASH' ? 'Tiền mặt' : 'Chuyển khoản'}) - <em>${p.date || p.created_at || ''}</em></span>
-                                            <span style="color:var(--text-secondary);">${escapeHtml(p.note || p.desc || 'Thu tiền đơn')}</span>
+                                            <span style="color:var(--text-secondary);">${escapeHtml(p.desc || p.note || 'Thu tiền đơn')}</span>
                                         </div>
                                     `).join("")}
                                 </div>
@@ -45626,6 +45767,13 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
                                 </div>
                             `}
                         </div>
+                        ${remainingDebt > 0 ? `
+                            <div style="margin-top:10px; margin-bottom:8px;">
+                                <button type="button" class="btn btn-warning" onclick="window.openNewPaymentInstallmentModal('${order.id}', ${isOnline}, 'FINAL')" style="padding:6px 14px; font-size:0.8rem; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+                                    <i data-lucide="credit-card" style="width:14px; height:14px;"></i> + Thu tiền quyết toán công nợ còn lại (${formatMoney(remainingDebt)} đ)
+                                </button>
+                            </div>
+                        ` : ''}
                         <!-- Evidence for Payment -->
                         ${window.renderMilestoneEvidenceSection(order, 'PAYMENT', 'Biên lai thanh toán / UNC quyết toán', isOnline)}
                     </div>
@@ -45681,4 +45829,641 @@ window.generateOrderTimelineHtml = function(order, isOnline, partner, totalAmt, 
             </div>
         </div>
     `;
+};
+
+// --- Dedicated Modals & Handlers for Payment Installments and Delivery Batches ---
+window._payInstTempFiles = [];
+window._delBatchTempFiles = [];
+
+window.updatePayInstAmountFormatted = function() {
+    const el = document.getElementById("payInstAmount");
+    const disp = document.getElementById("payInstAmountDisplay");
+    if (!el || !disp) return;
+    const val = parseFloat(el.value) || 0;
+    disp.textContent = (typeof formatMoney === 'function' ? formatMoney(val) : val) + " đ";
+};
+
+window.applyPayInstPreset = function(presetTitle, percent) {
+    const orderId = document.getElementById("payInstOrderId").value;
+    const isOnline = document.getElementById("payInstIsOnline").value === "true";
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) return;
+
+    const totalAmt = Number(order.total_amount || 0);
+    const installments = Array.isArray(order.payment_installments) ? order.payment_installments : [];
+    const instPaid = installments.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+    const alreadyPaid = Math.max(Number(order.paid_amount || 0), instPaid);
+    const remaining = Math.max(0, totalAmt - alreadyPaid);
+
+    document.getElementById("payInstTitle").value = presetTitle;
+    let targetAmt = 0;
+    if (percent === 100) {
+        targetAmt = remaining > 0 ? remaining : totalAmt;
+    } else {
+        targetAmt = Math.round(totalAmt * (percent / 100));
+    }
+    document.getElementById("payInstAmount").value = targetAmt;
+    window.updatePayInstAmountFormatted();
+};
+
+window.openNewPaymentInstallmentModal = function(orderId, isOnline = true, mode = 'DEPOSIT') {
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        alert("Không tìm thấy đơn hàng!");
+        return;
+    }
+
+    window._lastTimelineOrderId = order.id;
+    window._lastTimelineIsOnline = isOnline;
+    window._payInstTempFiles = [];
+
+    const partner = (state.partners || []).find(p => p.id === order.customer_id) || {};
+    const custName = order.customer_name || partner.name || "Khách hàng";
+    const totalAmt = Number(order.total_amount || 0);
+    const installments = Array.isArray(order.payment_installments) ? order.payment_installments : [];
+    const instPaid = installments.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+    const currentPaid = Math.max(Number(order.paid_amount || 0), instPaid);
+    const remainingDebt = Math.max(0, totalAmt - currentPaid);
+
+    document.getElementById("payInstOrderId").value = order.id;
+    document.getElementById("payInstIsOnline").value = isOnline ? "true" : "false";
+    document.getElementById("payInstId").value = "";
+    document.getElementById("payInstOrderNumberText").textContent = order.order_number;
+    document.getElementById("payInstDebtText").textContent = (typeof formatMoney === 'function' ? formatMoney(remainingDebt) : remainingDebt) + " đ";
+
+    const nextNo = installments.length + 1;
+    if (mode === 'FINAL') {
+        document.getElementById("payInstModalHeaderTitle").textContent = "Ghi Nhận Thu Tiền Quyết Toán Công Nợ";
+        document.getElementById("payInstTitle").value = `Đợt ${nextNo} - Quyết toán công nợ còn lại`;
+        document.getElementById("payInstAmount").value = remainingDebt;
+    } else {
+        document.getElementById("payInstModalHeaderTitle").textContent = "Ghi Nhận Đợt Tạm Ứng / Thu Tiền";
+        if (nextNo === 1) {
+            document.getElementById("payInstTitle").value = `Đợt 1 - Tạm ứng hợp đồng (50%)`;
+            document.getElementById("payInstAmount").value = Math.round(totalAmt * 0.5);
+        } else {
+            document.getElementById("payInstTitle").value = `Đợt ${nextNo} - Thu tiền đợt ${nextNo}`;
+            document.getElementById("payInstAmount").value = remainingDebt > 0 ? remainingDebt : Math.round(totalAmt * 0.3);
+        }
+    }
+
+    document.getElementById("payInstDate").value = new Date().toISOString().split('T')[0];
+    document.getElementById("payInstMethod").value = "BANK_TRANSFER";
+    document.getElementById("payInstAccount").value = "Techcombank - CTY CP IN LẠC HỒNG";
+    document.getElementById("payInstPayer").value = custName;
+    document.getElementById("payInstNote").value = "";
+
+    window.updatePayInstAmountFormatted();
+    window.renderPayInstThumbnails();
+
+    openModal("orderPaymentInstallmentModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.openEditPaymentInstallmentModal = function(orderId, instId, isOnline = true) {
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order || !Array.isArray(order.payment_installments)) return;
+
+    const inst = order.payment_installments.find(i => i.id === instId);
+    if (!inst) return;
+
+    window._lastTimelineOrderId = order.id;
+    window._lastTimelineIsOnline = isOnline;
+    window._payInstTempFiles = Array.isArray(inst.evidence_files) ? [...inst.evidence_files] : [];
+
+    const partner = (state.partners || []).find(p => p.id === order.customer_id) || {};
+    const custName = order.customer_name || partner.name || "Khách hàng";
+
+    document.getElementById("payInstOrderId").value = order.id;
+    document.getElementById("payInstIsOnline").value = isOnline ? "true" : "false";
+    document.getElementById("payInstId").value = inst.id;
+    document.getElementById("payInstModalHeaderTitle").textContent = "Chỉnh Sửa Đợt Thu Tiền / Tạm Ứng";
+    document.getElementById("payInstOrderNumberText").textContent = order.order_number;
+
+    document.getElementById("payInstTitle").value = inst.title || "";
+    document.getElementById("payInstAmount").value = inst.amount || 0;
+    document.getElementById("payInstDate").value = inst.date || "";
+    document.getElementById("payInstMethod").value = inst.method || "BANK_TRANSFER";
+    document.getElementById("payInstAccount").value = inst.account || "";
+    document.getElementById("payInstPayer").value = inst.payer || custName;
+    document.getElementById("payInstNote").value = inst.note || "";
+
+    window.updatePayInstAmountFormatted();
+    window.renderPayInstThumbnails();
+
+    openModal("orderPaymentInstallmentModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.handlePayInstFiles = function(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            window._payInstTempFiles.push({
+                id: "ev_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+                file_name: file.name,
+                file_url: e.target.result,
+                file_type: file.type.startsWith("image/") ? "IMAGE" : "DOCUMENT",
+                created_at: new Date().toISOString()
+            });
+            window.renderPayInstThumbnails();
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+window.renderPayInstThumbnails = function() {
+    const container = document.getElementById("payInstThumbnailsList");
+    if (!container) return;
+    if (window._payInstTempFiles.length === 0) {
+        container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh đính kèm. Bấm nút phía trên để chụp hoặc tải ảnh biên lai chuyển tiền.</span>`;
+        return;
+    }
+    container.innerHTML = window._payInstTempFiles.map((f, idx) => `
+        <div class="ot-evidence-thumb" style="position:relative;">
+            <img src="${f.file_url}" alt="Biên lai UNC" onclick="window.openLightbox('${f.file_url}', '${escapeHtml(f.file_name)}')">
+            <button type="button" class="ot-evidence-thumb-delete" onclick="window.removePayInstTempFile(${idx})">&times;</button>
+        </div>
+    `).join("");
+};
+
+window.removePayInstTempFile = function(idx) {
+    window._payInstTempFiles.splice(idx, 1);
+    window.renderPayInstThumbnails();
+};
+
+window.saveOrderPaymentInstallment = function() {
+    const orderId = document.getElementById("payInstOrderId").value;
+    const isOnline = document.getElementById("payInstIsOnline").value === "true";
+    const instId = document.getElementById("payInstId").value;
+
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        alert("Không tìm thấy đơn hàng!");
+        return;
+    }
+
+    const title = (document.getElementById("payInstTitle").value || "").trim();
+    const amount = parseFloat(document.getElementById("payInstAmount").value) || 0;
+    const date = document.getElementById("payInstDate").value;
+    const method = document.getElementById("payInstMethod").value;
+    const account = (document.getElementById("payInstAccount").value || "").trim();
+    const payer = (document.getElementById("payInstPayer").value || "").trim();
+    const note = (document.getElementById("payInstNote").value || "").trim();
+
+    if (!title) {
+        alert("Vui lòng nhập tên đợt thu!");
+        return;
+    }
+    if (amount <= 0) {
+        alert("Vui lòng nhập số tiền hợp lệ (> 0 đ)!");
+        return;
+    }
+    if (!date) {
+        alert("Vui lòng chọn ngày thu tiền!");
+        return;
+    }
+
+    if (!Array.isArray(order.payment_installments)) {
+        order.payment_installments = [];
+    }
+
+    if (instId) {
+        const idx = order.payment_installments.findIndex(i => i.id === instId);
+        if (idx !== -1) {
+            order.payment_installments[idx] = {
+                ...order.payment_installments[idx],
+                title,
+                amount,
+                date,
+                method,
+                account,
+                payer,
+                note,
+                evidence_files: [...window._payInstTempFiles]
+            };
+        }
+    } else {
+        const newInst = {
+            id: "inst_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+            installment_no: order.payment_installments.length + 1,
+            title,
+            amount,
+            date,
+            method,
+            account,
+            payer,
+            note,
+            evidence_files: [...window._payInstTempFiles],
+            created_at: new Date().toISOString()
+        };
+        order.payment_installments.push(newInst);
+    }
+
+    // Sync order financials
+    const totalInstPaid = order.payment_installments.reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+    order.paid_amount = totalInstPaid;
+    if (order.payment_installments.length > 0) {
+        order.deposit_amount = order.payment_installments[0].amount;
+        order.deposit_status = "DEPOSITED";
+        order.deposit_date = order.payment_installments[0].date;
+    }
+    const totalAmt = Number(order.total_amount || 0);
+    if (totalInstPaid >= totalAmt && totalAmt > 0) {
+        order.collection_status = "COLLECTED_FULL";
+    } else if (totalInstPaid > 0) {
+        order.collection_status = "PARTIAL";
+    }
+
+    // Also sync evidence to order.evidence_files
+    if (!Array.isArray(order.evidence_files)) order.evidence_files = [];
+    window._payInstTempFiles.forEach(f => {
+        if (!order.evidence_files.some(e => e.id === f.id || (e.file_name === f.file_name && e.file_url === f.file_url))) {
+            order.evidence_files.push({
+                ...f,
+                milestone: 'DEPOSIT',
+                title: `${title} - ${formatMoney(amount)} đ`,
+                created_at_formatted: date
+            });
+        }
+    });
+
+    // Record receipt in state.transactions
+    if (!Array.isArray(state.transactions)) state.transactions = [];
+    state.transactions.push({
+        id: "tr_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+        type: "RECEIPT",
+        order_id: order.id,
+        order_number: order.order_number,
+        reference_id: order.id,
+        amount: amount,
+        date: date,
+        method: method,
+        account: account,
+        category: "THU_TIEN_DON_HANG",
+        desc: `${title} - ${order.order_number}: ${note || 'Thu tiền đơn hàng'}`,
+        created_at: new Date().toISOString()
+    });
+
+    if (typeof saveToStorage === 'function') saveToStorage();
+    if (typeof syncState === 'function') syncState();
+
+    closeModal("orderPaymentInstallmentModal");
+    window.openOrderTimelineModal(order.id, isOnline);
+    if (typeof renderOnlineSales === 'function') renderOnlineSales();
+
+    alert("Đã lưu đợt tạm ứng / thu tiền thành công!");
+};
+
+window.deleteOrderPaymentInstallment = function(orderId, instId, isOnline = true) {
+    if (!confirm("Bạn có chắc chắn muốn xóa đợt thu tiền này không?")) return;
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order || !Array.isArray(order.payment_installments)) return;
+
+    order.payment_installments = order.payment_installments.filter(i => i.id !== instId);
+    const totalInstPaid = order.payment_installments.reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+    order.paid_amount = totalInstPaid;
+    order.deposit_amount = order.payment_installments.length > 0 ? order.payment_installments[0].amount : 0;
+    if (order.deposit_amount <= 0) order.deposit_status = "PENDING";
+
+    const totalAmt = Number(order.total_amount || 0);
+    if (totalInstPaid >= totalAmt && totalAmt > 0) {
+        order.collection_status = "COLLECTED_FULL";
+    } else if (totalInstPaid > 0) {
+        order.collection_status = "PARTIAL";
+    } else {
+        order.collection_status = "UNCOLLECTED";
+    }
+
+    if (typeof saveToStorage === 'function') saveToStorage();
+    if (typeof syncState === 'function') syncState();
+
+    window.openOrderTimelineModal(order.id, isOnline);
+    if (typeof renderOnlineSales === 'function') renderOnlineSales();
+};
+
+window.applyDelBatchPreset = function(presetTitle, status) {
+    document.getElementById("delBatchTitle").value = presetTitle;
+    document.getElementById("delBatchStatus").value = status;
+};
+
+window.openNewDeliveryBatchModal = function(orderId, isOnline = true) {
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        alert("Không tìm thấy đơn hàng!");
+        return;
+    }
+
+    window._lastTimelineOrderId = order.id;
+    window._lastTimelineIsOnline = isOnline;
+    window._delBatchTempFiles = [];
+
+    const partner = (state.partners || []).find(p => p.id === order.customer_id) || {};
+    const custName = order.customer_name || partner.name || "Khách hàng";
+    const custPhone = order.customer_phone || partner.phone || "";
+    const custAddr = order.customer_address || partner.address || "";
+
+    const batches = Array.isArray(order.delivery_batches) ? order.delivery_batches : [];
+    const nextNo = batches.length + 1;
+
+    document.getElementById("delBatchOrderId").value = order.id;
+    document.getElementById("delBatchIsOnline").value = isOnline ? "true" : "false";
+    document.getElementById("delBatchId").value = "";
+    document.getElementById("delBatchModalHeaderTitle").textContent = "Ghi Nhận Đợt Giao Hàng & Nghiệm Thu";
+    document.getElementById("delBatchOrderNumberText").textContent = order.order_number;
+    document.getElementById("delBatchCustText").textContent = `${custName} (${custPhone})`;
+
+    if (nextNo === 1) {
+        document.getElementById("delBatchTitle").value = `Đợt 1 - Giao hàng & Ký BBBG`;
+        document.getElementById("delBatchStatus").value = "DELIVERED";
+    } else {
+        document.getElementById("delBatchTitle").value = `Đợt ${nextNo} - Giao hàng đợt ${nextNo}`;
+        document.getElementById("delBatchStatus").value = "DELIVERED";
+    }
+
+    document.getElementById("delBatchDate").value = new Date().toISOString().split('T')[0];
+    document.getElementById("delBatchCarrier").value = order.delivery_carrier || "Nội bộ công ty (Xe tải)";
+    document.getElementById("delBatchTrackingCode").value = order.delivery_tracking_code || "";
+    document.getElementById("delBatchRecipient").value = `${custName} - ${custPhone}`;
+    document.getElementById("delBatchAddress").value = custAddr;
+
+    const items = order.items || [];
+    if (items.length > 0) {
+        document.getElementById("delBatchItems").value = items.map(it => `• ${it.name || it.sku} (x${it.qty || 1})`).join("\n");
+    } else {
+        document.getElementById("delBatchItems").value = order.print_spec ? `${order.print_spec} (SL: ${order.quantity || 1})` : "";
+    }
+
+    document.getElementById("delBatchNote").value = "Hàng hóa bao bì nguyên vẹn, đã kiểm đếm đủ số lượng, hai bên thống nhất ký biên bản giao nhận nghiệm thu đạt 100%.";
+
+    window.renderDelBatchThumbnails();
+
+    openModal("orderDeliveryBatchModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.openEditDeliveryBatchModal = function(orderId, batchId, isOnline = true) {
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order || !Array.isArray(order.delivery_batches)) return;
+
+    const batch = order.delivery_batches.find(b => b.id === batchId);
+    if (!batch) return;
+
+    window._lastTimelineOrderId = order.id;
+    window._lastTimelineIsOnline = isOnline;
+    window._delBatchTempFiles = Array.isArray(batch.evidence_files) ? [...batch.evidence_files] : [];
+
+    const partner = (state.partners || []).find(p => p.id === order.customer_id) || {};
+    const custName = order.customer_name || partner.name || "Khách hàng";
+
+    document.getElementById("delBatchOrderId").value = order.id;
+    document.getElementById("delBatchIsOnline").value = isOnline ? "true" : "false";
+    document.getElementById("delBatchId").value = batch.id;
+    document.getElementById("delBatchModalHeaderTitle").textContent = "Chỉnh Sửa Đợt Giao Hàng & Nghiệm Thu";
+    document.getElementById("delBatchOrderNumberText").textContent = order.order_number;
+    document.getElementById("delBatchCustText").textContent = custName;
+
+    document.getElementById("delBatchTitle").value = batch.title || "";
+    document.getElementById("delBatchDate").value = batch.date || "";
+    document.getElementById("delBatchStatus").value = batch.status || "DELIVERED";
+    document.getElementById("delBatchCarrier").value = batch.carrier || "";
+    document.getElementById("delBatchTrackingCode").value = batch.tracking_code || "";
+    document.getElementById("delBatchRecipient").value = batch.recipient || "";
+    document.getElementById("delBatchAddress").value = batch.address || "";
+    document.getElementById("delBatchItems").value = batch.items_delivered || "";
+    document.getElementById("delBatchNote").value = batch.note || "";
+
+    window.renderDelBatchThumbnails();
+
+    openModal("orderDeliveryBatchModal");
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+};
+
+window.handleDelBatchFiles = function(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            window._delBatchTempFiles.push({
+                id: "ev_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+                file_name: file.name,
+                file_url: e.target.result,
+                file_type: file.type.startsWith("image/") ? "IMAGE" : "DOCUMENT",
+                created_at: new Date().toISOString()
+            });
+            window.renderDelBatchThumbnails();
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+window.renderDelBatchThumbnails = function() {
+    const container = document.getElementById("delBatchThumbnailsList");
+    if (!container) return;
+    if (window._delBatchTempFiles.length === 0) {
+        container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh đính kèm. Bấm nút phía trên để chụp phiếu giao hàng hoặc BBBG đã ký.</span>`;
+        return;
+    }
+    container.innerHTML = window._delBatchTempFiles.map((f, idx) => `
+        <div class="ot-evidence-thumb" style="position:relative;">
+            <img src="${f.file_url}" alt="BBBG / Giao hàng" onclick="window.openLightbox('${f.file_url}', '${escapeHtml(f.file_name)}')">
+            <button type="button" class="ot-evidence-thumb-delete" onclick="window.removeDelBatchTempFile(${idx})">&times;</button>
+        </div>
+    `).join("");
+};
+
+window.removeDelBatchTempFile = function(idx) {
+    window._delBatchTempFiles.splice(idx, 1);
+    window.renderDelBatchThumbnails();
+};
+
+window.saveOrderDeliveryBatch = function() {
+    const orderId = document.getElementById("delBatchOrderId").value;
+    const isOnline = document.getElementById("delBatchIsOnline").value === "true";
+    const batchId = document.getElementById("delBatchId").value;
+
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        alert("Không tìm thấy đơn hàng!");
+        return;
+    }
+
+    const title = (document.getElementById("delBatchTitle").value || "").trim();
+    const date = document.getElementById("delBatchDate").value;
+    const status = document.getElementById("delBatchStatus").value;
+    const carrier = (document.getElementById("delBatchCarrier").value || "").trim();
+    const tracking_code = (document.getElementById("delBatchTrackingCode").value || "").trim();
+    const recipient = (document.getElementById("delBatchRecipient").value || "").trim();
+    const address = (document.getElementById("delBatchAddress").value || "").trim();
+    const items_delivered = (document.getElementById("delBatchItems").value || "").trim();
+    const note = (document.getElementById("delBatchNote").value || "").trim();
+
+    if (!title) {
+        alert("Vui lòng nhập tên đợt giao!");
+        return;
+    }
+    if (!date) {
+        alert("Vui lòng chọn ngày giao hàng!");
+        return;
+    }
+
+    if (!Array.isArray(order.delivery_batches)) {
+        order.delivery_batches = [];
+    }
+
+    if (batchId) {
+        const idx = order.delivery_batches.findIndex(b => b.id === batchId);
+        if (idx !== -1) {
+            order.delivery_batches[idx] = {
+                ...order.delivery_batches[idx],
+                title,
+                date,
+                status,
+                carrier,
+                tracking_code,
+                recipient,
+                address,
+                items_delivered,
+                note,
+                evidence_files: [...window._delBatchTempFiles]
+            };
+        }
+    } else {
+        const newBatch = {
+            id: "del_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+            batch_no: order.delivery_batches.length + 1,
+            title,
+            date,
+            status,
+            carrier,
+            tracking_code,
+            recipient,
+            address,
+            items_delivered,
+            note,
+            evidence_files: [...window._delBatchTempFiles],
+            created_at: new Date().toISOString()
+        };
+        order.delivery_batches.push(newBatch);
+    }
+
+    // Sync order delivery status
+    if (status === "DELIVERED") {
+        order.delivery_status = "DELIVERED";
+        order.delivery_date = date;
+        order.delivery_carrier = carrier;
+        order.delivery_tracking_code = tracking_code;
+        order.delivery_note = note;
+    } else if (status === "SHIPPING") {
+        order.delivery_status = "SHIPPING";
+        order.delivery_date = date;
+        order.delivery_carrier = carrier;
+        order.delivery_tracking_code = tracking_code;
+    } else if (status === "PARTIAL") {
+        order.delivery_status = "PARTIAL";
+    }
+
+    // Also sync evidence to order.evidence_files
+    if (!Array.isArray(order.evidence_files)) order.evidence_files = [];
+    window._delBatchTempFiles.forEach(f => {
+        if (!order.evidence_files.some(e => e.id === f.id || (e.file_name === f.file_name && e.file_url === f.file_url))) {
+            order.evidence_files.push({
+                ...f,
+                milestone: 'DELIVERY',
+                title: `${title} (${date})`,
+                created_at_formatted: date
+            });
+        }
+    });
+
+    if (typeof saveToStorage === 'function') saveToStorage();
+    if (typeof syncState === 'function') syncState();
+
+    closeModal("orderDeliveryBatchModal");
+    window.openOrderTimelineModal(order.id, isOnline);
+    if (typeof renderOnlineSales === 'function') renderOnlineSales();
+
+    alert("Đã lưu đợt giao hàng & nghiệm thu thành công!");
+};
+
+window.deleteOrderDeliveryBatch = function(orderId, batchId, isOnline = true) {
+    if (!confirm("Bạn có chắc chắn muốn xóa đợt giao hàng này không?")) return;
+    let order = null;
+    if (isOnline) {
+        order = (state.online_orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order) {
+        order = (state.orders || []).find(o => o.id === orderId || o.order_number === orderId);
+    }
+    if (!order || !Array.isArray(order.delivery_batches)) return;
+
+    order.delivery_batches = order.delivery_batches.filter(b => b.id !== batchId);
+    if (order.delivery_batches.length === 0) {
+        order.delivery_status = "PENDING";
+    } else {
+        const lastBatch = order.delivery_batches[order.delivery_batches.length - 1];
+        order.delivery_status = lastBatch.status || "PENDING";
+        order.delivery_date = lastBatch.date || "";
+    }
+
+    if (typeof saveToStorage === 'function') saveToStorage();
+    if (typeof syncState === 'function') syncState();
+
+    window.openOrderTimelineModal(order.id, isOnline);
+    if (typeof renderOnlineSales === 'function') renderOnlineSales();
 };

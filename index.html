@@ -1892,31 +1892,18 @@
                                 <table class="table" id="onlineOrdersTable">
 
                                     <thead>
-
                                         <tr>
-
-                                            <th>Mã đơn</th>
-
-                                            <th>Thời gian</th>
-
-                                            <th>Khách hàng</th>
-
-                                            <th>Khu vực / Địa chỉ</th>
-
-                                            <th>Mã sản phẩm</th>
-
-                                            <th>Quy trình theo dõi</th>
-
-                                            <th>Tổng tiền</th>
-
-                                            <th>Đã thanh toán</th>
-
-                                            <th style="color: var(--danger);">Còn nợ</th>
-
-                                            <th>Hành động</th>
-
+                                            <th style="white-space:nowrap; text-align:left;">Mã đơn</th>
+                                            <th style="white-space:nowrap; text-align:center;">Thời gian</th>
+                                            <th style="min-width:140px; white-space:nowrap;">Khách hàng</th>
+                                            <th style="min-width:130px;">Khu vực / Địa chỉ</th>
+                                            <th style="min-width:130px; max-width:190px;">Mã sản phẩm</th>
+                                            <th style="min-width:165px; white-space:nowrap;">Quy trình theo dõi</th>
+                                            <th style="text-align:right; white-space:nowrap;">Tổng tiền</th>
+                                            <th style="text-align:right; white-space:nowrap;">Đã thanh toán</th>
+                                            <th style="text-align:right; white-space:nowrap; color: var(--danger);">Còn nợ</th>
+                                            <th style="text-align:center; white-space:nowrap;">Hành động</th>
                                         </tr>
-
                                     </thead>
 
                                     <tbody>
@@ -12569,7 +12556,232 @@
         </div>
     </div>
 
-    <!-- Modal 15: Invoice PDF Preview with Payment QR Code -->
+    
+    <!-- Modal: Ghi Nhận Đợt Tạm Ứng / Thu Tiền Riêng Biệt -->
+    <div class="modal" id="orderPaymentInstallmentModal" style="z-index: 2050;">
+        <div class="modal-dialog" style="max-width: 680px; width: 95%;">
+            <div class="modal-content" style="border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="background:#f8fafc; border-bottom: 1px solid var(--border-color); padding: 14px 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:38px; height:38px; border-radius:8px; background:rgba(16, 143, 83, 0.12); color:#108f53; display:flex; align-items:center; justify-content:center;">
+                            <i data-lucide="wallet" style="width:20px; height:20px;"></i>
+                        </div>
+                        <div>
+                            <h3 id="payInstModalHeaderTitle" style="margin:0; font-size:1.15rem; font-weight:800; color:var(--text-primary);">
+                                Ghi Nhận Đợt Tạm Ứng / Thu Tiền
+                            </h3>
+                            <div id="payInstModalSubtitle" style="font-size:0.8rem; color:var(--text-secondary); margin-top:2px;">
+                                Đơn hàng: <strong id="payInstOrderNumberText"></strong> | Còn nợ: <span id="payInstDebtText" style="color:var(--danger); font-weight:700;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" onclick="closeModal('orderPaymentInstallmentModal')"><i data-lucide="x"></i></button>
+                </div>
+
+                <div class="modal-body" style="padding: 20px; max-height: 80vh; overflow-y: auto;">
+                    <form id="orderPaymentInstallmentForm" onsubmit="event.preventDefault(); window.saveOrderPaymentInstallment();">
+                        <input type="hidden" id="payInstOrderId">
+                        <input type="hidden" id="payInstIsOnline" value="true">
+                        <input type="hidden" id="payInstId" value="">
+
+                        <!-- Quick Installment Templates -->
+                        <div style="margin-bottom: 14px;">
+                            <label style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">CHỌN NHANH LOẠI ĐỢT THU:</label>
+                            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyPayInstPreset('Tạm ứng đợt 1 (Cọc 50%)', 50)" style="font-size:0.75rem; padding:4px 8px;">Tạm ứng đợt 1 (50%)</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyPayInstPreset('Tạm ứng đợt 1 (Cọc 30%)', 30)" style="font-size:0.75rem; padding:4px 8px;">Tạm ứng đợt 1 (30%)</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyPayInstPreset('Tạm ứng đợt 2 (Xuất xưởng 40%)', 40)" style="font-size:0.75rem; padding:4px 8px;">Tạm ứng đợt 2 (Xuất xưởng)</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyPayInstPreset('Thu tiền sau giao (Quyết toán nốt)', 100)" style="font-size:0.75rem; padding:4px 8px;">Quyết toán nốt còn nợ</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyPayInstPreset('Thanh toán toàn bộ (100%)', 100)" style="font-size:0.75rem; padding:4px 8px;">Toàn bộ 100%</button>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Tên đợt thu / Tạm ứng <span style="color:var(--danger);">*</span></label>
+                                <input type="text" class="form-control" id="payInstTitle" placeholder="Ví dụ: Đợt 1 - Tạm ứng hợp đồng 50%" required>
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Ngày thu tiền <span style="color:var(--danger);">*</span></label>
+                                <input type="date" class="form-control" id="payInstDate" required>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Số tiền thu (VNĐ) <span style="color:var(--danger);">*</span></label>
+                                <input type="number" class="form-control" id="payInstAmount" min="1" step="1000" placeholder="0" oninput="window.updatePayInstAmountFormatted()" required>
+                                <div id="payInstAmountDisplay" style="font-size:0.85rem; font-weight:700; color:#108f53; margin-top:4px;">0 đ</div>
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Phương thức thanh toán</label>
+                                <select class="form-select" id="payInstMethod">
+                                    <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
+                                    <option value="CASH">Tiền mặt (Thu trực tiếp)</option>
+                                    <option value="POS">Quẹt thẻ máy POS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Tài khoản / Quỹ thu</label>
+                                <input type="text" class="form-control" id="payInstAccount" placeholder="Techcombank - CTY CP IN LẠC HỒNG (hoặc Quỹ tiền mặt)">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Người chuyển / Nộp tiền</label>
+                                <input type="text" class="form-control" id="payInstPayer" placeholder="Họ tên người nộp / Kế toán đối tác">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 14px;">
+                            <label class="form-label" style="font-weight:700; font-size:0.85rem;">Nội dung / Ghi chú đợt thu</label>
+                            <textarea class="form-control" id="payInstNote" rows="2" placeholder="Ghi chú thêm về đợt thanh toán, số UNC, thỏa thuận..."></textarea>
+                        </div>
+
+                        <!-- Upload Photo Evidence for this Installment -->
+                        <div style="background:#f8fafc; border:1px dashed var(--border-color); border-radius:8px; padding:12px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <label style="font-weight:700; font-size:0.82rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; margin:0;">
+                                    <i data-lucide="paperclip" style="width:14px; height:14px;"></i> ẢNH BIÊN LAI / ỦY NHIỆM CHI (UNC) ĐÍNH KÈM
+                                </label>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('payInstFileField').click()" style="padding:3px 8px; font-size:0.75rem;">
+                                    <i data-lucide="camera" style="width:12px; height:12px;"></i> + Chọn ảnh / Chụp hình
+                                </button>
+                                <input type="file" id="payInstFileField" accept="image/*,.pdf" multiple style="display:none;" onchange="window.handlePayInstFiles(event)">
+                            </div>
+                            <div id="payInstThumbnailsList" style="display:flex; gap:8px; flex-wrap:wrap; min-height:36px; align-items:center;">
+                                <span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh đính kèm. Bấm nút phía trên để chụp hoặc tải ảnh biên lai chuyển tiền.</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--border-color); padding-top:14px;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('orderPaymentInstallmentModal'); if (window._lastTimelineOrderId) openOrderTimelineModal(window._lastTimelineOrderId, window._lastTimelineIsOnline);">Hủy / Quay lại</button>
+                            <button type="submit" class="btn btn-primary" style="font-weight:700;"><i data-lucide="check-circle" style="width:14px; height:14px;"></i> Lưu Đợt Thu Tiền</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Ghi Nhận Đợt Giao Hàng & Nghiệm Thu Riêng Biệt -->
+    <div class="modal" id="orderDeliveryBatchModal" style="z-index: 2050;">
+        <div class="modal-dialog" style="max-width: 720px; width: 95%;">
+            <div class="modal-content" style="border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="background:#f8fafc; border-bottom: 1px solid var(--border-color); padding: 14px 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:38px; height:38px; border-radius:8px; background:rgba(2, 132, 199, 0.12); color:#0284c7; display:flex; align-items:center; justify-content:center;">
+                            <i data-lucide="truck" style="width:20px; height:20px;"></i>
+                        </div>
+                        <div>
+                            <h3 id="delBatchModalHeaderTitle" style="margin:0; font-size:1.15rem; font-weight:800; color:var(--text-primary);">
+                                Ghi Nhận Đợt Giao Hàng & Nghiệm Thu
+                            </h3>
+                            <div id="delBatchModalSubtitle" style="font-size:0.8rem; color:var(--text-secondary); margin-top:2px;">
+                                Đơn hàng: <strong id="delBatchOrderNumberText"></strong> | Khách: <span id="delBatchCustText"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" onclick="closeModal('orderDeliveryBatchModal')"><i data-lucide="x"></i></button>
+                </div>
+
+                <div class="modal-body" style="padding: 20px; max-height: 80vh; overflow-y: auto;">
+                    <form id="orderDeliveryBatchForm" onsubmit="event.preventDefault(); window.saveOrderDeliveryBatch();">
+                        <input type="hidden" id="delBatchOrderId">
+                        <input type="hidden" id="delBatchIsOnline" value="true">
+                        <input type="hidden" id="delBatchId" value="">
+
+                        <!-- Quick Delivery Presets -->
+                        <div style="margin-bottom: 14px;">
+                            <label style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">CHỌN NHANH LOẠI ĐỢT GIAO:</label>
+                            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyDelBatchPreset('Đợt 1 - Bàn giao đợt đầu', 'PARTIAL')" style="font-size:0.75rem; padding:4px 8px;">Đợt 1 (Giao 1 phần)</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyDelBatchPreset('Đợt 2 - Bàn giao nốt số lượng còn lại', 'DELIVERED')" style="font-size:0.75rem; padding:4px 8px;">Đợt 2 (Giao nốt & Nghiệm thu)</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyDelBatchPreset('Giao toàn bộ đơn hàng (Đạt 100%)', 'DELIVERED')" style="font-size:0.75rem; padding:4px 8px;">Giao toàn bộ (Hoàn tất 100%)</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="window.applyDelBatchPreset('Đang vận chuyển giao cho khách', 'SHIPPING')" style="font-size:0.75rem; padding:4px 8px;">Đang giao / Vận chuyển</button>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Tên đợt giao <span style="color:var(--danger);">*</span></label>
+                                <input type="text" class="form-control" id="delBatchTitle" placeholder="Ví dụ: Đợt 1 - Giao hàng & Ký BBBG" required>
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Ngày giao hàng <span style="color:var(--danger);">*</span></label>
+                                <input type="date" class="form-control" id="delBatchDate" required>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Tình trạng đợt giao & Nghiệm thu <span style="color:var(--danger);">*</span></label>
+                                <select class="form-select" id="delBatchStatus" required>
+                                    <option value="DELIVERED">✅ Đã giao & Nghiệm thu thành công (Đạt 100%)</option>
+                                    <option value="SHIPPING">🚚 Đang trên đường vận chuyển</option>
+                                    <option value="PARTIAL">📦 Giao một phần (Còn lại giao sau)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Đơn vị vận chuyển / Người giao</label>
+                                <input type="text" class="form-control" id="delBatchCarrier" placeholder="Nội bộ công ty (Xe tải) / Viettel Post / Grab...">
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Mã vận đơn tra cứu (nếu có)</label>
+                                <input type="text" class="form-control" id="delBatchTrackingCode" placeholder="Mã vận đơn Viettel / GHTK / Aha...">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-weight:700; font-size:0.85rem;">Người nhận & Số điện thoại</label>
+                                <input type="text" class="form-control" id="delBatchRecipient" placeholder="Tên và SĐT người nhận tại điểm giao...">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label" style="font-weight:700; font-size:0.85rem;">Địa chỉ giao hàng</label>
+                            <input type="text" class="form-control" id="delBatchAddress" placeholder="Địa chỉ giao hàng chi tiết...">
+                        </div>
+
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label" style="font-weight:700; font-size:0.85rem;">Số lượng & Mặt hàng bàn giao đợt này</label>
+                            <textarea class="form-control" id="delBatchItems" rows="2" placeholder="Ví dụ: Bàn giao 5.000 vỏ hộp mẫu A, 500 túi xách..."></textarea>
+                        </div>
+
+                        <div style="margin-bottom: 14px;">
+                            <label class="form-label" style="font-weight:700; font-size:0.85rem;">Ghi chú giao nhận & Ý kiến nghiệm thu</label>
+                            <textarea class="form-control" id="delBatchNote" rows="2" placeholder="Ví dụ: Khách đã kiểm đếm đầy đủ quy cách, bao bì nguyên vẹn, ký BBBG đạt chất lượng 100%..."></textarea>
+                        </div>
+
+                        <!-- Upload Photo Evidence for this Delivery Batch -->
+                        <div style="background:#f8fafc; border:1px dashed var(--border-color); border-radius:8px; padding:12px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <label style="font-weight:700; font-size:0.82rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; margin:0;">
+                                    <i data-lucide="paperclip" style="width:14px; height:14px;"></i> ẢNH PHIẾU GIAO / BIÊN BẢN BÀN GIAO (BBBG) KÝ NHẬN
+                                </label>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('delBatchFileField').click()" style="padding:3px 8px; font-size:0.75rem;">
+                                    <i data-lucide="camera" style="width:12px; height:12px;"></i> + Chọn ảnh / Chụp hình
+                                </button>
+                                <input type="file" id="delBatchFileField" accept="image/*,.pdf" multiple style="display:none;" onchange="window.handleDelBatchFiles(event)">
+                            </div>
+                            <div id="delBatchThumbnailsList" style="display:flex; gap:8px; flex-wrap:wrap; min-height:36px; align-items:center;">
+                                <span style="font-size:0.75rem; color:var(--text-secondary); font-style:italic;">Chưa có ảnh đính kèm. Bấm nút phía trên để chụp phiếu giao hàng hoặc BBBG đã ký.</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--border-color); padding-top:14px;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('orderDeliveryBatchModal'); if (window._lastTimelineOrderId) openOrderTimelineModal(window._lastTimelineOrderId, window._lastTimelineIsOnline);">Hủy / Quay lại</button>
+                            <button type="submit" class="btn btn-primary" style="font-weight:700;"><i data-lucide="check-circle" style="width:14px; height:14px;"></i> Lưu Đợt Giao Hàng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal 15: Invoice PDF Preview with Payment QR Code -->
     <div class="modal" id="onlineOrderInvoicePdfModal">
 
         <div class="modal-dialog" style="max-width: 800px;">

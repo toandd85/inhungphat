@@ -10008,3 +10008,81 @@ select.form-select, .form-select {
     color: #94a3b8;
     border-color: #334155;
 }
+
+/* Table column formatting - No wrap on numbers and actions */
+#onlineOrdersTable th,
+#onlineOrdersTable td {
+    vertical-align: middle;
+}
+#onlineOrdersTable th:nth-child(1),
+#onlineOrdersTable td:nth-child(1),
+#onlineOrdersTable th:nth-child(2),
+#onlineOrdersTable td:nth-child(2),
+#onlineOrdersTable th:nth-child(6),
+#onlineOrdersTable td:nth-child(6),
+#onlineOrdersTable th:nth-child(7),
+#onlineOrdersTable td:nth-child(7),
+#onlineOrdersTable th:nth-child(8),
+#onlineOrdersTable td:nth-child(8),
+#onlineOrdersTable th:nth-child(9),
+#onlineOrdersTable td:nth-child(9),
+#onlineOrdersTable th:nth-child(10),
+#onlineOrdersTable td:nth-child(10) {
+    white-space: nowrap !important;
+}
+#onlineOrdersTable td:nth-child(7),
+#onlineOrdersTable td:nth-child(8),
+#onlineOrdersTable td:nth-child(9) {
+    text-align: right !important;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Timeline Batches & Installment Cards */
+.ot-batch-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+}
+[data-theme="dark"] .ot-batch-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+.ot-batch-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+}
+.ot-batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border-color);
+}
+.ot-batch-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.ot-batch-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+.ot-batch-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
