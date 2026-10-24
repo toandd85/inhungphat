@@ -69,7 +69,7 @@
     <!-- Chart.js for High-Performance Interactive Visual Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="/style.css?v=20261024_acceptance_and_contract_templates_v59">
+    <link rel="stylesheet" href="/style.css?v=20261024_remove_shipping_hub_card_v60">
 
     <!-- Critical CSS for Mobile Report Droplist & Full-Width Chart Layout -->
     <style>
@@ -426,10 +426,6 @@
                                     <i data-lucide="check-square" style="width: 13px; height: 13px;"></i>
                                     <span>Kiểm kê kho</span>
                                 </a>
-                                <a href="/bao-cao-van-chuyen" class="menu-item submenu-item" data-slug="bao-cao-van-chuyen" data-tab="online-sales" style="padding: 6px 12px; font-size: 0.85rem;">
-                                    <i data-lucide="truck" style="width: 13px; height: 13px; color: #0284c7;"></i>
-                                    <span>Báo cáo vận chuyển (Lái xe / Xe)</span>
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -773,15 +769,6 @@
                             <div class="hub-info">
                                 <h3>Báo cáo kho hàng</h3>
                                 <p>Tổng hợp Nhập - Xuất - Tồn & giá trị kho</p>
-                            </div>
-                        </div>
-                        <div class="hub-card" onclick="window.navigateTo('bao-cao-van-chuyen')">
-                            <div class="hub-icon gradient-5" style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);">
-                                <i data-lucide="truck"></i>
-                            </div>
-                            <div class="hub-info">
-                                <h3>Báo cáo vận chuyển</h3>
-                                <p>Năng suất giao hàng theo Lái xe & Xe vận chuyển</p>
                             </div>
                         </div>
                         <div class="hub-card" onclick="window.navigateTo('nhap-kho')">
@@ -3855,7 +3842,7 @@
                                     <i data-lucide="file-spreadsheet"></i>
                                     <span>Xuất Excel</span>
                                 </button>
-                                <button class="btn btn-secondary" onclick="window.navigateTo('bao-cao-van-chuyen')" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Báo cáo phân tích năng suất Người / Xe vận chuyển">
+                                <button class="btn btn-secondary" onclick="window.navigateTo('bao-cao-kho-hang'); setTimeout(() => window.switchWhReportModel && window.switchWhReportModel('shipping'), 100);" style="display:flex; align-items:center; gap:6px; color:#0284c7; border-color:#0284c7; font-weight:600;" title="Báo cáo phân tích năng suất Người / Xe vận chuyển (trong Báo cáo kho)">
                                     <i data-lucide="truck" style="width:16px; height:16px;"></i>
                                     <span>Báo cáo Vận chuyển</span>
                                 </button>
@@ -12975,7 +12962,7 @@
 
     <!-- Main App script -->
 
-    <script src="/app.js?v=20261024_acceptance_and_contract_templates_v59"></script>
+    <script src="/app.js?v=20261024_remove_shipping_hub_card_v60"></script>
 
 
     <!-- Bottom Navigation Bar (Mobile First menu) -->
